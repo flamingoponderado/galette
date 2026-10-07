@@ -1,0 +1,121 @@
+# Galette: agent and contributor notes
+
+Galette is a Rocq port of the CakeML Pancake compiler and its correctness
+theorems, restricted to the RISC-V backend. The reference is the HOL4 source
+in the read-only `../flapjack` checkout: `../flapjack/cakeml` (CakeML,
+including `pancake/`) and `../flapjack/HOL` (HOL4, including the L3 RISC-V
+model). Flapjack's Lean port is a convenient second opinion, but **HOL is the
+reference**. Do not modify `../flapjack`.
+
+Goals, in priority order:
+
+1. **Same-looking statements and definitions.** A ported declaration must be
+   recognisably the HOL one: same name (Rocq naming may only differ where HOL
+   names are illegal Rocq identifiers), same arguments in the same order,
+   same constructors in the same order, same hypotheses and conclusion.
+2. **Same bytes.** The extracted compiler must produce, byte for byte, the
+   output of `cake --pancake --target=riscv` (the oracle digests are
+   recorded in `../flapjack/scripts/parity-small-corpus.json` and
+   `../flapjack/scripts/guest-parity.json`).
+
+## Build
+
+    dune build                               # all theories
+    python3 scripts/check-hol-refs.py --kernel   # bookkeeping (see below)
+
+Rocq 9.3 (`rocq-prover` opam package). Libraries are deliberately few; see
+README.md for the dependency policy.
+
+## Layout: one counterpart file per HOL script
+
+HOL script `<dir>/<name>Script.sml` is ported to
+`theories/<dir>/<name>.v` (characters of `<dir>` outside `[A-Za-z0-9_]` become
+`_`; e.g. `HOL/src/n-bit/wordsScript.sml` -> `theories/HOL/src/n_bit/words.v`),
+giving the Rocq module `Galette.<dir>.<name>`. A large script may be split
+into `theories/<dir>/<name>/*.v`, named after HOL's own theorem groups. No
+catch-all "bridge"/"adapter"/"misc" modules collecting fragments of several
+scripts. Galette-only infrastructure (no HOL original) lives at the top of
+`theories/` (e.g. `Base.v`) and says so in its header.
+
+## Bookkeeping: `(*! HOL ... *)` tags
+
+Every Rocq declaration that ports a HOL declaration is immediately preceded
+(a docstring may sit in between) by
+
+    (*! HOL "cakeml/pancake/panLangScript.sml" "shape" *)
+
+citing the path relative to the reference checkout and the **exact** HOL
+declaration name (`foo_def` for `Definition foo_def:`, the theorem name, or
+the datatype name). If the script declares that name twice, add the line:
+`(*! HOL "..." "name" 123 *)`. `scripts/check-hol-refs.py` enforces:
+
+- the cited HOL file exists and declares the name;
+- the tag is in the counterpart file (or its directory);
+- **one HOL declaration has at most one Rocq translation** -- never add a
+  second translation of something already tagged; reuse it (find it with
+  `scripts/check-hol-refs.py --mapping | grep NAME`);
+- every tag has a row in `docs/HOL-THEOREM-MAP.json`
+  (`--update-manifest` adds new rows as `pending_review`);
+- `--kernel`: every tagged Rocq name exists in the compiled library.
+
+Manifest statuses: `pending_review` (tagged, not yet compared line-by-line),
+`reviewed_exact` (compared; reviewer note required), `documented_mismatch`.
+A successful build is not a review.
+
+Splitting a large theorem along HOL's own case structure: each piece is tagged
+`(*! HOL "..." "name" case "Skip" *)` and has the same hypotheses and
+conclusion shape as the HOL theorem plus induction hypotheses only; a main
+(untagged-case) translation assembles them.
+
+**A tag is a claim of sameness.** Before tagging, compare definitions,
+quantified variables, hypotheses, side conditions, conclusions, and carrier
+types (constructor arity, field types, word widths). If something differs,
+do not tag; explain the difference in the docstring instead.
+
+## Carrier conventions (how HOL types are represented)
+
+These are fixed so that no declaration needs a representation qualifier.
+
+| HOL | Rocq |
+| --- | --- |
+| `bool` (in code) | `bool`; in theorem statements coerced to `Prop` by `is_true` |
+| predicates defined by quantifiers | `Prop` |
+| `num` | `nat` (extracted to Zarith) |
+| `int` | `Z` |
+| `'a list`, `'a option`, `'a # 'b` | `list`, `option`, `*` |
+| `char`, `string` | `ascii`, `string` |
+| `mlstring` | `mlstring` (`strlit of string`), `theories/cakeml/basis/pure/mlstring.v` |
+| `'a word` | `word a` with `a : nat` the width index, `dimindex a` as in HOL |
+| `'a |-> 'b` | `fmap` (`theories/HOL/src/finite_maps/finite_map.v`) |
+| `num_map`, `'a spt` | `spt` (`theories/HOL/src/finite_maps/sptree.v`) |
+| `'a set` | `'a -> Prop` |
+| `ARB`, `@x. P x` | `ARB`, `select P` (`Base.v`) |
+| HOL `=` tested in code | `decide (x = y)` via `EqDecision` |
+| record `s with f := v` | Rocq record update (write out the record or use a `set_f` helper) |
+
+HOL's logic is classical with extensionality and choice; `Base.v` imports the
+corresponding Rocq axioms (excluded middle, epsilon, functional and
+propositional extensionality, proof irrelevance). No other axioms. No
+`Admitted` in committed code outside files explicitly marked as work in
+progress; prefer leaving a declaration untagged to tagging an unproved one.
+
+When HOL defines an operation non-computationally (e.g. words via `FCP`) but
+evaluates it through `[compute]` theorems, the Rocq definition is the
+computational one and HOL's defining equation is proved as a theorem carrying
+the `_def` tag. The tagged statement must be HOL's.
+
+## Testing parity
+
+Compiler definitions are extracted to OCaml (`extraction/`). Parity tests run
+the extracted compiler on the fixtures listed in
+`../flapjack/scripts/parity-small-corpus.json` and compare the sha256 of the
+output with the recorded `cake` digest.
+
+## Porting order
+
+1. HOL library foundations used by the compiler (num/bit/words/list/
+   finite_map/sptree/alignment/mlstring/misc).
+2. Compiler definitions along the pipeline (parser -> pan_to_target ->
+   backend -> lab_to_target -> riscv encoder -> export), reaching byte parity.
+3. Semantics (panSem ... targetSem, L3 RISC-V model).
+4. Correctness proofs, pass by pass, up to `pan_to_target_compile_semantics`.

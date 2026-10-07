@@ -1,0 +1,10 @@
+(rocq.extraction
+ (prelude Extract)
+ (extracted_modules galette_smoke)
+ (theories Galette Stdlib))
+
+(executable
+ (name smoke)
+ (modules galette_smoke smoke)
+ (flags (:standard -w -a))
+ (libraries zarith))

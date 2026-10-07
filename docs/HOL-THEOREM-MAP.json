@@ -1,0 +1,732 @@
+[
+ {
+  "hol_path": "HOL/src/n-bit/sum_numScript.sml",
+  "hol_name": "GSUM_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/sum_num.v",
+  "rocq_name": "GSUM"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/sum_numScript.sml",
+  "hol_name": "SUM_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/sum_num.v",
+  "rocq_name": "SUM"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "INT_MAX_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "INT_MAX"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "INT_MIN_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "INT_MIN"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "UINT_MAX_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "UINT_MAX"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "dimword_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "dimword"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "n2w_11",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "n2w_11"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "n2w_w2n",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "n2w_w2n"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "nzcv_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "nzcv"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "sw2sw_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "sw2sw"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "w2n_lt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "w2n_lt"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "w2n_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "w2n_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "w2w_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "w2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_1comp_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_1comp_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_2comp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_2comp"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_H_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_H"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_L_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_L"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_T_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_T"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_abs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_abs"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_add_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_add"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_asr_bv_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_asr_bv"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_asr_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_asr_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_bit_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_bit"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_bit_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_bit_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_bits_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_bits_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_concat_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_concat"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_div_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_div"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_exp"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_extract_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_extract"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_ge_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_ge"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_gt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_gt"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_hi_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_hi"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_hs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_hs"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_join_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_join"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_le_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_le"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_len_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_len"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_lo_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_lo"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_log2_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_log2"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_ls_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_ls"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_lsb_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_lsb_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_lsl_bv_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_lsl_bv"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_lsl_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_lsl_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_lsr_bv_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_lsr_bv"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_lsr_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_lsr_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_lt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_lt"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_max_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_max"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_min_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_min"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_mod_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_mod"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_msb_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_msb_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_mul_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_mul"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_rol_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_rol"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_ror_n2w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_ror_n2w"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_sign_extend_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_sign_extend"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_smax_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_smax"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_smin_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_smin"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/wordsScript.sml",
+  "hol_name": "word_sub_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/words.v",
+  "rocq_name": "word_sub"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "BITS_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "BITS"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "BITV_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "BITV"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "BITWISE_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "BITWISE"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "BIT_MODIFY_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "BIT_MODIFY"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "BIT_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "BIT"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "DIV_2EXP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "DIV_2EXP"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "MOD_2EXP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "MOD_2EXP"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "SBIT_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "SBIT"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "SIGN_EXTEND_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "SIGN_EXTEND"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "SLICE_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "SLICE"
+ },
+ {
+  "hol_path": "HOL/src/num/extra_theories/bitScript.sml",
+  "hol_name": "TIMES_2EXP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/extra_theories/bit.v",
+  "rocq_name": "TIMES_2EXP"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "DIVISION",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "DIVISION"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "EVEN",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "EVEN"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "EXP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "EXP"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "MAX_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "MAX"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "MIN_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "MIN"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "ODD",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "ODD"
+ }
+]

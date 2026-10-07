@@ -1,0 +1,9 @@
+; Every HOL script `<dir>/<name>Script.sml` has its counterpart at
+; `theories/<dir>/<name>.v` (characters outside [A-Za-z0-9_] in <dir> become
+; `_`), so the Rocq module is `Galette.<dir>.<name>`.
+(include_subdirs qualified)
+
+(rocq.theory
+ (name Galette)
+ (theories Stdlib)
+ (flags :standard -w -notation-overridden -w -ambiguous-paths))
