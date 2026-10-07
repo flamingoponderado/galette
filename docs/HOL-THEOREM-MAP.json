@@ -212,7 +212,7 @@
  {
   "hol_path": "HOL/src/n-bit/wordsScript.sml",
   "hol_name": "word_asr_n2w",
-  "hol_line": null,
+  "hol_line": 3660,
   "case": null,
   "status": "pending_review",
   "note": "",

@@ -430,7 +430,7 @@ Qed.
 Theorem word_lsr_n2w : forall (w : word a) n, (w >>> n = (dimindex a - 1 -- n) w)%w.
 Proof. reflexivity. Qed.
 
-(*! HOL "HOL/src/n-bit/wordsScript.sml" "word_asr_n2w" *)
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "word_asr_n2w" 3660 *)
 Theorem word_asr_n2w : forall n (w : word a),
   (w >> n =
   if word_msb w then Tw << (dimindex a - MIN n (dimindex a)) || w >>> n
