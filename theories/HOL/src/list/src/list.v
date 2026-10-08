@@ -123,8 +123,12 @@ Fixpoint UNZIP (l : list (A * B)) : list A * list B :=
 Fixpoint SNOC (x : A) (l : list A) : list A :=
   match l with [] => [x] | x' :: l => x' :: SNOC x l end.
 
-Definition GENLIST (f : N -> A) (n : N) : list A :=
-  num_rec [] (fun n r => SNOC (f n) r) n.
+(** [GENLIST] is computed with an accumulator (linear time); HOL's [SNOC]
+    equations are [GENLIST_thm]. *)
+Definition GENLIST_AUX (f : N -> A) (n : N) : list A -> list A :=
+  num_rec (fun acc => acc) (fun i r acc => r (f i :: acc)) n.
+
+Definition GENLIST (f : N -> A) (n : N) : list A := GENLIST_AUX f n [].
 
 (*! HOL "HOL/src/list/src/listScript.sml" "LAST_DEF" *)
 Fixpoint LAST `{Inhabited A} (l : list A) : A :=
@@ -288,7 +292,15 @@ Proof. intros; split; [reflexivity|apply EL_SUC]. Qed.
 (*! HOL "HOL/src/list/src/listScript.sml" "GENLIST" *)
 Theorem GENLIST_thm : forall {A} (f : N -> A) n,
   GENLIST f 0 = [] /\ GENLIST f (SUC n) = SNOC (f n) (GENLIST f n).
-Proof. intros; split; [reflexivity|]. unfold GENLIST; rewrite num_rec_SUC; reflexivity. Qed.
+Proof.
+  intros A f n; split; [reflexivity|].
+  assert (Haux : forall m acc, GENLIST_AUX f m acc = GENLIST_AUX f m [] ++ acc).
+  { induction m as [|m IH] using N.peano_ind; intros acc; [reflexivity|].
+    unfold GENLIST_AUX; rewrite !num_rec_SUC; fold (GENLIST_AUX f m).
+    rewrite IH, (IH [f m]), <- app_assoc; reflexivity. }
+  unfold GENLIST at 1; unfold GENLIST_AUX; rewrite num_rec_SUC; fold (GENLIST_AUX f n).
+  rewrite Haux, SNOC_app; reflexivity.
+Qed.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "LUPDATE_def" *)
 Theorem LUPDATE_def : forall {A},

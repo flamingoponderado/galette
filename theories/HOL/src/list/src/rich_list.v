@@ -113,7 +113,8 @@ Qed.
 Theorem COUNT_LIST_def : forall n,
   (COUNT_LIST 0 = []) /\ (COUNT_LIST (SUC n) = 0 :: MAP SUC (COUNT_LIST n)).
 Proof.
-  intros n; split; [reflexivity|]; rewrite !COUNT_LIST_GENLIST, GENLIST_CONS_aux, MAP_GENLIST_aux.
+  intros n; split; [reflexivity|].
+  rewrite (COUNT_LIST_GENLIST (SUC n)), (COUNT_LIST_GENLIST n), GENLIST_CONS_aux, MAP_GENLIST_aux.
   reflexivity.
 Qed.
 
