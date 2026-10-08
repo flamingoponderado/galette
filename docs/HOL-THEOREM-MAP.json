@@ -6680,6 +6680,26 @@
   "rocq_name": "wf_union"
  },
  {
+  "hol_path": "HOL/src/floating-point/binary_ieeeScript.sml",
+  "hol_name": "float_compare",
+  "hol_line": 755,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/floating_point/binary_ieee.v",
+  "rocq_name": "float_compare"
+ },
+ {
+  "hol_path": "HOL/src/floating-point/binary_ieeeScript.sml",
+  "hol_name": "rounding",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/floating_point/binary_ieee.v",
+  "rocq_name": "rounding"
+ },
+ {
   "hol_path": "HOL/src/integer/integer_wordScript.sml",
   "hol_name": "INT_BOUND_ORDER",
   "hol_line": null,
@@ -22488,6 +22508,1106 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
   "rocq_name": "the_eqn"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "call_arg_convention_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "call_arg_convention"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "distinct_tar_reg_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "distinct_tar_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_inst_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_inst"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "extract_labels_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "extract_labels"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "flat_exp_conventions_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "flat_exp_conventions"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "full_inst_ok_less_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "full_inst_ok_less"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "inst_arg_convention_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "inst_arg_convention"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "inst_ok_less_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "inst_ok_less"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "labels_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "labels_rel"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "post_alloc_conventions_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "post_alloc_conventions"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "pre_alloc_conventions_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "pre_alloc_conventions"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "two_reg_inst_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "two_reg_inst"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "wf_cutsets_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "wf_cutsets"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "wf_names_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "wf_names"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "MustTerminate_limit_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "MustTerminate_limit"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "STOP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "STOP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "add_ret_loc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "add_ret_loc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "alloc_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "alloc_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "alloc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "alloc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "assign_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "assign"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "bad_dest_args_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "bad_dest_args"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "bad_fun_return_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "bad_fun_return"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "buffer",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "buffer"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "buffer_flush_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "buffer_flush"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "buffer_write_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "buffer_write"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "call_env_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "call_env"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "const_addresses_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "const_addresses"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "const_writes_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "const_writes"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "cont_loop_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "cont_loop"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "cut_env_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "cut_env"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "cut_envs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "cut_envs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "cut_names_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "cut_names"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "cut_state_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "cut_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "cut_state_opt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "cut_state_opt"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "dec_clock_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "dec_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "dec_stack_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "dec_stack"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "enc_stack_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "enc_stack"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "env_to_list_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "env_to_list"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "evaluate_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "evaluate_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "evaluate_def",
+  "hol_line": 1369,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "evaluate_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "exit_loop_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "exit_loop"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "find_code_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "find_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "fix_clock_IMP_LESS_EQ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "fix_clock_IMP_LESS_EQ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "fix_clock_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "fix_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "fix_clock_evaluate",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "fix_clock_evaluate"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "flush_state_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "flush_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "gc_bij_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "gc_bij_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "gc_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "gc_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "gc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "gc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "gc_fun_type",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "gc_fun_type"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "get_fp_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "get_fp_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "get_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "get_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "get_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "get_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "get_var_imm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "get_var_imm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "get_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "get_vars"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "get_word_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "get_word"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "has_space_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "has_space"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "inst_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "inst_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "inst_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "inst"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "isException_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "isException"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "isResult_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "isResult"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "isWord_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "isWord"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "isWord_exists",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "isWord_exists"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "is_fwd_ptr_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "is_fwd_ptr"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "is_word_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "is_word"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "jump_exc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "jump_exc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "key_val_compare_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "key_val_compare"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "list_rearrange_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "list_rearrange"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "mem_load_32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "mem_load_32"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "mem_load_byte_aux_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "mem_load_byte_aux"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "mem_load"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "mem_store_32_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "mem_store_32_alt"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "mem_store_32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "mem_store_32"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "mem_store_byte_aux_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "mem_store_byte_aux"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "mem_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "pop_env_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "pop_env_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "pop_env_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "pop_env"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "push_env_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "push_env_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "push_env_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "push_env"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "result",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "result"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "semantics_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "semantics"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "set_fp_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "set_fp_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "set_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "set_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "set_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "set_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "set_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "set_vars"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_load16_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_load16"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_load32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_load32"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_load_byte_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_load_byte"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_load"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_set_var_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_set_var_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_set_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_set_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_store16_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_store16"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_store32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_store32"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_store_byte_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_store_byte"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "sh_mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "sh_mem_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "share_inst_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "share_inst_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "share_inst_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "share_inst"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "stack_frame",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "stack_frame"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "stack_size_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "stack_size"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "stack_size_frame_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "stack_size_frame"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "state_component_equality",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "state_component_equality"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "termdep_rw",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "termdep_rw"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "theWord_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "theWord"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "the_words_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "the_words"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "unset_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "unset_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "word_cmp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "word_cmp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "word_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "word_exp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "word_lang_safe_for_space_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "word_lang_safe_for_space"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "write_bytearray_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "write_bytearray"
  },
  {
   "hol_path": "cakeml/compiler/backend/source_to_flatScript.sml",
