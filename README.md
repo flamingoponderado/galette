@@ -40,19 +40,25 @@ HOL-style well-founded definitions.
 
 ## Status
 
-Ported so far (see `docs/HOL-THEOREM-MAP.json` for the per-declaration
-inventory and review status):
+**Compiler: complete and byte-identical on the parity corpus.** The
+extracted executable (`dune build ./extraction/galette.exe`) reproduces the
+original `cake --pancake --target=riscv` stdout byte for byte on all 166
+fixtures of Flapjack's parity corpus:
 
-- HOL foundations: `arithmetic`, `bit`, `sum_num`, `words` (n2w compute
-  theorems), `list`, `option`, `pair`, `combin`.
+    python3 scripts/parity.py          # 166 identical, 0 different
+
+Every compiler definition on the `compile_pancake_64` path is ported from
+HOL (parser, static checker, Pancake passes, word/stack/lab backend,
+register allocation, assembler, RISC-V encoder, exporter) and tagged; see
+`docs/HOL-THEOREM-MAP.json` for the per-declaration inventory and review
+status (`pending_review` rows have not yet been compared line by line).
 
 Plan, in order:
 
-1. HOL/CakeML foundations used by the compiler (finite maps, sptree,
-   mlstring, misc, alignment, byte, integer_word, sorting, balanced_map,
-   peg/pegexec, monadic state).
-2. Compiler definitions along the pipeline of `compile_pancake_64`
-   (parser, static checker, Pancake passes, word/stack/lab backend, RISC-V
-   encoder and exporter), extracted to OCaml and checked for byte parity.
-3. Semantics (Pancake to target, the L3 RISC-V model).
-4. Correctness proofs, up to `pan_to_target_compile_semantics`.
+1. Large inputs: byte parity and performance on the stateless-pancaketh
+   guest programs (about 5 MB of output).
+2. Semantics: Pancake (panSem), crep, loop, word, stack, lab, asm and
+   target semantics, and the L3 RISC-V step function.
+3. Correctness proofs, pass by pass, up to `pan_to_target_compile_semantics`.
+4. Review: compare `pending_review` declarations with HOL and mark them
+   `reviewed_exact`.
