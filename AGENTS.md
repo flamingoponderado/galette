@@ -115,6 +115,35 @@ evaluates it through `[compute]` theorems, the Rocq definition is the
 computational one and HOL's defining equation is proved as a theorem carrying
 the `_def` tag. The tagged statement must be HOL's.
 
+## Porting definitions
+
+- **Datatypes**: same constructors in the same order with the same argument
+  types. HOL's `'a` word-width type variables become `{a : N}` parameters.
+  Nested inductives (`exp list`) are fine; write the induction principle you
+  need by hand.
+- **Records**: a Rocq `Record` with HOL's field names in HOL's order. HOL
+  `s with f := v` becomes the record rebuilt with one field changed; define
+  a `set_<f>` helper or write the record out. If a field name clashes within a
+  Rocq module (HOL allows duplicates across records), prefix it with the
+  record type name (`<rec>_<field>`); document it in the record docstring.
+- **Recursion**: structural `Fixpoint` when HOL's recursion is structural
+  (use nested `fix` for list-nested recursion). Otherwise define with `Fix` on
+  a well-founded measure (or a provably sufficient fuel) and prove HOL's
+  equations as the tagged `_def` theorem. Recursion on `num` uses `num_rec`
+  or binary recursion; never unary recursion over potentially large numbers.
+  `Function` (rocq-core funind) is allowed.
+- **Pairs and patterns**: HOL tupled arguments `f (x, y)` stay tupled.
+  `case ... of` maps to `match`; HOL's catch-all/overlapping patterns need the
+  same first-match semantics.
+- **Monads**: CakeML's `do ... od` (option/state/exception) maps to explicit
+  binds with the same monad definitions as HOL (port the monad's definitions,
+  e.g. `ml_monadBase`, rather than using a different library).
+- **Executable**: compiler code must not use `ARB`, `select`, `classical_dec`
+  or `Classical.v` unless HOL's code does exactly that; extracted code that
+  hits them fails at run time.
+- **Shared files**: if you need something in a file you do not own, say so in
+  your report instead of editing it.
+
 ## Testing parity
 
 Compiler definitions are extracted to OCaml (`extraction/`). Parity tests run
