@@ -15,10 +15,9 @@
     definitions as evaluated literals; here they are constants with the
     defining expression of the ML [val].
 
-    Not yet ported: [riscv_next_def] (needs [NextRISCV] from [riscv_step]),
-    [riscv_ok_def] (needs the model's state functions), [riscv_proj_def]
-    ([fun2set]), [riscv_target_def] (needs the [target] record of
-    [targetSem]), and the generated rewrites [riscv_config], [riscv_asm_ok]. *)
+    The target record [riscv_target] (with [riscv_next], [riscv_ok],
+    [riscv_proj]) is at the end.  Not ported: the generated rewrites
+    [riscv_config], [riscv_asm_ok] (theorems computed by [asmLib]). *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.n_bit Require Import words.
@@ -27,11 +26,17 @@ From Galette.cakeml.semantics Require Import ast.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.HOL.examples.l3_machine_code.riscv.model Require Import riscv.
 From Galette.HOL.src.combin Require combin.
+From Galette.HOL.src.coretypes Require Import option.
+From Galette.HOL.src.n_bit Require Import alignment.
+From Galette.HOL.examples.l3_machine_code.riscv.step Require Import riscv_step.
+From Galette.HOL.examples.machine_code.hoare_triple Require set_sep.
+From Galette.cakeml.compiler.encoders.asm Require asmProps.
 Open Scope N_scope.
 Local Open Scope word_scope.
 
 (** ASM's [Load], [Store] and [Shift] are shadowed by the RISC-V instruction
-    constructors of the same names; ASM's are written [asm.Load] etc. *)
+    constructors of the same names, and ASM's constructor [Skip] by the
+    model's function [Skip]; ASM's are written [asm.Load], [asm.Skip] etc. *)
 
 (** ** Encoding RISC-V instructions to bytes *)
 
@@ -134,7 +139,7 @@ Definition temp_reg : word5 := n2w 31.
 (*! HOL "cakeml/compiler/encoders/riscv/riscv_targetScript.sml" "riscv_ast_def" *)
 Definition riscv_ast (x : asm 64) : list instruction :=
   match x with
-  | Inst Skip => [ArithI (ADDI (n2w 0, n2w 0, n2w 0))]
+  | Inst asm.Skip => [ArithI (ADDI (n2w 0, n2w 0, n2w 0))]
   | Inst (Const r i) =>
       let imm12 : word12 := (11 >< 0) i in
       if bool_decide (i = sw2sw imm12) then
@@ -347,3 +352,46 @@ Definition riscv_config : asm_config 64 := {|
   cjump_offset := (min21 + n2w 8, max21 + n2w 4);
   loc_offset := (min32, n2w 0x7FFFF7FF)
 |}.
+
+(** ** The RISC-V target *)
+
+(*! HOL "cakeml/compiler/encoders/riscv/riscv_targetScript.sml" "riscv_next_def" *)
+Definition riscv_next (s : riscv_state) : riscv_state := THE (NextRISCV s).
+
+(** Valid RISC-V states: virtual memory is turned off and a 64-bit
+    architecture (RV64I). *)
+(*! HOL "cakeml/compiler/encoders/riscv/riscv_targetScript.sml" "riscv_ok_def" *)
+Definition riscv_ok (ms : riscv_state) : bool :=
+  (bool_decide (mstatus_VM (MachineCSR_mstatus (riscv_state_c_MCSR ms (riscv_state_procID ms)))
+                = n2w 0) &&
+   bool_decide (mcpuid_ArchBase (MachineCSR_mcpuid (riscv_state_c_MCSR ms (riscv_state_procID ms)))
+                = n2w 2) &&
+   bool_decide (riscv_state_c_NextFetch ms (riscv_state_procID ms) = None) &&
+   bool_decide (riscv_state_exception ms = NoException) &&
+   aligned 2 (riscv_state_c_PC ms (riscv_state_procID ms)))%bool.
+
+(*! HOL "cakeml/compiler/encoders/riscv/riscv_targetScript.sml" "riscv_proj_def" *)
+Definition riscv_proj (d : word64 -> Prop) (s : riscv_state) :
+    word5 * word2 * option TransferControl * exception * (word5 -> word64) *
+    (word64 * word8 -> Prop) * word64 :=
+  (mstatus_VM (MachineCSR_mstatus (riscv_state_c_MCSR s (riscv_state_procID s))),
+   mcpuid_ArchBase (MachineCSR_mcpuid (riscv_state_c_MCSR s (riscv_state_procID s))),
+   riscv_state_c_NextFetch s (riscv_state_procID s),
+   riscv_state_exception s,
+   riscv_state_c_gpr s (riscv_state_procID s),
+   set_sep.fun2set (riscv_state_MEM8 s, d),
+   riscv_state_c_PC s (riscv_state_procID s)).
+
+(** HOL's record literal leaves the field [get_fp_reg] unset (its value is
+    that of [ARB]); here it is [ARB]. *)
+(*! HOL "cakeml/compiler/encoders/riscv/riscv_targetScript.sml" "riscv_target_def" *)
+Definition riscv_target :=
+  asmProps.mk_target
+    riscv_config
+    riscv_next
+    (fun s => riscv_state_c_PC s (riscv_state_procID s))
+    (fun s => riscv_state_c_gpr s (riscv_state_procID s) ∘ n2w)
+    ARB
+    riscv_state_MEM8
+    riscv_ok
+    riscv_proj.
