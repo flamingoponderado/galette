@@ -19,9 +19,9 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | HOL script | Status |
 | --- | --- |
 | semantics/ffi/ffiScript | done |
-| HOL llist, lprefix_lub (subset) | partial (definitions used by semantics) |
-| pancake/semantics/panSemScript | done except `mem_load_32_alt`, `mem_store_32_alt` |
-| pancake/semantics/crepSemScript, loopSemScript | wip |
+| HOL llist, lprefix_lub | done for what the proofs cite (LAPPEND, LPREFIX, lprefix_lub, build_lprefix_lub_thm, ...) |
+| pancake/semantics/panSemScript | done |
+| pancake/semantics/crepSemScript, loopSemScript | done (crep `eval_def` untagged: needs bitstring `v2w`) |
 | compiler/backend/semantics/wordSemScript (+ wordConvs) | wip |
 | compiler/backend/semantics/stackSemScript, labSemScript | wip |
 | compiler/encoders/asm/asmSemScript, backend/semantics/targetSemScript | wip |
@@ -32,8 +32,9 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | HOL script | Status |
 | --- | --- |
 | pancake/semantics/panPropsScript, pan_commonPropsScript | wip |
-| pancake/semantics/crepPropsScript, loopPropsScript | todo |
-| backend/semantics/wordPropsScript, stackPropsScript, labPropsScript, targetPropsScript, backendPropsScript | todo |
+| pancake/semantics/crepPropsScript, loopPropsScript | wip |
+| backend/semantics/backendPropsScript | done |
+| backend/semantics/wordPropsScript, stackPropsScript, labPropsScript, targetPropsScript | todo |
 | encoders/asm/asmPropsScript | todo |
 
 ## Pass proofs
@@ -41,8 +42,9 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | HOL script | Status |
 | --- | --- |
 | pancake/proofs/pan_simpProof, pan_structsProof, pan_globalsProof | wip |
-| pancake/proofs/pan_to_crepProof, crep_arithProof, crep_inlineProof | todo |
-| pancake/proofs/crep_to_loopProof, loop_callProof, loop_liveProof | todo |
+| pancake/proofs/crep_arithProof, crep_inlineProof, loop_callProof, loop_liveProof | wip |
+| pancake/proofs/pan_to_crepProof | todo |
+| pancake/proofs/crep_to_loopProof | todo |
 | pancake/proofs/loop_to_wordProof, pan_to_wordProof | todo |
 | backend/reg_alloc/proofs (reg_alloc, linear_scan, parmove) | wip |
 | backend/proofs word_simp, word_inst, word_cse, word_copy, word_remove, word_unreach, word_depth, word_alloc, word_to_word | todo |
@@ -51,3 +53,7 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | encoders/riscv/proofs/riscv_targetProof | todo |
 | backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | todo |
 | pancake/proofs/pan_to_targetProof | todo |
+
+Axiom audit: the theorems checked so far depend only on the axioms declared
+in `theories/Base.v` (excluded middle, choice, functional extensionality,
+proof irrelevance), i.e. HOL's logic.
