@@ -1481,6 +1481,86 @@
  },
  {
   "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LAPPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LAPPEND_thm"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LAPPEND_ASSOC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LAPPEND_ASSOC"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LAPPEND_EQ_LNIL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LAPPEND_EQ_LNIL"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LAPPEND_fromList",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LAPPEND_fromList"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LFINITE_APPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LFINITE_APPEND"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LFINITE_LAPPEND_IMP_NIL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LFINITE_LAPPEND_IMP_NIL"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LFINITE_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LFINITE_THM"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LFINITE_fromList",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LFINITE_fromList"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
   "hol_name": "LFINITE_rules",
   "hol_line": null,
   "case": null,
@@ -1521,6 +1601,16 @@
  },
  {
   "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LLENGTH_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LLENGTH_THM"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
   "hol_name": "LNIL",
   "hol_line": null,
   "case": null,
@@ -1531,6 +1621,36 @@
  },
  {
   "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LNTH_LAPPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LNTH_LAPPEND"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LNTH_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LNTH_THM"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LNTH_fromList",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LNTH_fromList"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
   "hol_name": "LPREFIX_def",
   "hol_line": null,
   "case": null,
@@ -1538,6 +1658,16 @@
   "note": "",
   "rocq_path": "theories/HOL/src/coalgebras/llist.v",
   "rocq_name": "LPREFIX"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LTAKE_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LTAKE_THM"
  },
  {
   "hol_path": "HOL/src/coalgebras/llistScript.sml",
@@ -1608,6 +1738,16 @@
   "note": "",
   "rocq_path": "theories/HOL/src/coalgebras/llist.v",
   "rocq_name": "toList"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "toList_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "toList_THM"
  },
  {
   "hol_path": "HOL/src/combin/combinScript.sml",
