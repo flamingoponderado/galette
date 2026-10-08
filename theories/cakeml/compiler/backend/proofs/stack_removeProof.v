@@ -243,3 +243,92 @@ Definition state_rel (jump : bool) (off : word a * word a) (k : N) (s1 s2 : stat
   end.
 
 End StateRel.
+
+Section StateRelLemmas.
+Context {a : N} {c ffi_t : Type}.
+Implicit Types s t : state a c ffi_t.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "state_rel_get_var" *)
+Local Theorem state_rel_get_var : forall jump off k s t n,
+  state_rel jump off k s t /\ n < k -> get_var n s = get_var n t.
+Proof.
+  intros jump off k s t n [H Hn]. unfold state_rel in H. destruct_ands.
+  unfold get_var. symmetry; auto.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "state_rel_with_clock" *)
+Local Theorem state_rel_with_clock : forall jump off k s t1 c0,
+  state_rel jump off k s t1 -> state_rel jump off k (set_clock c0 s) (set_clock c0 t1).
+Proof. intros jump off k s t1 c0 H. unfold state_rel in *; cbn [set_clock] in *; stk_fields. tauto. Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "state_rel_IMP" *)
+Local Theorem state_rel_IMP : forall jump off k s t1,
+  state_rel jump off k s t1 -> state_rel jump off k (dec_clock s) (dec_clock t1).
+Proof.
+  intros jump off k s t1 H. unfold dec_clock.
+  replace (clock t1) with (clock s) by (unfold state_rel in H; destruct_ands; congruence).
+  apply state_rel_with_clock, H.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "state_rel_const" *)
+Theorem state_rel_const : forall jump off k s t,
+  state_rel jump off k s t ->
+  code_buffer t = code_buffer s /\
+  sh_mdomain t = sh_mdomain s /\
+  ~ use_stack t /\ use_stack s /\ ffi t = ffi s /\
+  compile_oracle t = (fun n => (I ## (MAP (stack_remove.prog_comp jump off k) ## I)) (compile_oracle s n)) /\
+  compile s = (fun c0 p => compile t c0 (MAP (stack_remove.prog_comp jump off k) p)).
+Proof. intros jump off k s t H; unfold state_rel in H; destruct_ands; tauto. Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "find_code_lemma" *)
+Local Theorem find_code_lemma : forall jump off k s t1 dest x,
+  state_rel jump off k s t1 /\
+  match dest with inl _ => True | inr i => i < k end /\
+  find_code dest (regs s) (code s) = SOME x ->
+  find_code dest (regs t1) (code t1) = SOME (stack_remove.comp jump off k x) /\ reg_bound x k.
+Proof.
+  intros jump off k s t1 dest x (H & Hd & Hf). unfold state_rel in H; destruct_ands.
+  match goal with H0 : code_rel _ _ _ _ _ |- _ => destruct H0 as [Hcr _] end.
+  destruct dest as [l|r]; cbn [find_code] in Hf |- *.
+  - destruct (Hcr _ _ Hf) as [Hb Hl]; split; assumption.
+  - match goal with Hr : forall n, n < k -> _ |- _ => rewrite (Hr r Hd) end.
+    destruct (FLOOKUP (regs s) r) as [[w|l n0]|]; try discriminate Hf.
+    destruct (n0 =? 0); [|discriminate Hf].
+    destruct (Hcr _ _ Hf) as [Hb Hl]; split; assumption.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "find_code_lemma2" *)
+Local Theorem find_code_lemma2 : forall jump off k s t1 dest x x1,
+  state_rel jump off k s t1 /\
+  match dest with inl _ => True | inr i => i < k end /\
+  find_code dest (regs s \\ x1) (code s) = SOME x ->
+  find_code dest (regs t1 \\ x1) (code t1) = SOME (stack_remove.comp jump off k x) /\ reg_bound x k.
+Proof.
+  intros jump off k s t1 dest x x1 (H & Hd & Hf). unfold state_rel in H; destruct_ands.
+  match goal with H0 : code_rel _ _ _ _ _ |- _ => destruct H0 as [Hcr _] end.
+  destruct dest as [l|r]; cbn [find_code] in Hf |- *.
+  - destruct (Hcr _ _ Hf) as [Hb Hl]; split; assumption.
+  - rewrite DOMSUB_FLOOKUP_THM in Hf |- *.
+    match goal with Hr : forall n, n < k -> _ |- _ => rewrite (Hr r Hd) end.
+    destruct (decide (x1 = r)); [discriminate Hf|].
+    destruct (FLOOKUP (regs s) r) as [[w|l n0]|]; try discriminate Hf.
+    destruct (n0 =? 0); [|discriminate Hf].
+    destruct (Hcr _ _ Hf) as [Hb Hl]; split; assumption.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "state_rel_set_var" *)
+Theorem state_rel_set_var : forall jump off k s t1 v x,
+  state_rel jump off k s t1 /\ v < k ->
+  state_rel jump off k (set_var v x s) (set_var v x t1).
+Proof.
+  intros jump off k s t1 v x [H Hv]. unfold state_rel, set_var in *; stk_fields.
+  rewrite !(FLOOKUP_UPDATE (regs t1)).
+  destruct (decide (v = k + 2)) as [|_]; [lia|].
+  destruct (decide (v = k + 1)) as [|_]; [lia|].
+  destruct (decide (v = k)) as [|_]; [lia|].
+  destruct_ands. repeat (split; [assumption|]).
+  split; [intros n Hn; rewrite !FLOOKUP_UPDATE; destruct (decide (v = n)); auto|].
+  repeat (split; [assumption|]). assumption.
+Qed.
+
+End StateRelLemmas.

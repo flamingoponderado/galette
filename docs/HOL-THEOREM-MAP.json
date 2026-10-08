@@ -25791,6 +25791,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "find_code_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "find_code_lemma"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "find_code_lemma2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "find_code_lemma2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
   "hol_name": "get_var_set_var",
   "hol_line": null,
   "case": null,
@@ -25841,6 +25861,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "state_rel_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "state_rel_IMP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "state_rel_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "state_rel_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
   "hol_name": "state_rel_def",
   "hol_line": null,
   "case": null,
@@ -25848,6 +25888,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "state_rel"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "state_rel_get_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "state_rel_get_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "state_rel_set_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "state_rel_set_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "state_rel_with_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "state_rel_with_clock"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
