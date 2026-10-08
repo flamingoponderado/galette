@@ -26,34 +26,39 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | compiler/backend/semantics/wordConvsScript | definitions done; theorems partial |
 | compiler/backend/semantics/stackSemScript, labSemScript | done (stackSem `evaluate_ind` not ported) |
 | compiler/encoders/asm/asmSemScript, backend/semantics/targetSemScript | done |
-| HOL L3 riscv model (Next, step) | wip |
+| HOL L3 riscv model (Next, step) | done for what is ported (model, step) |
 
 ## Properties libraries
 
 | HOL script | Status |
 | --- | --- |
-| pancake/semantics/panPropsScript, pan_commonPropsScript | wip |
-| pancake/semantics/crepPropsScript, loopPropsScript | wip |
+| pancake/semantics/panPropsScript, pan_commonPropsScript | partial |
+| pancake/semantics/crepPropsScript, loopPropsScript | partial |
 | backend/semantics/backendPropsScript | done |
-| backend/semantics/wordPropsScript | wip |
-| backend/semantics/stackPropsScript, labPropsScript, targetPropsScript | todo |
+| backend/semantics/wordPropsScript | partial (constant-field lemmas, wordProps/consts.v) |
+| backend/semantics/stackPropsScript, labPropsScript | partial |
+| backend/semantics/targetPropsScript | todo |
 | encoders/asm/asmPropsScript | partial |
 
 ## Pass proofs
 
 | HOL script | Status |
 | --- | --- |
-| pancake/proofs/pan_simpProof, pan_structsProof, pan_globalsProof | wip |
-| pancake/proofs/crep_arithProof, crep_inlineProof, loop_callProof, loop_liveProof | wip |
+| pancake/proofs/pan_simpProof | partial |
+| pancake/proofs/pan_structsProof, pan_globalsProof | todo |
+| pancake/proofs/crep_arithProof, crep_inlineProof | partial |
+| pancake/proofs/loop_callProof, loop_liveProof | todo |
 | pancake/proofs/pan_to_crepProof | todo |
 | pancake/proofs/crep_to_loopProof | todo |
 | pancake/proofs/loop_to_wordProof, pan_to_wordProof | todo |
 | backend/reg_alloc/parmoveScript theorems | done |
 | backend/reg_alloc/proofs/reg_allocProof | done (`reg_alloc_correct`) |
-| backend/reg_alloc/proofs/linear_scanProof | wip |
+| backend/reg_alloc/proofs/linear_scanProof | partial (intervals, allocator) |
 | backend/proofs word_simp, word_inst, word_cse, word_copy, word_remove, word_unreach, word_depth, word_alloc, word_to_word | todo |
-| backend/proofs word_to_stack, stack_alloc, stack_remove, stack_names, stack_rawcall, stack_to_lab | todo |
-| backend/proofs lab_filter, lab_to_target | todo |
+| backend/proofs stack_names (helpers; comp_correct todo), stack_rawcall | partial |
+| backend/proofs word_to_stack, stack_alloc, stack_remove, stack_to_lab | todo |
+| backend/proofs lab_filter (helpers; filter_correct todo) | partial |
+| backend/proofs lab_to_target | todo |
 | encoders/riscv/proofs/riscv_targetProof | todo |
 | backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | todo |
 | pancake/proofs/pan_to_targetProof | todo |
