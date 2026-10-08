@@ -36,6 +36,7 @@ From Galette.HOL.src.coretypes Require pair.
 From Galette.HOL.src.sort Require Import ternaryComparisons.
 From Galette.HOL.src.finite_maps Require sptree.
 From Galette.HOL.src.n_bit Require byte.
+From Galette.HOL.src.relation Require relation.
 From Galette.HOL.examples.machine_code.hoare_triple Require set_sep.
 Open Scope N_scope.
 
@@ -589,3 +590,25 @@ Definition word_list_exists (ad : word a) (n : N) : (word a * B -> Prop) -> Prop
   set_sep.SEP_EXISTS (fun xs => set_sep.STAR (word_list ad xs) (set_sep.cond (LENGTH xs = n))).
 
 End WordList.
+
+(*! HOL "cakeml/misc/miscScript.sml" "FOLDR_FUNPOW" *)
+Theorem FOLDR_FUNPOW : forall {A B} (f : B -> B) (x : B) (ls : list A),
+  FOLDR (fun _ => f) x ls = FUNPOW f (LENGTH ls) x.
+Proof.
+  intros A B f x ls; induction ls as [|y ls IH]; [reflexivity|].
+  cbn [FOLDR]. rewrite IH. replace (LENGTH (y :: ls)) with (SUC (LENGTH ls))
+    by (rewrite !LENGTH_length; cbn [length]; lia).
+  rewrite FUNPOW_SUC; reflexivity.
+Qed.
+
+(*! HOL "cakeml/misc/miscScript.sml" "FUNPOW_refl_trans_chain" *)
+Theorem FUNPOW_refl_trans_chain : forall {A} (P : A -> A -> Prop) (f : A -> A),
+  relation.transitive P /\ relation.reflexive P ->
+  forall n x, (forall j, j < n -> P (FUNPOW f j x) (f (FUNPOW f j x))) -> P x (FUNPOW f n x).
+Proof.
+  intros A P f [Ht Hr] n; induction n as [|n IH] using N.peano_ind; intros x H; [apply Hr|].
+  rewrite FUNPOW_SUC. apply (Ht _ (FUNPOW f n x)); split.
+  - apply IH; intros j Hj; apply H; lia.
+  - apply H; lia.
+Qed.
+

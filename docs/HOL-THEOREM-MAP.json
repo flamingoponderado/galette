@@ -17551,6 +17551,16 @@
  },
  {
   "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "FUNPOW_ADD",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "FUNPOW_ADD"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
   "hol_name": "FUNPOW_SUC",
   "hol_line": null,
   "case": null,
@@ -42958,6 +42968,26 @@
   "note": "reviewer: P : A -> bool (HOL bool predicate); conj hypothesis kept",
   "rocq_path": "theories/cakeml/misc/misc.v",
   "rocq_name": "EVERY_lookup_vars"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "FOLDR_FUNPOW",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "FOLDR_FUNPOW"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "FUNPOW_refl_trans_chain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "FUNPOW_refl_trans_chain"
  },
  {
   "hol_path": "cakeml/misc/miscScript.sml",

@@ -90,3 +90,7 @@ Proof. unfold FUNPOW; rewrite N.iter_succ, N.iter_swap; reflexivity. Qed.
 Theorem FUNPOW_SUC : forall {S} (f : S -> S) n x, FUNPOW f (SUC n) x = f (FUNPOW f n x).
 Proof. intros S f n x; unfold FUNPOW; rewrite N.iter_succ; reflexivity. Qed.
 
+(*! HOL "HOL/src/num/theories/arithmeticScript.sml" "FUNPOW_ADD" *)
+Theorem FUNPOW_ADD : forall {S} (f : S -> S) x m n, FUNPOW f (m + n) x = FUNPOW f m (FUNPOW f n x).
+Proof. intros S f x m n; unfold FUNPOW; apply N.iter_add. Qed.
+
