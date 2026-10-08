@@ -25991,6 +25991,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "stack_remove_call_args",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "stack_remove_call_args"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
   "hol_name": "stack_remove_lab_pres",
   "hol_line": null,
   "case": null,

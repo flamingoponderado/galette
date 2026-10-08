@@ -709,3 +709,60 @@ Theorem upshift_downshift_call_args : forall n n0,
 Proof. intros; split; [apply call_args_upshift_f|apply call_args_downshift_f]. Qed.
 
 End SyntaxThms.
+
+Section CallArgs.
+Context {a : N}.
+
+Lemma call_args_alloc_f : forall f jump k n, call_args (@stack_remove.stack_alloc_f a f jump k n) 1 2 3 4 0 = true.
+Proof.
+  induction f as [|f IH]; intros jump k n; cbn [stack_remove.stack_alloc_f]; [reflexivity|].
+  destruct (n =? 0); [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); destruct jump; cbn [call_args andb]; rewrite ?IH; reflexivity.
+Qed.
+
+Lemma call_args_free_f : forall f k n, call_args (@stack_remove.stack_free_f a f k n) 1 2 3 4 0 = true.
+Proof.
+  induction f as [|f IH]; intros k n; cbn [stack_remove.stack_free_f]; [reflexivity|].
+  destruct (n =? 0); [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); cbn [call_args andb]; rewrite ?IH; reflexivity.
+Qed.
+
+Lemma call_args_comp jump off k : forall p : prog a,
+  call_args p 1 2 3 4 0 = true -> call_args (stack_remove.comp jump off k p) 1 2 3 4 0 = true.
+Proof.
+  intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|c0 r ri p1 p2 IH1 IH2|p IH|p Hp]
+    using prog_nested_ind; intros H.
+  - destruct ret as [[p1 [lr [l1 l2]]]|]; [|exact H].
+    destruct h as [[p2 [k1 k2]]|]; cbn [stack_remove.comp call_args] in H |- *;
+      repeat (match goal with Hx : (_ && _) = true |- _ => apply andb_true_iff in Hx as [? ?] end);
+      repeat (apply andb_true_iff; split); try assumption;
+      first [apply (Hr p1 _ eq_refl); assumption|apply (Hh p2 _ eq_refl); assumption].
+  - cbn [stack_remove.comp call_args] in H |- *; apply andb_true_iff in H as [H1 H2].
+    apply andb_true_iff; split; [apply IH1, H1|apply IH2, H2].
+  - cbn [stack_remove.comp call_args] in H |- *; apply andb_true_iff in H as [H1 H2].
+    apply andb_true_iff; split; [apply IH1, H1|apply IH2, H2].
+  - cbn [stack_remove.comp call_args] in H |- *; apply IH, H.
+  - destruct p; try contradiction; cbn [stack_remove.comp]; try exact H.
+    all: repeat (match goal with |- context [if ?b then _ else _] => destruct b end);
+         unfold stack_remove.stack_store, stack_remove.stack_load, stack_remove.copy_loop,
+                stack_remove.copy_each, stack_remove.stack_alloc, stack_remove.stack_free,
+                stack_remove.upshift, stack_remove.downshift; cbn [list_Seq call_args andb];
+         rewrite ?call_args_alloc_f, ?call_args_free_f, ?call_args_upshift_f, ?call_args_downshift_f;
+         reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "stack_remove_call_args" *)
+Theorem stack_remove_call_args : forall jump off gen_gc n k pos (p p' : list (N * prog a)),
+  stack_remove.compile jump off gen_gc n k pos p = p' /\
+  EVERY (fun p => call_args p 1 2 3 4 0) (MAP SND p) ->
+  EVERY (fun p => call_args p 1 2 3 4 0) (MAP SND p').
+Proof.
+  intros jump off gen_gc n k pos p p' [<- H]. unfold stack_remove.compile, is_true in *.
+  unfold stack_remove.init_stubs; cbn [app MAP EVERY SND].
+  do 3 (match goal with |- (?x && _)%bool = true => replace x with true by reflexivity end; cbn [andb]).
+  induction p as [|[m q] p IH]; [reflexivity|].
+  cbn [MAP EVERY SND stack_remove.prog_comp] in H |- *. apply andb_true_iff in H as [H1 H2].
+  apply andb_true_iff; split; [apply call_args_comp, H1|apply IH, H2].
+Qed.
+
+End CallArgs.
