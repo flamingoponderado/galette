@@ -87,6 +87,32 @@ Fixpoint wexp_ind (P : wordLang.exp a -> Prop)
 
 End WExpInd.
 
+(** Galette-only: induction on [stackLang.prog] with hypotheses for the
+    sub-programs nested in [Call]'s return and handler options. *)
+Section ProgInd.
+Context {a : N}.
+Lemma prog_nested_ind (P : prog a -> Prop) :
+  (forall ret dest h,
+     (forall p1 x, ret = Some (p1, x) -> P p1) ->
+     (forall p2 x, h = Some (p2, x) -> P p2) -> P (Call ret dest h)) ->
+  (forall p1 p2, P p1 -> P p2 -> P (Seq p1 p2)) ->
+  (forall c r ri p1 p2, P p1 -> P p2 -> P (If c r ri p1 p2)) ->
+  (forall p, P p -> P (Loop p)) ->
+  (forall p, match p with Call _ _ _ | Seq _ _ | If _ _ _ _ _ | Loop _ => False | _ => True end ->
+     P p) ->
+  forall p, P p.
+Proof.
+  intros HC HS HI HL HO; fix IH 1; intros p; destruct p;
+    try (apply HO; exact Logic.I).
+  - apply HC.
+    + destruct o as [[q y]|]; intros p1 x E; [injection E as E _; rewrite <- E; apply IH|discriminate].
+    + destruct o0 as [[q y]|]; intros p2 x E; [injection E as E _; rewrite <- E; apply IH|discriminate].
+  - apply HS; apply IH.
+  - apply HI; apply IH.
+  - apply HL; apply IH.
+Qed.
+End ProgInd.
+
 Ltac stk_fields :=
   cbn [regs fp_regs store stack stack_space memory mdomain sh_mdomain bitmaps compile
        compile_oracle code_buffer data_buffer gc_fun use_stack use_store use_alloc clock code

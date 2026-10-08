@@ -11911,6 +11911,16 @@
  },
  {
   "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "ALL_DISTINCT_GENLIST",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "ALL_DISTINCT_GENLIST"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
   "hol_name": "APPEND",
   "hol_line": 156,
   "case": null,
@@ -11968,6 +11978,16 @@
   "note": "coordinator 2026-10-08: compared with listScript; same equations/clauses. HOL partial functions (HD, LAST) give ARB outside their domain; HOL 'if t = []' rendered as a match on t; LENGTH/EL/TAKE/DROP/GENLIST/LUPDATE over num = N (num_rec definitions with HOL equations as tagged theorems)",
   "rocq_path": "theories/HOL/src/list/src/list.v",
   "rocq_name": "EVERY"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "EVERY_GENLIST",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "EVERY_GENLIST"
  },
  {
   "hol_path": "HOL/src/list/src/listScript.sml",
@@ -25051,6 +25071,36 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "comp_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "comp_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "compile_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "compile_semantics"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "compile_semantics_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "compile_semantics_alt"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
   "hol_name": "dec_clock_rename_state",
   "hol_line": null,
   "case": null,
@@ -25131,6 +25181,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "make_init_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "make_init"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "make_init_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "make_init_semantics"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
   "hol_name": "mem_load_rename_state",
   "hol_line": null,
   "case": null,
@@ -25148,6 +25218,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
   "rocq_name": "mem_store_rename_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "names_ok_imp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "names_ok_imp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "names_ok_imp2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "names_ok_imp2"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
@@ -25308,6 +25398,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
   "rocq_name": "sh_mem_store_rename_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "stack_names_call_args",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "stack_names_call_args"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "stack_names_comp_stack_asm_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "stack_names_comp_stack_asm_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "stack_names_lab_pres",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "stack_names_lab_pres"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_namesProofScript.sml",
+  "hol_name": "stack_names_stack_asm_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_namesProof.v",
+  "rocq_name": "stack_names_stack_asm_ok"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml",

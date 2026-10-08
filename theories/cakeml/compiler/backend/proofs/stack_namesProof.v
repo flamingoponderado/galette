@@ -14,9 +14,8 @@
       ([stackSem]); the Galette-only helpers (rewriting lemmas that move
       [rename_state] outwards, lemmas on [GENLIST], tactics) have no HOL
       original.
-    - Not yet ported: [comp_correct] and everything after it
-      ([compile_semantics], [make_init_semantics], [stack_names_lab_pres],
-      [names_ok_imp], the [stack_asm_ok] and [call_args] theorems). *)
+    - [comp_correct] and the theorems after it are stated outside the
+      section, quantifying HOL's free [f] and [c] explicitly. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -461,6 +460,38 @@ Proof.
   rewrite prog_comp_eta, ALOOKUP_MAP; cbn.
   destruct (sptree.lookup n cd); reflexivity.
 Qed.
+(** Galette-only: equality of [stackSem] states field by field (avoids
+    unfolding nested record updates, whose normal forms are huge). *)
+Lemma state_ext s t :
+  regs s = regs t -> fp_regs s = fp_regs t -> store s = store t -> stack s = stack t ->
+  stack_space s = stack_space t -> memory s = memory t -> mdomain s = mdomain t ->
+  sh_mdomain s = sh_mdomain t -> bitmaps s = bitmaps t -> compile s = compile t ->
+  compile_oracle s = compile_oracle t -> code_buffer s = code_buffer t ->
+  data_buffer s = data_buffer t -> gc_fun s = gc_fun t -> use_stack s = use_stack t ->
+  use_store s = use_store t -> use_alloc s = use_alloc t -> clock s = clock t ->
+  code s = code t -> ffi s = ffi t -> ffi_save_regs s = ffi_save_regs t -> be s = be t ->
+  s = t.
+Proof. destruct s, t; cbn; intros; subst; reflexivity. Qed.
+
+Lemma R_install_state s cb db bm ptr k p l :
+  set_compile_oracle (shift_seq 1 ((I ## (stack_names.compile f ## I)) ∘ compile_oracle s))
+    (set_fp_regs FEMPTY
+      (set_regs (DRESTRICT (regs (rn s)) (ffi_save_regs (rn s)) |+ (find_name f ptr, Loc k 0))
+        (set_code (sptree.union (code (rn s))
+                     (sptree.fromAList ((k, stack_names.comp f p) :: stack_names.compile f l)))
+          (set_data_buffer db (set_code_buffer cb (set_bitmaps bm (rn s))))))) =
+  rn (set_compile_oracle (shift_seq 1 (compile_oracle s))
+    (set_fp_regs FEMPTY
+      (set_regs (DRESTRICT (regs s) (ffi_save_regs s) |+ (ptr, Loc k 0))
+        (set_code (sptree.union (code s) (sptree.fromAList ((k, p) :: l)))
+          (set_data_buffer db (set_code_buffer cb (set_bitmaps bm s))))))).
+Proof.
+  apply state_ext; cbn [regs fp_regs store stack stack_space memory mdomain sh_mdomain bitmaps compile compile_oracle code_buffer data_buffer gc_fun use_stack use_store use_alloc clock code ffi ffi_save_regs be rename_state set_compile_oracle set_fp_regs set_regs set_code set_data_buffer set_code_buffer set_bitmaps set_ffi_save_regs set_compile].
+  1: rewrite (set_regs_rename f _ HB), DRESTRICT_MAP_KEYS_IMAGE by apply BIJ_INJ_UNIV, HB;
+     reflexivity.
+  18: rewrite code_union_rename; reflexivity.
+  all: reflexivity.
+Qed.
 Lemma R_dec_clock s : dec_clock (rn s) = rn (dec_clock s). Proof. reflexivity. Qed.
 Lemma R_set_var x y s : set_var (find_name f x) y (rn s) = rn (set_var x y s).
 Proof. symmetry; apply set_var_find_name, HB. Qed.
@@ -488,7 +519,7 @@ Create HintDb snr.
 Hint Rewrite R_use_alloc R_use_store R_use_stack R_clock R_memory R_mdomain R_sh_mdomain R_be
   R_ffi R_stack R_stack_space R_bitmaps R_store R_fp_regs R_code_buffer R_data_buffer R_compile
   R_get_var R_get_var_imm R_FLOOKUP R_inst R_find_code R_find_code_inl R_find_code_domsub R_lookup
-  R_dest_Seq R_oracle R_shift_FST R_compile_nil R_compile_cons R_dec_clock R_set_var R_empty_env R_loc_check R_sh_mem_op R_word_exp_addr R_ffi_state
+  R_dest_Seq R_oracle R_shift_FST R_install_state R_compile_nil R_compile_cons R_dec_clock R_set_var R_empty_env R_loc_check R_sh_mem_op R_word_exp_addr R_ffi_state
   @bool_decide_Some_None @bool_decide_None_None : snr.
 
 Definition sn_ok s : Prop :=
@@ -524,4 +555,324 @@ Ltac sn_loop IH H :=
           let E := fresh "E" in destruct x eqn:E; cbn beta iota zeta in H |- *
       end ].
 
+Lemma comp_correct_gen : forall (x : prog a * state a cfg_t ffi_t) r t,
+  evaluate x = (r, t) -> sn_ok (snd x) ->
+  evaluate (stack_names.comp f (fst x), rn (snd x)) = (r, rn t).
+Proof.
+  intros x; induction x as [[p s] IH] using (well_founded_induction eval_lt_wf).
+  intros r t H Hok; cbn [fst snd] in *.
+  pose proof Hok as (Hua & Hus & Hust & Hcomp).
+  rewrite evaluate_eqn in H |- *.
+  destruct p;
+    repeat match goal with o : option (prog _ * _) |- _ => destruct o end;
+    repeat match goal with q : (_ * _)%type |- _ => destruct q end;
+    repeat match goal with ad : addr _ |- _ => destruct ad end;
+    cbn [stack_names.comp]; cbn [evaluate_body] in H |- *; cbn [STOP] in H |- *;
+    rewrite ?Hua, ?Hus, ?Hust, ?Hcomp in H; cbn [negb orb andb] in H; cbn beta iota zeta in H;
+    autorewrite with snr; rewrite ?Hua, ?Hus, ?Hust; cbn [negb orb andb]; cbn beta iota zeta;
+    sn_loop IH H;
+    try (injection H as <- <-; reflexivity);
+    try (match goal with E : sh_mem_op _ _ _ _ = _ |- _ => rewrite E; reflexivity end);
+    try reflexivity.
+Qed.
+
 End Correct.
+
+(** Galette-only: [semantics] only depends on the results and FFI states
+    of the runs of the start call. *)
+Lemma semantics_eq_of_evaluate {a : N} {c1 c2 ffi_t : Type} (start : N)
+    (s1 : state a c1 ffi_t) (s2 : state a c2 ffi_t) (g : state a c2 ffi_t -> state a c1 ffi_t) :
+  (forall k, evaluate (Call NONE (inl start) NONE, set_clock k s1) =
+             let '(r, t) := evaluate (Call NONE (inl start) NONE, set_clock k s2) in (r, g t)) ->
+  (forall t, ffi (g t) = ffi t) ->
+  semantics start s1 = semantics start s2.
+Proof.
+  intros H Hg. unfold semantics; cbv zeta.
+  assert (HF : forall k, FST (evaluate (Call NONE (inl start) NONE, set_clock k s1)) =
+                         FST (evaluate (Call NONE (inl start) NONE, set_clock k s2))).
+  { intros k; rewrite H; destruct (evaluate (Call NONE (inl start) NONE, set_clock k s2)); reflexivity. }
+  assert (HI : forall k, ffi (SND (evaluate (Call NONE (inl start) NONE, set_clock k s1))) =
+                         ffi (SND (evaluate (Call NONE (inl start) NONE, set_clock k s2)))).
+  { intros k; rewrite H; destruct (evaluate (Call NONE (inl start) NONE, set_clock k s2)); apply Hg. }
+  assert (E1 : (exists k, FST (evaluate (Call NONE (inl start) NONE, set_clock k s1)) <> SOME TimeOut /\
+                 FST (evaluate (Call NONE (inl start) NONE, set_clock k s1)) <> SOME (Result (Loc 1 0)) /\
+                 (forall w, FST (evaluate (Call NONE (inl start) NONE, set_clock k s1)) <> SOME (Halt (Word w))) /\
+                 (forall f, FST (evaluate (Call NONE (inl start) NONE, set_clock k s1)) <> SOME (FinalFFI f))) =
+               (exists k, FST (evaluate (Call NONE (inl start) NONE, set_clock k s2)) <> SOME TimeOut /\
+                 FST (evaluate (Call NONE (inl start) NONE, set_clock k s2)) <> SOME (Result (Loc 1 0)) /\
+                 (forall w, FST (evaluate (Call NONE (inl start) NONE, set_clock k s2)) <> SOME (Halt (Word w))) /\
+                 (forall f, FST (evaluate (Call NONE (inl start) NONE, set_clock k s2)) <> SOME (FinalFFI f)))).
+  { apply propositional_extensionality; split; intros [k Hk]; exists k; rewrite ?HF in *; rewrite <- ?HF in *; exact Hk. }
+  rewrite E1. destruct (classical_dec _); [reflexivity|].
+  match goal with |- match some ?P1 with _ => _ end = match some ?P2 with _ => _ end =>
+    assert (EP : P1 = P2) end.
+  { apply functional_extensionality; intros res; apply propositional_extensionality; split.
+    - intros (k & t & r & o & He & Hm & ->).
+      rewrite H in He. destruct (evaluate (Call NONE (inl start) NONE, set_clock k s2)) as [r2 t2] eqn:E2.
+      injection He as -> <-. exists k, t2, r, o; rewrite Hg; auto.
+    - intros (k & t & r & o & He & Hm & ->).
+      exists k, (g t), r, o; rewrite H, He, Hg; auto. }
+  rewrite EP. destruct (some _); [reflexivity|].
+  f_equal; f_equal; f_equal; apply functional_extensionality; intros k; rewrite HI; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "comp_correct" *)
+Theorem comp_correct {a : N} {cfg_t ffi_t : Type} (f : sptree.spt N)
+    (c : cfg_t -> list (N * prog a) -> option (list word8 * cfg_t)) :
+  forall p (s : state a cfg_t ffi_t) r t,
+    evaluate (p, s) = (r, t) /\ BIJ (find_name f) UNIV UNIV /\
+    ~ use_alloc s /\ ~ use_store s /\ ~ use_stack s /\
+    compile s = (fun cfg => c cfg ∘ stack_names.compile f) ->
+    evaluate (stack_names.comp f p, rename_state c f s) = (r, rename_state c f t).
+Proof.
+  intros p s r t (H & HB & H1 & H2 & H3 & H4).
+  apply (comp_correct_gen f c HB (p, s)); [exact H|].
+  unfold sn_ok; repeat split; try assumption; apply not_true_is_false; assumption.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "compile_semantics" *)
+Theorem compile_semantics {a : N} {cfg_t ffi_t : Type} (f : sptree.spt N)
+    (c : cfg_t -> list (N * prog a) -> option (list word8 * cfg_t))
+    (s : state a cfg_t ffi_t) start :
+  BIJ (find_name f) UNIV UNIV /\
+  ~ use_alloc s /\ ~ use_store s /\ ~ use_stack s /\
+  compile s = (fun cfg => c cfg ∘ stack_names.compile f) ->
+  semantics start (rename_state c f s) = semantics start s.
+Proof.
+  intros (HB & H1 & H2 & H3 & H4).
+  apply (semantics_eq_of_evaluate start _ _ (rename_state c f)); [|reflexivity].
+  intros k. destruct (evaluate (Call NONE (inl start) NONE, set_clock k s)) as [r t] eqn:E.
+  rewrite <- rename_state_with_clock.
+  exact (comp_correct f c (Call NONE (inl start) NONE) (set_clock k s) r t
+           (conj E (conj HB (conj H1 (conj H2 (conj H3 H4)))))).
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "compile_semantics_alt" *)
+Theorem compile_semantics_alt {a : N} {cfg_t ffi_t : Type} (f : sptree.spt N) start :
+  forall (s t : state a cfg_t ffi_t),
+    BIJ (find_name f) UNIV UNIV /\ rename_state (compile t) f s = t /\
+    compile s = (fun c0 => compile t c0 ∘ stack_names.compile f) /\
+    ~ use_alloc s /\ ~ use_store s /\ ~ use_stack s ->
+    semantics start t = semantics start s.
+Proof.
+  intros s t (HB & Ht & Hc & H1 & H2 & H3).
+  rewrite <- Ht at 1. apply compile_semantics; exact (conj HB (conj H1 (conj H2 (conj H3 Hc)))).
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "make_init_def" *)
+Definition make_init {a : N} {cfg_t ffi_t : Type} (f : sptree.spt N) (code0 : sptree.spt (prog a))
+    (oracle : N -> cfg_t * (list (N * prog a) * list (word a))) (s : state a cfg_t ffi_t)
+    : state a cfg_t ffi_t :=
+  set_ffi_save_regs (IMAGE (LINV (find_name f) UNIV) (ffi_save_regs s))
+    (set_compile_oracle oracle
+      (set_compile (fun cfg => compile s cfg ∘ stack_names.compile f)
+        (set_regs (MAP_KEYS (LINV (find_name f) UNIV) (regs s))
+          (set_code code0 s)))).
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "make_init_semantics" *)
+Theorem make_init_semantics {a : N} {cfg_t ffi_t : Type} (f : sptree.spt N)
+    (code0 : list (N * prog a)) (oracle : N -> cfg_t * (list (N * prog a) * list (word a)))
+    (s : state a cfg_t ffi_t) start :
+  ~ use_alloc s /\ ~ use_store s /\ ~ use_stack s /\
+  BIJ (find_name f) UNIV UNIV /\ ALL_DISTINCT (MAP FST code0) /\
+  code s = sptree.fromAList (stack_names.compile f code0) /\
+  compile_oracle s = (I ## (stack_names.compile f ## I)) ∘ oracle ->
+  semantics start s = semantics start (make_init f (sptree.fromAList code0) oracle s).
+Proof.
+  intros (H1 & H2 & H3 & HB & _ & Hc & Ho).
+  apply (compile_semantics_alt f); split; [exact HB|]. split;
+    [|split; [reflexivity|cbn [use_alloc use_store use_stack make_init set_ffi_save_regs
+       set_compile_oracle set_compile set_regs set_code]; exact (conj H1 (conj H2 H3))]].
+  unfold make_init, rename_state.
+  apply state_ext; cbn [regs fp_regs store stack stack_space memory mdomain sh_mdomain bitmaps compile
+       compile_oracle code_buffer data_buffer gc_fun use_stack use_store use_alloc clock code
+       ffi ffi_save_regs be set_ffi_save_regs set_compile_oracle set_compile set_regs set_code];
+    try reflexivity.
+  - apply MAP_KEYS_BIJ_LINV, HB.
+  - symmetry; exact Ho.
+  - rewrite Hc. apply sptree.spt_eq_thm; [split; apply sptree.wf_fromAList|]. intros n.
+    rewrite lookup_rename_code, !sptree.lookup_fromAList.
+    unfold stack_names.compile; rewrite prog_comp_eta, ALOOKUP_MAP_2. reflexivity.
+  - rewrite <- IMAGE_COMPOSE.
+    replace (find_name f ∘ LINV (find_name f) UNIV) with (fun x : N => x); [apply IMAGE_ID|].
+    apply functional_extensionality; intros x; symmetry; apply (BIJ_LINV_INV _ _ _ HB); exact Logic.I.
+Qed.
+
+Ltac sn_get_addr := repeat match goal with ad : addr _ |- _ => destruct ad end.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "stack_names_lab_pres" *)
+Theorem stack_names_lab_pres {a : N} : forall f (p : prog a),
+  extract_labels p = extract_labels (stack_names.comp f p).
+Proof.
+  intros f p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|c0 r ri p1 p2 IH1 IH2|p IH|p Hp]
+    using prog_nested_ind.
+  - destruct ret as [[p1 [lr [l1 l2]]]|]; [|reflexivity].
+    destruct h as [[p2 [l1' l2']]|]; cbn [stack_names.comp extract_labels];
+      rewrite <- (Hr p1 _ eq_refl); try rewrite <- (Hh p2 _ eq_refl); reflexivity.
+  - cbn [stack_names.comp extract_labels]; rewrite IH1, IH2; reflexivity.
+  - cbn [stack_names.comp extract_labels]; rewrite IH1, IH2; reflexivity.
+  - cbn [stack_names.comp extract_labels]; exact IH.
+  - destruct p; try contradiction; sn_get_addr; reflexivity.
+Qed.
+
+Lemma bd_find_name f (x y : N) :
+  bool_decide (x = y) = true -> bool_decide (find_name f x = find_name f y) = true.
+Proof. rewrite !bool_decide_spec; intros ->; reflexivity. Qed.
+
+Lemma call_args_comp {a : N} f : forall (p : prog a) ptr len ptr2 len2 ret,
+  call_args p ptr len ptr2 len2 ret = true ->
+  call_args (stack_names.comp f p) (find_name f ptr) (find_name f len) (find_name f ptr2)
+    (find_name f len2) (find_name f ret) = true.
+Proof.
+  intros p; induction p as [ret0 dest h Hr Hh|p1 p2 IH1 IH2|c0 r ri p1 p2 IH1 IH2|p IH|p Hp]
+    using prog_nested_ind; intros ptr len ptr2 len2 ret H.
+  - destruct ret0 as [[p1 [lr [l1 l2]]]|]; [|reflexivity].
+    destruct h as [[p2 [x1 x2]]|]; cbn [stack_names.comp call_args] in H |- *.
+    all: apply andb_true_iff in H as [H H3]; apply andb_true_iff in H as [H1 H2];
+      apply andb_true_iff; split; [apply andb_true_iff; split|].
+    all: first [apply (Hr p1 _ eq_refl), H1 | apply bd_find_name, H2
+               | apply (Hh _ _ eq_refl), H3 | reflexivity].
+  - cbn [stack_names.comp call_args] in H |- *; apply andb_true_iff in H as [H1 H2].
+    apply andb_true_iff; split; [apply IH1, H1|apply IH2, H2].
+  - cbn [stack_names.comp call_args] in H |- *; apply andb_true_iff in H as [H1 H2].
+    apply andb_true_iff; split; [apply IH1, H1|apply IH2, H2].
+  - cbn [stack_names.comp call_args] in H |- *; apply IH, H.
+  - destruct p; try contradiction; sn_get_addr; cbn [stack_names.comp call_args] in H |- *;
+      try reflexivity;
+      repeat match goal with
+      | H : (_ && _) = true |- _ => apply andb_true_iff in H as [? ?]
+      | |- (_ && _) = true => apply andb_true_iff; split
+      end; apply bd_find_name; assumption.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "stack_names_call_args" *)
+Theorem stack_names_call_args {a : N} : forall f (p p' : list (N * prog a)),
+  stack_names.compile f p = p' /\ EVERY (fun p => call_args p 1 2 3 4 0) (MAP SND p) ->
+  EVERY (fun p => call_args p (find_name f 1) (find_name f 2) (find_name f 3) (find_name f 4)
+                    (find_name f 0)) (MAP SND p').
+Proof.
+  intros f p p' [<- H]; unfold stack_names.compile.
+  induction p as [|[n q] p IH]; [reflexivity|].
+  cbn [MAP EVERY SND stack_names.prog_comp] in H |- *; apply andb_true_iff in H as [H1 H2].
+  apply andb_true_iff; split; [apply call_args_comp, H1|apply IH, H2].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "names_ok_imp" *)
+Theorem names_ok_imp {a : N} (f : sptree.spt N) (c : asm_config a) :
+  names_ok f (reg_count c) (avoid_regs c) ->
+  forall n, reg_name n c -> reg_ok (find_name f n) c.
+Proof.
+  unfold names_ok, reg_name, is_true; intros H n Hn.
+  apply andb_true_iff in H as [_ H].
+  exact (proj1 (EVERY_GENLIST _ _ _) H n (proj1 (N.ltb_lt _ _) Hn)).
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "names_ok_imp2" *)
+Theorem names_ok_imp2 {a : N} (f : sptree.spt N) (c : asm_config a) n n' :
+  names_ok f (reg_count c) (avoid_regs c) /\ n <> n' /\ reg_name n c /\ reg_name n' c ->
+  find_name f n <> find_name f n'.
+Proof.
+  unfold names_ok, reg_name, is_true; intros (H & Hne & Hn & Hn') E.
+  apply andb_true_iff in H as [H _].
+  apply Hne, (proj1 (ALL_DISTINCT_GENLIST _ _) H); repeat split;
+    [apply N.ltb_lt, Hn|apply N.ltb_lt, Hn'|exact E].
+Qed.
+
+Lemma bool_decide_false_iff (P : Prop) {d : Decision P} : bool_decide P = false <-> ~ P.
+Proof. unfold bool_decide; destruct (decide P); split; congruence || tauto. Qed.
+
+Ltac sn_bnorm :=
+  repeat match goal with
+  | H : implb ?x _ = true |- _ =>
+      let E := fresh "E" in destruct x eqn:E; cbn [implb] in H; [|clear H]
+  | H : (_ || _) = false |- _ => apply orb_false_iff in H as [? ?]
+  | H : (_ && _) = false |- _ => apply andb_false_iff in H as [?|?]
+  | H : MEM _ _ = _ |- _ => cbn [MEM] in H
+  | H : (_ && _) = true |- _ => apply andb_true_iff in H as [? ?]
+  | H : (_ || _) = true |- _ => apply orb_true_iff in H as [?|?]
+  | H : negb _ = true |- _ => apply negb_true_iff in H
+  | H : bool_decide _ = true |- _ => apply bool_decide_spec in H
+  | H : bool_decide _ = false |- _ => apply bool_decide_false_iff in H
+  | H : Reg _ = Reg _ |- _ => injection H as H
+  end.
+
+Ltac sn_leaf f c Hok :=
+  first
+    [ reflexivity | assumption | congruence
+    | match goal with H : negb ?x = true |- ?x = false => apply negb_true_iff, H end
+    | apply (names_ok_imp f c Hok); assumption
+    | intros ?; eapply (names_ok_imp2 f c); [|eassumption];
+        repeat split; first [exact Hok|assumption|congruence] ].
+
+Ltac sn_goal f c Hok :=
+  repeat match goal with
+  | |- (_ && _) = true => apply andb_true_iff; split
+  | |- implb _ _ = true => apply Bool.implb_true_iff; intros ?; sn_bnorm; subst
+  | |- negb _ = true => apply negb_true_iff
+  | |- bool_decide _ = false => apply bool_decide_false_iff
+  | |- bool_decide _ = true => apply bool_decide_spec
+  | |- (_ || _) = true =>
+      apply orb_true_iff; first [left; solve [sn_goal f c Hok] | right; solve [sn_goal f c Hok]]
+  end; try sn_leaf f c Hok.
+
+(** Galette-only: [stack_names_comp_stack_asm_ok] for one instruction. *)
+Lemma inst_find_name_ok {a : N} (f : sptree.spt N) (c : asm_config a) (i : asm.inst a) :
+  inst_name c i -> names_ok f (reg_count c) (avoid_regs c) -> fixed_names f c ->
+  inst_ok (stack_names.inst_find_name f i) c.
+Proof.
+  unfold is_true; intros H Hok Hfx.
+  unfold fixed_names in Hfx.
+  destruct i as [|r w|x|m r ad|x]; [reflexivity| | | |];
+    [| destruct x as [b r1 r2 ri|l r1 r2 ri|r1 r2 r3|r1 r2 r3 r4|r1 r2 r3 r4 r5|r1 r2 r3 r4|r1 r2 r3 r4|r1 r2 r3 r4];
+       try destruct ri as [r3|w]
+    | destruct ad as [r2 w]
+    | destruct x];
+    cbn [stack_names.inst_find_name stack_names.ri_find_name inst_name inst_ok arith_name arith_ok
+         fp_name fp_ok addr_name reg_imm_name reg_imm_ok] in *;
+    destruct (ISA c); cbn in Hfx |- *; sn_bnorm; subst; sn_goal f c Hok.
+Qed.
+
+Ltac sn_regs f c Hok :=
+  repeat match goal with
+  | H : reg_name ?r c = true |- _ =>
+      let R := fresh "R" in
+      pose proof (names_ok_imp f c Hok r H) as R; unfold reg_ok, is_true in R;
+      apply andb_true_iff in R as [? ?]; revert H
+  end; intros.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "stack_names_comp_stack_asm_ok" *)
+Theorem stack_names_comp_stack_asm_ok {a : N} (c : asm_config a) : forall f (p : prog a),
+  stack_asm_name c p /\ names_ok f (reg_count c) (avoid_regs c) /\ fixed_names f c ->
+  stack_asm_ok c (stack_names.comp f p).
+Proof.
+  intros f p; unfold is_true.
+  induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|c0 r ri p1 p2 IH1 IH2|p IH|p Hp]
+    using prog_nested_ind; intros (H & Hok & Hfx).
+  - destruct ret as [[p1 [lr [l1 l2]]]|]; [destruct h as [[p2 [x1 x2]]|]|];
+      destruct dest as [l|r]; cbn [stack_names.comp stack_names.dest_find_name stack_asm_name stack_asm_ok] in H |- *;
+      sn_bnorm; subst; sn_regs f c Hok; sn_bnorm; sn_goal f c Hok;
+      first [ apply (Hr p1 _ eq_refl); repeat split; assumption
+            | apply (Hh p2 _ eq_refl); repeat split; assumption ].
+  - cbn [stack_names.comp stack_asm_name stack_asm_ok] in H |- *; sn_bnorm.
+    apply andb_true_iff; split; [apply IH1|apply IH2]; repeat split; assumption.
+  - cbn [stack_names.comp stack_asm_name stack_asm_ok] in H |- *; sn_bnorm.
+    apply andb_true_iff; split; [apply IH1|apply IH2]; repeat split; assumption.
+  - cbn [stack_names.comp stack_asm_name stack_asm_ok] in H |- *; apply IH; repeat split; assumption.
+  - destruct p; try contradiction; sn_get_addr;
+      cbn [stack_names.comp stack_asm_name stack_asm_ok addr_ok addr_name] in H |- *; try reflexivity;
+      first [ apply inst_find_name_ok; assumption
+            | sn_bnorm; subst; sn_regs f c Hok; sn_bnorm; sn_goal f c Hok ].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "stack_names_stack_asm_ok" *)
+Theorem stack_names_stack_asm_ok {a : N} (c : asm_config a) f (prog0 : list (N * prog a)) :
+  EVERY (fun '(n, p) => stack_asm_name c p) prog0 /\
+  names_ok f (reg_count c) (avoid_regs c) /\ fixed_names f c ->
+  EVERY (fun '(n, p) => stack_asm_ok c p) (stack_names.compile f prog0).
+Proof.
+  intros (H & Hok & Hfx); unfold stack_names.compile, is_true in *.
+  induction prog0 as [|[n q] prog0 IH]; [reflexivity|].
+  cbn [MAP EVERY stack_names.prog_comp] in H |- *; apply andb_true_iff in H as [H1 H2].
+  apply andb_true_iff; split; [apply stack_names_comp_stack_asm_ok; repeat split; assumption|].
+  apply IH, H2.
+Qed.

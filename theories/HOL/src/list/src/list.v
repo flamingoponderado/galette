@@ -339,3 +339,57 @@ Proof.
   - rewrite N.add_0_l, app_nil_r; reflexivity.
   - rewrite N.add_succ_l, !(proj2 (GENLIST_thm _ _)), !SNOC_app, IH, app_assoc; reflexivity.
 Qed.
+
+Lemma In_GENLIST_iff {A} (f : N -> A) n x : In x (GENLIST f n) <-> exists i, i < n /\ x = f i.
+Proof.
+  induction n as [|n IH] using N.peano_ind.
+  - split; [intros []|intros (i & Hi & _); lia].
+  - rewrite (proj2 (GENLIST_thm _ _)), SNOC_app, in_app_iff, IH; cbn [In]. split.
+    + intros [(i & Hi & ->)|[<-|[]]]; [exists i; split; [lia|reflexivity]|exists n; split; [lia|reflexivity]].
+    + intros (i & Hi & ->). destruct (N.eq_dec i n) as [->|Hne]; [right; left; reflexivity|].
+      left; exists i; split; [lia|reflexivity].
+Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "EVERY_GENLIST" *)
+Theorem EVERY_GENLIST : forall {A} (P : A -> bool) (f : N -> A) n,
+  EVERY P (GENLIST f n) <-> (forall i, i < n -> P (f i)).
+Proof.
+  intros A P f n; unfold is_true; rewrite EVERY_Forall, Forall_forall. split.
+  - intros H i Hi; apply H, In_GENLIST_iff; exists i; split; [exact Hi|reflexivity].
+  - intros H x Hx; apply In_GENLIST_iff in Hx as (i & Hi & ->); apply H, Hi.
+Qed.
+
+Lemma ALL_DISTINCT_NoDup_list {A} `{EqDecision A} (l : list A) : ALL_DISTINCT l = true <-> NoDup l.
+Proof.
+  induction l as [|x l IH]; cbn [ALL_DISTINCT].
+  - split; [constructor|reflexivity].
+  - rewrite andb_true_iff, negb_true_iff, IH. split.
+    + intros [H1 H2]; constructor; [|exact H2]. intros Hin.
+      apply MEM_In in Hin; congruence.
+    + intros HN; inversion HN as [|? ? Hn Hd]; subst; split; [|exact Hd].
+      destruct (MEM x l) eqn:E; [|reflexivity]. apply MEM_In in E; contradiction.
+Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "ALL_DISTINCT_GENLIST" *)
+Theorem ALL_DISTINCT_GENLIST : forall {A} `{EqDecision A} (f : N -> A) n,
+  ALL_DISTINCT (GENLIST f n) <-> (forall m1 m2, m1 < n /\ m2 < n /\ f m1 = f m2 -> m1 = m2).
+Proof.
+  intros A EA f n; unfold is_true; rewrite ALL_DISTINCT_NoDup_list.
+  induction n as [|n IH] using N.peano_ind.
+  - split; [intros _ m1 m2 (H & _); lia|constructor].
+  - rewrite (proj2 (GENLIST_thm _ _)), SNOC_app. split.
+    + intros HN. apply NoDup_app_remove_r in HN as H1.
+      assert (Hn : ~ In (f n) (GENLIST f n)).
+      { intros Hin; apply NoDup_remove_2 in HN; rewrite app_nil_r in HN; contradiction. }
+      intros m1 m2 (Hm1 & Hm2 & E).
+      destruct (N.eq_dec m1 n) as [->|H1n], (N.eq_dec m2 n) as [->|H2n]; [reflexivity| | |].
+      * exfalso; apply Hn, In_GENLIST_iff; exists m2; split; [lia|exact E].
+      * exfalso; apply Hn, In_GENLIST_iff; exists m1; split; [lia|symmetry; exact E].
+      * apply IH; [exact H1|split; [lia|split; [lia|exact E]]].
+    + intros H. apply NoDup_app.
+      * apply IH; intros m1 m2 (Hm1 & Hm2 & E); apply H; repeat split; [lia|lia|exact E].
+      * constructor; [intros []|constructor].
+      * intros x Hx Hx'. destruct Hx' as [<-|[]].
+        apply In_GENLIST_iff in Hx as (i & Hi & E).
+        assert (i = n) by (apply H; repeat split; [lia|lia|symmetry; exact E]). lia.
+Qed.
