@@ -22,3 +22,14 @@ Definition UNCURRY {A B C} (f : A -> B -> C) (v : A * B) : C := f (FST v) (SND v
 (*! HOL "HOL/src/coretypes/pairScript.sml" "UNCURRY_DEF" *)
 Theorem UNCURRY_DEF : forall {A B C} (f : A -> B -> C) x y, UNCURRY f (x, y) = f x y.
 Proof. reflexivity. Qed.
+
+(** HOL [f ## g] ([PAIR_MAP]). *)
+(*! HOL "HOL/src/coretypes/pairScript.sml" "PAIR_MAP" *)
+Definition PAIR_MAP {A B C D} (f : A -> C) (g : B -> D) (p : A * B) : C * D :=
+  (f (FST p), g (SND p)).
+Notation "f ## g" := (PAIR_MAP f g) (at level 40, left associativity).
+
+(*! HOL "HOL/src/coretypes/pairScript.sml" "PAIR_MAP_THM" *)
+Theorem PAIR_MAP_THM : forall {A B C D} (f : A -> C) (g : B -> D) x y,
+  (f ## g) (x, y) = (f x, g y).
+Proof. reflexivity. Qed.

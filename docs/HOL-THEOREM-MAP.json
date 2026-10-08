@@ -1811,6 +1811,26 @@
  },
  {
   "hol_path": "HOL/src/coretypes/pairScript.sml",
+  "hol_name": "PAIR_MAP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coretypes/pair.v",
+  "rocq_name": "PAIR_MAP"
+ },
+ {
+  "hol_path": "HOL/src/coretypes/pairScript.sml",
+  "hol_name": "PAIR_MAP_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coretypes/pair.v",
+  "rocq_name": "PAIR_MAP_THM"
+ },
+ {
+  "hol_path": "HOL/src/coretypes/pairScript.sml",
   "hol_name": "SND",
   "hol_line": null,
   "case": null,
@@ -15030,6 +15050,16 @@
   "rocq_name": "count"
  },
  {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "irreflexive_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "irreflexive"
+ },
+ {
   "hol_path": "HOL/src/sort/mergesortScript.sml",
   "hol_name": "mergesort_tail_def",
   "hol_line": null,
@@ -21698,6 +21728,346 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/riscv/riscv_config.v",
   "rocq_name": "riscv_names"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "FST_pure_co",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "FST_pure_co"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "FST_state_co",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "FST_state_co"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "OPTION_MAP2_MAX_ASSOC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "OPTION_MAP2_MAX_ASSOC"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "OPTION_MAP2_MAX_COMM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "OPTION_MAP2_MAX_COMM"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "SND_pure_co",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "SND_pure_co"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "SND_state_co",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "SND_state_co"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "is_state_oracle_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "is_state_oracle"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_add_assoc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_add_assoc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_add_comm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_add_comm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_le_SOME_0",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_le_SOME_0"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_le_add",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_le_add"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_le_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_le"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_le_max",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_le_max"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_le_max_right",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_le_max_right"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_le_refl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_le_refl"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "option_le_trans",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "option_le_trans"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "oracle_monotonic_DISJOINT_init",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "oracle_monotonic_DISJOINT_init"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "oracle_monotonic_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "oracle_monotonic"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "oracle_monotonic_init",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "oracle_monotonic_init"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "oracle_monotonic_step",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "oracle_monotonic_step"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "oracle_monotonic_step2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "oracle_monotonic_step2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "pure_cc_I",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "pure_cc_I"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "pure_cc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "pure_cc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "pure_co_I",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "pure_co_I"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "pure_co_comb_pure_co",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "pure_co_comb_pure_co"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "pure_co_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "pure_co"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "pure_co_progs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "pure_co_progs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "restrict_nonzero_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "restrict_nonzero"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "restrict_zero_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "restrict_zero"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "state_cc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "state_cc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "state_co_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "state_co"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "syntax_to_full_oracle_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "syntax_to_full_oracle"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "the_F_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "the_F_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/backendPropsScript.sml",
+  "hol_name": "the_eqn",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/backendProps.v",
+  "rocq_name": "the_eqn"
  },
  {
   "hol_path": "cakeml/compiler/backend/source_to_flatScript.sml",
