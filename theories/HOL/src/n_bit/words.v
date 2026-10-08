@@ -125,8 +125,9 @@ Proof.
   - intros H; apply word_eq_w2n; exact H.
 Qed.
 
-Lemma n2w_mod n : (n2w (n MOD dimword a) : word a) = n2w n.
-Proof. apply n2w_11; apply N.Div0.mod_mod. Qed.
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "n2w_mod" *)
+Theorem n2w_mod : forall n, (n2w (n MOD dimword a) : word a) = n2w n.
+Proof. intros n; apply n2w_11; apply N.Div0.mod_mod. Qed.
 
 (** ** Constants *)
 
@@ -225,6 +226,51 @@ Definition word_sign_extend (n : N) (w : word a) : word a :=
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_len_def" *)
 Definition word_len (w : word a) : N := dimindex a.
 
+Definition word_nand (v w : word a) : word a := word_1comp (word_and v w).
+Definition word_nor (v w : word a) : word a := word_1comp (word_or v w).
+Definition word_xnor (v w : word a) : word a := word_1comp (word_xor v w).
+
+Definition word_slice (h l : N) (w : word a) : word a :=
+  n2w (SLICE (MIN h (dimindex a - 1)) l (w2n w)).
+
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "word_modify_def" *)
+Definition word_modify (f : N -> bool -> bool) (w : word a) : word a :=
+  FCP (fun i => f i (fcp_index w i)).
+
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "bit_count_upto_def" *)
+Definition bit_count_upto (n : N) (w : word a) : N :=
+  SUM n (fun i => if fcp_index w i then 1 else 0).
+
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "bit_count_def" *)
+Definition bit_count (w : word a) : N := bit_count_upto (dimindex a) w.
+
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "add_with_carry_def" *)
+Definition add_with_carry (p : word a * word a * bool) : word a * bool * bool :=
+  let '(x, y, carry_in) := p in
+  let unsigned_sum := w2n x + w2n y + (if carry_in then 1 else 0) in
+  let result := (n2w unsigned_sum : word a) in
+  let carry_out := negb (w2n result =? unsigned_sum) in
+  let overflow := Bool.eqb (word_msb x) (word_msb y) && negb (Bool.eqb (word_msb x) (word_msb result)) in
+  (result, carry_out, overflow).
+
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "word_quot_def" *)
+Definition word_quot (a0 b : word a) : word a :=
+  if word_msb a0 then
+    if word_msb b then word_div (word_2comp a0) (word_2comp b)
+    else word_2comp (word_div (word_2comp a0) b)
+  else
+    if word_msb b then word_2comp (word_div a0 (word_2comp b))
+    else word_div a0 b.
+
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "word_rem_def" *)
+Definition word_rem (a0 b : word a) : word a :=
+  if word_msb a0 then
+    if word_msb b then word_2comp (word_mod (word_2comp a0) (word_2comp b))
+    else word_2comp (word_mod (word_2comp a0) b)
+  else
+    if word_msb b then word_mod a0 (word_2comp b)
+    else word_mod a0 b.
+
 (** ** Comparisons *)
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "nzcv_def" *)
@@ -308,6 +354,10 @@ Definition word_join {a b : N} (v : word a) (w : word b) : word (a + b) :=
 Definition word_concat {a b c : N} (v : word a) (w : word b) : word c :=
   w2w (word_join v w).
 
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "bit_field_insert_def" *)
+Definition bit_field_insert {a b : N} (h l : N) (a0 : word b) : word a -> word a :=
+  word_modify (fun i x => if (l <=? i) && (i <=? h) then fcp_index a0 (i - l) else x).
+
 (** ** HOL notation (HOL's overloads in [words]) *)
 
 Notation "v + w" := (word_add v w) : word_scope.
@@ -316,6 +366,11 @@ Notation "v * w" := (word_mul v w) : word_scope.
 Notation "- w" := (word_2comp w) : word_scope.
 Notation "v ** w" := (word_exp v w) : word_scope.
 Notation "v // w" := (word_div v w) (at level 40, left associativity) : word_scope.
+(** HOL writes [word_1comp] as [~w] or [¬w], binding tighter than [+].
+    Rocq fixes [~] at level 75, so [~] would parse [~ w + x] as [~(w + x)];
+    use [¬], whose level matches HOL's. ([~] is kept only for compatibility
+    and is to be removed.) *)
+Notation "¬ w" := (word_1comp w) (at level 35, right associativity) : word_scope.
 Notation "~ w" := (word_1comp w) : word_scope.
 Notation "v && w" := (word_and v w) : word_scope.
 Notation "v || w" := (word_or v w) : word_scope.

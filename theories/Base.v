@@ -18,7 +18,7 @@
 From Stdlib Require Export Bool PeanoNat NArith ZArith String Ascii List.
 From Stdlib Require Export Logic.ClassicalEpsilon Logic.FunctionalExtensionality
   Logic.PropExtensionality Logic.ProofIrrelevance.
-From Stdlib Require Export Lia.
+From Stdlib Require Export Lia ZifyN.
 Export ListNotations.
 
 Set Asymmetric Patterns.

@@ -153,9 +153,11 @@ def module_of(v: Path) -> str:
     return ".".join(("Galette",) + rel.parts)
 
 
-def scan() -> tuple[list[dict], list[str]]:
+def scan(exclude: str | None = None) -> tuple[list[dict], list[str]]:
     tags, errors = [], []
     for v in sorted(THEORIES.rglob("*.v")):
+        if exclude and re.search(exclude, str(v.relative_to(ROOT))):
+            continue
         text = v.read_text()
         clean = strip_comments(text)
         for m in TAG_RE.finditer(text):
@@ -297,13 +299,15 @@ def main() -> int:
     ap.add_argument("--mapping", action="store_true", help="print HOL -> Rocq mapping")
     ap.add_argument("--no-manifest", action="store_true",
                     help="skip the manifest check (for work in progress)")
+    ap.add_argument("--exclude", metavar="REGEX",
+                    help="ignore Rocq files whose path matches (work in progress)")
     ap.add_argument("--only", metavar="PREFIX",
                     help="report only errors for Rocq files under this path prefix")
     args = ap.parse_args()
     if not REFERENCE.is_dir():
         print(f"reference checkout not found: {REFERENCE}", file=sys.stderr)
         return 2
-    tags, errors = scan()
+    tags, errors = scan(args.exclude)
     errors += check(tags)
     if not args.no_manifest:
         errors += check_manifest(tags, args.update_manifest)
