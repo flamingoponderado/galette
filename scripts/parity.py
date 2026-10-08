@@ -14,6 +14,10 @@ CakeML executable (`cake`, sha256 recorded in
                                          # sanity-check the oracle itself
   scripts/parity.py --diff FIXTURE --cake PATH
                                          # show a diff against the oracle
+  scripts/parity.py --vs-cake prog.pnk ...
+                                         # compare stdout and stderr with a
+                                         # live run of the oracle (e.g. the
+                                         # stateless-pancaketh guest programs)
 """
 from __future__ import annotations
 
@@ -46,7 +50,19 @@ def main() -> int:
     ap.add_argument("--timeout", type=int, default=600)
     ap.add_argument("--diff", metavar="FIXTURE", help="diff one fixture against --cake output")
     ap.add_argument("--cake", type=Path, default=DEFAULT_CAKE)
+    ap.add_argument("--vs-cake", nargs="+", type=Path, metavar="PNK")
     args = ap.parse_args()
+
+    if args.vs_cake:
+        bad = 0
+        for src in args.vs_cake:
+            ours = compile_with(args.compiler, src, args.timeout)
+            theirs = compile_with(args.cake, src, args.timeout)
+            same = ours.stdout == theirs.stdout and ours.stderr == theirs.stderr
+            bad += not same
+            print(f"{'ok' if same else 'MISMATCH':10} {hashlib.sha256(ours.stdout).hexdigest()[:16]} "
+                  f"{len(ours.stdout)} bytes  {src}")
+        return 1 if bad else 0
 
     fixtures = json.loads(MANIFEST.read_text())["fixtures"]
     if args.diff:

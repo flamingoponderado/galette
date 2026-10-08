@@ -90,17 +90,31 @@ Definition can {S A B E} (f : A -> M S B E) (x : A) : M S bool E :=
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "store_ref" *)
 Inductive store_ref : Type := StoreRef : N -> store_ref.
 
-(** ** Arrays *)
+(** ** Arrays
+
+    HOL's monadic arrays are lists.  Galette writes their type as [marray A],
+    a transparent alias of [list A] (so every HOL statement about them is
+    unchanged), only so that extraction can realise them, and exactly the
+    operations below that inspect them ([Msub], [Mupdate], [array_resize],
+    [Marray_length], [marray_replicate]), with persistent arrays
+    (extraction/galette_parray.ml) instead of linked lists: CakeML's own
+    executable likewise runs them as ML arrays.  An array value used as an
+    ordinary list in extracted code is an OCaml type error, so the
+    realisation cannot be bypassed silently. *)
+Definition marray (A : Type) : Type := list A.
+
+(** Creation of an array of [n] copies of [x] (HOL [REPLICATE n x]). *)
+Definition marray_replicate {A} (n : N) (x : A) : marray A := REPLICATE n x.
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "Msub_def" *)
-Fixpoint Msub {A E} (e : E) (n : N) (l : list A) : exc A E :=
+Fixpoint Msub {A E} (e : E) (n : N) (l : marray A) : exc A E :=
   match l with
   | [] => M_failure e
   | x :: l' => if n =? 0 then M_success x else Msub e (n - 1) l'
   end.
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "Mupdate_def" *)
-Fixpoint Mupdate {A E} (e : E) (x : A) (n : N) (l : list A) : exc (list A) E :=
+Fixpoint Mupdate {A E} (e : E) (x : A) (n : N) (l : marray A) : exc (marray A) E :=
   match l with
   | [] => M_failure e
   | x' :: l' =>
@@ -113,7 +127,7 @@ Fixpoint Mupdate {A E} (e : E) (x : A) (n : N) (l : list A) : exc (list A) E :=
   end.
 
 (** HOL [array_resize] (see [array_resize_def]). *)
-Definition array_resize {A} (n : N) (x : A) (a : list A) : list A :=
+Definition array_resize {A} (n : N) (x : A) (a : marray A) : marray A :=
   num_rec (fun _ => []) (fun _ r a => match a with [] => x :: r a | x' :: a' => x' :: r a' end) n a.
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "array_resize_def" *)
@@ -131,15 +145,15 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "Marray_length_def" *)
-Definition Marray_length {S A E} (get_arr : S -> list A) : M S N E :=
+Definition Marray_length {S A E} (get_arr : S -> marray A) : M S N E :=
   fun s => (M_success (LENGTH (get_arr s)), s).
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "Marray_sub_def" *)
-Definition Marray_sub {S A E} (get_arr : S -> list A) (e : E) (n : N) : M S A E :=
+Definition Marray_sub {S A E} (get_arr : S -> marray A) (e : E) (n : N) : M S A E :=
   fun s => (Msub e n (get_arr s), s).
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "Marray_update_def" *)
-Definition Marray_update {S A E} (get_arr : S -> list A) (set_arr : list A -> S -> S)
+Definition Marray_update {S A E} (get_arr : S -> marray A) (set_arr : marray A -> S -> S)
     (e : E) (n : N) (x : A) : M S unit E :=
   fun s =>
     match Mupdate e x n (get_arr s) with
@@ -148,11 +162,11 @@ Definition Marray_update {S A E} (get_arr : S -> list A) (set_arr : list A -> S 
     end.
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "Marray_alloc_def" *)
-Definition Marray_alloc {S A E} (set_arr : list A -> S -> S) (n : N) (x : A) : M S unit E :=
-  fun s => (M_success tt, set_arr (REPLICATE n x) s).
+Definition Marray_alloc {S A E} (set_arr : marray A -> S -> S) (n : N) (x : A) : M S unit E :=
+  fun s => (M_success tt, set_arr (marray_replicate n x) s).
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "Marray_resize_def" *)
-Definition Marray_resize {S A E} (get_arr : S -> list A) (set_arr : list A -> S -> S)
+Definition Marray_resize {S A E} (get_arr : S -> marray A) (set_arr : marray A -> S -> S)
     (n : N) (x : A) : M S unit E :=
   fun s => (M_success tt, set_arr (array_resize n x (get_arr s)) s).
 

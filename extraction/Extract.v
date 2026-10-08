@@ -160,6 +160,21 @@ Definition smoke : list N :=
 Set Extraction Output Directory ".".
 Extraction "galette_smoke.ml" smoke.
 
+
+(** ** HOL monadic arrays as persistent arrays (see [ml_monadBase.marray]) *)
+From Galette.cakeml.translator.monadic.monad_base Require ml_monadBase.
+Extract Constant ml_monadBase.marray "'a" => "'a Galette_parray.t".
+Extract Constant ml_monadBase.marray_replicate =>
+  "(fun n x -> Galette_parray.make (Galette_zarith.to_int n) x)".
+Extract Constant ml_monadBase.Msub =>
+  "(fun e n a -> if Galette_zarith.lt n (Galette_zarith.of_int (Galette_parray.length a)) then M_success (Galette_parray.get a (Galette_zarith.to_int n)) else M_failure e)".
+Extract Constant ml_monadBase.Mupdate =>
+  "(fun e x n a -> if Galette_zarith.lt n (Galette_zarith.of_int (Galette_parray.length a)) then M_success (Galette_parray.set a (Galette_zarith.to_int n) x) else M_failure e)".
+Extract Constant ml_monadBase.array_resize =>
+  "(fun n x a -> let len = Galette_parray.length a in Galette_parray.init (Galette_zarith.to_int n) (fun i -> if i < len then Galette_parray.get a i else x))".
+Extract Constant ml_monadBase.Marray_length =>
+  "(fun get_arr s -> (M_success (Galette_zarith.of_int (Galette_parray.length (get_arr s))), s))".
+
 (** ** The compiler executable
 
     [galette_main args stdin] runs the compiler's top level

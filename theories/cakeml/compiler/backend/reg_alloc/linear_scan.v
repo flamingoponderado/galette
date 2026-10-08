@@ -358,11 +358,11 @@ Record linear_scan_state : Type := mk_linear_scan_state {
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/linear_scanScript.sml" "linear_scan_hidden_state" *)
 Record linear_scan_hidden_state : Type := mk_linear_scan_hidden_state {
-  colors : list N;
-  int_beg : list Z;
-  int_end : list Z;
-  sorted_regs : list N;
-  sorted_moves : list (N * (N * N))
+  colors : marray N;
+  int_beg : marray Z;
+  int_end : marray Z;
+  sorted_regs : marray N;
+  sorted_moves : marray (N * (N * N))
 }.
 
 (** The monad of the linear-scan allocator. *)
@@ -1187,15 +1187,15 @@ Record i_linear_scan_hidden_state : Type := mk_i_linear_scan_hidden_state {
 Definition run_i_linear_scan_hidden_state {A E} (x : M linear_scan_hidden_state A E)
     (state : i_linear_scan_hidden_state) : exc A E :=
   run x (mk_linear_scan_hidden_state
-    (REPLICATE (FST state.(i_linear_scan_hidden_state_colors))
+    (marray_replicate (FST state.(i_linear_scan_hidden_state_colors))
                (SND state.(i_linear_scan_hidden_state_colors)))
-    (REPLICATE (FST state.(i_linear_scan_hidden_state_int_beg))
+    (marray_replicate (FST state.(i_linear_scan_hidden_state_int_beg))
                (SND state.(i_linear_scan_hidden_state_int_beg)))
-    (REPLICATE (FST state.(i_linear_scan_hidden_state_int_end))
+    (marray_replicate (FST state.(i_linear_scan_hidden_state_int_end))
                (SND state.(i_linear_scan_hidden_state_int_end)))
-    (REPLICATE (FST state.(i_linear_scan_hidden_state_sorted_regs))
+    (marray_replicate (FST state.(i_linear_scan_hidden_state_sorted_regs))
                (SND state.(i_linear_scan_hidden_state_sorted_regs)))
-    (REPLICATE (FST state.(i_linear_scan_hidden_state_sorted_moves))
+    (marray_replicate (FST state.(i_linear_scan_hidden_state_sorted_moves))
                (SND state.(i_linear_scan_hidden_state_sorted_moves)))).
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/linear_scanScript.sml" "linear_reg_alloc_and_extract_coloration_def" *)

@@ -47,6 +47,17 @@ fixtures of Flapjack's parity corpus:
 
     python3 scripts/parity.py          # 166 identical, 0 different
 
+It is also byte-identical (stdout and stderr) on both builds of the
+stateless-pancaketh guest program (about 5 MB of assembly each), checked
+against a live run of the original executable:
+
+    python3 scripts/parity.py --vs-cake Guest/guest.pp.pnk Guest/guest-software.pp.pnk
+
+Run time on those is about 3-9x that of `cake` (44 s and 75 s against 5 s and
+25 s). HOL's monadic arrays (lists in the logic) are extracted to persistent
+arrays (`ml_monadBase.marray`, `extraction/galette_parray.ml`); without that
+the register allocator is quadratic.
+
 Every compiler definition on the `compile_pancake_64` path is ported from
 HOL (parser, static checker, Pancake passes, word/stack/lab backend,
 register allocation, assembler, RISC-V encoder, exporter) and tagged; see
@@ -55,10 +66,8 @@ status (`pending_review` rows have not yet been compared line by line).
 
 Plan, in order:
 
-1. Large inputs: byte parity and performance on the stateless-pancaketh
-   guest programs (about 5 MB of output).
-2. Semantics: Pancake (panSem), crep, loop, word, stack, lab, asm and
+1. Semantics: Pancake (panSem), crep, loop, word, stack, lab, asm and
    target semantics, and the L3 RISC-V step function.
-3. Correctness proofs, pass by pass, up to `pan_to_target_compile_semantics`.
-4. Review: compare `pending_review` declarations with HOL and mark them
+2. Correctness proofs, pass by pass, up to `pan_to_target_compile_semantics`.
+3. Review: compare `pending_review` declarations with HOL and mark them
    `reviewed_exact`.

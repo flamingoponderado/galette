@@ -67,17 +67,17 @@ Defined.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "ra_state" *)
 Record ra_state : Type := mk_ra_state {
-  adj_ls : list (list N);
-  node_tag : list tag;
-  degrees : list N;
+  adj_ls : marray (list N);
+  node_tag : marray tag;
+  degrees : marray N;
   dim : N;
   simp_wl : list N;
   spill_wl : list N;
   freeze_wl : list N;
   avail_moves_wl : list (N * (N * N));
   unavail_moves_wl : list (N * (N * N));
-  coalesced : list N;
-  move_related : list bool;
+  coalesced : marray N;
+  move_related : marray bool;
   stack : list N
 }.
 
@@ -1175,17 +1175,17 @@ Record ira_state : Type := mk_ira_state {
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "run_ira_state_def" *)
 Definition run_ira_state {A E} (x : M ra_state A E) (state : ira_state) : exc A E :=
   run x (mk_ra_state
-    (REPLICATE (FST state.(ira_state_adj_ls)) (SND state.(ira_state_adj_ls)))
-    (REPLICATE (FST state.(ira_state_node_tag)) (SND state.(ira_state_node_tag)))
-    (REPLICATE (FST state.(ira_state_degrees)) (SND state.(ira_state_degrees)))
+    (marray_replicate (FST state.(ira_state_adj_ls)) (SND state.(ira_state_adj_ls)))
+    (marray_replicate (FST state.(ira_state_node_tag)) (SND state.(ira_state_node_tag)))
+    (marray_replicate (FST state.(ira_state_degrees)) (SND state.(ira_state_degrees)))
     state.(ira_state_dim)
     state.(ira_state_simp_wl)
     state.(ira_state_spill_wl)
     state.(ira_state_freeze_wl)
     state.(ira_state_avail_moves_wl)
     state.(ira_state_unavail_moves_wl)
-    (REPLICATE (FST state.(ira_state_coalesced)) (SND state.(ira_state_coalesced)))
-    (REPLICATE (FST state.(ira_state_move_related)) (SND state.(ira_state_move_related)))
+    (marray_replicate (FST state.(ira_state_coalesced)) (SND state.(ira_state_coalesced)))
+    (marray_replicate (FST state.(ira_state_move_related)) (SND state.(ira_state_move_related)))
     state.(ira_state_stack)).
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "reg_alloc_aux_def" *)
