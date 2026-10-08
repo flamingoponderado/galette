@@ -509,6 +509,133 @@ Fixpoint eval (s : state a ffi_t) (e : exp a) {struct e} : option (v a) :=
 
 End Eval.
 
+Lemma UNZIP_MAP {A B} (l : list (A * B)) : UNZIP l = (MAP fst l, MAP snd l).
+Proof. induction l as [|[x y] l IH]; cbn; [reflexivity|]. rewrite IH; reflexivity. Qed.
+
+Lemma OPT_MMAP_MAP {A B C} (f : B -> option C) (g : A -> B) l :
+  OPT_MMAP f (MAP g l) = OPT_MMAP (fun x => f (g x)) l.
+Proof. induction l as [|x l IH]; cbn; [reflexivity|]. rewrite IH; reflexivity. Qed.
+
+Section EvalDef.
+Context {a : N} {ffi_t : Type}.
+Local Open Scope word_scope.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "eval_def" *)
+Theorem eval_def :
+  (forall (s : state a ffi_t) w,
+     eval s (Const w) = SOME (ValWord w)) /\
+  (forall (s : state a ffi_t) v,
+     eval s (Var Local v) = FLOOKUP (locals s) v) /\
+  (forall (s : state a ffi_t) v,
+     eval s (Var Global v) = FLOOKUP (globals s) v) /\
+  (forall (s : state a ffi_t) es,
+     eval s (panLang.RStruct es) =
+      match OPT_MMAP (eval s) es with SOME vs => SOME (RStruct vs) | NONE => NONE end) /\
+  (forall (s : state a ffi_t) index e,
+     eval s (RField index e) =
+      match eval s e with
+      | SOME (RStruct vs) => if (index <? LENGTH vs)%N then SOME (EL index vs) else NONE
+      | _ => NONE
+      end) /\
+  (forall (s : state a ffi_t) nm eflds,
+     eval s (panLang.NStruct nm eflds) =
+      let '(field_names, field_exps) := UNZIP eflds in
+      match ALOOKUP (structs s) nm with
+      | SOME info =>
+          let '(field_names', field_shapes) := UNZIP (fields info) in
+          if bool_decide (field_names' = field_names) then
+            match OPT_MMAP (eval s) field_exps with
+            | SOME field_vals =>
+                if EVERY (fun '(s, v) => bool_decide (s = shape_of v)) (ZIP (field_shapes, field_vals))
+                then SOME (NStruct nm (ZIP (field_names, field_vals)))
+                else NONE
+            | NONE => NONE
+            end
+          else NONE
+      | NONE => NONE
+      end) /\
+  (forall (s : state a ffi_t) fld e,
+     eval s (NField fld e) =
+      match eval s e with
+      | SOME (NStruct nm vflds) =>
+          if negb (bool_decide (ALOOKUP (structs s) nm = NONE)) then ALOOKUP vflds fld else NONE
+      | _ => NONE
+      end) /\
+  (forall (s : state a ffi_t) shape addr,
+     eval s (Load shape addr) =
+      if is_wf_shape (structs s) shape then
+        match eval s addr with
+        | SOME (Val (Word w)) => mem_load shape w (memaddrs s) (memory s) (structs s)
+        | _ => NONE
+        end
+      else NONE) /\
+  (forall (s : state a ffi_t) addr,
+     eval s (Load32 addr) =
+      match eval s addr with
+      | SOME (Val (Word w)) =>
+          match mem_load_32 (memory s) (memaddrs s) (be s) w with
+          | NONE => NONE
+          | SOME w => SOME (ValWord (w2w w))
+          end
+      | _ => NONE
+      end) /\
+  (forall (s : state a ffi_t) addr,
+     eval s (LoadByte addr) =
+      match eval s addr with
+      | SOME (Val (Word w)) =>
+          match mem_load_byte (memory s) (memaddrs s) (be s) w with
+          | NONE => NONE
+          | SOME w => SOME (ValWord (w2w w))
+          end
+      | _ => NONE
+      end) /\
+  (forall (s : state a ffi_t) op es,
+     eval s (Op op es) =
+      match OPT_MMAP (eval s) es with
+      | SOME ws =>
+          if EVERY (fun w => match w with Val (Word _) => true | _ => false end) ws
+          then OPTION_MAP ValWord
+                 (wordLang.word_op op (MAP (fun w => match w with Val (Word n) => n | _ => ARB end) ws))
+          else NONE
+      | _ => NONE
+      end) /\
+  (forall (s : state a ffi_t) op es,
+     eval s (Panop op es) =
+      match OPT_MMAP (eval s) es with
+      | SOME ws =>
+          if EVERY (fun w => match w with Val (Word _) => true | _ => false end) ws
+          then OPTION_MAP ValWord
+                 (pan_op op (MAP (fun w => match w with Val (Word n) => n | _ => ARB end) ws))
+          else NONE
+      | _ => NONE
+      end) /\
+  (forall (s : state a ffi_t) cmp e1 e2,
+     eval s (Cmp cmp e1 e2) =
+      match eval s e1, eval s e2 with
+      | SOME (Val (Word w1)), SOME (Val (Word w2)) =>
+          SOME (ValWord (if word_cmp cmp w1 w2 then n2w 1 else n2w 0))
+      | _, _ => NONE
+      end) /\
+  (forall (s : state a ffi_t) sh e1 e2,
+     eval s (Shift sh e1 e2) =
+      match eval s e1, eval s e2 with
+      | SOME (Val (Word w1)), SOME (Val (Word w2)) =>
+          OPTION_MAP ValWord (wordLang.word_sh sh w1 (w2n w2))
+      | _, _ => NONE
+      end) /\
+  (forall (s : state a ffi_t) ,
+     eval s (BaseAddr) = SOME (ValWord (base_addr s))) /\
+  (forall (s : state a ffi_t) ,
+     eval s (TopAddr) = SOME (ValWord (top_addr s))) /\
+  (forall (s : state a ffi_t) ,
+     eval s (BytesInWord) = SOME (ValWord bytes_in_word)).
+Proof.
+  repeat split; intros; try reflexivity.
+  cbn [eval]; rewrite UNZIP_MAP, OPT_MMAP_MAP; reflexivity.
+Qed.
+
+End EvalDef.
+
 Section Store.
 Context {a : N} {ffi_t : Type}.
 Local Open Scope word_scope.
@@ -1092,6 +1219,253 @@ Proof.
 Qed.
 
 End EvaluateEqns.
+
+Section EvaluateDef.
+Context {a : N} {ffi_t : Type}.
+Local Open Scope word_scope.
+
+(** HOL's [evaluate_def] as rebound after [fix_clock_evaluate] (the
+    [compute] form CakeML's proofs use). *)
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "evaluate_def" 780 *)
+Theorem evaluate_def :
+  (forall (s : state a ffi_t),
+     evaluate (Skip, s) =
+ (NONE, s)) /\
+  (forall v0 sh e prog0 (s : state a ffi_t),
+     evaluate (Dec v0 sh e prog0, s) =
+      match eval s e with
+      | SOME value =>
+          if bool_decide (sh = shape_of value) then
+            let '(res, st) := evaluate (prog0, (set_locals (locals s |+ (v0, value)) s)) in
+            (res, set_locals (res_var (locals st) (v0, FLOOKUP (locals s) v0)) st)
+          else (SOME Error, s)
+      | NONE => (SOME Error, s)
+      end) /\
+  (forall vk v0 src (s : state a ffi_t),
+     evaluate (Assign vk v0 src, s) =
+      match eval s src with
+      | SOME value =>
+          if is_valid_value s vk v0 value then (NONE, set_kvar vk v0 value s)
+          else (SOME Error, s)
+      | NONE => (SOME Error, s)
+      end) /\
+  (forall v0 pop es (s : state a ffi_t),
+     evaluate (Primitive v0 pop es, s) =
+      match OPT_MMAP (eval s) es with
+      | SOME vs =>
+          match pan_primop pop vs with
+          | SOME value =>
+              if is_valid_value s Local v0 value then (NONE, set_var v0 value s)
+              else (SOME Error, s)
+          | NONE => (SOME Error, s)
+          end
+      | _ => (SOME Error, s)
+      end) /\
+  (forall dst src (s : state a ffi_t),
+     evaluate (Store dst src, s) =
+      match eval s dst, eval s src with
+      | SOME (Val (Word addr)), SOME value =>
+          match mem_stores addr (flatten value) (memaddrs s) (memory s) with
+          | SOME m => (NONE, set_memory m s)
+          | NONE => (SOME Error, s)
+          end
+      | _, _ => (SOME Error, s)
+      end) /\
+  (forall dst src (s : state a ffi_t),
+     evaluate (Store32 dst src, s) =
+      match eval s dst, eval s src with
+      | SOME (Val (Word adr)), SOME (Val (Word w)) =>
+          match mem_store_32 (memory s) (memaddrs s) (be s) adr (w2w w) with
+          | SOME m => (NONE, set_memory m s)
+          | NONE => (SOME Error, s)
+          end
+      | _, _ => (SOME Error, s)
+      end) /\
+  (forall dst src (s : state a ffi_t),
+     evaluate (StoreByte dst src, s) =
+      match eval s dst, eval s src with
+      | SOME (Val (Word adr)), SOME (Val (Word w)) =>
+          match mem_store_byte (memory s) (memaddrs s) (be s) adr (w2w w) with
+          | SOME m => (NONE, set_memory m s)
+          | NONE => (SOME Error, s)
+          end
+      | _, _ => (SOME Error, s)
+      end) /\
+  (forall op vk v0 ad (s : state a ffi_t),
+     evaluate (ShMemLoad op vk v0 ad, s) =
+      match eval s ad with
+      | SOME (Val (Word addr)) =>
+          match lookup_kvar vk v0 s with
+          | SOME (Val (Word _)) => sh_mem_load vk v0 addr (nb_op op) s
+          | _ => (SOME Error, s)
+          end
+      | _ => (SOME Error, s)
+      end) /\
+  (forall op ad e (s : state a ffi_t),
+     evaluate (ShMemStore op ad e, s) =
+      match eval s ad, eval s e with
+      | SOME (Val (Word addr)), SOME (Val (Word bytes)) => sh_mem_store bytes addr (nb_op op) s
+      | _, _ => (SOME Error, s)
+      end) /\
+  (forall c1 c2 (s : state a ffi_t),
+     evaluate (Seq c1 c2, s) =
+      let '(res, s1) := evaluate (c1, s) in
+      if ⌜res = NONE⌝ then evaluate (c2, s1) else (res, s1)) /\
+  (forall e c1 c2 (s : state a ffi_t),
+     evaluate (If e c1 c2, s) =
+      match eval s e with
+      | SOME (Val (Word w)) =>
+          evaluate (if negb (bool_decide (w = n2w 0)) then c1 else c2, s)
+      | _ => (SOME Error, s)
+      end) /\
+  (forall (s : state a ffi_t),
+     evaluate (panLang.Break, s) =
+ (SOME Break, s)) /\
+  (forall (s : state a ffi_t),
+     evaluate (panLang.Continue, s) =
+ (SOME Continue, s)) /\
+  (forall e c (s : state a ffi_t),
+     evaluate (While e c, s) =
+      match eval s e with
+      | SOME (Val (Word w)) =>
+          if negb (bool_decide (w = n2w 0)) then
+            if (clock s =? 0)%N then (SOME TimeOut, empty_locals s)
+            else
+              let '(res, s1) := fix_clock (dec_clock s) (evaluate (c, (dec_clock s))) in
+              match res with
+              | SOME Continue => evaluate ((While e c), s1)
+              | NONE => evaluate ((While e c), s1)
+              | SOME Break => (NONE, s1)
+              | _ => (res, s1)
+              end
+          else (NONE, s)
+      | _ => (SOME Error, s)
+      end) /\
+  (forall e (s : state a ffi_t),
+     evaluate (panLang.Return e, s) =
+      match eval s e with
+      | SOME value =>
+          if (size_of_sh_with_ctxt (structs s) (shape_of value) <=? 32)%N
+          then (SOME (Return value), empty_locals s)
+          else (SOME Error, s)
+      | _ => (SOME Error, s)
+      end) /\
+  (forall eid e (s : state a ffi_t),
+     evaluate (Raise eid e, s) =
+      match FLOOKUP (eshapes s) eid, eval s e with
+      | SOME sh, SOME value =>
+          if andb (bool_decide (shape_of value = sh))
+                  (size_of_sh_with_ctxt (structs s) (shape_of value) <=? 32)%N
+          then (SOME (Exception eid value), empty_locals s)
+          else (SOME Error, s)
+      | _, _ => (SOME Error, s)
+      end) /\
+  (forall (s : state a ffi_t),
+     evaluate (Tick, s) =
+      if (clock s =? 0)%N then (SOME TimeOut, empty_locals s) else (NONE, dec_clock s)) /\
+  (forall s1 s2 (s : state a ffi_t),
+     evaluate (Annot s1 s2, s) =
+ (NONE, s)) /\
+  (forall caltyp fname argexps (s : state a ffi_t),
+     evaluate (Call caltyp fname argexps, s) =
+      match OPT_MMAP (eval s) argexps with
+      | SOME args =>
+          match lookup_code (code s) fname args with
+          | SOME (prog0, (newlocals, return_sh)) =>
+              if (clock s =? 0)%N then (SOME TimeOut, empty_locals s)
+              else
+                match fix_clock (set_locals newlocals (dec_clock s))
+                        (evaluate (prog0, (set_locals newlocals (dec_clock s)))) with
+                | (NONE, st) => (SOME Error, st)
+                | (SOME Break, st) => (SOME Error, st)
+                | (SOME Continue, st) => (SOME Error, st)
+                | (SOME (Return retv), st) =>
+                    if negb (bool_decide (shape_of retv = return_sh)) then (SOME Error, st)
+                    else
+                      match caltyp with
+                      | NONE => (SOME (Return retv), empty_locals st)
+                      | SOME (NONE, _) => (NONE, set_locals (locals s) st)
+                      | SOME (SOME (rk, rt), _) =>
+                          if is_valid_value s rk rt retv
+                          then (NONE, set_kvar rk rt retv (set_locals (locals s) st))
+                          else (SOME Error, st)
+                      end
+                | (SOME (Exception eid exn), st) =>
+                    match caltyp with
+                    | NONE => (SOME (Exception eid exn), empty_locals st)
+                    | SOME (_, NONE) => (SOME (Exception eid exn), empty_locals st)
+                    | SOME (_, SOME (eid', (evar, p))) =>
+                        if bool_decide (eid = eid') then
+                          match FLOOKUP (eshapes s) eid with
+                          | SOME sh =>
+                              if andb (bool_decide (shape_of exn = sh))
+                                      (is_valid_value s Local evar exn)
+                              then evaluate (p, (set_var evar exn (set_locals (locals s) st)))
+                              else (SOME Error, st)
+                          | NONE => (SOME Error, st)
+                          end
+                        else (SOME (Exception eid exn), empty_locals st)
+                    end
+                | (res, st) => (res, empty_locals st)
+                end
+          | _ => (SOME Error, s)
+          end
+      | _ => (SOME Error, s)
+      end) /\
+  (forall rt shape fname argexps prog1 (s : state a ffi_t),
+     evaluate (DecCall rt shape fname argexps prog1, s) =
+      match OPT_MMAP (eval s) argexps with
+      | SOME args =>
+          match lookup_code (code s) fname args with
+          | SOME (prog0, (newlocals, return_sh)) =>
+              if (clock s =? 0)%N then (SOME TimeOut, empty_locals s)
+              else
+                match fix_clock (set_locals newlocals (dec_clock s))
+                        (evaluate (prog0, (set_locals newlocals (dec_clock s)))) with
+                | (NONE, st) => (SOME Error, st)
+                | (SOME Break, st) => (SOME Error, st)
+                | (SOME Continue, st) => (SOME Error, st)
+                | (SOME (Return retv), st) =>
+                    if andb (bool_decide (shape_of retv = shape))
+                            (bool_decide (shape_of retv = return_sh)) then
+                      let '(res', st') :=
+                        evaluate (prog1, (set_var rt retv (set_locals (locals s) st))) in
+                      (res', set_locals (res_var (locals st') (rt, FLOOKUP (locals s) rt)) st')
+                    else (SOME Error, st)
+                | (res, st) => (res, empty_locals st)
+                end
+          | _ => (SOME Error, s)
+          end
+      | _ => (SOME Error, s)
+      end) /\
+  (forall ffi_index ptr1 len1 ptr2 len2 (s : state a ffi_t),
+     evaluate (ExtCall ffi_index ptr1 len1 ptr2 len2, s) =
+      match eval s ptr1, eval s len1, eval s ptr2, eval s len2 with
+      | SOME (Val (Word sz1)), SOME (Val (Word ad1)), SOME (Val (Word sz2)), SOME (Val (Word ad2)) =>
+          match read_bytearray sz1 (w2n ad1) (mem_load_byte (memory s) (memaddrs s) (be s)),
+                read_bytearray sz2 (w2n ad2) (mem_load_byte (memory s) (memaddrs s) (be s)) with
+          | SOME bytes, SOME bytes2 =>
+              match call_FFI (ffi s) (ffi.ExtCall ffi_index) bytes bytes2 with
+              | FFI_final outcome => (SOME (FinalFFI outcome), empty_locals s)
+              | FFI_return new_ffi new_bytes =>
+                  let nmem := write_bytearray sz2 new_bytes (memory s) (memaddrs s) (be s) in
+                  (NONE, set_ffi new_ffi (set_memory nmem s))
+              end
+          | _, _ => (SOME Error, s)
+          end
+      | _, _, _, _ => (SOME Error, s)
+      end).
+Proof.
+  repeat split; intros; rewrite evaluate_eqn; cbn [evaluate_body];
+    rewrite ?fix_clock_evaluate; try reflexivity.
+  all: try (destruct (evaluate (c1, s)) as [[res|] s1]; cbn beta iota;
+            unfold bool_decide; destruct (decide _) as [Hd|Hd];
+            solve [reflexivity | discriminate | exfalso; apply Hd; reflexivity]).
+  all: try (destruct (eval s e) as [[[w]| |]|]; try reflexivity;
+            destruct (negb _); reflexivity).
+Qed.
+
+End EvaluateDef.
 
 (** ** Observable semantics and declarations *)
 Section Semantics.

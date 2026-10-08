@@ -30771,6 +30771,16 @@
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "eval_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "eval_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
   "hol_name": "evaluate_clock",
   "hol_line": null,
   "case": null,
@@ -30788,6 +30798,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
   "rocq_name": "evaluate_decls"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "evaluate_def",
+  "hol_line": 780,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "evaluate_def"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
