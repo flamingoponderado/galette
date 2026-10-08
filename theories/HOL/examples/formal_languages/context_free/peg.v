@@ -122,6 +122,25 @@ Proof. intros D f [] fl fe; cbn; repeat split; congruence. Qed.
 Theorem resultmap_I : forall (r : pegresult A C E), resultmap (fun x => x) r = r.
 Proof. intros []; reflexivity. Qed.
 
+(*! HOL "HOL/examples/formal-languages/context-free/pegScript.sml" "UNCURRY_Failure_EQ_Success" *)
+Theorem UNCURRY_Failure_EQ_Success : forall (fle : locs * E) (s : A) (r : C) eo,
+  UNCURRY Failure fle <> Success s r eo.
+Proof. intros [] s r eo; discriminate. Qed.
+
+(*! HOL "HOL/examples/formal-languages/context-free/pegScript.sml" "FORALL_result" *)
+Theorem FORALL_result : forall P : pegresult A C E -> Prop,
+  (forall r, P r) <-> (forall a c eo, P (Success a c eo)) /\ (forall fl fe, P (Failure fl fe)).
+Proof. intros P; split; [intros h; split; intros; apply h|intros [h1 h2] []; auto]. Qed.
+
+(*! HOL "HOL/examples/formal-languages/context-free/pegScript.sml" "EXISTS_result" *)
+Theorem EXISTS_result : forall P : pegresult A C E -> Prop,
+  (exists r, P r) <-> (exists a c eo, P (Success a c eo)) \/ (exists fl fe, P (Failure fl fe)).
+Proof.
+  intros P; split.
+  - intros [[] h]; [left|right]; eauto.
+  - intros [[a [c [eo h]]]|[fl [fe h]]]; eauto.
+Qed.
+
 End Results.
 
 (*! HOL "HOL/examples/formal-languages/context-free/pegScript.sml" "MAXerr_def" *)
@@ -204,11 +223,6 @@ Scheme peg_eval_ind2 := Minimality for peg_eval Sort Prop
   with peg_eval_list_ind2 := Minimality for peg_eval_list Sort Prop.
 Combined Scheme peg_eval_mutind from peg_eval_ind2, peg_eval_list_ind2.
 
-(*! HOL "HOL/examples/formal-languages/context-free/pegScript.sml" "UNCURRY_Failure_EQ_Success" *)
-Theorem UNCURRY_Failure_EQ_Success : forall (fle : locs * E) (s : input) (r : C) eo,
-  UNCURRY Failure fle <> Success s r eo.
-Proof. intros [] s r eo; discriminate. Qed.
-
 Lemma UNCURRY_Failure_isFailure (fle : locs * E) :
   @UNCURRY _ _ result Failure fle = Failure (fst fle) (snd fle).
 Proof. destruct fle; reflexivity. Qed.
@@ -257,20 +271,6 @@ Proof.
   intros G; destruct (peg_deterministic0 G) as [h1 h2]; split.
   - intros s0 e sr H sr'; split; [apply h1, H|intros ->; exact H].
   - intros s0 e s rl err H srl'; split; [apply h2, H|intros ->; exact H].
-Qed.
-
-(*! HOL "HOL/examples/formal-languages/context-free/pegScript.sml" "FORALL_result" *)
-Theorem FORALL_result : forall P : result -> Prop,
-  (forall r, P r) <-> (forall a c eo, P (Success a c eo)) /\ (forall fl fe, P (Failure fl fe)).
-Proof. intros P; split; [intros h; split; intros; apply h|intros [h1 h2] []; auto]. Qed.
-
-(*! HOL "HOL/examples/formal-languages/context-free/pegScript.sml" "EXISTS_result" *)
-Theorem EXISTS_result : forall P : result -> Prop,
-  (exists r, P r) <-> (exists a c eo, P (Success a c eo)) \/ (exists fl fe, P (Failure fl fe)).
-Proof.
-  intros P; split.
-  - intros [[] h]; [left|right]; eauto.
-  - intros [[a [c [eo h]]]|[fl [fe h]]]; eauto.
 Qed.
 
 (** ** Suffix property (HOL's Theorem 3.1) *)

@@ -51,14 +51,14 @@ Definition bind {A B E} (m : error_ty A E) (f : A -> error_ty B E) : error_ty B 
   end.
 
 (*! HOL "HOL/src/monad/more_monads/errorMonadScript.sml" "try_def" *)
-Definition try_ {A E} (m : error_ty A E) (f : E -> error_ty A E) : error_ty A E :=
+Definition try_ {A E F} (m : error_ty A E) (f : E -> error_ty A F) : error_ty A F :=
   match m with
   | return_ v => return_ v
   | error e => f e
   end.
 
 (*! HOL "HOL/src/monad/more_monads/errorMonadScript.sml" "choice_def" *)
-Definition choice {A E} (m1 m : error_ty A E) : error_ty A E :=
+Definition choice {A E F} (m1 : error_ty A E) (m : error_ty A F) : error_ty A F :=
   match m1 with
   | return_ v => return_ v
   | error e => m

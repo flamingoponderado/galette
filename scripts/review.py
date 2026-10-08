@@ -48,7 +48,7 @@ def hol_block(path: Path, name: str, line: int | None) -> str:
 def rocq_block(path: Path, name: str) -> str:
     text = path.read_text()
     m = re.search(r"^[ \t]*(?:#\[[^\]]*\]\s*)*(?:Definition|Fixpoint|Inductive|Record|Theorem|Lemma|"
-                  r"Abbreviation|Notation|Class|Instance)\s+" + re.escape(name) + r"\b", text, re.M)
+                  r"Abbreviation|Notation|Class|Instance)\s+" + re.escape(name) + r"(?![A-Za-z0-9_'])", text, re.M)
     if not m:
         return "(not found)"
     rest = text[m.start():]

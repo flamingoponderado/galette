@@ -70,18 +70,19 @@ Proof.
 Qed.
 
 (*! HOL "HOL/src/monad/more_monads/errorLogMonadScript.sml" "silently_def" *)
-Definition silently {A E L} (m : M A E L) : M A E L :=
+Definition silently {X Y Z} (m : X * Y) : X * list Z :=
   let '(r, ms) := m in (I r, K [] ms).
 
 (*! HOL "HOL/src/monad/more_monads/errorLogMonadScript.sml" "choice_def" *)
-Definition choice {A E L} (m1 m2 : M A E L) : M A E L :=
+Definition choice {A E1 E2 L} (m1 : M A E1 L) (m2 : M A E2 L) : M A E2 L :=
   match m1 with
   | (errorMonad.return_ v, ms1) => (emret v, ms1)
   | (errorMonad.error e, ms1) => let '(r, ms2) := m2 in (I r, APPEND ms1 ms2)
   end.
 
 (*! HOL "HOL/src/monad/more_monads/errorLogMonadScript.sml" "choice_return" *)
-Theorem choice_return : forall {A E L} (v : A) (m : M A E L), choice (return_ v) m = return_ v.
+Theorem choice_return : forall {A E1 E2 L} (v : A) (m : M A E2 L),
+  choice (return_ v : M A E1 L) m = return_ v.
 Proof. reflexivity. Qed.
 
 Declare Scope errorLog_scope.
