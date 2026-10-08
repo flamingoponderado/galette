@@ -49,6 +49,7 @@ From Galette.cakeml.misc Require Import misc.
 From Galette.cakeml.misc.misc Require Import fromList2.
 From Galette.HOL.src.list.src.rich_list Require Import lastn.
 From Galette.cakeml.semantics.ffi Require Import ffi.
+From Galette.cakeml.semantics Require fpSem.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.cakeml.compiler.backend Require Import backend_common stackLang wordLang.
 Open Scope N_scope.
@@ -908,9 +909,7 @@ Definition set_fp_var (v : N) (x : word64) (s : state) : state :=
   set_fp_regs (fp_regs s |+ (v, x)) s.
 
 (** The floating-point operations ([fp64_*]) are the stand-ins of
-    [machine_ieee] (see there); HOL's [fpSem$fpfma f1 f2 f3] is by definition
-    [fp64_mul_add roundTiesToEven f2 f3 f1], written out because [fpfma] is
-    not yet in [fpSem.v].  HOL's final catch-all [| _ => NONE] is redundant
+    [machine_ieee] (see there).  HOL's final catch-all [| _ => NONE] is redundant
     and omitted. *)
 (*! HOL "cakeml/compiler/backend/semantics/wordSemScript.sml" "inst_def" *)
 Definition inst (i : inst a) (s : state) : option state :=
@@ -1092,8 +1091,7 @@ Definition inst (i : inst a) (s : state) : option state :=
   | FP (FPFma d1 d2 d3) =>
       match get_fp_var d1 s, get_fp_var d2 s, get_fp_var d3 s with
       | SOME f1, SOME f2, SOME f3 =>
-          (* HOL: [fpSem$fpfma f1 f2 f3] *)
-          SOME (set_fp_var d1 (fp64_mul_add roundTiesToEven f2 f3 f1) s)
+          SOME (set_fp_var d1 (fpSem.fpfma f1 f2 f3) s)
       | _, _, _ => NONE
       end
   | FP (FPMovToReg r1 r2 d) =>
