@@ -709,7 +709,7 @@ Definition inst (i : asm.inst a) (s : state a c ffi_t) : option (state a c ffi_t
       let vs := get_vars [r3; r2] s in
       match vs with
       | SOME [Word q; Word w2] =>
-          if negb (bool_decide (q = n2w 0)) then SOME (set_var r1 (Word (w2 // q)) s)
+          if negb (bool_decide (q = n2w 0)) then SOME (set_var r1 (Word (word_quot w2 q)) s)
           else NONE
       | _ => NONE
       end

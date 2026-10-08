@@ -334,7 +334,7 @@ Definition arith_upd (x : arith a) (s : state a c ffi_t) : state a c ffi_t :=
       end
   | Div r1 r2 r3 =>
       match read_reg r3 s, read_reg r2 s with
-      | Word q, Word w2 => assert (negb (bool_decide (q = n2w 0))) (upd_reg r1 (Word (w2 // q)) s)
+      | Word q, Word w2 => assert (negb (bool_decide (q = n2w 0))) (upd_reg r1 (Word (word_quot w2 q)) s)
       | _, _ => assert false s
       end
   | AddCarry r1 r2 r3 r4 =>

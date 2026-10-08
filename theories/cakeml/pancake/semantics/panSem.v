@@ -1401,7 +1401,7 @@ Theorem evaluate_def :
           if negb (bool_decide (w = n2w 0)) then
             if (clock s =? 0)%N then (SOME TimeOut, empty_locals s)
             else
-              let '(res, s1) := fix_clock (dec_clock s) (evaluate (c, (dec_clock s))) in
+              let '(res, s1) := evaluate (c, (dec_clock s)) in
               match res with
               | SOME Continue => evaluate ((While e c), s1)
               | NONE => evaluate ((While e c), s1)
@@ -1444,8 +1444,7 @@ Theorem evaluate_def :
           | SOME (prog0, (newlocals, return_sh)) =>
               if (clock s =? 0)%N then (SOME TimeOut, empty_locals s)
               else
-                match fix_clock (set_locals newlocals (dec_clock s))
-                        (evaluate (prog0, (set_locals newlocals (dec_clock s)))) with
+                match evaluate (prog0, (set_locals newlocals (dec_clock s))) with
                 | (NONE, st) => (SOME Error, st)
                 | (SOME Break, st) => (SOME Error, st)
                 | (SOME Continue, st) => (SOME Error, st)
@@ -1490,8 +1489,7 @@ Theorem evaluate_def :
           | SOME (prog0, (newlocals, return_sh)) =>
               if (clock s =? 0)%N then (SOME TimeOut, empty_locals s)
               else
-                match fix_clock (set_locals newlocals (dec_clock s))
-                        (evaluate (prog0, (set_locals newlocals (dec_clock s)))) with
+                match evaluate (prog0, (set_locals newlocals (dec_clock s))) with
                 | (NONE, st) => (SOME Error, st)
                 | (SOME Break, st) => (SOME Error, st)
                 | (SOME Continue, st) => (SOME Error, st)
@@ -1527,12 +1525,19 @@ Theorem evaluate_def :
       end).
 Proof.
   repeat split; intros; rewrite evaluate_eqn; cbn [evaluate_body];
-    rewrite ?fix_clock_evaluate; try reflexivity.
+    repeat setoid_rewrite fix_clock_evaluate; try reflexivity.
   all: try (destruct (evaluate (c1, s)) as [[res|] s1]; cbn beta iota;
             unfold bool_decide; destruct (decide _) as [Hd|Hd];
             solve [reflexivity | discriminate | exfalso; apply Hd; reflexivity]).
   all: try (destruct (eval s e) as [[[w]| |]|]; try reflexivity;
             destruct (negb _); reflexivity).
+  all: try (destruct (eval s e) as [[[w]| |]|]; try reflexivity;
+            destruct (negb _); try reflexivity; destruct (clock s =? 0)%N; try reflexivity;
+            rewrite fix_clock_evaluate; reflexivity).
+  all: try (destruct (OPT_MMAP (eval s) _); try reflexivity;
+            destruct (lookup_code _ _ _) as [[prog0 [newlocals return_sh]]|]; try reflexivity;
+            destruct (clock s =? 0)%N; try reflexivity;
+            rewrite fix_clock_evaluate; reflexivity).
 Qed.
 
 End EvaluateDef.
