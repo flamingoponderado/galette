@@ -12,8 +12,8 @@ From Galette.cakeml.misc Require Import misc.
 Open Scope N_scope.
 
 (*! HOL "cakeml/compiler/backend/semantics/backendPropsScript.sml" "state_cc_def" *)
-Definition state_cc {S C P Q Co Da} (f : S -> P -> S * Q)
-    (cc : C -> Q -> option (Co * (Da * C))) : S * C -> P -> option (Co * (Da * (S * C))) :=
+Definition state_cc {S S1 C C1 P Q Co Da} (f : S -> P -> S1 * Q)
+    (cc : C -> Q -> option (Co * (Da * C1))) : S * C -> P -> option (Co * (Da * (S1 * C1))) :=
   fun '(state, cfg) prog =>
     let '(state1, prog1) := f state prog in
     match cc cfg prog1 with
@@ -26,14 +26,14 @@ Definition pure_cc {C P Q R} (f : P -> Q) (cc : C -> Q -> R) : C -> P -> R :=
   fun cfg prog => let prog1 := f prog in cc cfg prog1.
 
 (*! HOL "cakeml/compiler/backend/semantics/backendPropsScript.sml" "state_co_def" *)
-Definition state_co {S C P Q} (f : S -> P -> S * Q) (co : N -> (S * C) * P) : N -> C * Q :=
+Definition state_co {S X C P Q} (f : S -> P -> X * Q) (co : N -> (S * C) * P) : N -> C * Q :=
   fun n =>
     let '((state, cfg), progs) := co n in
     let '(state1, progs) := f state progs in
     (cfg, progs).
 
 (*! HOL "cakeml/compiler/backend/semantics/backendPropsScript.sml" "FST_state_co" *)
-Theorem FST_state_co : forall {S C P Q} (f : S -> P -> S * Q) (co : N -> (S * C) * P) n,
+Theorem FST_state_co : forall {S X C P Q} (f : S -> P -> X * Q) (co : N -> (S * C) * P) n,
   FST (state_co f co n) = SND (FST (co n)).
 Proof.
   intros; unfold state_co; destruct (co n) as [[st cfg] progs]; cbn.
@@ -41,7 +41,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/semantics/backendPropsScript.sml" "SND_state_co" *)
-Theorem SND_state_co : forall {S C P Q} (f : S -> P -> S * Q) (co : N -> (S * C) * P) n,
+Theorem SND_state_co : forall {S X C P Q} (f : S -> P -> X * Q) (co : N -> (S * C) * P) n,
   SND (state_co f co n) = SND (f (FST (FST (co n))) (SND (co n))).
 Proof.
   intros; unfold state_co; destruct (co n) as [[st cfg] progs]; cbn.
@@ -124,7 +124,7 @@ Definition is_state_oracle {S C P Q} (compile_inc_f : S -> P -> S * Q)
   forall n, FST (FST (co (SUC n))) = FST (compile_inc_f (FST (FST (co n))) (SND (co n))).
 
 (*! HOL "cakeml/compiler/backend/semantics/backendPropsScript.sml" "syntax_to_full_oracle_def" *)
-Definition syntax_to_full_oracle {P M} (mk : (N -> P) -> N -> M) (progs : N -> P) (i : N) : M * P :=
+Definition syntax_to_full_oracle {I P M} (mk : (I -> P) -> I -> M) (progs : I -> P) (i : I) : M * P :=
   (mk progs i, progs i).
 
 (*! HOL "cakeml/compiler/backend/semantics/backendPropsScript.sml" "pure_co_progs_def" *)
