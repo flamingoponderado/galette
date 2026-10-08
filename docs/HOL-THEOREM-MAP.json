@@ -35141,6 +35141,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "encoder_correct_RTC_asm_step_target_state_rel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "encoder_correct_RTC_asm_step_target_state_rel"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "encoder_correct_asm_step_target_state_rel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "encoder_correct_asm_step_target_state_rel"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
   "hol_name": "evaluate_EQ_evaluate_lemma",
   "hol_line": null,
   "case": null,

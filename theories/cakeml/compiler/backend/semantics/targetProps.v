@@ -17,11 +17,7 @@
       [interference_pos_SOME], [find_next_interference_body_mono],
       [evaluate_body_rel], [evaluate_clock_le], [call_FFI_prefix],
       [DROP_LENGTH_self], [bytes_in_memory_DROP], [evaluate_one_step],
-      [encoded_bytes_in_mem_intro].
-    - Not yet ported: [encoder_correct_asm_step_target_state_rel] and
-      [encoder_correct_RTC_asm_step_target_state_rel], which need HOL's
-      [FUNPOW] (with [FOLDR_FUNPOW], [FUNPOW_refl_trans_chain]) and
-      [asmProps]' [asserts2_every]; [lab_to_targetProof] does not use them. *)
+      [encoded_bytes_in_mem_intro]. *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -1583,3 +1579,66 @@ Proof.
 Qed.
 
 End Step.
+
+Section EncoderCorrect.
+Context {a : N} {B C : Type}.
+
+Lemma LENGTH_REVERSE_GENLIST {A} (f : N -> A) n : LENGTH (REVERSE (GENLIST f n)) = n.
+Proof.
+  rewrite LENGTH_length, length_rev.
+  induction n as [|n IH] using N.peano_ind; [reflexivity|].
+  rewrite (proj2 (GENLIST_thm f n)), SNOC_app, length_app. cbn [length]. lia.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/semantics/targetPropsScript.sml" "encoder_correct_asm_step_target_state_rel" *)
+Theorem encoder_correct_asm_step_target_state_rel : forall (t : asmProps.target a B C) s1 ms i s2,
+  encoder_correct t /\ target_state_rel t s1 ms /\ asm_step (config t) s1 i s2 ->
+  exists n,
+    target_state_rel t s2 (FUNPOW (next t) n ms) /\
+    (forall j, j < n ->
+       (forall pc0, pc0 IN all_pcs (LENGTH (encode (config t) i)) s1.(pc) 0 ->
+          get_byte t (FUNPOW (next t) j ms) pc0 = get_byte t ms pc0) /\
+       get_pc t (FUNPOW (next t) j ms) IN
+         all_pcs (LENGTH (encode (config t) i)) s1.(pc) (code_alignment (config t)) /\
+       state_ok t (FUNPOW (next t) j ms)) /\
+    (forall j x, j <= n /\ x NOTIN s1.(mem_domain) ->
+       get_byte t (FUNPOW (next t) j ms) x = get_byte t ms x).
+Proof.
+  intros t s1 ms i s2 ((Hok & Hc) & Hr & Hs).
+  destruct (Hc s1 i s2 ms (conj Hs Hr)) as [n Hn].
+  destruct (Hn (fun _ x => x) ltac:(intros k m; reflexivity)) as [Ha Ha2]. cbv zeta beta in Ha, Ha2.
+  pose proof (asserts_IMP_FOLDR_COUNT_LIST _ _ _ _ _ Ha) as HQ.
+  change (FOLDR (fun (_ : N) => next t) (next t ms) (COUNT_LIST n)) with
+         (FOLDR (fun (_ : N) => next t) (next t ms) (COUNT_LIST n)) in HQ.
+  rewrite (FOLDR_FUNPOW (next t)), LENGTH_COUNT_LIST, <- FUNPOW_SUC_r in HQ.
+  exists (SUC n). split; [exact HQ|split].
+  - intros j; destruct j as [|j] using N.peano_ind; intros Hj.
+    + rewrite FUNPOW_0. destruct Hr as (Hst & Hpc & _).
+      split; [intros; reflexivity|split; [|exact Hst]].
+      rewrite Hpc, all_pcs_thm. exists 0. split; [rewrite N.mul_0_l, (proj1 lemmas.WORD_ADD_0); reflexivity|].
+      destruct Hok as [[_ [Hl _]] _]. destruct (Hl i) as [_ Hne]. lia.
+    + assert (Hjn : j < n) by lia.
+      pose proof (asserts_IMP_FOLDR_COUNT_LIST_LESS j n _ _ _ _ (conj Ha Hjn)) as HP.
+      cbv beta in HP. rewrite (FOLDR_FUNPOW (next t)), LENGTH_REVERSE_GENLIST in HP.
+      destruct HP as (P1 & P2 & P3). split; [exact P2|split; [exact P3|exact P1]].
+  - intros j x [Hj Hx].
+    set (P0 := fun m1 m2 : B => forall y, y NOTIN s1.(mem_domain) -> get_byte t m1 y = get_byte t m2 y).
+    enough (HP : P0 ms (FUNPOW (next t) j ms)) by (symmetry; exact (HP x Hx)).
+    apply (FUNPOW_refl_trans_chain P0 (next t)).
+    + split; [intros u v w [H1 H2] y Hy; rewrite (H1 y Hy); exact (H2 y Hy)|intros u y _; reflexivity].
+    + intros j' Hj'. assert (Hjn : j' < n + 1) by lia. exact (asserts2_every (fun x => x) (next t) _ _ _ _ (conj Ha2 Hjn)).
+Qed.
+
+(*! HOL "cakeml/compiler/backend/semantics/targetPropsScript.sml" "encoder_correct_RTC_asm_step_target_state_rel" *)
+Theorem encoder_correct_RTC_asm_step_target_state_rel : forall (t : asmProps.target a B C) s1 ms s2,
+  encoder_correct t /\ target_state_rel t s1 ms /\
+  RTC (fun s1 s2 => exists i, asm_step (config t) s1 i s2) s1 s2 ->
+  exists n, target_state_rel t s2 (FUNPOW (next t) n ms).
+Proof.
+  intros t s1 ms s2 (Hc & Hr & H). revert ms Hr.
+  induction H as [s|s s' s'' [i Hs] _ IH]; intros ms Hr; [exists 0; exact Hr|].
+  destruct (encoder_correct_asm_step_target_state_rel t s ms i s' (conj Hc (conj Hr Hs))) as (n1 & H1 & _).
+  destruct (IH _ H1) as [n2 H2]. exists (n2 + n1). rewrite FUNPOW_ADD. exact H2.
+Qed.
+
+End EncoderCorrect.
