@@ -980,8 +980,8 @@ Ltac clock_facts :=
              pose proof (fix_clock_IMP_LESS_EQ _ _ _ _ H) as Hle; clear H
          | H : (clock _ =? 0)%N = false |- _ => apply N.eqb_neq in H
          end;
-  repeat match goal with |- context [set_kvar ?vk _ _ _] => destruct vk end;
-  cbn [clock set_locals set_var set_global set_kvar set_memory set_ffi set_clock
+  repeat match goal with |- context [set_kvar ?vk _ _ _] => is_var vk; destruct vk end;
+  cbn [clock set_locals set_globals set_structs set_var set_global set_kvar set_memory set_ffi set_clock
        dec_clock empty_locals psize] in *.
 
 Ltac prove_eval_lt := unfold eval_lt; cbn [fst snd]; clock_facts; lia.
@@ -1039,4 +1039,153 @@ Proof.
   - intros p' s' Hlt. cbn [lowerF]. symmetry; apply evaluate_eq_c. lia.
 Qed.
 
+
+Ltac clock_step IH H :=
+  repeat first
+    [ match type of H with
+      | evaluate (?p', ?s'') = (?r', ?t) =>
+          let Hc := fresh "Hc" in
+          assert (Hc : (clock t <= clock s'')%N)
+            by (apply (IH (p', s'') ltac:(prove_eval_lt) r' t H));
+          clear H; clock_facts; lia
+      | (_, _) = (_, _) => injection H as <- <-; clock_facts; lia
+      end
+    | match goal with
+      | E : evaluate (?p', ?s'') = (?r', ?t) |- _ =>
+          let Hc := fresh "Hc" in
+          assert (Hc : (clock t <= clock s'')%N)
+            by (apply (IH (p', s'') ltac:(prove_eval_lt) r' t E));
+          clear E
+      | E : fix_clock _ _ = (_, _) |- _ =>
+          let Hle := fresh "Hle" in
+          pose proof (fix_clock_IMP_LESS_EQ _ _ _ _ E) as Hle; clear E
+      | E : (clock _ =? 0)%N = false |- _ => apply N.eqb_neq in E
+      end
+    | match type of H with
+      | context [match ?x with _ => _ end] =>
+          let E := fresh "E" in destruct x eqn:E; cbn beta iota zeta in H
+      end ].
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "evaluate_clock" *)
+Theorem evaluate_clock : forall (prog0 : prog a) (s : state a ffi_t) r s',
+  evaluate (prog0, s) = (r, s') -> (clock s' <= clock s)%N.
+Proof.
+  enough (G : forall x : prog a * state a ffi_t, forall r s',
+            evaluate x = (r, s') -> (clock s' <= clock (snd x))%N)
+    by (intros p s r s' H; exact (G (p, s) r s' H)).
+  intros x; induction x as [[p s] IH] using (well_founded_induction eval_lt_wf).
+  intros r s' H; cbn [snd].
+  rewrite evaluate_eqn in H.
+  destruct p; cbn [evaluate_body] in H; unfold sh_mem_load, sh_mem_store in H;
+    clock_step IH H.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "fix_clock_evaluate" *)
+Theorem fix_clock_evaluate : forall (prog0 : prog a) (s : state a ffi_t),
+  fix_clock s (evaluate (prog0, s)) = evaluate (prog0, s).
+Proof.
+  intros p s; destruct (evaluate (p, s)) as [r s'] eqn:E.
+  pose proof (evaluate_clock p s r s' E) as Hc.
+  unfold fix_clock; f_equal.
+  destruct (N.ltb_spec (clock s) (clock s')); [lia|].
+  destruct s'; reflexivity.
+Qed.
+
 End EvaluateEqns.
+
+(** ** Observable semantics and declarations *)
+Section Semantics.
+Context {a : N} {ffi_t : Type}.
+
+#[local] Instance behaviour_inhabited : Inhabited behaviour := Fail.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "semantics_def" *)
+Definition semantics (s : state a ffi_t) (start : funname) : behaviour :=
+  let prog0 := @panLang.Call a NONE start [] in
+  if classical_dec (exists k,
+       match fst (evaluate (prog0, set_clock k s)) with
+       | SOME TimeOut => False
+       | SOME (FinalFFI _) => False
+       | SOME (Return _) => False
+       | _ => True
+       end)
+  then Fail
+  else
+    match some (fun res => exists k t r outcome,
+             evaluate (prog0, set_clock k s) = (r, t) /\
+             match r with
+             | SOME (FinalFFI e) => outcome = FFI_outcome e
+             | SOME (Return _) => outcome = Success
+             | _ => False
+             end /\
+             res = Terminate outcome (io_events (ffi t))) with
+    | SOME res => res
+    | NONE =>
+        Diverge (build_lprefix_lub
+                   (IMAGE (fun k => fromList (io_events (ffi (snd (evaluate (prog0, set_clock k s))))))
+                          UNIV))
+    end.
+
+(** HOL [s with code := s.code |+ ...] etc. *)
+Definition set_code x (s : state a ffi_t) := mk_state s.(locals) s.(globals) s.(structs) x s.(eshapes) s.(memory) s.(memaddrs) s.(sh_memaddrs) s.(clock) s.(be) s.(ffi) s.(base_addr) s.(top_addr).
+Definition set_eshapes x (s : state a ffi_t) := mk_state s.(locals) s.(globals) s.(structs) s.(code) x s.(memory) s.(memaddrs) s.(sh_memaddrs) s.(clock) s.(be) s.(ffi) s.(base_addr) s.(top_addr).
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "evaluate_decls_def" *)
+Fixpoint evaluate_decls (s : state a ffi_t) (ds : list (decl a)) : option (state a ffi_t) :=
+  match ds with
+  | [] => SOME s
+  | Name nm flds :: ds => evaluate_decls s ds
+  | Decl sh v0 e :: ds =>
+      match eval (set_locals FEMPTY s) e with
+      | SOME res =>
+          if bool_decide (sh = shape_of res)
+          then evaluate_decls (set_globals (globals s |+ (v0, res)) s) ds
+          else NONE
+      | NONE => NONE
+      end
+  | Function fi :: ds =>
+      if andb (EVERY (is_wf_shape (structs s) ∘ snd) (params fi))
+              (is_wf_shape (structs s) (fun_decl_return fi))
+      then evaluate_decls
+             (set_code (code s |+ (name fi, (params fi, (body fi, fun_decl_return fi)))) s) ds
+      else NONE
+  | ExnDecl eid sh :: ds =>
+      if andb (bool_decide (FLOOKUP (eshapes s) eid = NONE)) (is_wf_shape (structs s) sh)
+      then evaluate_decls (set_eshapes (eshapes s |+ (eid, sh)) s) ds
+      else NONE
+  end.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "decs_stcnames_def" *)
+Fixpoint decs_stcnames (st_ctxt : list (stcname * struct_info)) (ds : list (decl a))
+    : option (list (stcname * struct_info)) :=
+  match ds with
+  | [] => SOME st_ctxt
+  | Name nm flds :: ds =>
+      match ALOOKUP st_ctxt nm with
+      | SOME info => NONE
+      | NONE =>
+          if ALL_DISTINCT (MAP fst flds) then
+            let shs := MAP snd flds in
+            if EVERY (is_wf_shape st_ctxt) shs then
+              let info := {| fields := flds; size := size_of_sh_with_ctxt st_ctxt (Comb shs) |} in
+              decs_stcnames ((nm, info) :: st_ctxt) ds
+            else NONE
+          else NONE
+      end
+  | Decl sh v0 e :: ds => decs_stcnames st_ctxt ds
+  | Function fi :: ds => decs_stcnames st_ctxt ds
+  | ExnDecl eid sh :: ds => decs_stcnames st_ctxt ds
+  end.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "semantics_decls_def" *)
+Definition semantics_decls (s : state a ffi_t) (start : funname) (decls : list (decl a)) : behaviour :=
+  match decs_stcnames [] decls with
+  | NONE => Fail
+  | SOME st_ctxt =>
+      match evaluate_decls (set_structs st_ctxt s) decls with
+      | NONE => Fail
+      | SOME s' => semantics s' start
+      end
+  end.
+
+End Semantics.

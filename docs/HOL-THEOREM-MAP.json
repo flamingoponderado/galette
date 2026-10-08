@@ -30751,6 +30751,16 @@
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "decs_stcnames_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "decs_stcnames"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
   "hol_name": "empty_locals_def",
   "hol_line": null,
   "case": null,
@@ -30758,6 +30768,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
   "rocq_name": "empty_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "evaluate_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "evaluate_clock"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "evaluate_decls_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "evaluate_decls"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
@@ -30778,6 +30808,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
   "rocq_name": "fix_clock"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "fix_clock_evaluate",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "fix_clock_evaluate"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
@@ -30958,6 +30998,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
   "rocq_name": "result"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "semantics_decls_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "semantics_decls"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "semantics_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "semantics"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",

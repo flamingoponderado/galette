@@ -144,6 +144,31 @@ the `_def` tag. The tagged statement must be HOL's.
 - **Shared files**: if you need something in a file you do not own, say so in
   your report instead of editing it.
 
+## Porting semantics (clocked `evaluate` functions)
+
+CakeML semantics define `evaluate` by well-founded recursion on
+`(clock, program size)`, where later calls use the state returned by earlier
+ones (`fix_clock`). Rocq's `Function` cannot handle this (nested recursion).
+Use the recipe of `theories/cakeml/pancake/semantics/panSem.v`:
+
+1. `evaluate_body go lower p s`: HOL's clauses with `go` for calls at the
+   same clock bound (structurally smaller programs: `Seq`, `Dec`, `If`, ...)
+   and `lower` for calls at a strictly smaller clock (loop iteration, function
+   bodies, handlers).
+2. `evaluate_c cf`: structural recursion on a clock fuel `cf` (outer) and the
+   program (inner `fix go`), with `lower` = `evaluate_c (cf - 1)`;
+   `evaluate (p, s) := evaluate_c (S clock) p s`.
+3. `evaluate_body_ext`: every recursive call is smaller in HOL's measure
+   (`eval_lt`), so bodies agreeing on smaller arguments agree; the Ltac loop
+   there rewrites calls and case-splits scrutinees, then `cbn beta iota zeta`
+   (without it the loop re-splits constructor redexes and explodes).
+4. `evaluate_c_fuel` by well-founded induction on `eval_lt`, then
+   `evaluate_eqn : evaluate (p, s) = evaluate_body evaluate evaluate p s`,
+   from which HOL's `evaluate_def` clauses follow.
+
+Run long proof searches with a memory watchdog (a runaway case split can
+exhaust RAM): see the build commands in recent commit messages.
+
 ## Testing parity
 
 Compiler definitions are extracted to OCaml (`extraction/`). Parity tests run
