@@ -46,6 +46,7 @@ Inductive v : Type :=
 | RStruct : list v -> v
 | NStruct : stcname -> list (fldname * v) -> v.
 
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "ValWord" *)
 Definition ValWord (w : word a) : v := Val (Word w).
 
 #[global] Instance word_lab_inhabited : Inhabited word_lab := Word (n2w 0).
@@ -1561,5 +1562,64 @@ Definition semantics_decls (s : state a ffi_t) (start : funname) (decls : list (
       | SOME s' => semantics s' start
       end
   end.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "kvar_simps" *)
+Theorem kvar_simps : forall v0 value (s : state a ffi_t),
+  set_kvar Local v0 value s = set_var v0 value s /\
+  set_kvar Global v0 value s = set_global v0 value s /\
+  lookup_kvar Local v0 s = FLOOKUP (locals s) v0 /\
+  lookup_kvar Global v0 s = FLOOKUP (globals s) v0.
+Proof. repeat split. Qed.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "is_valid_value_simps" *)
+Theorem is_valid_value_simps : forall (s : state a ffi_t) v0 value,
+  is_valid_value s Local v0 value =
+    match FLOOKUP (locals s) v0 with
+    | SOME w => bool_decide (shape_of value = shape_of w)
+    | NONE => false
+    end /\
+  is_valid_value s Global v0 value =
+    match FLOOKUP (globals s) v0 with
+    | SOME w => bool_decide (shape_of value = shape_of w)
+    | NONE => false
+    end.
+Proof. repeat split. Qed.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "is_valid_value_simps2" *)
+Theorem is_valid_value_simps2 : forall (s : state a ffi_t) k ffi0 cd m vk v0 vl,
+  is_valid_value (set_clock k s) vk v0 vl = is_valid_value s vk v0 vl /\
+  is_valid_value (set_ffi ffi0 s) vk v0 vl = is_valid_value s vk v0 vl /\
+  is_valid_value (set_code cd s) vk v0 vl = is_valid_value s vk v0 vl /\
+  is_valid_value (set_memory m s) vk v0 vl = is_valid_value s vk v0 vl /\
+  lookup_kvar vk v0 (set_clock k s) = lookup_kvar vk v0 s /\
+  lookup_kvar vk v0 (set_ffi ffi0 s) = lookup_kvar vk v0 s /\
+  lookup_kvar vk v0 (set_code cd s) = lookup_kvar vk v0 s /\
+  lookup_kvar vk v0 (set_memory m s) = lookup_kvar vk v0 s.
+Proof. intros; destruct vk; repeat split. Qed.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "kvar_defs" *)
+Theorem kvar_defs :
+  (forall v0 value (s : state a ffi_t), set_var v0 value s = set_locals (locals s |+ (v0, value)) s) /\
+  (forall v0 value (s : state a ffi_t), set_global v0 value s = set_globals (globals s |+ (v0, value)) s) /\
+  (forall vk v0 value (s : state a ffi_t),
+     set_kvar vk v0 value s = match vk with Local => set_var v0 value s | Global => set_global v0 value s end) /\
+  (forall (s : state a ffi_t) vk v0 value,
+     is_valid_value s vk v0 value =
+     match lookup_kvar vk v0 s with
+     | SOME w => bool_decide (shape_of value = shape_of w)
+     | NONE => false
+     end) /\
+  (forall vk v0 (s : state a ffi_t),
+     lookup_kvar vk v0 s = match vk with Local => FLOOKUP (locals s) v0 | Global => FLOOKUP (globals s) v0 end).
+Proof. repeat split. Qed.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "vshapes_args_rel_imp_eq_len_MAP" *)
+Theorem vshapes_args_rel_imp_eq_len_MAP : forall (vshapes : list (varname * shape)) (args : list (v a)),
+  LIST_REL (fun vshape arg => snd vshape = shape_of arg) vshapes args ->
+  LENGTH vshapes = LENGTH args /\ MAP snd vshapes = MAP shape_of args.
+Proof.
+  intros vshapes args H; induction H as [|x y l1 l2 Hxy Hl IH]; [split; reflexivity|].
+  destruct IH as [IH1 IH2]; cbn [LENGTH MAP List.map]; rewrite IH1, Hxy, IH2; split; reflexivity.
+Qed.
 
 End Semantics.

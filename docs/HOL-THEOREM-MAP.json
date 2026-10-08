@@ -30741,6 +30741,16 @@
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "ValWord",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "ValWord"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
   "hol_name": "dec_clock_def",
   "hol_line": null,
   "case": null,
@@ -30878,6 +30888,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
   "rocq_name": "is_valid_value"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "is_valid_value_simps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "is_valid_value_simps"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "is_valid_value_simps2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "is_valid_value_simps2"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "kvar_defs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "kvar_defs"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "kvar_simps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "kvar_simps"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
@@ -31148,6 +31198,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
   "rocq_name": "v"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "vshapes_args_rel_imp_eq_len_MAP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "vshapes_args_rel_imp_eq_len_MAP"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
