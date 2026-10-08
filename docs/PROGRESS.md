@@ -36,8 +36,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/semantics/crepPropsScript, loopPropsScript | partial |
 | backend/semantics/backendPropsScript | done |
 | backend/semantics/wordPropsScript | partial (constant-field lemmas, wordProps/consts.v) |
-| backend/semantics/stackPropsScript, labPropsScript | partial |
-| backend/semantics/targetPropsScript | todo |
+| backend/semantics/stackPropsScript, labPropsScript | done |
+| backend/semantics/targetPropsScript | done except encoder_correct_(RTC_)asm_step_target_state_rel |
 | encoders/asm/asmPropsScript | partial |
 
 ## Pass proofs
@@ -47,17 +47,19 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/proofs/pan_simpProof | partial |
 | pancake/proofs/pan_structsProof, pan_globalsProof | todo |
 | pancake/proofs/crep_arithProof, crep_inlineProof | partial |
-| pancake/proofs/loop_callProof, loop_liveProof | todo |
-| pancake/proofs/pan_to_crepProof | todo |
-| pancake/proofs/crep_to_loopProof | todo |
-| pancake/proofs/loop_to_wordProof, pan_to_wordProof | todo |
+| pancake/proofs/loop_callProof, loop_liveProof | done |
+| pancake/proofs/pan_to_crepProof | wip |
+| pancake/proofs/crep_to_loopProof | done (`state_rel_imp_semantics`) |
+| pancake/proofs/loop_to_wordProof | wip |
+| pancake/proofs/pan_to_wordProof | todo |
 | backend/reg_alloc/parmoveScript theorems | done |
 | backend/reg_alloc/proofs/reg_allocProof | done (`reg_alloc_correct`) |
 | backend/reg_alloc/proofs/linear_scanProof | partial (intervals, allocator) |
 | backend/proofs word_simp, word_inst, word_cse, word_copy, word_remove, word_unreach, word_depth, word_alloc, word_to_word | todo |
 | backend/proofs stack_names, stack_rawcall | done |
-| backend/proofs word_to_stack, stack_alloc, stack_remove, stack_to_lab | todo |
-| backend/proofs lab_filter (helpers; filter_correct todo) | partial |
+| backend/proofs stack_remove | wip |
+| backend/proofs word_to_stack, stack_alloc, stack_to_lab | todo |
+| backend/proofs lab_filter | done |
 | backend/proofs lab_to_target | todo |
 | encoders/riscv/proofs/riscv_targetProof | todo |
 | backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | todo |
