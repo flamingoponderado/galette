@@ -20720,6 +20720,1806 @@
   "rocq_name": "the_nil_eq_cons"
  },
  {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "assign_ret_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "assign_ret"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "assigned_free_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "assigned_free_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "assigned_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "assigned_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "crepop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "crepop"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "exp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "exps_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "exps"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "funname",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "funname"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "load_globals_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "load_globals_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "load_shape_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "load_shape_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "nested_decs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "nested_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "nested_seq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "nested_seq"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "prog",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "shift",
+  "hol_line": 17,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "shift"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "store_globals_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "store_globals"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "stores_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "stores"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "var_cexp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "var_cexp"
+ },
+ {
+  "hol_path": "cakeml/pancake/crepLangScript.sml",
+  "hol_name": "varname",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crepLang.v",
+  "rocq_name": "varname"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_arithScript.sml",
+  "hol_name": "dest_2exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_arith.v",
+  "rocq_name": "dest_2exp_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_arithScript.sml",
+  "hol_name": "dest_2exp_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_arith.v",
+  "rocq_name": "dest_2exp_thm"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_arithScript.sml",
+  "hol_name": "dest_const_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_arith.v",
+  "rocq_name": "dest_const"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_arithScript.sml",
+  "hol_name": "mul_const_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_arith.v",
+  "rocq_name": "mul_const"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_arithScript.sml",
+  "hol_name": "simp_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_arith.v",
+  "rocq_name": "simp_exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_arithScript.sml",
+  "hol_name": "simp_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_arith.v",
+  "rocq_name": "simp_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "arg_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "arg_load"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "compile_inl_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "compile_inl_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "compile_inl_top_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "compile_inl_top"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "early_exit",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "early_exit"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "has_return_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "has_return"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "inline_nontail_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "inline_nontail"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "inline_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "inline_prog_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "inline_tail_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "inline_tail"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "not_branch_ret_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "not_branch_ret"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "transform_branch_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "transform_branch"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "transform_eoc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "transform_eoc"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "unreach_elim_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "unreach_elim"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "var_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "var_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_inlineScript.sml",
+  "hol_name": "vmax_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_inline.v",
+  "rocq_name": "vmax_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "comp_func_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "comp_func"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "compile_crepop_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "compile_crepop"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "compile_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "compile"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "compile_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "compile_exp_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "compile_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "compile_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "context",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "context"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "find_lab_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "find_lab"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "find_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "find_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "first_name_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "first_name"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "gen_temps_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "gen_temps"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "make_funcs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "make_funcs"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "make_vmap_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "make_vmap"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "mk_ctxt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "mk_ctxt"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "ocompile_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "ocompile"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "prog_if_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "prog_if"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "rt_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "rt_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/crep_to_loopScript.sml",
+  "hol_name": "rt_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/crep_to_loop.v",
+  "rocq_name": "rt_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/loopLangScript.sml",
+  "hol_name": "acc_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loopLang.v",
+  "rocq_name": "acc_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/loopLangScript.sml",
+  "hol_name": "assigned_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loopLang.v",
+  "rocq_name": "assigned_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/loopLangScript.sml",
+  "hol_name": "exp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loopLang.v",
+  "rocq_name": "exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/loopLangScript.sml",
+  "hol_name": "locals_touched_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loopLang.v",
+  "rocq_name": "locals_touched"
+ },
+ {
+  "hol_path": "cakeml/pancake/loopLangScript.sml",
+  "hol_name": "loop_arith",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loopLang.v",
+  "rocq_name": "loop_arith"
+ },
+ {
+  "hol_path": "cakeml/pancake/loopLangScript.sml",
+  "hol_name": "nested_seq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loopLang.v",
+  "rocq_name": "nested_seq"
+ },
+ {
+  "hol_path": "cakeml/pancake/loopLangScript.sml",
+  "hol_name": "prog",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loopLang.v",
+  "rocq_name": "prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/loopLangScript.sml",
+  "hol_name": "shift",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loopLang.v",
+  "rocq_name": "shift"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_callScript.sml",
+  "hol_name": "comp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_call.v",
+  "rocq_name": "comp"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_callScript.sml",
+  "hol_name": "is_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_call.v",
+  "rocq_name": "is_load"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "arith_vars",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "arith_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "comp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "comp"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "fixedpoint_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "fixedpoint_thm"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "mark_all_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "mark_all"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "optimise_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "optimise"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "shrink_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "shrink_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "size_inter",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "size_inter"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "size_mk_BN",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "size_mk_BN"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "size_mk_BS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "size_mk_BS"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_liveScript.sml",
+  "hol_name": "vars_of_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_live.v",
+  "rocq_name": "vars_of_exp_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "comp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "comp"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "comp_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "comp_exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "comp_func_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "comp_func"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "compile_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "compile"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "compile_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "compile_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "find_reg_imm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "find_reg_imm"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "find_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "find_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "fromNumSet_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "fromNumSet"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "make_ctxt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "make_ctxt"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "mk_new_cutset_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "mk_new_cutset"
+ },
+ {
+  "hol_path": "cakeml/pancake/loop_to_wordScript.sml",
+  "hol_name": "toNumSet_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/loop_to_word.v",
+  "rocq_name": "toNumSet"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "AssignCall",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "AssignCall"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "StandAloneCall",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "StandAloneCall"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "TailCall",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "TailCall"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "decl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "decl"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "decname",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "decname"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "eid",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "eid"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "exceptions_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "exceptions"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "exp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "exp_ids_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "exp_ids"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "fldname",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "fldname"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "free_var_ids_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "free_var_ids"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "fun_decl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "fun_decl"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "fun_ids_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "fun_ids"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "functions_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "functions"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "funname",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "funname"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "global_var_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "global_var_exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "index",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "index"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "inlinable_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "inlinable"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "is_decl_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "is_decl"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "is_exn_decl_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "is_exn_decl"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "is_function_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "is_function"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "is_name_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "is_name"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "is_wf_ctxt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "is_wf_ctxt"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "is_wf_flds_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "is_wf_flds"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "is_wf_shape_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "is_wf_shape"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "load_op_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "load_op"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "nested_seq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "nested_seq"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "opsize",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "opsize"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "panop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "panop"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "primop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "primop"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "prog",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "shape",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "shape"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "shape_to_str_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "shape_to_str"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "shape_val_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "shape_val"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "shift",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "shift"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "size_of_eids_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "size_of_eids"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "size_of_sh_with_ctxt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "size_of_sh_with_ctxt"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "size_of_shape_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "size_of_shape"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "stcname",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "stcname"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "store_op_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "store_op"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "struct_info",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "struct_info"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "var_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "var_exp_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "varkind",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "varkind"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "varname",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "varname"
+ },
+ {
+  "hol_path": "cakeml/pancake/panLangScript.sml",
+  "hol_name": "with_shape_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/panLang.v",
+  "rocq_name": "with_shape"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_commonScript.sml",
+  "hol_name": "distinct_lists_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_common.v",
+  "rocq_name": "distinct_lists"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "compile_decs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "compile_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "compile_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "compile"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "compile_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "compile_exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "compile_top_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "compile_top"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "context",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "context"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "dec_shapes_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "dec_shapes"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "fperm_decs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "fperm_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "fperm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "fperm"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "fperm_name_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "fperm_name"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "fresh_name_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "fresh_name_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "new_main_name_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "new_main_name"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_globalsScript.sml",
+  "hol_name": "resort_decls_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_globals.v",
+  "rocq_name": "resort_decls"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "SmartSeq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "SmartSeq"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "compile_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "compile"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "compile_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "compile_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "compile_prog_pmatch",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "compile_prog_pmatch"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "ret_to_tail_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "ret_to_tail"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "ret_to_tail_pmatch",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "ret_to_tail_pmatch"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "seq_assoc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "seq_assoc"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "seq_assoc_pmatch",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "seq_assoc_pmatch"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_simpScript.sml",
+  "hol_name": "seq_call_ret_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_simp.v",
+  "rocq_name": "seq_call_ret"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "afindi_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "afindi"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "compile_decs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "compile_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "compile_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "compile"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "compile_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "compile_exp_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "compile_shape_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "compile_shape_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "compile_top_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "compile_top"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "context",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "context"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "get_names_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "get_names"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_structsScript.sml",
+  "hol_name": "old_exp_shape_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_structs.v",
+  "rocq_name": "old_exp_shape_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "cexp_heads_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "cexp_heads"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "comp_field_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "comp_field"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "comp_func_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "comp_func"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "compile_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "compile"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "compile_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "compile_exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "compile_panop_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "compile_panop"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "compile_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "compile_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "compile_to_crep_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "compile_to_crep"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "context",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "context"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "crep_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "crep_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "exp_hdl_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "exp_hdl"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "get_eids_from_decls_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "get_eids_from_decls"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "make_funcs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "make_funcs"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "make_vmap_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "make_vmap"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "mk_ctxt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "mk_ctxt"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "ret_hdl_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "ret_hdl"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "ret_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "ret_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_crepScript.sml",
+  "hol_name": "wrap_rt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_crep.v",
+  "rocq_name": "wrap_rt"
+ },
+ {
+  "hol_path": "cakeml/pancake/pan_to_wordScript.sml",
+  "hol_name": "compile_prog_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/pan_to_word.v",
+  "rocq_name": "compile_prog"
+ },
+ {
   "hol_path": "cakeml/semantics/astScript.sml",
   "hol_name": "shift",
   "hol_line": null,

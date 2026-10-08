@@ -408,7 +408,7 @@ Notation "v >=+ w" := (word_hs v w) (at level 70, no associativity) : word_scope
 Notation "( h -- l )" := (word_bits h l) : word_scope.
 Notation "( h >< l )" := (word_extract h l) : word_scope.
 Notation "v @@ w" := (word_concat v w) (at level 60, right associativity) : word_scope.
-Notation "w ' i" := (fcp_index w i) (at level 9, i at level 9) : word_scope.
+Notation "w ' i" := (fcp_index w i%N) (at level 9, i at level 9) : word_scope.
 Abbreviation UINT_MAXw := word_T.
 Abbreviation INT_MAXw := word_H.
 Abbreviation INT_MINw := word_L.

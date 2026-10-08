@@ -230,7 +230,7 @@ Definition FDIFF {K V} (f1 : fmap K V) (s : K -> Prop) : fmap K V :=
 
 Arguments FEMPTY {K V}.
 
-Notation "f ' k" := (FAPPLY f k) (at level 9, k at level 8) : fmap_scope.
+Notation "f ' k" := (FAPPLY f k) (at level 9, k at level 9) : fmap_scope.
 Infix "|+" := FUPDATE (at level 45, left associativity) : fmap_scope.
 Infix "|++" := FUPDATE_LIST (at level 50, left associativity) : fmap_scope.
 Infix "\\" := fdomsub (at level 45, left associativity) : fmap_scope.
