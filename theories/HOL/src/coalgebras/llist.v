@@ -521,3 +521,193 @@ Proof.
       pose proof (f_equal (fun l => llist_rep l 0) E) as H0; cbn in H0; discriminate.
   - intros [-> ->]; apply (proj1 LAPPEND_thm).
 Qed.
+
+(** ** [LPREFIX]
+
+    HOL defines [LPREFIX] through [toList]; it is equivalent to the
+    pointwise relation [pfx] below (every element of the first list is at the
+    same position in the second), from which HOL's lemmas follow. *)
+Section Prefix.
+Context {A : Type} `{EqDecision A} `{Inhabited A}.
+
+Definition pfx (l1 l2 : llist A) : Prop :=
+  forall i x, LNTH i l1 = SOME x -> LNTH i l2 = SOME x.
+
+Lemma pfx_LCONS (x h : A) l1 t : pfx (LCONS x l1) (LCONS h t) <-> x = h /\ pfx l1 t.
+Proof.
+  unfold pfx; split.
+  - intros P. assert (x = h) as ->.
+    { specialize (P 0 x); rewrite !(proj1 (proj2 LNTH_THM)) in P.
+      specialize (P eq_refl); inversion P; reflexivity. }
+    split; [reflexivity|]. intros i y Hy.
+    specialize (P (SUC i) y); rewrite !(proj2 (proj2 LNTH_THM)) in P; exact (P Hy).
+  - intros [-> P] i y Hy. destruct i as [|i] using N.peano_ind.
+    + rewrite (proj1 (proj2 LNTH_THM)) in *; exact Hy.
+    + rewrite (proj2 (proj2 LNTH_THM)) in *; exact (P i y Hy).
+Qed.
+
+Lemma pfx_LNIL l : pfx LNIL l.
+Proof. intros i x Hx; rewrite (proj1 LNTH_THM) in Hx; discriminate. Qed.
+
+Lemma pfx_LCONS_LNIL (x : A) l : ~ pfx (LCONS x l) LNIL.
+Proof.
+  intros P; specialize (P 0 x); rewrite (proj1 (proj2 LNTH_THM)), (proj1 LNTH_THM) in P.
+  discriminate (P eq_refl).
+Qed.
+
+Lemma LTAKE_pfx n : forall (ll : llist A) xs,
+  LTAKE n ll = SOME xs <-> LENGTH xs = n /\ pfx (fromList xs) ll.
+Proof.
+  induction n as [|n IH] using N.peano_ind; intros ll xs.
+  - rewrite (proj1 LTAKE_THM); split.
+    + intros E; inversion E; split; [reflexivity|apply pfx_LNIL].
+    + intros [Hl _]; destruct xs; [reflexivity|cbn in Hl; lia].
+  - destruct (llist_CASES ll) as [->|[h [t ->]]].
+    + rewrite (proj1 (proj2 LTAKE_THM)); split; [discriminate|].
+      intros [Hl P]; destruct xs as [|x xs]; [cbn in Hl; lia|]. exfalso; exact (pfx_LCONS_LNIL x _ P).
+    + rewrite (proj2 (proj2 LTAKE_THM)). destruct xs as [|x xs].
+      * split; [destruct (LTAKE n t); discriminate|intros [Hl _]; cbn in Hl; lia].
+      * cbn [fromList]; rewrite pfx_LCONS; cbn [LENGTH].
+        destruct (LTAKE n t) as [ys|] eqn:E; cbn.
+        -- split.
+           ++ intros F; inversion F; subst. apply IH in E as [E1 E2]. split; [lia|split; auto].
+           ++ intros [Hl [-> P]]. f_equal. f_equal.
+              assert (Hys := proj1 (IH t ys) E). assert (Hxs : LTAKE n t = SOME xs).
+              { apply IH; split; [lia|exact P]. }
+              congruence.
+        -- split; [discriminate|]. intros [Hl [-> P]].
+           assert (LTAKE n t = SOME xs) by (apply IH; split; [lia|exact P]). congruence.
+Qed.
+
+Lemma toList_fromList (l : list A) : toList (fromList l) = SOME l.
+Proof.
+  induction l as [|x l IH]; cbn [fromList].
+  - apply (proj1 toList_THM).
+  - rewrite (proj2 toList_THM), IH; reflexivity.
+Qed.
+
+Lemma LFINITE_fromList_ex (ll : llist A) : LFINITE ll -> exists xs, ll = fromList xs.
+Proof.
+  induction 1 as [|h t _ [xs ->]]; [exists []; reflexivity|]. exists (h :: xs); reflexivity.
+Qed.
+
+Lemma toList_SOME (ll : llist A) xs : toList ll = SOME xs <-> ll = fromList xs.
+Proof.
+  split; [|intros ->; apply toList_fromList].
+  intros E. destruct (classic (LFINITE ll)) as [Hf|Hf].
+  - destruct (LFINITE_fromList_ex ll Hf) as [ys ->]. rewrite toList_fromList in E.
+    inversion E; reflexivity.
+  - unfold toList in E; destruct (classical_dec _); [contradiction|discriminate].
+Qed.
+
+Lemma toList_NONE (ll : llist A) : toList ll = NONE <-> ~ LFINITE ll.
+Proof.
+  split.
+  - intros E Hf; destruct (LFINITE_fromList_ex ll Hf) as [xs ->].
+    rewrite toList_fromList in E; discriminate.
+  - intros Hf; unfold toList; destruct (classical_dec _); [contradiction|reflexivity].
+Qed.
+
+Lemma isPREFIX_LTAKE (xs ys : list A) :
+  isPREFIX xs ys = true <-> LTAKE (LENGTH xs) (fromList ys) = SOME xs.
+Proof.
+  revert ys; induction xs as [|x xs IH]; intros ys; cbn [isPREFIX LENGTH].
+  - rewrite (proj1 LTAKE_THM); split; reflexivity.
+  - destruct ys as [|y ys]; cbn [fromList].
+    + rewrite (proj1 (proj2 LTAKE_THM)); split; discriminate.
+    + rewrite (proj2 (proj2 LTAKE_THM)), andb_true_iff, bool_decide_spec, IH.
+      destruct (LTAKE (LENGTH xs) (fromList ys)) as [zs|]; cbn; split.
+      * intros [-> E]; inversion E; reflexivity.
+      * intros E; inversion E; subst; split; reflexivity.
+      * intros [_ E]; discriminate.
+      * discriminate.
+Qed.
+
+Lemma infinite_pfx_eq (l1 l2 : llist A) : ~ LFINITE l1 -> pfx l1 l2 -> l1 = l2.
+Proof.
+  intros Hf P; apply llist_ext_LNTH; intros n.
+  destruct (LNTH n l1) as [x|] eqn:E; [symmetry; exact (P n x E)|].
+  exfalso; apply Hf, LFINITE_rep; exists n; rewrite <- LNTH_rep; exact E.
+Qed.
+
+Lemma LPREFIX_pfx (l1 l2 : llist A) : LPREFIX l1 l2 <-> pfx l1 l2.
+Proof.
+  unfold LPREFIX.
+  destruct (toList l1) as [xs|] eqn:E1.
+  - apply toList_SOME in E1 as ->.
+    destruct (toList l2) as [ys|] eqn:E2.
+    + apply toList_SOME in E2 as ->. rewrite isPREFIX_LTAKE, LTAKE_pfx; tauto.
+    + rewrite LTAKE_pfx; tauto.
+  - apply toList_NONE in E1. split; [intros ->; intros i x Hx; exact Hx|].
+    apply infinite_pfx_eq; exact E1.
+Qed.
+
+End Prefix.
+
+Section PrefixThms.
+Context {A : Type} `{EqDecision A} `{Inhabited A}.
+
+(** The list [ll] without its first [m] elements (Galette helper). *)
+Lemma lrep_ok_ldrop (m : N) (ll : llist A) : lrep_ok (fun n => llist_rep ll (n + m)).
+Proof.
+  intros n; cbv beta. replace (SUC n + m) with (SUC (n + m)) by lia.
+  exact (llist_rep_ok ll (n + m)).
+Qed.
+
+Definition ldrop (m : N) (ll : llist A) : llist A :=
+  llist_abs_ok (fun n => llist_rep ll (n + m)) (lrep_ok_ldrop m ll).
+
+(*! HOL "HOL/src/coalgebras/llistScript.sml" "LPREFIX_APPEND" *)
+Theorem LPREFIX_APPEND : forall (l1 l2 : llist A),
+  LPREFIX l1 l2 <-> exists ll, l2 = LAPPEND l1 ll.
+Proof.
+  intros l1 l2; rewrite LPREFIX_pfx; split.
+  - intros P. destruct (LLENGTH l1) as [m|] eqn:Em.
+    + exists (ldrop m l2). apply llist_ext; intros n; cbn; unfold lapp_rep; rewrite Em.
+      destruct (N.ltb_spec n m).
+      * apply LLENGTH_fin_len in Em as [_ F].
+        destruct (llist_rep l1 n) as [x|] eqn:E; [|exfalso; exact (F n H1 E)].
+        rewrite <- !LNTH_rep in *. exact (P n x E).
+      * unfold ldrop; cbn [llist_rep]; rewrite N.sub_add by lia; reflexivity.
+    + exists LNIL. symmetry.
+      assert (Hf : ~ LFINITE l1) by (rewrite LFINITE_LLENGTH; congruence).
+      rewrite <- (infinite_pfx_eq l1 l2 Hf P).
+      apply llist_ext; intros n; cbn; unfold lapp_rep; rewrite Em; reflexivity.
+  - intros [ll ->] i x Hx. rewrite LNTH_LAPPEND.
+    destruct (LLENGTH l1) as [m|] eqn:Em; [|exact Hx].
+    destruct (N.ltb_spec i m); [exact Hx|].
+    apply LLENGTH_fin_len in Em as [F _]. rewrite LNTH_rep in Hx.
+    pose proof (lrep_ok_none _ (llist_rep_ok l1) m i F ltac:(lia)) as Z; rewrite Z in Hx; discriminate.
+Qed.
+
+(*! HOL "HOL/src/coalgebras/llistScript.sml" "LPREFIX_REFL" *)
+Theorem LPREFIX_REFL : forall (ll : llist A), LPREFIX ll ll.
+Proof. intros ll; apply LPREFIX_pfx; intros i x Hx; exact Hx. Qed.
+
+(*! HOL "HOL/src/coalgebras/llistScript.sml" "LPREFIX_TRANS" *)
+Theorem LPREFIX_TRANS : forall (l1 l2 l3 : llist A),
+  LPREFIX l1 l2 /\ LPREFIX l2 l3 -> LPREFIX l1 l3.
+Proof.
+  intros l1 l2 l3 [P Q]; rewrite LPREFIX_pfx in *; intros i x Hx; apply Q, P, Hx.
+Qed.
+
+(*! HOL "HOL/src/coalgebras/llistScript.sml" "LPREFIX_LNIL" *)
+Theorem LPREFIX_LNIL : forall (ll : llist A),
+  LPREFIX LNIL ll /\ (LPREFIX ll LNIL <-> ll = LNIL).
+Proof.
+  intros ll; rewrite !LPREFIX_pfx; split; [apply pfx_LNIL|split].
+  - intros P; destruct (llist_CASES ll) as [->|[h [t ->]]]; [reflexivity|].
+    exfalso; exact (pfx_LCONS_LNIL h t P).
+  - intros ->; apply pfx_LNIL.
+Qed.
+
+(*! HOL "HOL/src/coalgebras/llistScript.sml" "LPREFIX_fromList" *)
+Theorem LPREFIX_fromList : forall (l : list A) ll,
+  LPREFIX (fromList l) ll <->
+  match toList ll with
+  | NONE => LTAKE (LENGTH l) ll = SOME l
+  | SOME ys => isPREFIX l ys = true
+  end.
+Proof. intros l ll; unfold LPREFIX; rewrite toList_fromList; reflexivity. Qed.
+
+End PrefixThms.
