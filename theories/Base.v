@@ -15,7 +15,7 @@
       [is_true] coercion.  HOL predicates defined by quantification are [Prop].
     - HOL [=] on a type used computationally is decided by [decide (x = y)]. *)
 
-From Stdlib Require Export Bool PeanoNat ZArith String Ascii List.
+From Stdlib Require Export Bool PeanoNat NArith ZArith String Ascii List.
 From Stdlib Require Export Logic.ClassicalEpsilon Logic.FunctionalExtensionality
   Logic.PropExtensionality Logic.ProofIrrelevance.
 From Stdlib Require Export Lia.
@@ -50,6 +50,7 @@ Class EqDecision (A : Type) := eq_dec :: forall x y : A, Decision (x = y).
 
 #[global] Instance nat_eq_dec : EqDecision nat := Nat.eq_dec.
 #[global] Instance Z_eq_dec : EqDecision Z := Z.eq_dec.
+#[global] Instance N_eq_dec : EqDecision N := N.eq_dec.
 #[global] Instance bool_eq_dec : EqDecision bool := Bool.bool_dec.
 #[global] Instance ascii_eq_dec : EqDecision ascii := Ascii.ascii_dec.
 #[global] Instance string_eq_dec : EqDecision string := String.string_dec.
@@ -103,6 +104,7 @@ Arguments inhabitant A {_}.
 
 #[global] Instance nat_inhabited : Inhabited nat := 0.
 #[global] Instance Z_inhabited : Inhabited Z := 0%Z.
+#[global] Instance N_inhabited : Inhabited N := 0%N.
 #[global] Instance bool_inhabited : Inhabited bool := false.
 #[global] Instance unit_inhabited : Inhabited unit := tt.
 #[global] Instance list_inhabited {A} : Inhabited (list A) := [].
