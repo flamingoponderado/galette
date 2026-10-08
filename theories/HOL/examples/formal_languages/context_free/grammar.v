@@ -45,6 +45,12 @@ Inductive parsetree (A B L : Type) : Type :=
 Arguments Lf {A B L} _.
 Arguments Nd {A B L} _ _.
 
+(** Every HOL type is inhabited; HOL's partial list functions on parse trees
+    ([HD], [EL], ...) need this. *)
+#[global] Instance parsetree_inhabited {A B L} `{Inhabited L} : Inhabited (parsetree A B L) :=
+  Nd (inr 0%N, inhabitant L) [].
+
+
 Section Ptree.
 Context {A B L : Type}.
 

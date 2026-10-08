@@ -140,12 +140,12 @@ Extract Inlined Constant Pos.succ => "Galette_zarith.succ".
 Extract Inlined Constant N.of_nat => "(fun n -> n)".
 Extract Inlined Constant N.to_nat => "(fun n -> n)".
 Extract Inlined Constant N.peano_rect =>
-  "(fun _ f0 fs n -> let rec go i acc = if Galette_zarith.equal i n then acc else go (Galette_zarith.succ i) (fs i acc) in go Galette_zarith.zero f0)".
+  "(fun f0 fs n -> let rec go i acc = if Galette_zarith.equal i n then acc else go (Galette_zarith.succ i) (fs i acc) in go Galette_zarith.zero f0)".
 Extract Inlined Constant N.peano_rec =>
   "(fun f0 fs n -> let rec go i acc = if Galette_zarith.equal i n then acc else go (Galette_zarith.succ i) (fs i acc) in go Galette_zarith.zero f0)".
 
 (** [ARB]/[select] are not computable; reaching them at run time is a bug. *)
-Extract Constant select => "(fun _ _ -> failwith ""Galette: ARB/select evaluated"")".
+Extract Constant select => "(fun _ -> failwith ""Galette: ARB/select evaluated"")".
 
 Open Scope N_scope.
 Definition smoke : list N :=
@@ -159,3 +159,23 @@ Definition smoke : list N :=
 
 Set Extraction Output Directory ".".
 Extraction "galette_smoke.ml" smoke.
+
+(** ** The compiler executable
+
+    [galette_main args stdin] runs the compiler's top level
+    ([compiler.compiler_main], the Pancake path of CakeML's
+    [full_compile_64]) on the command-line arguments and the contents of
+    stdin, and returns the stdout text (the flattened [app_list] of
+    chunks), the stderr text and whether the latter is an error message
+    ([compiler.is_error_msg]); see [galette.ml]. *)
+
+From Galette.cakeml.misc Require Import misc.
+From Galette.cakeml.basis.pure Require Import mlstring.
+From Galette.cakeml.compiler Require compiler.
+
+Definition galette_main (args : list (list ascii)) (inp : list ascii)
+    : (list (list ascii) * list ascii) * bool :=
+  let '(out, err) := compiler.compiler_main (List.map implode args) inp in
+  ((List.map explode (append out), explode err), compiler.is_error_msg err).
+
+Extraction "galette_compiler.ml" galette_main.

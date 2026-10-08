@@ -1,10 +1,12 @@
 (rocq.extraction
  (prelude Extract)
- (extracted_modules galette_smoke)
+ (extracted_modules galette_smoke galette_compiler)
  (theories Galette Stdlib))
 
-(executable
- (name smoke)
- (modules galette_zarith galette_smoke smoke)
+; [galette] is the compiler executable (see galette.ml); [smoke] tests
+; the word arithmetic realisations.
+(executables
+ (names smoke galette)
+ (modules galette_zarith galette_smoke smoke galette_compiler galette)
  (flags (:standard -w -a))
  (libraries zarith))
