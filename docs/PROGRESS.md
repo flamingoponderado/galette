@@ -22,7 +22,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | HOL llist, lprefix_lub | done for what the proofs cite (LAPPEND, LPREFIX, lprefix_lub, build_lprefix_lub_thm, ...) |
 | pancake/semantics/panSemScript | done |
 | pancake/semantics/crepSemScript, loopSemScript | done (crep `eval_def` untagged: needs bitstring `v2w`) |
-| compiler/backend/semantics/wordSemScript (+ wordConvs) | wip |
+| compiler/backend/semantics/wordSemScript | done |
+| compiler/backend/semantics/wordConvsScript | definitions done; theorems wip |
 | compiler/backend/semantics/stackSemScript, labSemScript | wip |
 | compiler/encoders/asm/asmSemScript, backend/semantics/targetSemScript | wip |
 | HOL L3 riscv model (Next, step) | wip |
@@ -34,7 +35,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/semantics/panPropsScript, pan_commonPropsScript | wip |
 | pancake/semantics/crepPropsScript, loopPropsScript | wip |
 | backend/semantics/backendPropsScript | done |
-| backend/semantics/wordPropsScript, stackPropsScript, labPropsScript, targetPropsScript | todo |
+| backend/semantics/wordPropsScript | wip |
+| backend/semantics/stackPropsScript, labPropsScript, targetPropsScript | todo |
 | encoders/asm/asmPropsScript | todo |
 
 ## Pass proofs
@@ -57,3 +59,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 Axiom audit: the theorems checked so far depend only on the axioms declared
 in `theories/Base.v` (excluded middle, choice, functional extensionality,
 proof irrelevance), i.e. HOL's logic.
+
+Known gap: floating-point operations (`machine_ieee`/`binary_ieee`) are
+Galette stand-ins (`ARB`) shared by wordSem/stackSem/asmSem; Pancake never
+emits FP instructions, but a faithful port of those HOL theories is still to
+do.
