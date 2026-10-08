@@ -21031,6 +21031,126 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "ALL_DISTINCT_parmove",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "ALL_DISTINCT_parmove"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "ALL_DISTINCT_pmov",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "ALL_DISTINCT_pmov"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "ALL_DISTINCT_step",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "ALL_DISTINCT_step"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "ALL_DISTINCT_steps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "ALL_DISTINCT_steps"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "MEM_MAP_FST_SND_SND_pmov",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "MEM_MAP_FST_SND_SND_pmov"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "MEM_MAP_FST_parmove",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "MEM_MAP_FST_parmove"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "MEM_MAP_SND_SND_SND_pmov",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "MEM_MAP_SND_SND_SND_pmov"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "MEM_MAP_SND_parmove",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "MEM_MAP_SND_parmove"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "NoRead_path",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "NoRead_path"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "dstep_rules",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "dstep"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "dstep_step",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "dstep_step"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "dsteps_steps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "dsteps_steps"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
   "hol_name": "eqenv_def",
   "hol_line": null,
   "case": null,
@@ -21041,6 +21161,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "eqenv_sym",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "eqenv_sym"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "fstep_MAP_INJ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "fstep_MAP_INJ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
   "hol_name": "fstep_def",
   "hol_line": null,
   "case": null,
@@ -21048,6 +21188,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove.v",
   "rocq_name": "fstep"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "fstep_dstep",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "fstep_dstep"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "independence",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "independence"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
@@ -21071,6 +21231,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "not_use_temp_before_assign_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "not_use_temp_before_assign_append"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
   "hol_name": "not_use_temp_before_assign_def",
   "hol_line": null,
   "case": null,
@@ -21078,6 +21248,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove.v",
   "rocq_name": "not_use_temp_before_assign"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "not_use_temp_before_assign_insert",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "not_use_temp_before_assign_insert"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "not_use_temp_before_assign_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "not_use_temp_before_assign_thm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parmove_MAP_INJ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parmove_MAP_INJ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parmove_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parmove_correct"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
@@ -21091,6 +21301,66 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parmove_not_use_temp_before_assign",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parmove_not_use_temp_before_assign"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parmove_preserves_moves",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parmove_preserves_moves"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parsem_MAP_INJ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parsem_MAP_INJ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parsem_NoRead",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parsem_NoRead"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parsem_change_env",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parsem_change_env"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parsem_cons",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parsem_cons"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
   "hol_name": "parsem_def",
   "hol_line": null,
   "case": null,
@@ -21098,6 +21368,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove.v",
   "rocq_name": "parsem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parsem_nil",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parsem_nil"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "parsem_untouched",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "parsem_untouched"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "path_change_start",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "path_change_start"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
@@ -21111,6 +21411,46 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "path_imp_mem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "path_imp_mem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "path_imp_mem2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "path_imp_mem2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "path_tail",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "path_tail"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "pmov_MAP_INJ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "pmov_MAP_INJ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
   "hol_name": "pmov_def",
   "hol_line": null,
   "case": null,
@@ -21118,6 +21458,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove.v",
   "rocq_name": "pmov_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "pmov_dsteps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "pmov_dsteps"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "pmov_final",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "pmov_final"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "pmov_not_use_temp_before_assign",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "pmov_not_use_temp_before_assign"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "pmov_preserves_moves",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "pmov_preserves_moves"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
@@ -21131,6 +21511,36 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "sem_final",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "sem_final"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "sem_init",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "sem_init"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "seqsem_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "seqsem_append"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
   "hol_name": "seqsem_def",
   "hol_line": null,
   "case": null,
@@ -21138,6 +21548,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove.v",
   "rocq_name": "seqsem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "seqsem_move_unchanged",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "seqsem_move_unchanged"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
@@ -21151,6 +21571,126 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "step_MAP_INJ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "step_MAP_INJ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "step_inj_on_state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "step_inj_on_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "step_not_use_temp_before_assign",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "step_not_use_temp_before_assign"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "step_preserves_moves",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "step_preserves_moves"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "step_rules",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "step"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "step_sem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "step_sem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "steps_MAP_INJ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "steps_MAP_INJ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "steps_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "steps_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "steps_inj_on_state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "steps_inj_on_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "steps_not_use_temp_before_assign",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "steps_not_use_temp_before_assign"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "steps_preserves_moves",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "steps_preserves_moves"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "steps_sem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "steps_sem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
   "hol_name": "wf_def",
   "hol_line": null,
   "case": null,
@@ -21158,6 +21698,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove.v",
   "rocq_name": "wf"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "wf_init",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "wf_init"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "wf_step",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "wf_step"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "wf_steps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "wf_steps"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
+  "hol_name": "windmill_cons",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/parmove/proofs.v",
+  "rocq_name": "windmill_cons"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/parmoveScript.sml",
