@@ -15501,6 +15501,166 @@
  },
  {
   "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_CASES1",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_CASES1"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_CASES2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_CASES2"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_CASES_RTC_TWICE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_CASES_RTC_TWICE"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_INDUCT",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_INDUCT"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_MONOTONE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_MONOTONE"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_REFL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_REFL"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_REFLEXIVE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_REFLEXIVE"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_RTC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_RTC"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_RULES",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_RULES"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_SINGLE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_SINGLE"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_STRONG_INDUCT",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_STRONG_INDUCT"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_SUBSET",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_SUBSET"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_TRANS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_TRANS"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_TRANSITIVE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_TRANSITIVE"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "RTC_lifts_invariants",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "RTC_lifts_invariants"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
   "hol_name": "irreflexive_def",
   "hol_line": null,
   "case": null,
@@ -15508,6 +15668,26 @@
   "note": "",
   "rocq_path": "theories/HOL/src/relation/relation.v",
   "rocq_name": "irreflexive"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "reflexive_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "reflexive"
+ },
+ {
+  "hol_path": "HOL/src/relation/relationScript.sml",
+  "hol_name": "transitive_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/relation/relation.v",
+  "rocq_name": "transitive"
  },
  {
   "hol_path": "HOL/src/sort/mergesortScript.sml",

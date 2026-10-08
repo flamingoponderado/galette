@@ -5,10 +5,8 @@
     definitions are in [parmove.v]).
 
     Galette-local (untagged) infrastructure, documented where it is used:
-    - [RTC]: HOL's reflexive-transitive closure ([relationTheory.RTC]) is not
-      ported yet; it is defined here with HOL's rules ([RTC_REFL],
-      [RTC_SINGLE]/[RTC_RULES]).  HOL's [▷*] is [RTC step], [↪*] is
-      [RTC dstep].
+    - HOL's [▷*] is [RTC step] and [↪*] is [RTC dstep] ([RTC] from
+      [relation.v]).
     - HOL's [PERM] is not ported; [parsem_perm] is stated with Rocq's
       [Permutation] and therefore left untagged.
     - HOL's local overload [NoRead μ dn] is written out as
@@ -24,6 +22,7 @@ From Galette.HOL.src.list.src.list Require Import list_to_set.
 From Galette.HOL.src.pred_set.src Require Import pred_set.
 From Galette.HOL.src.coretypes Require Import option pair.
 From Galette.HOL.src.combin Require Import combin.
+From Galette.HOL.src.relation Require Import relation.
 From Galette.cakeml.misc Require Import misc.
 From Galette.cakeml.compiler.backend.reg_alloc Require Import parmove.
 From Stdlib Require Import Permutation.
@@ -31,20 +30,6 @@ Open Scope N_scope.
 
 (** ** Local infrastructure *)
 
-(** HOL [RTC] (relationTheory; not ported yet). *)
-Inductive RTC {X} (R : X -> X -> Prop) : X -> X -> Prop :=
-| RTC_refl x : RTC R x x
-| RTC_cons x y z : R x y -> RTC R y z -> RTC R x z.
-
-Lemma RTC_single {X} (R : X -> X -> Prop) x y : R x y -> RTC R x y.
-Proof. intros H; eapply RTC_cons; [exact H|apply RTC_refl]. Qed.
-
-Lemma RTC_trans {X} (R : X -> X -> Prop) x y z : RTC R x y -> RTC R y z -> RTC R x z.
-Proof. induction 1; [auto|]; intros; eapply RTC_cons; eauto. Qed.
-
-Lemma RTC_lifts_invariants {X} (R : X -> X -> Prop) (P : X -> Prop) :
-  (forall x y, P x -> R x y -> P y) -> forall x y, P x /\ RTC R x y -> P y.
-Proof. intros HP x y [Hx H]; induction H; eauto. Qed.
 
 Lemma MEM_iff {X} `{EqDecision X} (x : X) l : is_true (MEM x l) <-> In x l.
 Proof. apply MEM_In. Qed.
@@ -515,7 +500,7 @@ Qed.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/parmoveScript.sml" "wf_steps" *)
 Theorem wf_steps : forall s1 s2 : st, wf s1 /\ RTC step s1 s2 -> wf s2.
-Proof. apply RTC_lifts_invariants; intros x y Hx Hs; eapply wf_step; eauto. Qed.
+Proof. apply RTC_lifts_invariants; intros x y [Hx Hs]; eapply wf_step; eauto. Qed.
 
 End Steps.
 
@@ -625,24 +610,24 @@ Qed.
 Theorem dstep_step : forall s1 s2 : st, dstep s1 s2 -> wf s1 -> RTC step s1 s2.
 Proof.
   intros s1 s2 Hs Hw; destruct Hs.
-  - apply RTC_single; exact (step_1 [] r μ [] τ).
-  - apply RTC_single; exact (step_2 [] d s μ τ).
-  - apply RTC_single; exact (step_3 μ1 r d μ2 s σ τ).
+  - apply RTC_SINGLE; exact (step_1 [] r μ [] τ).
+  - apply RTC_SINGLE; exact (step_2 [] d s μ τ).
+  - apply RTC_SINGLE; exact (step_3 μ1 r d μ2 s σ τ).
   - apply wf_iff in Hw as (_ & _ & _ & _ & Hfs & _).
     assert (Hr : r <> None).
     { intros ->; specialize (Hfs (None, s) (or_introl eq_refl)); discriminate. }
-    eapply RTC_cons; [exact (step_4 μ ([(r, s)] ++ σ) d r τ)|].
-    apply RTC_single; exact (step_5 μ r None s σ d ([(None, r)] ++ τ) H Hr).
-  - apply RTC_single; exact (step_5 μ dn s0 sn σ d0 τ H H0).
-  - apply RTC_single; exact (step_6 μ d s τ H).
+    eapply rtc_step; [exact (step_4 μ ([(r, s)] ++ σ) d r τ)|].
+    apply RTC_SINGLE; exact (step_5 μ r None s σ d ([(None, r)] ++ τ) H Hr).
+  - apply RTC_SINGLE; exact (step_5 μ dn s0 sn σ d0 τ H H0).
+  - apply RTC_SINGLE; exact (step_6 μ d s τ H).
 Qed.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/parmoveScript.sml" "dsteps_steps" *)
 Theorem dsteps_steps : forall s1 s2 : st, RTC dstep s1 s2 -> wf s1 -> RTC step s1 s2.
 Proof.
-  intros s1 s2 H; induction H as [x|x y z Hxy Hyz IH]; intros Hw; [apply RTC_refl|].
+  intros s1 s2 H; induction H as [x|x y z Hxy Hyz IH]; intros Hw; [apply rtc_refl|].
   pose proof (dstep_step _ _ Hxy Hw) as H1.
-  apply (RTC_trans _ _ _ _ H1), IH, (wf_steps x); split; assumption.
+  apply (fun H2 => RTC_RTC _ _ _ H1 _ H2), IH, (wf_steps x); split; assumption.
 Qed.
 
 Lemma NoRead_of_split (t1 : list mv) d :
@@ -696,8 +681,8 @@ Qed.
 Theorem pmov_dsteps : forall s : st, RTC dstep s (pmov s).
 Proof.
   intros s; induction s as [s IH] using (well_founded_induction pmov_wf).
-  destruct s as [[|m μ] [[|x σ] τ]]; rewrite pmov_def; cbv beta iota; [apply RTC_refl|..];
-    (eapply RTC_cons; [apply fstep_dstep; intros ? [=]|apply IH, fstep_dec; reflexivity]).
+  destruct s as [[|m μ] [[|x σ] τ]]; rewrite pmov_def; cbv beta iota; [apply rtc_refl|..];
+    (eapply rtc_step; [apply fstep_dstep; intros ? [=]|apply IH, fstep_dec; reflexivity]).
 Qed.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/parmoveScript.sml" "pmov_final" *)
@@ -906,7 +891,7 @@ Theorem steps_not_use_temp_before_assign : forall s1 s2 : st,
   RTC step s1 s2 ->
   (fun s1 : st => wf s1 /\ not_use_temp_before_assign (REVERSE (FST (SND s1) ++ SND (SND s1)))) s2.
 Proof.
-  apply RTC_lifts_invariants; intros x y Hx Hs; split;
+  apply RTC_lifts_invariants; intros x y [Hx Hs]; split;
     [eapply wf_step; [exact Hs|apply Hx]|eapply step_not_use_temp_before_assign; eauto].
 Qed.
 
@@ -976,7 +961,7 @@ Theorem ALL_DISTINCT_steps : forall s1 s2 : st,
   (fun s1 : st => ALL_DISTINCT (FILTER IS_SOME (MAP FST (FST s1 ++ FST (SND s1) ++ SND (SND s1))))) s1 /\
   RTC step s1 s2 ->
   (fun s1 : st => ALL_DISTINCT (FILTER IS_SOME (MAP FST (FST s1 ++ FST (SND s1) ++ SND (SND s1))))) s2.
-Proof. apply RTC_lifts_invariants; intros x y Hx Hs; eapply ALL_DISTINCT_step; eauto. Qed.
+Proof. apply RTC_lifts_invariants; intros x y [Hx Hs]; eapply ALL_DISTINCT_step; eauto. Qed.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/parmoveScript.sml" "ALL_DISTINCT_pmov" *)
 Theorem ALL_DISTINCT_pmov : forall p : st,
@@ -1039,7 +1024,7 @@ Qed.
 Theorem steps_preserves_moves : forall x (s1 s2 : st),
   (fun s1 : st => exists y, MEM (x, y) (state_to_list s1) /\ x <> y) s1 /\ RTC step s1 s2 ->
   (fun s1 : st => exists y, MEM (x, y) (state_to_list s1) /\ x <> y) s2.
-Proof. intros x; apply RTC_lifts_invariants; intros a b Ha Hs; eapply step_preserves_moves; eauto. Qed.
+Proof. intros x; apply RTC_lifts_invariants; intros a b [Ha Hs]; eapply step_preserves_moves; eauto. Qed.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/parmoveScript.sml" "pmov_preserves_moves" *)
 Theorem pmov_preserves_moves : forall x y (p : st),
@@ -1158,7 +1143,7 @@ Qed.
 (*! HOL "cakeml/compiler/backend/reg_alloc/parmoveScript.sml" "steps_inj_on_state" *)
 Theorem steps_inj_on_state : forall {B} (f : option A -> option B) (s1 s2 : st),
   inj_on_state f s1 /\ RTC step s1 s2 -> inj_on_state f s2.
-Proof. intros B f; apply RTC_lifts_invariants; intros x y Hx Hs; eapply step_inj_on_state; eauto. Qed.
+Proof. intros B f; apply RTC_lifts_invariants; intros x y [Hx Hs]; eapply step_inj_on_state; eauto. Qed.
 
 Ltac in_ls :=
   repeat match goal with H : In (?a, ?b) ?l |- _ =>
@@ -1192,8 +1177,8 @@ Qed.
 Theorem steps_MAP_INJ : forall {B} `{EqDecision B} (f : option A -> option B) (s1 s2 : st),
   RTC step s1 s2 -> inj_on_state f s1 -> RTC step (map_state f s1) (map_state f s2).
 Proof.
-  intros B EB f s1 s2 H; induction H as [x|x y z Hxy Hyz IH]; intros Hi; [apply RTC_refl|].
-  eapply RTC_cons; [apply step_MAP_INJ; eauto|apply IH; eapply step_inj_on_state; eauto].
+  intros B EB f s1 s2 H; induction H as [x|x y z Hxy Hyz IH]; intros Hi; [apply rtc_refl|].
+  eapply rtc_step; [apply step_MAP_INJ; eauto|apply IH; eapply step_inj_on_state; eauto].
 Qed.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/parmoveScript.sml" "fstep_MAP_INJ" *)
@@ -1252,7 +1237,7 @@ Proof.
   - destruct p as [[|m μ] [[|x σ] τ]]; try discriminate Ef.
     unfold map_state; cbn [fst snd map]; rewrite !pmov_nil; reflexivity.
   - assert (Hnf : forall τ, p <> ([], ([], τ))) by (intros τ ->; discriminate).
-    assert (Hst : RTC step p (fstep p)) by (apply dsteps_steps; [apply RTC_single, fstep_dstep, Hnf|exact Hw]).
+    assert (Hst : RTC step p (fstep p)) by (apply dsteps_steps; [apply RTC_SINGLE, fstep_dstep, Hnf|exact Hw]).
     rewrite (pmov_step p Ef), (pmov_step (map_state f p)).
     + rewrite fstep_MAP_INJ by exact Hi. apply IH; [apply fstep_dec, Ef|].
       split; [apply (wf_steps p); auto|apply (steps_inj_on_state f p); auto].
