@@ -55,7 +55,7 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | backend/reg_alloc/proofs/reg_allocProof | done (`reg_alloc_correct`) |
 | backend/reg_alloc/proofs/linear_scanProof | partial (intervals, allocator) |
 | backend/proofs word_simp, word_inst, word_cse, word_copy, word_remove, word_unreach, word_depth, word_alloc, word_to_word | todo |
-| backend/proofs stack_names (helpers; comp_correct todo), stack_rawcall | partial |
+| backend/proofs stack_names, stack_rawcall | done |
 | backend/proofs word_to_stack, stack_alloc, stack_remove, stack_to_lab | todo |
 | backend/proofs lab_filter (helpers; filter_correct todo) | partial |
 | backend/proofs lab_to_target | todo |
