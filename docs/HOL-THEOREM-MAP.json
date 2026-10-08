@@ -1,5 +1,355 @@
 [
  {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "ALL_DISTINCT",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "ALL_DISTINCT"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "APPEND",
+  "hol_line": 156,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "APPEND_thm"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "DROP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "DROP"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "EL",
+  "hol_line": 231,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "EL_thm"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "EL_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "EL"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "EVERY_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "EVERY"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "EXISTS_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "EXISTS"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "FILTER",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "FILTER_thm"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "FIND_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "FIND"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "FLAT",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "FLAT_thm"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "FOLDL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "FOLDL"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "FOLDR",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "FOLDR"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "FRONT_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "FRONT"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "GENLIST",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "GENLIST"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "HD",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "HD"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "INDEX_FIND_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "INDEX_FIND"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "INDEX_OF_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "INDEX_OF"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "LAST_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "LAST"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "LENGTH",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "LENGTH_thm"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "LIST_REL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "LIST_REL"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "LIST_REL_def",
+  "hol_line": 1456,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "LIST_REL_def"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "LUPDATE_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "LUPDATE"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "MAP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "MAP_thm"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "MAP2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "MAP2_thm"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "MAP2_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "MAP2"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "MEM",
+  "hol_line": 1264,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "MEM"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "NULL_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "NULL"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "REVERSE_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "REVERSE_DEF"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "SNOC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "SNOC"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "SUM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "SUM"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "TAKE_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "TAKE"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "TL_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "TL"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "UNZIP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "UNZIP"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "ZIP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "ZIP"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "isPREFIX",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "isPREFIX"
+ },
+ {
   "hol_path": "HOL/src/n-bit/sum_numScript.sml",
   "hol_name": "GSUM_def",
   "hol_line": null,

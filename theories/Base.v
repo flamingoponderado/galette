@@ -15,7 +15,7 @@
       [is_true] coercion.  HOL predicates defined by quantification are [Prop].
     - HOL [=] on a type used computationally is decided by [decide (x = y)]. *)
 
-From Stdlib Require Export Bool PeanoNat ZArith List String Ascii.
+From Stdlib Require Export Bool PeanoNat ZArith String Ascii List.
 From Stdlib Require Export Logic.ClassicalEpsilon Logic.FunctionalExtensionality
   Logic.PropExtensionality Logic.ProofIrrelevance.
 From Stdlib Require Export Lia.

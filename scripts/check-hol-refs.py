@@ -295,13 +295,20 @@ def main() -> int:
     ap.add_argument("--update-manifest", action="store_true")
     ap.add_argument("--kernel", action="store_true", help="also Check every tagged name")
     ap.add_argument("--mapping", action="store_true", help="print HOL -> Rocq mapping")
+    ap.add_argument("--no-manifest", action="store_true",
+                    help="skip the manifest check (for work in progress)")
+    ap.add_argument("--only", metavar="PREFIX",
+                    help="report only errors for Rocq files under this path prefix")
     args = ap.parse_args()
     if not REFERENCE.is_dir():
         print(f"reference checkout not found: {REFERENCE}", file=sys.stderr)
         return 2
     tags, errors = scan()
     errors += check(tags)
-    errors += check_manifest(tags, args.update_manifest)
+    if not args.no_manifest:
+        errors += check_manifest(tags, args.update_manifest)
+    if args.only:
+        errors = [e for e in errors if e.startswith(args.only)]
     if args.kernel and not errors:
         errors += kernel_check(tags)
     if args.mapping:

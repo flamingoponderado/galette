@@ -67,6 +67,11 @@ Splitting a large theorem along HOL's own case structure: each piece is tagged
 conclusion shape as the HOL theorem plus induction hypotheses only; a main
 (untagged-case) translation assembles them.
 
+**Name clashes.** HOL keeps constants and theorems in separate namespaces;
+Rocq does not. When a HOL theorem has the name of a constant (e.g. listTheory's
+theorem `MAP` characterising the constant `MAP`), the Rocq theorem is named
+`<NAME>_thm`; the tag still cites the exact HOL name.
+
 **A tag is a claim of sameness.** Before tagging, compare definitions,
 quantified variables, hypotheses, side conditions, conclusions, and carrier
 types (constructor arity, field types, word widths). If something differs,
