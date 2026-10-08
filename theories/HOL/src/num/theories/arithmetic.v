@@ -75,3 +75,18 @@ Proof. reflexivity. Qed.
 
 Lemma num_rec_SUC {A} (z : A) s n : num_rec z s (SUC n) = s n (num_rec z s n).
 Proof. unfold num_rec; exact (N.peano_rect_succ (fun _ => A) z s n). Qed.
+
+(** HOL's [FUNPOW f n x] applies [f] [n] times to [x]. *)
+(*! HOL "HOL/src/num/theories/arithmeticScript.sml" "FUNPOW" *)
+Definition FUNPOW {S} (f : S -> S) (n : N) (x : S) : S := N.iter n f x.
+
+Lemma FUNPOW_0 {S} (f : S -> S) x : FUNPOW f 0 x = x.
+Proof. reflexivity. Qed.
+
+Lemma FUNPOW_SUC_r {S} (f : S -> S) n x : FUNPOW f (N.succ n) x = FUNPOW f n (f x).
+Proof. unfold FUNPOW; rewrite N.iter_succ, N.iter_swap; reflexivity. Qed.
+
+(*! HOL "HOL/src/num/theories/arithmeticScript.sml" "FUNPOW_SUC" *)
+Theorem FUNPOW_SUC : forall {S} (f : S -> S) n x, FUNPOW f (SUC n) x = f (FUNPOW f n x).
+Proof. intros S f n x; unfold FUNPOW; rewrite N.iter_succ; reflexivity. Qed.
+

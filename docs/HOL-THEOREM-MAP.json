@@ -17541,6 +17541,26 @@
  },
  {
   "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "FUNPOW",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "FUNPOW"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
+  "hol_name": "FUNPOW_SUC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/num/theories/arithmetic.v",
+  "rocq_name": "FUNPOW_SUC"
+ },
+ {
+  "hol_path": "HOL/src/num/theories/arithmeticScript.sml",
   "hol_name": "MAX_DEF",
   "hol_line": null,
   "case": null,

@@ -9,9 +9,9 @@
     definitions are ported as they are ([coreloop_def], [peg_exec_def],
     [applykont_def]); they are not executable ([OWHILE] decides termination
     classically).  The step function is [coreloop_step] (HOL's lambda,
-    named).  [OWHILE] and [FUNPOW] are HOL's [While$OWHILE_def] and
-    [arithmetic$FUNPOW] (with [num] = [N]); they are not yet in
-    [While.v]/[arithmetic.v] and are defined here, untagged.
+    named).  [OWHILE] is HOL's [While$OWHILE_def]
+    (with [num] = [N]); it is not yet in [While.v] and is defined here,
+    untagged ([FUNPOW] is [arithmetic]'s).
 
     ** Execution (Galette)
 
@@ -103,18 +103,10 @@ Arguments Looped {A B C E}.
 
 (** ** HOL's [FUNPOW] and [OWHILE] *)
 
-Definition FUNPOW {S} (f : S -> S) (n : N) (x : S) : S := N.iter n f x.
-
 Definition OWHILE {S} (G : S -> bool) (f : S -> S) (s : S) : option S :=
   if classical_dec (exists n, ~ G (FUNPOW f n s))
   then SOME (FUNPOW f (LEAST (fun n => ~ G (FUNPOW f n s))) s)
   else NONE.
-
-Lemma FUNPOW_SUC_r {S} (f : S -> S) n x : FUNPOW f (N.succ n) x = FUNPOW f n (f x).
-Proof. unfold FUNPOW; rewrite N.iter_succ, N.iter_swap; reflexivity. Qed.
-
-Lemma FUNPOW_0 {S} (f : S -> S) x : FUNPOW f 0 x = x.
-Proof. reflexivity. Qed.
 
 Lemma OWHILE_THM {S} (G : S -> bool) f s :
   OWHILE G f s = if G s then OWHILE G f (f s) else SOME s.
