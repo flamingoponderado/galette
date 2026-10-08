@@ -90,6 +90,14 @@ Proof. destruct (decide P); destruct (decide Q); [left|right|right|right]; tauto
 Proof. destruct (decide P); destruct (decide Q); [left|left|left|right]; tauto. Defined.
 #[global] Instance is_true_dec (b : bool) : Decision (is_true b).
 Proof. destruct b; [left; reflexivity|right; discriminate]. Defined.
+#[global] Instance N_lt_dec (m n : N) : Decision (m < n)%N.
+Proof.
+  destruct (N.ltb m n) eqn:E; [left; apply N.ltb_lt, E|right; apply N.ltb_ge in E; lia].
+Defined.
+#[global] Instance N_le_dec (m n : N) : Decision (m <= n)%N.
+Proof.
+  destruct (N.leb m n) eqn:E; [left; apply N.leb_le, E|right; apply N.leb_gt in E; lia].
+Defined.
 #[global] Instance nat_lt_dec (m n : nat) : Decision (m < n) := lt_dec m n.
 #[global] Instance nat_le_dec (m n : nat) : Decision (m <= n) := le_dec m n.
 
