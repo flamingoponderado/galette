@@ -353,14 +353,14 @@ Proof.
 Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_NEG" *)
-Theorem WORD_NEG : forall w : word a, - w = (~ w) + n2w 1.
+Theorem WORD_NEG : forall w : word a, - w = (¬ w) + n2w 1.
 Proof.
   intros w; unfold word_1comp; rewrite word_add_n2w; unfold word_2comp.
   pose proof (w2n_lt w); f_equal; lia.
 Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_NOT" *)
-Theorem WORD_NOT : forall w : word a, (~ w) = - w - n2w 1.
+Theorem WORD_NOT : forall w : word a, (¬ w) = - w - n2w 1.
 Proof. intros w; rewrite WORD_NEG; word_ring. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_NEG_0" *)
@@ -579,11 +579,11 @@ Proof.
 Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_NOT_T" *)
-Theorem WORD_NOT_T : (~ (Tw : word a)) = n2w 0.
+Theorem WORD_NOT_T : (¬ (Tw : word a)) = n2w 0.
 Proof. rewrite WORD_NOT, WORD_NEG_T; apply WORD_SUB_REFL. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_NOT_0" *)
-Theorem WORD_NOT_0 : (~ (n2w 0 : word a)) = Tw.
+Theorem WORD_NOT_0 : (¬ (n2w 0 : word a)) = Tw.
 Proof. rewrite WORD_NOT, WORD_NEG_0, WORD_SUB_LZERO; apply WORD_NEG_1. Qed.
 
 End Arith.
@@ -1160,17 +1160,17 @@ Context {a : N}.
 Local Open Scope word_scope.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_NOT_NOT" *)
-Theorem WORD_NOT_NOT : forall a0 : word a, (~ (~ a0)) = a0.
+Theorem WORD_NOT_NOT : forall a0 : word a, (¬ (¬ a0)) = a0.
 Proof. bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_DE_MORGAN_THM" *)
 Theorem WORD_DE_MORGAN_THM : forall a0 b : word a,
-  (~ (a0 && b)) = ((~ a0) || (~ b)) /\ (~ (a0 || b)) = ((~ a0) && (~ b)).
+  (¬ (a0 && b)) = ((¬ a0) || (¬ b)) /\ (¬ (a0 || b)) = ((¬ a0) && (¬ b)).
 Proof. split; bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_NOT_XOR" *)
 Theorem WORD_NOT_XOR : forall a0 b : word a,
-  (~ a0) ?? (~ b) = a0 ?? b /\ a0 ?? (~ b) = (~ (a0 ?? b)) /\ (~ a0) ?? b = (~ (a0 ?? b)).
+  (¬ a0) ?? (¬ b) = a0 ?? b /\ a0 ?? (¬ b) = (¬ (a0 ?? b)) /\ (¬ a0) ?? b = (¬ (a0 ?? b)).
 Proof. repeat split; bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_AND_CLAUSES" *)
@@ -1187,7 +1187,7 @@ Proof. repeat split; bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_XOR_CLAUSES" *)
 Theorem WORD_XOR_CLAUSES : forall a0 : word a,
-  (Tw ?? a0 = (~ a0)) /\ (a0 ?? Tw = (~ a0)) /\
+  (Tw ?? a0 = (¬ a0)) /\ (a0 ?? Tw = (¬ a0)) /\
   (n2w 0 ?? a0 = a0) /\ (a0 ?? n2w 0 = a0) /\ (a0 ?? a0 = n2w 0).
 Proof. repeat split; bitwise. Qed.
 
@@ -1232,15 +1232,15 @@ Theorem WORD_OR_ABSORB : forall a0 b : word a, a0 && (a0 || b) = a0.
 Proof. bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_AND_COMP" *)
-Theorem WORD_AND_COMP : forall a0 : word a, a0 && (~ a0) = n2w 0.
+Theorem WORD_AND_COMP : forall a0 : word a, a0 && (¬ a0) = n2w 0.
 Proof. bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_OR_COMP" *)
-Theorem WORD_OR_COMP : forall a0 : word a, a0 || (~ a0) = Tw.
+Theorem WORD_OR_COMP : forall a0 : word a, a0 || (¬ a0) = Tw.
 Proof. bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_XOR_COMP" *)
-Theorem WORD_XOR_COMP : forall a0 : word a, a0 ?? (~ a0) = Tw.
+Theorem WORD_XOR_COMP : forall a0 : word a, a0 ?? (¬ a0) = Tw.
 Proof. bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_RIGHT_AND_OVER_OR" *)
@@ -1274,11 +1274,11 @@ Theorem WORD_LEFT_AND_OVER_XOR : forall a0 b c : word a,
 Proof. bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_XOR" *)
-Theorem WORD_XOR : forall a0 b : word a, a0 ?? b = (a0 && (~ b)) || (b && (~ a0)).
+Theorem WORD_XOR : forall a0 b : word a, a0 ?? b = (a0 && (¬ b)) || (b && (¬ a0)).
 Proof. bitwise. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "WORD_MSB_1COMP" *)
-Theorem WORD_MSB_1COMP : forall w : word a, word_msb (~ w) = negb (word_msb w).
+Theorem WORD_MSB_1COMP : forall w : word a, word_msb (¬ w) = negb (word_msb w).
 Proof.
   intros w; rewrite !word_msb_def, fcp_index_word_1comp by (pose proof (DIMINDEX_GT_0 a); lia).
   reflexivity.

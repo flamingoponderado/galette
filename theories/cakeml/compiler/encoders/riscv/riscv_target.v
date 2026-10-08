@@ -105,7 +105,7 @@ Definition riscv_memop (m : memop) :
 (*! HOL "cakeml/compiler/encoders/riscv/riscv_targetScript.sml" "riscv_const32_def" *)
 Definition riscv_const32 (r : word5) (i : word32) : list instruction :=
   if i ' 11 then
-    [ArithI (LUI (r, ~((31 >< 12) i)));
+    [ArithI (LUI (r, ¬((31 >< 12) i)));
      ArithI (XORI (r, r, (11 >< 0) i))]
   else
     [ArithI (LUI (r, (31 >< 12) i));
@@ -144,7 +144,7 @@ Definition riscv_ast (x : asm 64) : list instruction :=
         riscv_const32 (n2w r) ((31 >< 0) i)
       else if i ' 31 then
         riscv_const32 temp_reg ((31 >< 0) i) ++
-        riscv_const32 (n2w r) (~((63 >< 32) i)) ++
+        riscv_const32 (n2w r) (¬((63 >< 32) i)) ++
         [Shift (SLLI (n2w r, n2w r, n2w 32));
          ArithR (XOR (n2w r, n2w r, temp_reg))]
       else

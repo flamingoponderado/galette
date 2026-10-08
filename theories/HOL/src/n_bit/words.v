@@ -385,10 +385,8 @@ Notation "v ** w" := (word_exp v w) : word_scope.
 Notation "v // w" := (word_div v w) (at level 40, left associativity) : word_scope.
 (** HOL writes [word_1comp] as [~w] or [¬w], binding tighter than [+].
     Rocq fixes [~] at level 75, so [~] would parse [~ w + x] as [~(w + x)];
-    use [¬], whose level matches HOL's. ([~] is kept only for compatibility
-    and is to be removed.) *)
+    use [¬], whose level matches HOL's. *)
 Notation "¬ w" := (word_1comp w) (at level 35, right associativity) : word_scope.
-Notation "~ w" := (word_1comp w) : word_scope.
 Notation "v && w" := (word_and v w) : word_scope.
 Notation "v || w" := (word_or v w) : word_scope.
 Notation "v ?? w" := (word_xor v w) (at level 50, left associativity) : word_scope.
@@ -461,7 +459,7 @@ Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_1comp_n2w" *)
 Theorem word_1comp_n2w : forall n,
-  (~ (n2w n : word a))%w = n2w (dimword a - 1 - n MOD dimword a).
+  (¬ (n2w n : word a))%w = n2w (dimword a - 1 - n MOD dimword a).
 Proof. reflexivity. Qed.
 
 Lemma BITS_lt h l n : BITS h l n < 2 ** (SUC h - l).
