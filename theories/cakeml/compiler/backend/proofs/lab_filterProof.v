@@ -6,12 +6,14 @@
       lines of the first section) is a nested structural recursion; HOL's
       equation is the tagged [adjust_pc_def].
     - HOL's [s with f := v] is [set_<f> v s] ([labSem]).
-    - Not yet ported: [share_mem_op_*_filter_correct], [filter_correct],
-      [state_rel_IMP_sem_EQ_sem], [filter_skip_semantics],
-      [sec_ends_with_label_filter_skip].  The helpers here (untagged:
-      [loc_to_pc_filter], combining HOL's [loc_to_pc_eq_NONE] and
-      [loc_to_pc_eq_SOME], and commutation lemmas of [asm_inst] and
-      [share_mem_op] with the state updates) prepare [filter_correct].
+    - The proof of [filter_correct] follows HOL's case analysis but is
+      organised around a few Galette helpers (untagged): [loc_to_pc_filter]
+      (combining HOL's [loc_to_pc_eq_NONE] and [loc_to_pc_eq_SOME]) and
+      commutation lemmas of [asm_inst] and [share_mem_op] with the state
+      updates.  HOL's [share_mem_op_*_filter_correct] are ported but not
+      used by it.
+    - [state_rel_IMP_sem_EQ_sem] goes through the untagged helper
+      [semantics_sim] (equal semantics from a clock-extending simulation).
     - Not ported (HOL [local] lemmas superseded by the helpers):
       [is_Label_not_skip], [asm_fetch_not_skip_adjust_pc], [state_rw],
       [asm_fetch_aux_eq2], [all_skips_evaluate_rw], [all_skips_initial_adjust],
@@ -584,4 +586,397 @@ Definition state_rel (s1 t1 : state a c ffi_t) : Prop :=
      compile t1 = (fun c0 p => s1compile c0 (filter_skip p))) /\
   ~ failed t1.
 
+Lemma bd_some_none {A} (x : A) {d : Decision (SOME x = NONE)} : bool_decide (SOME x = NONE) = false.
+Proof. unfold bool_decide; destruct (decide _); [discriminate|reflexivity]. Qed.
+
+Lemma bd_none_none {A} {d : Decision (@NONE A = NONE)} : bool_decide (@NONE A = NONE) = true.
+Proof. unfold bool_decide; destruct (decide _); [reflexivity|congruence]. Qed.
+
+(** Rewriting (rather than [cbn]) keeps the kernel from unfolding
+    [evaluate] when it re-checks the hypothesis. *)
+Lemma option_map_SOME {A B} (f : A -> B) x : option_map f (SOME x) = SOME (f x).
+Proof. reflexivity. Qed.
+
+Lemma option_map_NONE {A B} (f : A -> B) : option_map f NONE = NONE.
+Proof. reflexivity. Qed.
+
+Ltac split_hyp H :=
+  match type of H with
+  | context [match ?x with _ => _ end] =>
+      lazymatch x with
+      | context [match _ with _ => _ end] => fail
+      | filter_skip ?v => is_var v; destruct v as [|[? ?] ?]
+      | context [option_map _ ?y] => let E := fresh "E" in destruct y eqn:E
+      | _ => let E := fresh "E" in destruct x eqn:E
+      end
+  end.
+
+Ltac norm_H H :=
+  cbn beta iota zeta in H; st_cbn;
+  rewrite ?asm_inst_set_compile, ?asm_inst_set_compile_oracle, ?asm_inst_set_pc,
+    ?asm_inst_set_code, ?share_mem_op_set_compile, ?share_mem_op_set_compile_oracle,
+    ?share_mem_op_set_pc, ?share_mem_op_set_code, ?loc_to_pc_filter in H;
+  rewrite ?option_map_SOME, ?option_map_NONE in H; rewrite ?bd_some_none, ?bd_none_none in H;
+  cbn beta iota zeta in H; st_cbn.
+
+Ltac rw_eqs :=
+  repeat (match goal with
+          | E : ?x = _ |- context [?x] => progress rewrite E
+          end; cbn beta iota zeta; st_cbn).
+
+Ltac norm_goal :=
+  cbn beta iota zeta; st_cbn;
+  rewrite ?asm_inst_with_clock, ?asm_inst_set_pc, ?share_mem_op_set_clock, ?share_mem_op_set_pc;
+  cbn beta iota zeta; st_cbn.
+
+(** One step of the unfiltered run, symbolically in the extra clock (the
+    run is the one taken by the filtered run in [H]). *)
+Ltac step_goal Ec :=
+  intros ?K; rewrite evaluate_def; st_cbn;
+  rewrite (proj2 (N.eqb_neq _ 0)) by (apply N.eqb_neq in Ec; lia);
+  unfold asm_fetch, get_pc_value, get_ret_Loc, reg_imm; st_cbn;
+  repeat (norm_goal; rw_eqs; norm_goal;
+          rewrite ?bd_some_none, ?bd_none_none; cbn beta iota zeta);
+  first [ match goal with |- _ = evaluate (?R _) => unfold R; reflexivity end
+        | match goal with |- _ = ?R _ => unfold R; reflexivity end ].
+
+Lemma asm_inst_code i s : code (asm_inst i s) = code s.
+Proof. apply asm_inst_frame. Qed.
+Lemma asm_inst_compile i s : compile (asm_inst i s) = compile s.
+Proof. apply asm_inst_frame. Qed.
+Lemma asm_inst_compile_oracle i s : compile_oracle (asm_inst i s) = compile_oracle s.
+Proof. apply asm_inst_frame. Qed.
+Lemma asm_inst_pc i s : pc (asm_inst i s) = pc s.
+Proof. apply asm_inst_frame. Qed.
+
+Ltac frames :=
+  rewrite ?asm_inst_code, ?asm_inst_compile, ?asm_inst_compile_oracle, ?asm_inst_pc,
+    ?asm_inst_clock in *;
+  repeat match goal with
+         | E : share_mem_op _ _ _ _ = SOME (FFI_return _ _, ?s') |- _ =>
+             lazymatch goal with
+             | _ : code s' = _ |- _ => fail
+             | _ => destruct (share_mem_op_return_frame _ _ _ _ _ _ _ E) as (? & ? & ? & ? & ? & ?)
+             end
+         end;
+  repeat match goal with
+         | F : ?p ?v = _ |- context [?p ?v] =>
+             is_var v;
+             lazymatch p with
+             | code => idtac | compile => idtac | compile_oracle => idtac
+             | pc => idtac | clock => idtac | failed => idtac
+             end;
+             progress rewrite F
+         end.
+
+Ltac field_tac S :=
+  first [ reflexivity | assumption | lia
+        | apply adjust_pc_all_skips; exact S
+        | eapply loc_to_pc_adjust_pc_append; eassumption
+        | rewrite filter_skip_append; reflexivity
+        | apply functional_extensionality; intros; reflexivity ].
+
+(*! HOL "cakeml/compiler/backend/proofs/lab_filterProofScript.sml" "filter_correct" *)
+Theorem filter_correct : forall (s1 : state a c ffi_t) t1 res s2,
+  evaluate s1 = (res, s2) /\ state_rel s1 t1 /\ ~ failed t1 ->
+  exists k t2,
+    evaluate (set_clock (clock s1 + k) t1) = (res, t2) /\
+    ffi s2 = ffi t2.
+Proof.
+  intros s1; induction s1 as [s1 IH] using evaluate_clock_ind.
+  intros t1 res s2 (H & ((s1c & -> & Hc) & Hf) & _).
+  apply not_true_is_false in Hf.
+  destruct (asm_fetch_aux_eq (pc t1) (code t1)) as (kk & E0 & S).
+  assert (Hskip : forall K, evaluate (set_clock (clock t1 + (K + kk)) t1) =
+                         evaluate (set_clock (clock t1 + K) (set_pc (pc t1 + kk) t1))).
+  { intros K. rewrite N.add_assoc. apply all_skips_evaluate. split; [exact S|rewrite Hf; discriminate]. }
+  rewrite evaluate_def in H. st_cbn.
+  destruct (clock t1 =? 0) eqn:Ec.
+  { injection H as <- <-. exists 0, (set_clock (clock t1 + 0) t1).
+    rewrite evaluate_def. st_cbn. rewrite N.add_0_r, Ec. split; reflexivity. }
+  unfold asm_fetch, get_pc_value, get_ret_Loc, reg_imm in H. st_cbn.
+  rewrite <- E0 in H. clear E0.
+  rewrite <- (get_lab_after_adjust _ _ _ S) in H.
+  repeat (split_hyp H; norm_H H).
+  all: first
+    [ (* a final result *)
+      injection H as <- <-;
+      let RR := fresh "RR" in
+      evar (RR : N -> machine_result * state a c ffi_t);
+      let HY := fresh "HY" in
+      assert (HY : forall K, evaluate (set_clock (clock t1 + K) (set_pc (pc t1 + kk) t1)) = RR K)
+        by step_goal Ec;
+      exists (0 + kk); eexists; rewrite Hskip, HY; unfold RR; split; [reflexivity|];
+      repeat match goal with
+             | E : share_mem_op _ _ _ _ = SOME (FFI_final _, _) |- _ =>
+                 apply share_mem_op_final in E; subst
+             end; st_cbn; reflexivity
+    | (* a recursive call *)
+      let YY := fresh "YY" in
+      evar (YY : N -> state a c ffi_t);
+      let HY := fresh "HY" in
+      assert (HY : forall K, evaluate (set_clock (clock t1 + K) (set_pc (pc t1 + kk) t1)) =
+                             evaluate (YY K))
+        by step_goal Ec;
+      apply N.eqb_neq in Ec;
+      frames;
+      match type of H with
+      | evaluate ?s' = _ =>
+          let k2 := fresh "k2" in let t2 := fresh "t2" in
+          let Ek := fresh "Ek" in let Ef := fresh "Ef" in
+          destruct (IH s' ltac:(st_cbn; frames; lia) (YY 0) res s2) as (k2 & t2 & Ek & Ef);
+          [ split; [exact H|]; split;
+            [ split; [exists s1c; split; [apply state_eq_intro; unfold YY; st_cbn; frames;
+                                          field_tac S
+                                         | unfold YY; st_cbn; frames; first [exact Hc | reflexivity]]
+                     | unfold YY; st_cbn; frames; congruence]
+            | unfold YY; st_cbn; frames; congruence ]
+          | exists (k2 + kk), t2; rewrite Hskip, HY; split; [|exact Ef];
+            rewrite <- Ek; f_equal; unfold YY; apply state_eq_intro; st_cbn; frames;
+            reflexivity || lia ]
+      end ].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/lab_filterProofScript.sml" "share_mem_op_NONE_filter_correct" *)
+Theorem share_mem_op_NONE_filter_correct : forall (t1 : state a c ffi_t) k m r ad arb_compile
+    arb_oracle,
+  all_skips (pc t1) (code t1) k /\
+  share_mem_op m r ad
+    (set_compile_oracle arb_oracle (set_compile arb_compile
+       (set_code (filter_skip (code t1)) (set_pc (adjust_pc (pc t1) (code t1)) t1)))) = NONE ->
+  share_mem_op m r ad (set_pc (k + pc t1) t1) = NONE.
+Proof.
+  intros t1 k m r ad ac ao [_ H].
+  rewrite share_mem_op_set_compile_oracle, share_mem_op_set_compile, share_mem_op_set_code,
+    share_mem_op_set_pc in H.
+  rewrite share_mem_op_set_pc.
+  destruct (share_mem_op m r ad t1) as [[[f l|f] s']|]; [discriminate|discriminate|reflexivity].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/lab_filterProofScript.sml" "share_mem_op_FFI_return_filter_correct" *)
+Theorem share_mem_op_FFI_return_filter_correct : forall (t1 : state a c ffi_t) k s1compile m r ad
+    f l s,
+  (all_skips (pc t1) (code t1) k /\ clock t1 <> 0 /\
+   compile t1 = (fun c0 p => s1compile c0 (filter_skip p)) /\ ~ failed t1 /\
+   share_mem_op m r ad
+     (set_compile_oracle (fun n => (fun '(a0, b) => (a0, filter_skip b)) (compile_oracle t1 n))
+        (set_compile s1compile
+           (set_code (filter_skip (code t1)) (set_pc (adjust_pc (pc t1) (code t1)) t1)))) =
+     SOME (FFI_return f l, s)) ->
+  exists s2, forall k',
+    share_mem_op m r ad (set_pc (k + pc t1) t1) = SOME (FFI_return f l, s2) /\
+    state_rel s s2 /\ ~ failed s /\ ~ failed s2 /\
+    share_mem_op m r ad (set_clock (k' + clock t1) (set_pc (k + pc t1) t1)) =
+      SOME (FFI_return f l, set_clock (k' + clock s2) s2).
+Proof.
+  intros t1 k s1c m r ad f l s (S & Hc0 & Hc & Hf & H).
+  apply not_true_is_false in Hf.
+  rewrite share_mem_op_set_compile_oracle, share_mem_op_set_compile, share_mem_op_set_code,
+    share_mem_op_set_pc in H.
+  destruct (share_mem_op m r ad t1) as [[[f0 l0|f0] s0]|] eqn:E; try discriminate H.
+  injection H as <- <- <-.
+  destruct (share_mem_op_return_frame _ _ _ _ _ _ _ E) as (Ecd & Ecp & Eco & Epc & Eck & Efl).
+  exists (set_pc (k + pc t1 + 1) s0). intros k'.
+  rewrite share_mem_op_set_clock, share_mem_op_set_pc, E. st_cbn.
+  repeat split.
+  - exists s1c. split.
+    + apply state_eq_intro; st_cbn; rewrite ?Ecd, ?Eco, ?Epc; try reflexivity.
+      rewrite (adjust_pc_all_skips _ _ _ S). f_equal. lia.
+    + st_cbn. rewrite Ecp. exact Hc.
+  - st_cbn. rewrite Efl, Hf. discriminate.
+  - st_cbn. rewrite Efl, Hf. discriminate.
+  - st_cbn. rewrite Efl, Hf. discriminate.
+  - f_equal. f_equal. apply state_eq_intro; st_cbn; reflexivity || lia.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/lab_filterProofScript.sml" "share_mem_op_FFI_final_filter_correct" *)
+Theorem share_mem_op_FFI_final_filter_correct : forall (t1 : state a c ffi_t) k s1compile m r ad
+    f s,
+  (all_skips (pc t1) (code t1) k /\ clock t1 <> 0 /\
+   compile t1 = (fun c0 p => s1compile c0 (filter_skip p)) /\ ~ failed t1 /\
+   share_mem_op m r ad
+     (set_compile_oracle (fun n => (fun '(a0, b) => (a0, filter_skip b)) (compile_oracle t1 n))
+        (set_compile s1compile
+           (set_code (filter_skip (code t1)) (set_pc (adjust_pc (pc t1) (code t1)) t1)))) =
+     SOME (FFI_final f, s)) ->
+  exists s2, share_mem_op m r ad (set_pc (k + pc t1) t1) = SOME (FFI_final f, s2) /\
+    ffi s = ffi s2.
+Proof.
+  intros t1 k s1c m r ad f s (S & Hc0 & Hc & Hf & H).
+  rewrite share_mem_op_set_compile_oracle, share_mem_op_set_compile, share_mem_op_set_code,
+    share_mem_op_set_pc in H.
+  destruct (share_mem_op m r ad t1) as [[[f0 l0|f0] s0]|] eqn:E; try discriminate H.
+  injection H as <- <-.
+  rewrite share_mem_op_set_pc, E. eexists; split; [reflexivity|].
+  apply share_mem_op_final in E. subst. reflexivity.
+Qed.
+
+Lemma set_clock_set_clock k1 k2 (s : state a c ffi_t) : set_clock k1 (set_clock k2 s) = set_clock k1 s.
+Proof. destruct s; reflexivity. Qed.
+
+(** A run that does not time out is the result of every larger clock. *)
+Lemma evaluate_clock_mono (t : state a c ffi_t) k1 k2 r t1' :
+  evaluate (set_clock k1 t) = (r, t1') -> r <> TimeOut -> k1 <= k2 ->
+  exists t2', evaluate (set_clock k2 t) = (r, t2') /\ ffi t2' = ffi t1'.
+Proof.
+  intros E Hr Hk. pose proof (evaluate_ADD_clock (set_clock k1 t) r t1' (k2 - k1) (conj E Hr)) as E2.
+  cbn [clock set_clock] in E2. rewrite set_clock_set_clock in E2.
+  replace (k1 + (k2 - k1)) with k2 in E2 by lia. eexists; split; [exact E2|reflexivity].
+Qed.
+
+Lemma io_events_mono (t : state a c ffi_t) k1 k2 :
+  k1 <= k2 ->
+  is_true (isPREFIX (io_events (ffi (SND (evaluate (set_clock k1 t)))))
+                    (io_events (ffi (SND (evaluate (set_clock k2 t)))))).
+Proof.
+  intros Hk. pose proof (evaluate_add_clock_io_events_mono (k2 - k1) (set_clock k1 t)) as P.
+  cbn [clock set_clock] in P. rewrite set_clock_set_clock in P.
+  replace (k1 + (k2 - k1)) with k2 in P by lia. exact P.
+Qed.
+
+Lemma LNTH_fromList_prefix {A} `{EqDecision A} (l1 l2 : list A) n x :
+  is_true (isPREFIX l1 l2) -> LNTH n (fromList l1) = SOME x -> LNTH n (fromList l2) = SOME x.
+Proof.
+  revert l2 n; induction l1 as [|h l1 IH]; intros [|h' l2] n Hp Hn; cbn [fromList isPREFIX] in *;
+    unfold is_true in *; try discriminate; try (rewrite (proj1 LNTH_THM) in Hn; discriminate).
+  apply andb_prop in Hp as [Hh Hp]. apply bool_decide_spec in Hh. subst h'.
+  destruct n as [|n] using N.peano_ind.
+  - rewrite (proj1 (proj2 LNTH_THM)) in *. exact Hn.
+  - rewrite (proj2 (proj2 LNTH_THM)) in *. apply IH; assumption.
+Qed.
+
+Lemma io_chain (s : state a c ffi_t) :
+  lprefix_chain (IMAGE (fun k => fromList (io_events (ffi (SND (evaluate (set_clock k s)))))) UNIV).
+Proof.
+  assert (E : IMAGE (fun k => fromList (io_events (ffi (SND (evaluate (set_clock k s)))))) UNIV =
+              IMAGE fromList (IMAGE (fun k => io_events (ffi (SND (evaluate (set_clock k s))))) UNIV)).
+  { apply functional_extensionality; intros y; apply propositional_extensionality.
+    unfold IMAGE, UNIV. split.
+    - intros (k & -> & _). eexists; split; [reflexivity|]. exists k. split; [reflexivity|exact Logic.I].
+    - intros (l & -> & (k & -> & _)). exists k. split; [reflexivity|exact Logic.I]. }
+  rewrite E. apply prefix_chain_lprefix_chain.
+  intros l1 l2 [(k1 & -> & _) (k2 & -> & _)].
+  destruct (N.le_ge_cases k1 k2); [left|right]; apply io_events_mono; assumption.
+Qed.
+
+(** Semantics are equal when every clocked run of [s] is matched by a run
+    of [t] with more clock (Galette helper; the argument of HOL's
+    [state_rel_IMP_sem_EQ_sem]). *)
+Lemma semantics_sim (s t : state a c ffi_t) :
+  (forall k r s', evaluate (set_clock k s) = (r, s') ->
+     exists k' t', evaluate (set_clock (k + k') t) = (r, t') /\ ffi s' = ffi t') ->
+  semantics s = semantics t.
+Proof.
+  intros FC. unfold semantics.
+  assert (EE : (exists k, FST (evaluate (set_clock k s)) = Error) =
+               (exists k, FST (evaluate (set_clock k t)) = Error)).
+  { apply propositional_extensionality; split.
+    - intros [k Hk]. destruct (evaluate (set_clock k s)) as [r s'] eqn:Ev. cbn in Hk; subst r.
+      destruct (FC _ _ _ Ev) as (k' & t' & Et & _). exists (k + k'). rewrite Et. reflexivity.
+    - intros [k Hk]. destruct (evaluate (set_clock k t)) as [r0 t0] eqn:Ev0. cbn in Hk. subst r0.
+      exists k. destruct (evaluate (set_clock k s)) as [r s'] eqn:Ev.
+      destruct (FC _ _ _ Ev) as (k' & t' & Et & _).
+      destruct (evaluate_clock_mono t k (k + k') Error t0 Ev0 ltac:(discriminate) ltac:(lia))
+        as (t2 & E2 & _).
+      rewrite Et in E2. injection E2 as -> _. reflexivity. }
+  rewrite EE. destruct (classical_dec _); [reflexivity|].
+  assert (ET : (fun res => exists k t' outcome,
+                  evaluate (set_clock k s) = (Halt outcome, t') /\
+                  res = Terminate outcome (io_events (ffi t'))) =
+               (fun res => exists k t' outcome,
+                  evaluate (set_clock k t) = (Halt outcome, t') /\
+                  res = Terminate outcome (io_events (ffi t')))).
+  { apply functional_extensionality; intros res; apply propositional_extensionality; split.
+    - intros (k & s' & o & Ev & ->). destruct (FC _ _ _ Ev) as (k' & t' & Et & Ef).
+      exists (k + k'), t', o. rewrite Ef. split; [exact Et|reflexivity].
+    - intros (k & t0 & o & Ev0 & ->). destruct (evaluate (set_clock k s)) as [r s'] eqn:Ev.
+      destruct (FC _ _ _ Ev) as (k' & t' & Et & Ef).
+      destruct (evaluate_clock_mono t k (k + k') (Halt o) t0 Ev0 ltac:(discriminate) ltac:(lia))
+        as (t2 & E2 & Ef2).
+      rewrite Et in E2. injection E2 as -> ->.
+      exists k, s', o. rewrite Ef, Ef2. split; [exact Ev|reflexivity]. }
+  rewrite ET. destruct (some _) as [b|]; [reflexivity|]. f_equal.
+  set (L1 := IMAGE _ UNIV). set (L2 := IMAGE _ UNIV).
+  assert (C1 : lprefix_chain L1) by apply io_chain.
+  assert (C2 : lprefix_chain L2) by apply io_chain.
+  assert (EQ : equiv_lprefix_chain L1 L2).
+  { apply (equiv_lprefix_chain_thm L1 L2 (conj C1 C2)). unfold L1, L2, IMAGE, UNIV. split.
+    - intros ll1 m x [(k & -> & _) Hx].
+      destruct (evaluate (set_clock k s)) as [r s'] eqn:Ev.
+      destruct (FC _ _ _ Ev) as (k' & t' & Et & Ef).
+      eexists; split; [exists (k + k'); split; [reflexivity|exact Logic.I]|].
+      rewrite Et. cbn [SND snd] in *. rewrite <- Ef. exact Hx.
+    - intros ll2 m x [(k & -> & _) Hx].
+      destruct (evaluate (set_clock k s)) as [r s'] eqn:Ev.
+      destruct (FC _ _ _ Ev) as (k' & t' & Et & Ef).
+      eexists; split; [exists k; split; [reflexivity|exact Logic.I]|].
+      rewrite Ev. cbn [SND snd]. rewrite Ef.
+      pose proof (io_events_mono t k (k + k') ltac:(lia)) as P. apply (LNTH_fromList_prefix _ _ m x P) in Hx.
+      rewrite Et in Hx. exact Hx. }
+  apply (unique_lprefix_lub L2). split.
+  - apply (lprefix_lub_new_chain L1 L2). split; [exact C2|split; [exact EQ|]].
+    apply build_lprefix_lub_thm, C1.
+  - apply build_lprefix_lub_thm, C2.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/lab_filterProofScript.sml" "state_rel_IMP_sem_EQ_sem" *)
+Theorem state_rel_IMP_sem_EQ_sem : forall s t : state a c ffi_t,
+  state_rel s t -> semantics s = semantics t.
+Proof.
+  intros s t [(s1c & -> & Hc) Hf]. apply semantics_sim. intros k r s' Ev.
+  match type of Ev with
+  | evaluate ?S = _ => assert (HR : state_rel S (set_clock k t))
+  end.
+  { split; [|exact Hf]. exists s1c. split; [apply state_eq_intro; reflexivity|exact Hc]. }
+  destruct (filter_correct _ (set_clock k t) r s' (conj Ev (conj HR Hf))) as (k' & t' & Et & Ef).
+  exists k', t'. split; [exact Et|exact Ef].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/lab_filterProofScript.sml" "filter_skip_semantics" *)
+Theorem filter_skip_semantics : forall s t : state a c ffi_t,
+  pc t = 0 /\ ~ failed t /\
+  (exists scompile,
+     s = set_compile scompile
+           (set_compile_oracle ((fun '(a0, b) => (a0, filter_skip b)) ∘ compile_oracle t)
+              (set_code (filter_skip (code t)) t)) /\
+     compile t = (fun c0 p => scompile c0 (filter_skip p))) /\
+  ~ failed t ->
+  semantics s = semantics t.
+Proof.
+  intros s t (Hpc & Hf & (sc & -> & Hc) & _). apply state_rel_IMP_sem_EQ_sem.
+  split; [|exact Hf]. exists sc. split; [|exact Hc].
+  apply state_eq_intro; st_cbn; try reflexivity. rewrite Hpc, adjust_pc_0. reflexivity.
+Qed.
+
 End Sem.
+
+Section EndsLabel.
+Context {a : N}.
+
+Lemma ends_label_FILTER (xs : list (line a)) :
+  negb (NULL xs) && is_Label (LAST xs) = true ->
+  negb (NULL (FILTER not_skip xs)) && is_Label (LAST (FILTER not_skip xs)) = true.
+Proof.
+  induction xs as [|x xs IH]; [discriminate|]. intros H.
+  destruct xs as [|y ys].
+  - change (is_Label x = true) in H. cbn [List.filter]. rewrite (label_not_skip x H). exact H.
+  - change (negb (NULL (y :: ys)) && is_Label (LAST (y :: ys)) = true) in H.
+    specialize (IH H).
+    change (FILTER not_skip (x :: y :: ys)) with
+      (if not_skip x then x :: FILTER not_skip (y :: ys) else FILTER not_skip (y :: ys)).
+    destruct (FILTER not_skip (y :: ys)) as [|f fs]; [discriminate IH|].
+    destruct (not_skip x); [|exact IH].
+    change (negb (NULL (f :: fs)) && is_Label (LAST (f :: fs)) = true). exact IH.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/lab_filterProofScript.sml" "sec_ends_with_label_filter_skip" *)
+Theorem sec_ends_with_label_filter_skip : forall code : list (sec a),
+  EVERY sec_ends_with_label code ->
+  EVERY sec_ends_with_label (filter_skip code).
+Proof.
+  unfold is_true. induction code as [|[n xs] code IH]; [reflexivity|].
+  cbn [filter_skip EVERY]. intros H. apply andb_prop in H as [H1 H2].
+  rewrite (IH H2), Bool.andb_true_r. apply ends_label_FILTER, H1.
+Qed.
+
+End EndsLabel.

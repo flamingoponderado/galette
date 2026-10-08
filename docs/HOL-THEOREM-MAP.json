@@ -25071,6 +25071,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
+  "hol_name": "filter_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_filterProof.v",
+  "rocq_name": "filter_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
+  "hol_name": "filter_skip_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_filterProof.v",
+  "rocq_name": "filter_skip_semantics"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
   "hol_name": "get_lab_after_adjust",
   "hol_line": null,
   "case": null,
@@ -25118,6 +25138,56 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_filterProof.v",
   "rocq_name": "next_label_filter_skip"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
+  "hol_name": "sec_ends_with_label_filter_skip",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_filterProof.v",
+  "rocq_name": "sec_ends_with_label_filter_skip"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
+  "hol_name": "share_mem_op_FFI_final_filter_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_filterProof.v",
+  "rocq_name": "share_mem_op_FFI_final_filter_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
+  "hol_name": "share_mem_op_FFI_return_filter_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_filterProof.v",
+  "rocq_name": "share_mem_op_FFI_return_filter_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
+  "hol_name": "share_mem_op_NONE_filter_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_filterProof.v",
+  "rocq_name": "share_mem_op_NONE_filter_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
+  "hol_name": "state_rel_IMP_sem_EQ_sem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_filterProof.v",
+  "rocq_name": "state_rel_IMP_sem_EQ_sem"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
@@ -34940,6 +35010,556 @@
   "rocq_name": "word_exp"
  },
  {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "app_post_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "app_post"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "asm_step_IMP_evaluate_step",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "asm_step_IMP_evaluate_step"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "asm_step_IMP_evaluate_step_find_next",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "asm_step_IMP_evaluate_step_find_next"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "bytes_in_memory_DIFF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "bytes_in_memory_DIFF"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "bytes_in_memory_SUBSET",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "bytes_in_memory_SUBSET"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "ccache_interfer_ok_post_ccache_asm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "ccache_interfer_ok_post_ccache_asm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "constructed_oracles_EQ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "constructed_oracles_EQ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "constructed_oracles_cc_step",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "constructed_oracles_cc_step"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "constructed_oracles_ffi_step",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "constructed_oracles_ffi_step"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "enc_ok_not_empty",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "enc_ok_not_empty"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "evaluate_EQ_evaluate_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "evaluate_EQ_evaluate_lemma"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "evaluate_add_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "evaluate_add_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "evaluate_add_clock_io_events_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "evaluate_add_clock_io_events_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "evaluate_io_events_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "evaluate_io_events_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "ffi_entry_pcs_disjoint_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "ffi_entry_pcs_disjoint"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "ffi_interfer_ok_post_ffi_asm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "ffi_interfer_ok_post_ffi_asm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "find_next_interference_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "find_next_interference_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "find_next_interference_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "find_next_interference_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "find_next_interference_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "find_next_interference_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "find_next_interference_unique",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "find_next_interference_unique"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_app",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_app"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_app_seq_EQ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_app_seq_EQ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_app_seq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_app_seq_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_app_seq_tail",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_app_seq_tail"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_count_EQ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_count_EQ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_count_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_count_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_count_lt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_count_lt"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_count_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_count_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_count_tail",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_count_tail"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_pos_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_pos"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_pos_head",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_pos_head"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_pos_tail_hit",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_pos_tail_hit"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_pos_tail_miss",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_pos_tail_miss"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "interference_pos_unique",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "interference_pos_unique"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "is_ffi_app_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "is_ffi_app"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "machine_sem_total",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "machine_sem_total"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "machine_sem_unique",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "machine_sem_unique"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_ExtCall",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference_ExtCall"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_MappedRead",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference_MappedRead"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_MappedWrite",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference_MappedWrite"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_SharedMem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference_SharedMem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_ccache",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference_ccache"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference_intro"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "next_interference_shift",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "next_interference_shift"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "read_ffi_bytearray_IMP_SUBSET_prog_addresses",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "read_ffi_bytearray_IMP_SUBSET_prog_addresses"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "shift_interfer_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "shift_interfer"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "shift_interfer_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "shift_interfer_intro"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "target_cc_fp_regs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "target_cc_fp_regs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "target_cc_regs_callee_saved",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "target_cc_regs_callee_saved"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "target_cc_regs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "target_cc_regs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "target_io_fp_regs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "target_io_fp_regs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "target_io_regs_callee_saved",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "target_io_regs_callee_saved"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetPropsScript.sml",
+  "hol_name": "target_io_regs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetProps.v",
+  "rocq_name": "target_io_regs"
+ },
+ {
   "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
   "hol_name": "apply_oracle_def",
   "hol_line": null,
@@ -42521,6 +43141,46 @@
  },
  {
   "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "bytes_in_memory_APPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "bytes_in_memory_APPEND"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "bytes_in_memory_EL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "bytes_in_memory_EL"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "bytes_in_memory_change_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "bytes_in_memory_change_domain"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "bytes_in_memory_change_mem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "bytes_in_memory_change_mem"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
   "hol_name": "bytes_in_memory_def",
   "hol_line": null,
   "case": null,
@@ -42528,6 +43188,16 @@
   "note": "reviewer: x:word8 annotated in HOL; sets as predicates",
   "rocq_path": "theories/cakeml/misc/misc.v",
   "rocq_name": "bytes_in_memory"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "bytes_in_memory_in_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "bytes_in_memory_in_domain"
  },
  {
   "hol_path": "cakeml/misc/miscScript.sml",

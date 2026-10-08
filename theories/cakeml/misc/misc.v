@@ -30,6 +30,7 @@ From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
 From Galette.HOL.src.list.src Require Import list.
 From Galette.HOL.src.n_bit Require Import words.
+From Galette.HOL.src.n_bit.words Require lemmas.
 From Galette.HOL.src.combin Require combin.
 From Galette.HOL.src.coretypes Require pair.
 From Galette.HOL.src.sort Require Import ternaryComparisons.
@@ -482,6 +483,71 @@ Theorem mem_eq_imp_asm_write_bytearray_eq : forall m1 m2 k (w : word a) bs,
 Proof.
   intros m1 m2 k w bs; revert w; induction bs as [|x bs IH]; intros w H; cbn; [exact H|].
   unfold combin.UPDATE; destruct (decide (w = k)); auto.
+Qed.
+
+Local Lemma word_add_n2w_SUC (w : word a) n : (w + n2w 1 + n2w n)%w = (w + n2w (SUC n))%w.
+Proof. rewrite <- lemmas.WORD_ADD_ASSOC, lemmas.word_add_n2w. do 2 f_equal. lia. Qed.
+
+(*! HOL "cakeml/misc/miscScript.sml" "bytes_in_memory_APPEND" *)
+Theorem bytes_in_memory_APPEND : forall l1 l2 (pc : word a) mem mem_domain,
+  bytes_in_memory pc (l1 ++ l2) mem mem_domain <->
+  bytes_in_memory pc l1 mem mem_domain /\
+  bytes_in_memory (pc + n2w (LENGTH l1)) l2 mem mem_domain.
+Proof.
+  intros l1; induction l1 as [|x l1 IH]; intros l2 pc mem md; cbn [app bytes_in_memory LENGTH].
+  - rewrite (proj1 lemmas.WORD_ADD_0). tauto.
+  - rewrite IH, word_add_n2w_SUC. tauto.
+Qed.
+
+(*! HOL "cakeml/misc/miscScript.sml" "bytes_in_memory_change_domain" *)
+Theorem bytes_in_memory_change_domain : forall (ad : word a) bs m md1 md2,
+  bytes_in_memory ad bs m md1 /\
+  (forall n, (n < LENGTH bs)%N /\ md1 (ad + n2w n)%w -> md2 (ad + n2w n)%w) ->
+  bytes_in_memory ad bs m md2.
+Proof.
+  intros ad bs; revert ad; induction bs as [|x bs IH]; intros ad m md1 md2 [H Hn];
+    cbn [bytes_in_memory LENGTH] in *; [exact Logic.I|].
+  destruct H as (H1 & H2 & H3). split; [exact H1|split].
+  - specialize (Hn 0). rewrite (proj1 lemmas.WORD_ADD_0) in Hn. apply Hn. split; [lia|exact H2].
+  - apply (IH _ m md1). split; [exact H3|]. intros n [Hl Hi].
+    rewrite word_add_n2w_SUC in *. apply Hn. split; [lia|exact Hi].
+Qed.
+
+(*! HOL "cakeml/misc/miscScript.sml" "bytes_in_memory_change_mem" *)
+Theorem bytes_in_memory_change_mem : forall (ad : word a) bs m1 m2 md,
+  bytes_in_memory ad bs m1 md /\
+  (forall n, (n < LENGTH bs)%N -> m1 (ad + n2w n)%w = m2 (ad + n2w n)%w) ->
+  bytes_in_memory ad bs m2 md.
+Proof.
+  intros ad bs; revert ad; induction bs as [|x bs IH]; intros ad m1 m2 md [H Hn];
+    cbn [bytes_in_memory LENGTH] in *; [exact Logic.I|].
+  destruct H as (H1 & H2 & H3). split; [|split; [exact H2|]].
+  - specialize (Hn 0 ltac:(lia)). rewrite (proj1 lemmas.WORD_ADD_0) in Hn. rewrite <- Hn. exact H1.
+  - apply (IH _ m1). split; [exact H3|]. intros n Hl.
+    rewrite word_add_n2w_SUC. apply Hn. lia.
+Qed.
+
+(*! HOL "cakeml/misc/miscScript.sml" "bytes_in_memory_EL" *)
+Theorem bytes_in_memory_EL : forall (ad : word a) bs m md k,
+  bytes_in_memory ad bs m md /\ (k < LENGTH bs)%N -> m (ad + n2w k)%w = EL k bs.
+Proof.
+  intros ad bs; revert ad; induction bs as [|x bs IH]; intros ad m md k [H Hk];
+    cbn [bytes_in_memory LENGTH] in *; [lia|].
+  destruct H as (H1 & _ & H3). destruct k as [|k] using N.peano_ind.
+  - rewrite (proj1 lemmas.WORD_ADD_0). exact H1.
+  - rewrite <- word_add_n2w_SUC, (proj2 EL_thm).
+    apply (IH _ m md). split; [exact H3|lia].
+Qed.
+
+(*! HOL "cakeml/misc/miscScript.sml" "bytes_in_memory_in_domain" *)
+Theorem bytes_in_memory_in_domain : forall (ad : word a) bs m md k,
+  bytes_in_memory ad bs m md /\ (k < LENGTH bs)%N -> md (ad + n2w k)%w.
+Proof.
+  intros ad bs; revert ad; induction bs as [|x bs IH]; intros ad m md k [H Hk];
+    cbn [bytes_in_memory LENGTH] in *; [lia|].
+  destruct H as (_ & H2 & H3). destruct k as [|k] using N.peano_ind.
+  - rewrite (proj1 lemmas.WORD_ADD_0). exact H2.
+  - rewrite <- word_add_n2w_SUC. apply (IH _ m md). split; [exact H3|lia].
 Qed.
 
 End Words.
