@@ -24314,8 +24314,8 @@
   "hol_name": "inst_def",
   "hol_line": null,
   "case": null,
-  "status": "reviewed_exact",
-  "note": "reviewer: all cases match; HOL final catch-all omitted, verified redundant (all inst/arith/memop/fp constructors covered), documented in comment",
+  "status": "pending_review",
+  "note": "reviewer: reverted to pending: Div clause uses w2 // q (word_div, unsigned) but HOL stackSem inst_def uses w2 / q = word_quot (signed); undocumented",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
   "rocq_name": "inst"
  },
@@ -24831,6 +24831,116 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_name_conj",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_name_conj"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_name_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_name_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_stack_var_conj",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_stack_var_conj"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_stack_var_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_stack_var_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_var_conj",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_var_conj"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_var_exp_conj",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_var_exp_conj"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_var_exp_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_var_exp_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_var_imp_every_stack_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_var_imp_every_stack_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_var_inst_conj",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_var_inst_conj"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_var_inst_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_var_inst_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "every_var_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "every_var_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
   "hol_name": "extract_labels_def",
   "hol_line": null,
   "case": null,
@@ -24861,6 +24971,36 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "get_code_labels_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "get_code_labels"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "good_code_labels_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "good_code_labels"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "good_handlers_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "good_handlers"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
   "hol_name": "inst_arg_convention_def",
   "hol_line": null,
   "case": null,
@@ -24881,6 +25021,36 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "labels_rel_APPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "labels_rel_APPEND"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "labels_rel_CONS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "labels_rel_CONS"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "labels_rel_TRANS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "labels_rel_TRANS"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
   "hol_name": "labels_rel_def",
   "hol_line": null,
   "case": null,
@@ -24888,6 +25058,126 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
   "rocq_name": "labels_rel"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "labels_rel_refl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "labels_rel_refl"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "max_var_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "max_var_intro"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "no_alloc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "no_alloc_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "no_alloc_subprogs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "no_alloc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "no_install_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "no_install_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "no_install_subprogs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "no_install"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "no_mt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "no_mt_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "no_mt_subprogs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "no_mt"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "no_share_inst_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "no_share_inst_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "no_share_inst_subprogs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "no_share_inst"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "not_created_subprogs_P_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "not_created_subprogs_P_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
+  "hol_name": "not_created_subprogs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordConvs.v",
+  "rocq_name": "not_created_subprogs"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
