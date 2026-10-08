@@ -31321,6 +31321,16 @@
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_load_32_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_load_32_alt"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
   "hol_name": "mem_load_32_def",
   "hol_line": null,
   "case": null,
@@ -31348,6 +31358,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
   "rocq_name": "mem_load_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_store_32_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_store_32_alt"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panSemScript.sml",

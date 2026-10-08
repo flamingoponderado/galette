@@ -22,6 +22,7 @@ From Galette.HOL.src.list.src.list Require Import extra.
 From Galette.HOL.src.coretypes Require Import option pair.
 From Galette.HOL.src.combin Require Import combin.
 From Galette.HOL.src.n_bit Require Import words alignment byte.
+Import byte.ByteBits.
 From Galette.HOL.src.pred_set.src Require Import pred_set.
 From Galette.HOL.src.finite_maps Require Import finite_map alist.
 From Galette.HOL.src.coalgebras Require Import llist.
@@ -827,6 +828,115 @@ Definition sh_mem_store (w addr : word a) (nb : N) (s : state a ffi_t)
      else (SOME Error, s)).
 
 End Store.
+
+(** ** HOL's [mem_load_32_alt] and [mem_store_32_alt]
+
+    HOL proves these by evaluation and bit-blasting; here via two byte
+    identities on [word32] (Galette helpers, proved bitwise). *)
+Lemma word_of_bytes_4_le (b0 b1 b2 b3 : word8) :
+  word_of_bytes false (n2w 0 : word32) [b0; b1; b2; b3] =
+  ((w2w b0) || ((w2w b1) << 8) || ((w2w b2) << 16) || ((w2w b3) << 24))%w.
+Proof.
+  apply word_testbit_eq; intros i Hi.
+  cbn [word_of_bytes].
+  rewrite !testbit_set_byte, !testbit_or, !testbit_lsl, !testbit_w2w.
+  unfold byte_index; cbn - [N.testbit].
+  rewrite ?testbit_n2w.
+  change (dimindex 32) with 32 in *; change (dimindex 8) with 8 in *.
+  assert (i < 8 \/ (8 <= i < 16) \/ (16 <= i < 24) \/ (24 <= i < 32)) as [H|[H|[H|H]]] by lia;
+  repeat match goal with
+         | |- context [N.ltb ?x ?y] => destruct (N.ltb_spec x y); try lia
+         | |- context [N.leb ?x ?y] => destruct (N.leb_spec x y); try lia
+         end; cbn; rewrite ?testbit_word8_high by lia; try reflexivity.
+  all: repeat match goal with
+              | |- context [N.testbit (w2n ?b) ?j] => rewrite (testbit_word8_high b j) by lia
+              end;
+       rewrite ?N.sub_0_r, ?orb_false_r, ?orb_false_l; reflexivity.
+Qed.
+
+Lemma word_of_bytes_4_be (b0 b1 b2 b3 : word8) :
+  word_of_bytes true (n2w 0 : word32) [b0; b1; b2; b3] =
+  (((w2w b0) << 24) || ((w2w b1) << 16) || ((w2w b2) << 8) || (w2w b3))%w.
+Proof.
+  apply word_testbit_eq; intros i Hi.
+  cbn [word_of_bytes].
+  rewrite !testbit_set_byte, !testbit_or, !testbit_lsl, !testbit_w2w.
+  unfold byte_index; cbn - [N.testbit].
+  rewrite ?testbit_n2w.
+  change (dimindex 32) with 32 in *; change (dimindex 8) with 8 in *.
+  assert (i < 8 \/ (8 <= i < 16) \/ (16 <= i < 24) \/ (24 <= i < 32)) as [H|[H|[H|H]]] by lia;
+  repeat match goal with
+         | |- context [N.ltb ?x ?y] => destruct (N.ltb_spec x y); try lia
+         | |- context [N.leb ?x ?y] => destruct (N.leb_spec x y); try lia
+         end; cbn; rewrite ?testbit_word8_high by lia; try reflexivity.
+  all: repeat match goal with
+              | |- context [N.testbit (w2n ?b) ?j] => rewrite (testbit_word8_high b j) by lia
+              end;
+       rewrite ?N.sub_0_r, ?orb_false_r, ?orb_false_l; reflexivity.
+Qed.
+
+Section Alt.
+Context {a : N}.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "mem_load_32_alt" *)
+Theorem mem_load_32_alt : forall m dm be (w : word a),
+  mem_load_32 m dm be w =
+  if aligned 2 w then
+    match m (byte_align w) with
+    | Word v =>
+        if classical_dec (byte_align w IN dm) then
+          let b0 := get_byte w v be in
+          let b1 := get_byte (w + n2w 1)%w v be in
+          let b2 := get_byte (w + n2w 2)%w v be in
+          let b3 := get_byte (w + n2w 3)%w v be in
+          let v' := (if be
+                     then (w2w b0 << 24 || w2w b1 << 16 || w2w b2 << 8 || w2w b3)%w
+                     else (w2w b0 || w2w b1 << 8 || w2w b2 << 16 || w2w b3 << 24)%w) in
+          SOME (v' : word32)
+        else NONE
+    end
+  else NONE.
+Proof.
+  intros m dm be w; unfold mem_load_32.
+  destruct (aligned 2 w); [|reflexivity].
+  destruct (m (byte_align w)) as [v]; destruct (classical_dec _); [|reflexivity].
+  cbv zeta; f_equal; destruct be; [apply word_of_bytes_4_be|apply word_of_bytes_4_le].
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/panSemScript.sml" "mem_store_32_alt" *)
+Theorem mem_store_32_alt : forall m dm be (w : word a) (hw : word32),
+  mem_store_32 m dm be w hw =
+  if aligned 2 w then
+    match m (byte_align w) with
+    | Word v =>
+        if classical_dec (byte_align w IN dm) then
+          if be then
+            let v0 := set_byte w (w2w (hw >>> 24)%w) v be in
+            let v1 := set_byte (w + n2w 1)%w (w2w (hw >>> 16)%w) v0 be in
+            let v2 := set_byte (w + n2w 2)%w (w2w (hw >>> 8)%w) v1 be in
+            let v3 := set_byte (w + n2w 3)%w (w2w hw) v2 be in
+            SOME ((byte_align w =+ Word v3) m)
+          else
+            let v0 := set_byte w (w2w hw) v be in
+            let v1 := set_byte (w + n2w 1)%w (w2w (hw >>> 8)%w) v0 be in
+            let v2 := set_byte (w + n2w 2)%w (w2w (hw >>> 16)%w) v1 be in
+            let v3 := set_byte (w + n2w 3)%w (w2w (hw >>> 24)%w) v2 be in
+            SOME ((byte_align w =+ Word v3) m)
+        else NONE
+    end
+  else NONE.
+Proof.
+  intros m dm be w hw; unfold mem_store_32.
+  destruct (aligned 2 w); [|reflexivity].
+  destruct (m (byte_align w)) as [v]; destruct (classical_dec _); [|reflexivity].
+  destruct be; cbv zeta; unfold get_byte; f_equal.
+  all: repeat f_equal.
+  all: first [ apply word_eq_w2n; reflexivity
+             | apply word_testbit_eq; intros j Hj; rewrite testbit_lsr;
+               f_equal; unfold byte_index; cbn; lia ].
+Qed.
+
+End Alt.
 
 
 Section Evaluate.
