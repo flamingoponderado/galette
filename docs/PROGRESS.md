@@ -23,7 +23,7 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/semantics/panSemScript | done |
 | pancake/semantics/crepSemScript, loopSemScript | done (crep `eval_def` untagged: needs bitstring `v2w`) |
 | compiler/backend/semantics/wordSemScript | done |
-| compiler/backend/semantics/wordConvsScript | definitions done; theorems wip |
+| compiler/backend/semantics/wordConvsScript | definitions done; theorems partial |
 | compiler/backend/semantics/stackSemScript, labSemScript | done (stackSem `evaluate_ind` not ported) |
 | compiler/encoders/asm/asmSemScript, backend/semantics/targetSemScript | done |
 | HOL L3 riscv model (Next, step) | wip |
@@ -49,7 +49,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/proofs/crep_to_loopProof | todo |
 | pancake/proofs/loop_to_wordProof, pan_to_wordProof | todo |
 | backend/reg_alloc/parmoveScript theorems | done |
-| backend/reg_alloc/proofs (reg_alloc, linear_scan) | wip |
+| backend/reg_alloc/proofs/reg_allocProof | done (`reg_alloc_correct`) |
+| backend/reg_alloc/proofs/linear_scanProof | wip |
 | backend/proofs word_simp, word_inst, word_cse, word_copy, word_remove, word_unreach, word_depth, word_alloc, word_to_word | todo |
 | backend/proofs word_to_stack, stack_alloc, stack_remove, stack_names, stack_rawcall, stack_to_lab | todo |
 | backend/proofs lab_filter, lab_to_target | todo |
