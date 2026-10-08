@@ -9,11 +9,11 @@
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
+Open Scope N_scope.
 
 (** ** Functions that coincide with the Rocq standard library *)
 
 Abbreviation APPEND := List.app.
-Abbreviation LENGTH := List.length.
 Abbreviation MAP := List.map.
 Abbreviation FILTER := List.filter.
 Abbreviation FLAT := List.concat.
@@ -24,9 +24,11 @@ Theorem APPEND_thm : forall {A}, (forall l : list A, APPEND [] l = l) /\
   (forall (l1 l2 : list A) h, APPEND (h :: l1) l2 = h :: APPEND l1 l2).
 Proof. split; reflexivity. Qed.
 
+(** HOL [LENGTH] returns a [num] ([N]); [LENGTH_length] relates it to
+    Rocq's [length]. *)
 (*! HOL "HOL/src/list/src/listScript.sml" "LENGTH" *)
-Theorem LENGTH_thm : forall {A} (h : A) t, LENGTH (@nil A) = 0 /\ LENGTH (h :: t) = SUC (LENGTH t).
-Proof. split; reflexivity. Qed.
+Fixpoint LENGTH {A} (l : list A) : N :=
+  match l with [] => 0 | h :: t => SUC (LENGTH t) end.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "MAP" *)
 Theorem MAP_thm : forall {A B} (f : A -> B) h t, MAP f (@nil A) = [] /\ MAP f (h :: t) = f h :: MAP f t.
@@ -60,12 +62,11 @@ Definition HD `{Inhabited A} (l : list A) : A := match l with h :: t => h | [] =
 (*! HOL "HOL/src/list/src/listScript.sml" "TL_DEF" *)
 Definition TL (l : list A) : list A := match l with [] => [] | h :: t => t end.
 
-(*! HOL "HOL/src/list/src/listScript.sml" "EL_def" *)
-Fixpoint EL `{Inhabited A} (n : nat) (l : list A) : A :=
-  match n with 0 => HD l | S n => EL n (TL l) end.
+Definition EL `{Inhabited A} (n : N) : list A -> A :=
+  num_rec HD (fun _ r l => r (TL l)) n.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "SUM" *)
-Fixpoint SUM (l : list nat) : nat := match l with [] => 0 | h :: t => h + SUM t end.
+Fixpoint SUM (l : list N) : N := match l with [] => 0 | h :: t => h + SUM t end.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "FOLDR" *)
 Fixpoint FOLDR (f : A -> B -> B) (e : B) (l : list A) : B :=
@@ -122,9 +123,8 @@ Fixpoint UNZIP (l : list (A * B)) : list A * list B :=
 Fixpoint SNOC (x : A) (l : list A) : list A :=
   match l with [] => [x] | x' :: l => x' :: SNOC x l end.
 
-(*! HOL "HOL/src/list/src/listScript.sml" "GENLIST" *)
-Fixpoint GENLIST (f : nat -> A) (n : nat) : list A :=
-  match n with 0 => [] | S n => SNOC (f n) (GENLIST f n) end.
+Definition GENLIST (f : N -> A) (n : N) : list A :=
+  num_rec [] (fun n r => SNOC (f n) r) n.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "LAST_DEF" *)
 Fixpoint LAST `{Inhabited A} (l : list A) : A :=
@@ -141,29 +141,27 @@ Fixpoint FRONT (l : list A) : list A :=
   end.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "TAKE_def" *)
-Fixpoint TAKE (n : nat) (l : list A) : list A :=
+Fixpoint TAKE (n : N) (l : list A) : list A :=
   match l with
   | [] => []
   | x :: xs => if n =? 0 then [] else x :: TAKE (n - 1) xs
   end.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "DROP_def" *)
-Fixpoint DROP (n : nat) (l : list A) : list A :=
+Fixpoint DROP (n : N) (l : list A) : list A :=
   match l with
   | [] => []
   | x :: xs => if n =? 0 then x :: xs else DROP (n - 1) xs
   end.
 
-(*! HOL "HOL/src/list/src/listScript.sml" "LUPDATE_def" *)
-Fixpoint LUPDATE (e : A) (n : nat) (l : list A) : list A :=
-  match l, n with
-  | [], _ => []
-  | x :: l, 0 => e :: l
-  | x :: l, S n => x :: LUPDATE e n l
+Fixpoint LUPDATE (e : A) (n : N) (l : list A) : list A :=
+  match l with
+  | [] => []
+  | x :: l => if n =? 0 then e :: l else x :: LUPDATE e (PRE n) l
   end.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "INDEX_FIND_def" *)
-Fixpoint INDEX_FIND (i : nat) (P : A -> bool) (l : list A) : option (nat * A) :=
+Fixpoint INDEX_FIND (i : N) (P : A -> bool) (l : list A) : option (N * A) :=
   match l with
   | [] => None
   | h :: t => if P h then Some (i, h) else INDEX_FIND (SUC i) P t
@@ -174,7 +172,7 @@ Definition FIND (P : A -> bool) : list A -> option A :=
   option_map snd ∘ INDEX_FIND 0 P.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "INDEX_OF_def" *)
-Definition INDEX_OF `{EqDecision A} (x : A) : list A -> option nat :=
+Definition INDEX_OF `{EqDecision A} (x : A) : list A -> option N :=
   option_map fst ∘ INDEX_FIND 0 (fun y => bool_decide (x = y)).
 
 (*! HOL "HOL/src/list/src/listScript.sml" "isPREFIX" *)
@@ -191,6 +189,9 @@ Inductive LIST_REL (R : A -> B -> Prop) : list A -> list B -> Prop :=
 | LIST_REL_nil : LIST_REL R [] []
 | LIST_REL_cons a b l1 l2 : R a b -> LIST_REL R l1 l2 -> LIST_REL R (a :: l1) (b :: l2).
 
+(*! HOL "HOL/src/list/src/listScript.sml" "LIST_BIND_def" *)
+Definition LIST_BIND (l : list A) (f : A -> list B) : list B := FLAT (MAP f l).
+
 End Defs.
 
 Lemma ZIP_eqns {A B} : (forall l2 : list B, ZIP ([] : list A, l2) = []) /\
@@ -200,7 +201,7 @@ Proof. repeat split; intros; try reflexivity; destruct l1; reflexivity. Qed.
 
 (** HOL [list_size]: the size function generated for [list] (used in
     termination arguments). *)
-Fixpoint list_size {A} (f : A -> nat) (l : list A) : nat :=
+Fixpoint list_size {A} (f : A -> N) (l : list A) : N :=
   match l with [] => 0 | x :: xs => 1 + f x + list_size f xs end.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "LIST_REL_def" 1456 *)
@@ -220,7 +221,7 @@ Qed.
 (*! HOL "HOL/src/list/src/listScript.sml" "EL" 231 *)
 Theorem EL_thm : forall {A} `{Inhabited A},
   (forall l : list A, EL 0 l = HD l) /\ (forall (l : list A) n, EL (SUC n) l = EL n (TL l)).
-Proof. split; reflexivity. Qed.
+Proof. split; [reflexivity|]. intros; unfold EL; rewrite num_rec_SUC; reflexivity. Qed.
 
 (*! HOL "HOL/src/list/src/listScript.sml" "MAP2" *)
 Theorem MAP2_thm : forall {A B C},
@@ -242,22 +243,32 @@ Proof.
   rewrite andb_true_iff, IH; split; [intros [? ?]; constructor; auto|intros Hf; inversion Hf; auto].
 Qed.
 
-Lemma EL_nth {A} `{Inhabited A} n (l : list A) : n < length l -> EL n l = nth n l ARB.
+Lemma LENGTH_length {A} (l : list A) : LENGTH l = N.of_nat (length l).
+Proof. induction l as [|x l IH]; cbn [LENGTH length]; [reflexivity|]. rewrite IH; lia. Qed.
+
+Lemma EL_SUC {A} `{Inhabited A} n (l : list A) : EL (SUC n) l = EL n (TL l).
+Proof. unfold EL; rewrite num_rec_SUC; reflexivity. Qed.
+
+Lemma EL_nth {A} `{Inhabited A} n (l : list A) :
+  n < LENGTH l -> EL n l = nth (N.to_nat n) l ARB.
 Proof.
-  revert l; induction n as [|n IH]; intros [|h t] Hl; cbn in *; try lia; auto.
-  apply IH; lia.
+  revert l; induction n as [|n IH] using N.peano_ind; intros [|h t] Hl;
+    cbn [LENGTH] in Hl; try lia; [reflexivity|].
+  rewrite EL_SUC, N2Nat.inj_succ; cbn [TL nth]; apply IH; lia.
 Qed.
 
-Lemma TAKE_firstn {A} n (l : list A) : TAKE n l = firstn n l.
+Lemma TAKE_firstn {A} n (l : list A) : TAKE n l = firstn (N.to_nat n) l.
 Proof.
-  revert n; induction l as [|x xs IH]; intros [|n]; cbn; auto.
-  rewrite IH, Nat.sub_0_r; reflexivity.
+  revert n; induction l as [|x xs IH]; intros n; cbn [TAKE]; [destruct (N.to_nat n); reflexivity|].
+  destruct (N.eqb_spec n 0) as [->|Hn]; [reflexivity|].
+  rewrite IH; replace (N.to_nat n) with (S (N.to_nat (n - 1))) by lia; reflexivity.
 Qed.
 
-Lemma DROP_skipn {A} n (l : list A) : DROP n l = skipn n l.
+Lemma DROP_skipn {A} n (l : list A) : DROP n l = skipn (N.to_nat n) l.
 Proof.
-  revert n; induction l as [|x xs IH]; intros [|n]; cbn; auto using skipn_nil.
-  rewrite IH, Nat.sub_0_r; reflexivity.
+  revert n; induction l as [|x xs IH]; intros n; cbn [DROP]; [destruct (N.to_nat n); reflexivity|].
+  destruct (N.eqb_spec n 0) as [->|Hn]; [reflexivity|].
+  rewrite IH; replace (N.to_nat n) with (S (N.to_nat (n - 1))) by lia; reflexivity.
 Qed.
 
 Lemma FOLDL_fold_left {A B} (f : B -> A -> B) e l : FOLDL f e l = fold_left f l e.
@@ -268,3 +279,24 @@ Proof. induction l; cbn; congruence. Qed.
 
 Lemma SNOC_app {A} (x : A) l : SNOC x l = l ++ [x].
 Proof. induction l; cbn; congruence. Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "EL_def" *)
+Theorem EL_def : forall {A} `{Inhabited A} (l : list A) n,
+  EL 0 l = HD l /\ EL (SUC n) l = EL n (TL l).
+Proof. intros; split; [reflexivity|apply EL_SUC]. Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "GENLIST" *)
+Theorem GENLIST_thm : forall {A} (f : N -> A) n,
+  GENLIST f 0 = [] /\ GENLIST f (SUC n) = SNOC (f n) (GENLIST f n).
+Proof. intros; split; [reflexivity|]. unfold GENLIST; rewrite num_rec_SUC; reflexivity. Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "LUPDATE_def" *)
+Theorem LUPDATE_def : forall {A},
+  (forall (e : A) n, LUPDATE e n [] = []) /\
+  (forall (e : A) x l, LUPDATE e 0 (x :: l) = e :: l) /\
+  (forall (e : A) n x l, LUPDATE e (SUC n) (x :: l) = x :: LUPDATE e n l).
+Proof.
+  intros A; split; [reflexivity|split; [reflexivity|]].
+  intros e n x l; cbn [LUPDATE]; destruct (N.eqb_spec (SUC n) 0); [lia|].
+  rewrite N.pred_succ; reflexivity.
+Qed.

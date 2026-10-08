@@ -72,6 +72,10 @@ Rocq does not. When a HOL theorem has the name of a constant (e.g. listTheory's
 theorem `MAP` characterising the constant `MAP`), the Rocq theorem is named
 `<NAME>_thm`; the tag still cites the exact HOL name.
 
+**Type/constructor clashes.** HOL keeps types and constructors apart too;
+when a HOL type has a constructor's name (L3's `ArithI`), the Rocq type is
+`<NAME>_ty`.
+
 **A tag is a claim of sameness.** Before tagging, compare definitions,
 quantified variables, hypotheses, side conditions, conclusions, and carrier
 types (constructor arity, field types, word widths). If something differs,
@@ -85,15 +89,17 @@ These are fixed so that no declaration needs a representation qualifier.
 | --- | --- |
 | `bool` (in code) | `bool`; in theorem statements coerced to `Prop` by `is_true` |
 | predicates defined by quantifiers | `Prop` |
-| `num` | `nat` (extracted to Zarith) |
+| `num` | `N` (binary, so concrete numbers like `dimword(:64)` compute in the kernel; extracted to Zarith). Every file has `Open Scope N_scope`. Recursion on `SUC n` uses `num_rec` (arithmetic.v) and HOL's equations are proved |
 | `int` | `Z` |
 | `'a list`, `'a option`, `'a # 'b` | `list`, `option`, `*` |
-| `char`, `string` | `ascii`, `string` |
-| `mlstring` | `mlstring` (`strlit of string`), `theories/cakeml/basis/pure/mlstring.v` |
+| `char` | `ascii` |
+| `string` (= `char list` in HOL) | `list ascii` (HOL's own type abbreviation), with string literals via `String Notation`; not Rocq's `String.string` |
+| `ordering` | `ordering` (`LESS`/`EQUAL`/`GREATER`, ported from `ternaryComparisons`) |
+| `mlstring` | `mlstring` with constructor `implode` (HOL's), `strlit` an abbreviation |
 | `'a word` | `word a` with `a : nat` the width index, `dimindex a` as in HOL |
 | `'a |-> 'b` | `fmap` (`theories/HOL/src/finite_maps/finite_map.v`) |
 | `num_map`, `'a spt` | `spt` (`theories/HOL/src/finite_maps/sptree.v`) |
-| `'a set` | `'a -> Prop` |
+| `'a set` | `'a -> Prop`, with HOL's `pred_set` operations (`IN`, `INSERT`, `UNION`, ...) ported so statements read as in HOL |
 | `ARB`, `@x. P x` | `ARB`, `select P` (`Base.v`) |
 | HOL `=` tested in code | `decide (x = y)` via `EqDecision` |
 | record `s with f := v` | Rocq record update (write out the record or use a `set_f` helper) |

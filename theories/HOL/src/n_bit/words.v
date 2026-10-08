@@ -5,7 +5,7 @@
     [n2w]-normal forms ([w2n_n2w], [word_add_n2w], [word_lsl_n2w], ...).
     Galette's carrier [word a] is that normal form: a natural number below
     [dimword a], with an (irrelevant) proof of the bound.  The width index
-    [a : nat] plays the role of HOL's type ['a]; [dimindex a] is [a] for
+    [a : N] plays the role of HOL's type ['a]; [dimindex a] is [a] for
     positive [a] and [1] for [a = 0], mirroring HOL, where [dimindex(:'a) = 1]
     for any infinite ['a] and every [dimindex] is positive.
 
@@ -19,35 +19,36 @@ From Galette.HOL.src.num.theories Require Import arithmetic.
 From Galette.HOL.src.num.extra_theories Require Import bit.
 From Galette.HOL.src.n_bit Require Import sum_num.
 From Stdlib Require Import Eqdep_dec.
+Open Scope N_scope.
 
 (** ** Widths *)
 
 (** HOL [dimindex(:'a)]: the width of ['a word] (from [fcp]). *)
-Definition dimindex (a : nat) : nat := Nat.max 1 a.
+Definition dimindex (a : N) : N := N.max 1 a.
 
 Lemma DIMINDEX_GT_0 a : 0 < dimindex a.
 Proof. unfold dimindex; lia. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "dimword_def" *)
-Definition dimword (a : nat) : nat := 2 ** dimindex a.
+Definition dimword (a : N) : N := 2 ** dimindex a.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "INT_MIN_def" *)
-Definition INT_MIN (a : nat) : nat := 2 ** (dimindex a - 1).
+Definition INT_MIN (a : N) : N := 2 ** (dimindex a - 1).
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "UINT_MAX_def" *)
-Definition UINT_MAX (a : nat) : nat := dimword a - 1.
+Definition UINT_MAX (a : N) : N := dimword a - 1.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "INT_MAX_def" *)
-Definition INT_MAX (a : nat) : nat := INT_MIN a - 1.
+Definition INT_MAX (a : N) : N := INT_MIN a - 1.
 
 Lemma ZERO_LT_dimword a : 0 < dimword a.
-Proof. unfold dimword; apply Nat.neq_0_lt_0, Nat.pow_nonzero; lia. Qed.
+Proof. unfold dimword; apply N.neq_0_lt_0, N.pow_nonzero; lia. Qed.
 
 (** ** The carrier *)
 
-Record word (a : nat) : Type := mk_word {
-  w2n_val : nat;
-  w2n_bound : Nat.ltb w2n_val (dimword a) = true
+Record word (a : N) : Type := mk_word {
+  w2n_val : N;
+  w2n_bound : N.ltb w2n_val (dimword a) = true
 }.
 Arguments mk_word {a} _ _.
 Arguments w2n_val {a} _.
@@ -74,17 +75,17 @@ Delimit Scope word_scope with w.
 Bind Scope word_scope with word.
 
 Section Ops.
-Context {a : nat}.
+Context {a : N}.
 
 (** HOL [w2n].  ([w2n_def] is stated over [FCP] indices; see [w2n_def]
     below once [fcp_index] is available.) *)
-Definition w2n (w : word a) : nat := w2n_val w.
+Definition w2n (w : word a) : N := w2n_val w.
 
-Lemma n2w_bound n : Nat.ltb (n MOD dimword a) (dimword a) = true.
-Proof. apply Nat.ltb_lt, Nat.mod_upper_bound. pose proof (ZERO_LT_dimword a); lia. Qed.
+Lemma n2w_bound n : N.ltb (n MOD dimword a) (dimword a) = true.
+Proof. apply N.ltb_lt, N.mod_lt. pose proof (ZERO_LT_dimword a); lia. Qed.
 
 (** HOL [n2w]. *)
-Definition n2w (n : nat) : word a := mk_word (n MOD dimword a) (n2w_bound n).
+Definition n2w (n : N) : word a := mk_word (n MOD dimword a) (n2w_bound n).
 
 Lemma word_eq_w2n (v w : word a) : w2n v = w2n w -> v = w.
 Proof.
@@ -94,7 +95,7 @@ Qed.
 
 #[global] Instance word_eq_dec : EqDecision (word a).
 Proof.
-  intros v w; destruct (Nat.eq_dec (w2n v) (w2n w)) as [e|n].
+  intros v w; destruct (N.eq_dec (w2n v) (w2n w)) as [e|n].
   - left; apply word_eq_w2n, e.
   - right; intros ->; apply n; reflexivity.
 Defined.
@@ -103,7 +104,7 @@ Defined.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "w2n_lt" *)
 Theorem w2n_lt : forall w : word a, w2n w < dimword a.
-Proof. intros [w Hw]; apply Nat.ltb_lt, Hw. Qed.
+Proof. intros [w Hw]; apply N.ltb_lt, Hw. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "w2n_n2w" *)
 Theorem w2n_n2w : forall n, w2n (n2w n : word a) = n MOD dimword a.
@@ -112,7 +113,7 @@ Proof. reflexivity. Qed.
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "n2w_w2n" *)
 Theorem n2w_w2n : forall w : word a, n2w (w2n w) = w.
 Proof.
-  intros w; apply word_eq_w2n; rewrite w2n_n2w; apply Nat.mod_small, w2n_lt.
+  intros w; apply word_eq_w2n; rewrite w2n_n2w; apply N.mod_small, w2n_lt.
 Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "n2w_11" *)
@@ -125,7 +126,7 @@ Proof.
 Qed.
 
 Lemma n2w_mod n : (n2w (n MOD dimword a) : word a) = n2w n.
-Proof. apply n2w_11; apply Nat.Div0.mod_mod. Qed.
+Proof. apply n2w_11; apply N.Div0.mod_mod. Qed.
 
 (** ** Constants *)
 
@@ -167,45 +168,45 @@ Definition word_mod (v w : word a) : word a := n2w (w2n v MOD w2n w).
 (** ** Bitwise operations (computational forms; see the [_n2w] theorems) *)
 
 Definition word_1comp (w : word a) : word a := n2w (dimword a - 1 - w2n w).
-Definition word_and (v w : word a) : word a := n2w (Nat.land (w2n v) (w2n w)).
-Definition word_or (v w : word a) : word a := n2w (Nat.lor (w2n v) (w2n w)).
-Definition word_xor (v w : word a) : word a := n2w (Nat.lxor (w2n v) (w2n w)).
+Definition word_and (v w : word a) : word a := n2w (N.land (w2n v) (w2n w)).
+Definition word_or (v w : word a) : word a := n2w (N.lor (w2n v) (w2n w)).
+Definition word_xor (v w : word a) : word a := n2w (N.lxor (w2n v) (w2n w)).
 
 (** HOL [w ' i] ([fcp_index]).  Out-of-range indices are unspecified in HOL;
     here they read as [false]. *)
-Definition fcp_index (w : word a) (i : nat) : bool := BIT i (w2n w).
+Definition fcp_index (w : word a) (i : N) : bool := BIT i (w2n w).
 
 (** HOL [FCP i. f i] at word type. *)
-Definition FCP (f : nat -> bool) : word a :=
+Definition FCP (f : N -> bool) : word a :=
   n2w (SUM (dimindex a) (fun i => SBIT (f i) i)).
 
 Definition word_lsb (w : word a) : bool := ODD (w2n w).
 Definition word_msb (w : word a) : bool := BIT (dimindex a - 1) (w2n w).
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_bit_def" *)
-Definition word_bit (b : nat) (w : word a) : bool :=
+Definition word_bit (b : N) (w : word a) : bool :=
   (b <=? dimindex a - 1) && fcp_index w b.
 
-Definition word_bits (h l : nat) (w : word a) : word a :=
+Definition word_bits (h l : N) (w : word a) : word a :=
   n2w (BITS (MIN h (dimindex a - 1)) l (w2n w)).
 
-Definition word_lsl (w : word a) (n : nat) : word a :=
+Definition word_lsl (w : word a) (n : N) : word a :=
   if dimindex a - 1 <? n then n2w 0 else n2w (w2n w * 2 ** n).
 
-Definition word_lsr (w : word a) (n : nat) : word a :=
+Definition word_lsr (w : word a) (n : N) : word a :=
   word_bits (dimindex a - 1) n w.
 
-Definition word_asr (w : word a) (n : nat) : word a :=
+Definition word_asr (w : word a) (n : N) : word a :=
   if word_msb w then
     word_or (word_lsl word_T (dimindex a - MIN n (dimindex a))) (word_lsr w n)
   else word_lsr w n.
 
-Definition word_ror (w : word a) (n : nat) : word a :=
+Definition word_ror (w : word a) (n : N) : word a :=
   let x := n MOD dimindex a in
   n2w (BITS (dimindex a - 1) x (w2n w) + BITS (x - 1) 0 (w2n w) * 2 ** (dimindex a - x)).
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_rol_def" *)
-Definition word_rol (w : word a) (n : nat) : word a :=
+Definition word_rol (w : word a) (n : N) : word a :=
   word_ror w (dimindex a - n MOD dimindex a).
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_lsl_bv_def" *)
@@ -218,11 +219,11 @@ Definition word_lsr_bv (w n : word a) : word a := word_lsr w (w2n n).
 Definition word_asr_bv (w n : word a) : word a := word_asr w (w2n n).
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_sign_extend_def" *)
-Definition word_sign_extend (n : nat) (w : word a) : word a :=
+Definition word_sign_extend (n : N) (w : word a) : word a :=
   n2w (SIGN_EXTEND n (dimindex a) (w2n w)).
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_len_def" *)
-Definition word_len (w : word a) : nat := dimindex a.
+Definition word_len (w : word a) : N := dimindex a.
 
 (** ** Comparisons *)
 
@@ -287,24 +288,24 @@ End Ops.
 (** ** Width-changing operations *)
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "w2w_def" *)
-Definition w2w {a b : nat} (w : word a) : word b := n2w (w2n w).
+Definition w2w {a b : N} (w : word a) : word b := n2w (w2n w).
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "sw2sw_def" *)
-Definition sw2sw {a b : nat} (w : word a) : word b :=
+Definition sw2sw {a b : N} (w : word a) : word b :=
   n2w (SIGN_EXTEND (dimindex a) (dimindex b) (w2n w)).
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_extract_def" *)
-Definition word_extract {a b : nat} (h l : nat) : word a -> word b :=
+Definition word_extract {a b : N} (h l : N) : word a -> word b :=
   w2w ∘ word_bits h l.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_join_def" *)
-Definition word_join {a b : nat} (v : word a) (w : word b) : word (a + b) :=
+Definition word_join {a b : N} (v : word a) (w : word b) : word (a + b) :=
   let cv := (w2w v : word (a + b)) in
   let cw := (w2w w : word (a + b)) in
   word_or (word_lsl cv (dimindex b)) cw.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_concat_def" *)
-Definition word_concat {a b c : nat} (v : word a) (w : word b) : word c :=
+Definition word_concat {a b c : N} (v : word a) (w : word b) : word c :=
   w2w (word_join v w).
 
 (** ** HOL notation (HOL's overloads in [words]) *)
@@ -344,17 +345,17 @@ Abbreviation Tw := word_T.
 (** ** Compute theorems *)
 
 Section Compute.
-Context {a : nat}.
+Context {a : N}.
 
 Lemma dimword_pow : dimword a = 2 ** dimindex a.
 Proof. reflexivity. Qed.
 
-Lemma dimindex_split : dimindex a = S (dimindex a - 1).
+Lemma dimindex_split : dimindex a = SUC (dimindex a - 1).
 Proof. pose proof (DIMINDEX_GT_0 a); lia. Qed.
 
 Lemma BIT_mod_pow i k n : i < k -> BIT i (n MOD 2 ** k) = BIT i n.
 Proof.
-  intros H; rewrite !BIT_testbit, Nat.mod_pow2_bits_low by exact H; reflexivity.
+  intros H; rewrite !BIT_testbit, N.mod_pow2_bits_low by exact H; reflexivity.
 Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_msb_n2w" *)
@@ -366,11 +367,7 @@ Qed.
 
 Lemma ODD_mod_even n k : 0 < k -> ODD (n MOD 2 ** k) = ODD n.
 Proof.
-  intros Hk.
-  assert (Hodd : forall m, ODD m = Nat.odd m).
-  { induction m; [reflexivity|]. cbn [ODD]. rewrite IHm, Nat.odd_succ, <- Nat.negb_odd.
-    reflexivity. }
-  rewrite !Hodd, <- !Nat.bit0_odd, Nat.mod_pow2_bits_low by exact Hk; reflexivity.
+  intros Hk; rewrite <- !N.bit0_odd, N.mod_pow2_bits_low by exact Hk; reflexivity.
 Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_lsb_n2w" *)
@@ -386,7 +383,7 @@ Theorem word_bit_n2w : forall b n,
 Proof.
   intros b n; unfold word_bit, fcp_index; rewrite w2n_n2w, dimword_pow.
   pose proof (DIMINDEX_GT_0 a).
-  destruct (Nat.leb_spec b (dimindex a - 1)) as [Hb|Hb]; [|reflexivity].
+  destruct (N.leb_spec b (dimindex a - 1)) as [Hb|Hb]; [|reflexivity].
   rewrite !andb_true_l; apply BIT_mod_pow; lia.
 Qed.
 
@@ -395,18 +392,18 @@ Theorem word_1comp_n2w : forall n,
   (~ (n2w n : word a))%w = n2w (dimword a - 1 - n MOD dimword a).
 Proof. reflexivity. Qed.
 
-Lemma BITS_lt h l n : BITS h l n < 2 ** (S h - l).
-Proof. unfold BITS, MOD_2EXP; apply Nat.mod_upper_bound, Nat.pow_nonzero; lia. Qed.
+Lemma BITS_lt h l n : BITS h l n < 2 ** (SUC h - l).
+Proof. unfold BITS, MOD_2EXP; apply N.mod_lt, N.pow_nonzero; lia. Qed.
 
 Lemma BITS_mod_pow h l k n :
   h < k -> BITS h l (n MOD 2 ** k) = BITS h l n.
 Proof.
   intros H; unfold BITS, MOD_2EXP, DIV_2EXP.
-  apply Nat.bits_inj; intros i.
-  destruct (Nat.ltb_spec i (S h - l)).
-  - rewrite !Nat.mod_pow2_bits_low, !Nat.div_pow2_bits, Nat.mod_pow2_bits_low
+  apply N.bits_inj; intros i.
+  destruct (N.ltb_spec i (SUC h - l)).
+  - rewrite !N.mod_pow2_bits_low, !N.div_pow2_bits, N.mod_pow2_bits_low
       by lia; reflexivity.
-  - rewrite !Nat.mod_pow2_bits_high by lia; reflexivity.
+  - rewrite !N.mod_pow2_bits_high by lia; reflexivity.
 Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_bits_n2w" *)
@@ -423,7 +420,7 @@ Theorem word_lsl_n2w : forall n m,
   if dimindex a - 1 <? n then n2w 0 else n2w (m * 2 ** n).
 Proof.
   intros n m; unfold word_lsl; destruct (dimindex a - 1 <? n); [reflexivity|].
-  apply n2w_11; rewrite w2n_n2w, Nat.Div0.mul_mod_idemp_l; reflexivity.
+  apply n2w_11; rewrite w2n_n2w, N.Div0.mul_mod_idemp_l; reflexivity.
 Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "word_lsr_n2w" *)
@@ -445,7 +442,8 @@ Theorem word_ror_n2w : forall n a0,
 Proof.
   intros n a0; unfold word_ror; cbv zeta; rewrite w2n_n2w, dimword_pow.
   assert (Hx : n MOD dimindex a < dimindex a)
-    by (apply Nat.mod_upper_bound; pose proof (DIMINDEX_GT_0 a); lia).
+    by (apply N.mod_lt; pose proof (DIMINDEX_GT_0 a); lia).
+  pose proof (DIMINDEX_GT_0 a).
   rewrite !BITS_mod_pow by lia; reflexivity.
 Qed.
 

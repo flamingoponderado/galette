@@ -5,6 +5,6 @@
 
 (executable
  (name smoke)
- (modules galette_smoke smoke)
+ (modules galette_zarith galette_smoke smoke)
  (flags (:standard -w -a))
  (libraries zarith))

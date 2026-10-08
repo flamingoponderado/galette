@@ -64,6 +64,14 @@ Proof.
     congruence.
 Defined.
 
+#[global] Instance sum_eq_dec {A B} `{EqDecision A} `{EqDecision B} :
+  EqDecision (A + B).
+Proof.
+  intros [a|b] [c|d]; try (right; discriminate).
+  - destruct (decide (a = c)) as [->|n]; [left; reflexivity|right; congruence].
+  - destruct (decide (b = d)) as [->|n]; [left; reflexivity|right; congruence].
+Defined.
+
 #[global] Instance option_eq_dec {A} `{EqDecision A} : EqDecision (option A).
 Proof.
   intros [a|] [b|]; try (right; discriminate); try (left; reflexivity).
