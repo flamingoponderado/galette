@@ -332,3 +332,87 @@ Proof.
 Qed.
 
 End StateRelLemmas.
+
+Section MemLemmas.
+Context {a : N} {c ffi_t : Type}.
+Implicit Types s t : state a c ffi_t.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "memory_fun2set_IMP_read" *)
+Local Theorem memory_fun2set_IMP_read : forall (m m1 : word a -> word_loc a) d d1 p ad,
+  STAR (memory m d) p (fun2set (m1, d1)) /\ ad IN d -> ad IN d1 /\ m1 ad = m ad.
+Proof.
+  intros m m1 d d1 p ad [H Hd]. apply STAR_alt in H as (u & Hu & Hm & _).
+  unfold memory in Hm; subst u.
+  assert (Hin : fun2set (m, d) (ad, m ad)) by (apply fun2set_thm; split; [reflexivity|exact Hd]).
+  apply Hu in Hin. apply fun2set_thm in Hin as [E Hd1]. split; [exact Hd1|exact E].
+Qed.
+
+Lemma state_rel_STAR jump off k s t :
+  state_rel jump off k s t ->
+  exists base p, FLOOKUP (regs t) (k + 1) = SOME (Word base) /\
+    STAR (memory (stackSem.memory s) (mdomain s)) p (fun2set (stackSem.memory t, mdomain t)).
+Proof.
+  intros H; unfold state_rel in H; destruct_ands. cbv zeta in *.
+  destruct (FLOOKUP (regs t) (k + 1)) as [[base|]|] eqn:E; try contradiction.
+  destruct_ands. eexists base, _; split; [reflexivity|].
+  rewrite <- !STAR_ASSOC in *. eassumption.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "state_rel_read" *)
+Local Theorem state_rel_read : forall jump off k s t ad,
+  state_rel jump off k s t /\ ad IN mdomain s ->
+  ad IN mdomain t /\ stackSem.memory t ad = stackSem.memory s ad.
+Proof.
+  intros jump off k s t ad [H Hd]. destruct (state_rel_STAR _ _ _ _ _ H) as (base & p & _ & Hs).
+  exact (memory_fun2set_IMP_read _ _ _ _ _ _ (conj Hs Hd)).
+Qed.
+
+Lemma state_rel_be jump off k s t : state_rel jump off k s t -> be t = be s.
+Proof. intros H; unfold state_rel in H; destruct_ands; assumption. Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "mem_load_32_IMP" *)
+Local Theorem mem_load_32_IMP : forall jump off k s t ad x,
+  state_rel jump off k s t /\
+  wordSem.mem_load_32 (stackSem.memory s) (mdomain s) (be s) ad = SOME x ->
+  wordSem.mem_load_32 (stackSem.memory t) (mdomain t) (be t) ad = SOME x.
+Proof.
+  intros jump off k s t ad x [H E]. rewrite (state_rel_be _ _ _ _ _ H).
+  unfold wordSem.mem_load_32 in *. destruct (aligned 2 ad); [|discriminate E].
+  destruct (stackSem.memory s (byte_align ad)) as [v|l1 l2] eqn:Em; [|cbn in E; discriminate E].
+  destruct (classical_dec (byte_align ad IN mdomain s)) as [Hd|]; [|discriminate E].
+  destruct (state_rel_read _ _ _ _ _ _ (conj H Hd)) as [Hd' Et]. rewrite Et, Em.
+  destruct (classical_dec _); [exact E|contradiction].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "mem_load_byte_aux_IMP" *)
+Local Theorem mem_load_byte_aux_IMP : forall jump off k s t ad x,
+  state_rel jump off k s t /\
+  wordSem.mem_load_byte_aux (stackSem.memory s) (mdomain s) (be s) ad = SOME x ->
+  wordSem.mem_load_byte_aux (stackSem.memory t) (mdomain t) (be t) ad = SOME x.
+Proof.
+  intros jump off k s t ad x [H E]. rewrite (state_rel_be _ _ _ _ _ H).
+  unfold wordSem.mem_load_byte_aux in *.
+  destruct (stackSem.memory s (byte_align ad)) as [v|l1 l2] eqn:Em; [|cbn in E; discriminate E].
+  destruct (classical_dec (byte_align ad IN mdomain s)) as [Hd|]; [|discriminate E].
+  destruct (state_rel_read _ _ _ _ _ _ (conj H Hd)) as [Hd' Et]. rewrite Et, Em.
+  destruct (classical_dec _); [exact E|contradiction].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "read_bytearray_IMP_read_bytearray" *)
+Local Theorem read_bytearray_IMP_read_bytearray : forall jump off n ad k s t x,
+  state_rel jump off k s t /\
+  read_bytearray ad n (wordSem.mem_load_byte_aux (stackSem.memory s) (mdomain s) (be s)) = SOME x ->
+  read_bytearray ad n (wordSem.mem_load_byte_aux (stackSem.memory t) (mdomain t) (be t)) = SOME x.
+Proof.
+  intros jump off n; induction n as [|n IH] using N.peano_ind; intros ad k s t x [H E].
+  - rewrite (proj1 (read_bytearray_def _ _ 0)) in *; exact E.
+  - rewrite (proj2 (read_bytearray_def _ _ n)) in E. rewrite (proj2 (read_bytearray_def _ _ n)). cbv beta in E |- *.
+    revert E. destruct (wordSem.mem_load_byte_aux (stackSem.memory s) (mdomain s) (be s) ad) as [b|] eqn:Eb;
+      intros E; [|discriminate E].
+    rewrite (mem_load_byte_aux_IMP _ _ _ _ _ _ _ (conj H Eb)).
+    revert E. destruct (read_bytearray (ad + n2w 1)%w n (wordSem.mem_load_byte_aux (stackSem.memory s) (mdomain s) (be s))) as [bs|] eqn:Ebs;
+      intros E; [|discriminate E].
+    rewrite (IH _ _ _ _ _ (conj H Ebs)). exact E.
+Qed.
+
+End MemLemmas.

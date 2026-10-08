@@ -25841,6 +25841,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "mem_load_32_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "mem_load_32_IMP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "mem_load_byte_aux_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "mem_load_byte_aux_IMP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
   "hol_name": "memory_def",
   "hol_line": null,
   "case": null,
@@ -25848,6 +25868,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "memory"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "memory_fun2set_IMP_read",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "memory_fun2set_IMP_read"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "read_bytearray_IMP_read_bytearray",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "read_bytearray_IMP_read_bytearray"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
@@ -25898,6 +25938,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "state_rel_get_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "state_rel_read",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "state_rel_read"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
