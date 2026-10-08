@@ -8930,6 +8930,26 @@
   "rocq_name": "word_msb_align"
  },
  {
+  "hol_path": "HOL/src/n-bit/bitstringScript.sml",
+  "hol_name": "testbit",
+  "hol_line": 405,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/bitstring.v",
+  "rocq_name": "testbit_thm"
+ },
+ {
+  "hol_path": "HOL/src/n-bit/bitstringScript.sml",
+  "hol_name": "v2w_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/n_bit/bitstring.v",
+  "rocq_name": "v2w"
+ },
+ {
   "hol_path": "HOL/src/n-bit/byteScript.sml",
   "hol_name": "DIV_not_0",
   "hol_line": null,
@@ -31558,6 +31578,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/crepSem.v",
   "rocq_name": "empty_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/crepSemScript.sml",
+  "hol_name": "eval_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/crepSem.v",
+  "rocq_name": "eval"
  },
  {
   "hol_path": "cakeml/pancake/semantics/crepSemScript.sml",

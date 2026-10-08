@@ -20,9 +20,7 @@
       [evaluate_c] with a clock fuel, as in [panSem.v]; [evaluate_eqn] is its
       unfolding and HOL's final [evaluate_def] is proved from it.
 
-    Not ported: HOL's [eval_def] is not tagged: [eval] is HOL's except for
-    the [Cmp] case, where HOL's [v2w [b]] (bitstring theory, not ported) is
-    written [if b then 1w else 0w].  The generated induction theorems
+    Not ported: the generated induction theorems
     [eval_ind]/[evaluate_ind] (and the rebound [evaluate_ind]) are not
     ported: their statements are produced by HOL's definition package and
     do not appear in the script. *)
@@ -33,7 +31,7 @@ From Galette.HOL.src.list.src Require Import list rich_list.
 From Galette.HOL.src.list.src.list Require Import extra.
 From Galette.HOL.src.coretypes Require Import option pair.
 From Galette.HOL.src.combin Require Import combin.
-From Galette.HOL.src.n_bit Require Import words alignment byte.
+From Galette.HOL.src.n_bit Require Import words alignment byte bitstring.
 From Galette.HOL.src.pred_set.src Require Import pred_set.
 From Galette.HOL.src.finite_maps Require Import finite_map alist.
 From Galette.HOL.src.coalgebras Require Import llist.
@@ -139,8 +137,7 @@ Definition crep_op (op : crepop) (ws : list (word a)) : option (word a) :=
   | _, _ => NONE
   end.
 
-(** HOL [eval_def], except that HOL's [v2w [b]] in the [Cmp] case is
-    [if b then 1w else 0w] (bitstring's [v2w] is not ported). *)
+(*! HOL "cakeml/pancake/semantics/crepSemScript.sml" "eval_def" *)
 Fixpoint eval (s : state a ffi_t) (e : exp a) {struct e} : option (word_lab a) :=
   match e with
   | Const w => SOME (Word w)
@@ -188,7 +185,7 @@ Fixpoint eval (s : state a ffi_t) (e : exp a) {struct e} : option (word_lab a) :
   | Cmp cmp e1 e2 =>
       match eval s e1, eval s e2 with
       | SOME (Word w1), SOME (Word w2) =>
-          SOME (Word (if word_cmp cmp w1 w2 then n2w 1 else n2w 0))
+          SOME (Word (v2w [word_cmp cmp w1 w2]))
       | _, _ => NONE
       end
   | Shift sh e1 e2 =>
