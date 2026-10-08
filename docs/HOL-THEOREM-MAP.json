@@ -1430,6 +1430,226 @@
   "rocq_name": "opc"
  },
  {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "IN_fun2set",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "IN_fun2set"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_ARRAY_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_ARRAY"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_DISJ_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_DISJ"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_EQ_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_EQ"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_EXISTS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_EXISTS"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_F_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_F"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_HIDE_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_HIDE"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_IMP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_IMP"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_T_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_T"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SPLIT_EQ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SPLIT_EQ"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SPLIT_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SPLIT"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "STAR_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "STAR"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "cond_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "cond"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "emp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "emp"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "fun2set_DIFF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "fun2set_DIFF"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "fun2set_EMPTY",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "fun2set_EMPTY"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "fun2set_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "fun2set"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "fun2set_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "fun2set_eq"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "fun2set_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "fun2set_thm"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "one_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "one"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "precond_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "precond"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "sidecond_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "sidecond"
+ },
+ {
   "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
   "hol_name": "LPREFIX_NTH",
   "hol_line": null,
@@ -8578,6 +8798,36 @@
   "note": "",
   "rocq_path": "theories/HOL/src/monad/more_monads/errorMonad.v",
   "rocq_name": "try_"
+ },
+ {
+  "hol_path": "HOL/src/monad/more_monads/state_transformerScript.sml",
+  "hol_name": "BIND_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/monad/more_monads/state_transformer.v",
+  "rocq_name": "BIND"
+ },
+ {
+  "hol_path": "HOL/src/monad/more_monads/state_transformerScript.sml",
+  "hol_name": "FOR_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/monad/more_monads/state_transformer.v",
+  "rocq_name": "FOR_def"
+ },
+ {
+  "hol_path": "HOL/src/monad/more_monads/state_transformerScript.sml",
+  "hol_name": "UNIT_DEF",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/monad/more_monads/state_transformer.v",
+  "rocq_name": "UNIT"
  },
  {
   "hol_path": "HOL/src/n-bit/alignmentScript.sml",
@@ -23280,6 +23530,1276 @@
   "rocq_name": "the_eqn"
  },
  {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "addr_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "addr"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "arith_upd_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "arith_upd"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "asm_code_length_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "asm_code_length_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "asm_fetch_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "asm_fetch_IMP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "asm_fetch_aux_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "asm_fetch_aux_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "asm_fetch_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "asm_fetch"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "asm_inst_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "asm_inst_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "asm_inst_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "asm_inst"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "assert_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "assert"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "binop_upd_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "binop_upd"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "dec_clock_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "dec_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "evaluate_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "evaluate_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "fp_upd_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "fp_upd"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "get_lab_after_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "get_lab_after_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "get_pc_value_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "get_pc_value"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "get_ret_Loc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "get_ret_Loc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "inc_pc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "inc_pc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "is_Label_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "is_Label"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "is_Loc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "is_Loc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "lab_to_loc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "lab_to_loc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "loc_to_pc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "loc_to_pc_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "mem_load32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "mem_load32"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "mem_load_byte_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "mem_load_byte"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "mem_load"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "mem_op_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "mem_op"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "mem_store32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "mem_store32"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "mem_store_byte_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "mem_store_byte"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "mem_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "next_label_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "next_label_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "read_fp_reg_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "read_fp_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "read_reg",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "read_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "reg_imm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "reg_imm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "semantics_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "semantics"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "share_mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "share_mem_load"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "share_mem_op_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "share_mem_op"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "share_mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "share_mem_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "upd_fp_reg_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "upd_fp_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "upd_mem_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "upd_mem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "upd_pc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "upd_pc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "upd_reg_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "upd_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/labSemScript.sml",
+  "hol_name": "word8_loc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/labSem.v",
+  "rocq_name": "word8_loc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "STOP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "STOP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "alloc_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "alloc_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "alloc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "alloc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "assign_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "assign"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "bad_fun_return_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "bad_fun_return"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "bit_length_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "bit_length_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "check_store_consts_opt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "check_store_consts_opt"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "cont_loop_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "cont_loop"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "copy_words_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "copy_words_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "copy_words_for_pattern_LESS_EQ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "copy_words_for_pattern_LESS_EQ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "copy_words_for_pattern_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "copy_words_for_pattern_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "dec_clock_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "dec_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "dec_stack_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "dec_stack_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "dest_Seq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "dest_Seq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "empty_env_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "empty_env"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "enc_stack_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "enc_stack_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "evaluate_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "evaluate_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "evaluate_def",
+  "hol_line": 773,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "evaluate_def_fix_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "evaluate_def",
+  "hol_line": 1108,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "evaluate_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "exit_loop_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "exit_loop"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "filter_bitmap_LENGTH",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "filter_bitmap_LENGTH"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "filter_bitmap_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "filter_bitmap"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "find_code_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "find_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "fix_clock_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "fix_clock_IMP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "fix_clock_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "fix_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "fix_clock_evaluate",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "fix_clock_evaluate"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "full_read_bitmap_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "full_read_bitmap"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "gc_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "gc_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "gc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "gc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "get_fp_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "get_fp_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "get_labels_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "get_labels"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "get_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "get_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "get_var_imm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "get_var_imm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "get_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "get_vars"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "has_space_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "has_space"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "inst_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "inst_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "inst_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "inst"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "loc_check_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "loc_check"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "map_bitmap_LENGTH",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "map_bitmap_LENGTH"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "map_bitmap_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "map_bitmap"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "mem_load"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "mem_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "read_bitmap_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "read_bitmap"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "read_stack_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "read_stack"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "read_stack_space_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "read_stack_space"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "result",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "result"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "semantics_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "semantics"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "set_fp_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "set_fp_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "set_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "set_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "set_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "set_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_load16_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_load16"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_load32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_load32"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_load_byte_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_load_byte"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_load"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_op_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_op_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_op_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_op"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_store16_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_store16"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_store32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_store32"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_store_byte_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_store_byte"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "sh_mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "sh_mem_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "store_const_sem_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "store_const_sem_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "store_const_sem_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "store_const_sem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "unset_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "unset_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/stackSemScript.sml",
+  "hol_name": "word_exp_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/stackSem.v",
+  "rocq_name": "word_exp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "apply_oracle_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "apply_oracle"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "ccache_interfer_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "ccache_interfer_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "code_loaded_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "code_loaded"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "encoded_bytes_in_mem_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "encoded_bytes_in_mem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "evaluate_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "evaluate_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "ffi_interfer_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "ffi_interfer_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "get_reg_value_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "get_reg_value"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "good_init_state_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "good_init_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "is_valid_mapped_read_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "is_valid_mapped_read"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "is_valid_mapped_write_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "is_valid_mapped_write"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "machine_config",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "machine_config"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "machine_result",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "machine_result"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "machine_sem_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "machine_sem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "mmio_pcs_min_index_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "mmio_pcs_min_index"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "post_ccache_asm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "post_ccache_asm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "post_ffi_asm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "post_ffi_asm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "read_ffi_bytearray_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "read_ffi_bytearray"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "read_ffi_bytearrays_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "read_ffi_bytearrays"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "start_pc_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "start_pc_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "target_configured_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "target_configured"
+ },
+ {
   "hol_path": "cakeml/compiler/backend/semantics/wordConvsScript.sml",
   "hol_name": "call_arg_convention_def",
   "hol_line": null,
@@ -28590,6 +30110,76 @@
   "rocq_name": "safe_substring"
  },
  {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asm_deterministic",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asm_deterministic"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "enc_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "enc_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "interference_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "interference_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "offset_monotonic_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "offset_monotonic"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "target",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "target"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "target_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "target_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "target_state_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "target_state_rel"
+ },
+ {
   "hol_path": "cakeml/compiler/encoders/asm/asmScript.sml",
   "hol_name": "addr",
   "hol_line": null,
@@ -28898,6 +30488,256 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/encoders/asm/asm.v",
   "rocq_name": "word_cmp"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "addr_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "addr"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "arith_upd_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "arith_upd"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "asm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "asm"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "asm_state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "asm_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "asm_step_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "asm_step"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "assert_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "assert"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "binop_upd_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "binop_upd"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "fp_upd_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "fp_upd"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "inst_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "inst"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "is_test_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "is_test"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "jump_to_offset_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "jump_to_offset"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "mem_load"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "mem_op_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "mem_op"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "mem_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "read_fp_reg_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "read_fp_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "read_mem_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "read_mem"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "read_mem_word_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "read_mem_word_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "read_reg_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "read_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "reg_imm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "reg_imm"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "upd_fp_reg_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "upd_fp_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "upd_mem_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "upd_mem"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "upd_pc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "upd_pc"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "upd_reg_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "upd_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "word_shift_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "word_shift"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmSemScript.sml",
+  "hol_name": "write_mem_word_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmSem.v",
+  "rocq_name": "write_mem_word_def"
  },
  {
   "hol_path": "cakeml/compiler/encoders/riscv/riscv_targetScript.sml",
