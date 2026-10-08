@@ -270,7 +270,7 @@ Lemma add_unavail_moves_wl_eq ls s :
   add_unavail_moves_wl ls s = (M_success tt, with_unavail_moves_wl s (ls ++ s.(unavail_moves_wl))).
 Proof. reflexivity. Qed.
 
-Lemma EVERY_moves_iff d (l : list (N * (N * N))) :
+Lemma EVERY_moves_iff {A} d (l : list (A * (N * N))) :
   is_true (EVERY (fun '(p, (x, y)) => (x <? d) && (y <? d)) l) <->
   (forall p x y, In (p, (x, y)) l -> x < d /\ y < d).
 Proof.
@@ -535,7 +535,7 @@ Lemma with_coalesced_twice s a b : with_coalesced (with_coalesced s a) b = with_
 Proof. reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/proofs/reg_allocProofScript.sml" "st_ex_FIRST_consistency_ok_bg_ok" *)
-Theorem st_ex_FIRST_consistency_ok_bg_ok : forall k ls acc s,
+Theorem st_ex_FIRST_consistency_ok_bg_ok : forall {A} k (ls acc : list (A * (N * N))) s,
   good_ra_state s /\
   EVERY (fun '(p, (x, y)) => (x <? s.(dim)) && (y <? s.(dim))) ls /\
   EVERY (fun '(p, (x, y)) => (x <? s.(dim)) && (y <? s.(dim))) acc ->
@@ -552,7 +552,7 @@ Theorem st_ex_FIRST_consistency_ok_bg_ok : forall k ls acc s,
     | None => True
     end.
 Proof.
-  intros k; induction ls as [|[p [x y]] ms IH]; intros acc s (Hg & Hls & Hacc); cbn [st_ex_FIRST].
+  intros A k; induction ls as [|[p [x y]] ms IH]; intros acc s (Hg & Hls & Hacc); cbn [st_ex_FIRST].
   - exists None, acc, s, (coalesced s); split; [reflexivity|split; [exact Hg|split; [destruct s; reflexivity|split; [exact Hacc|exact I]]]].
   - cbn [EVERY] in Hls; apply andb_iff in Hls as [Hxy Hls]; apply andb_iff in Hxy as [Hx Hy]; apply ltb_iff in Hx, Hy.
     destruct (coalesce_parent_success x s (conj Hx Hg)) as (x' & s1 & c1 & E1 & Hx' & Hg1 & ->). mstep' E1.
@@ -728,16 +728,16 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/proofs/reg_allocProofScript.sml" "reset_move_related_success" *)
-Theorem reset_move_related_success : forall ls s,
+Theorem reset_move_related_success : forall {A} (ls : list (A * (N * N))) s,
   good_ra_state s /\ EVERY (fun '(p, (x, y)) => (x <? s.(dim)) && (y <? s.(dim))) ls ->
   exists mv, reset_move_related ls s = (M_success tt, with_move_related s mv) /\ LENGTH mv = s.(dim).
 Proof.
-  intros ls s [Hg Hev]. good_destr Hg. unfold reset_move_related.
+  intros A ls s [Hg Hev]. good_destr Hg. unfold reset_move_related.
   mstep' (get_dim_eq (E:=state_exn) s).
   destruct (st_ex_FOREACH_update_move_related (COUNT_LIST (dim s)) s false) as (lss & E1 & Hl1).
   { apply EVERY_lt_iff; intros v Hv; apply In_COUNT_LIST in Hv; lia. }
   mstep E1. rewrite EVERY_moves_iff in Hev.
-  assert (H : forall (l : list (N * (N * N))) (s0 : ra_state) mv0, (forall p x y, In (p, (x, y)) l -> x < dim s /\ y < dim s) ->
+  assert (H : forall (l : list (A * (N * N))) (s0 : ra_state) mv0, (forall p x y, In (p, (x, y)) l -> x < dim s /\ y < dim s) ->
      LENGTH mv0 = dim s -> LENGTH (node_tag s0) = dim s ->
      exists mv, st_ex_FOREACH l (fun '(_, (x, y)) =>
         bx <- is_Fixed x ;; by_ <- is_Fixed y ;;

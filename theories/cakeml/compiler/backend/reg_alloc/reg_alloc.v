@@ -535,9 +535,9 @@ Definition canonize_move (x y : N) : RA (N * N) :=
     [N] (the only instance used by the compiler), because the committed
     statements in [reg_allocProof] (heuristics.v) quantify over the move list
     without a type annotation and would no longer elaborate. *)
-Fixpoint st_ex_FIRST {B} (P : N -> N -> RA bool) (Q : N -> N -> RA (option B))
-    (l : list (N * (N * N))) (unavail : list (N * (N * N)))
-    : RA (option ((N * N) * (B * list (N * (N * N)))) * list (N * (N * N))) :=
+Fixpoint st_ex_FIRST {A B} (P : N -> N -> RA bool) (Q : N -> N -> RA (option B))
+    (l : list (A * (N * N))) (unavail : list (A * (N * N)))
+    : RA (option ((N * N) * (B * list (A * (N * N)))) * list (A * (N * N))) :=
   match l with
   | [] => st_ex_return (None, unavail)
   | m :: ms =>
@@ -588,7 +588,7 @@ Definition do_coalesce (k : N) : RA bool :=
     [N] (the only instance used by the compiler), because the committed
     statements in [reg_allocProof] (heuristics.v) quantify over the move list
     without a type annotation and would no longer elaborate. *)
-Definition reset_move_related (ls : list (N * (N * N))) : RA unit :=
+Definition reset_move_related {A} (ls : list (A * (N * N))) : RA unit :=
   d <- get_dim ;;
   st_ex_FOREACH (COUNT_LIST d) (fun x => update_move_related x false) ;;
   st_ex_FOREACH ls (fun '(_, (x, y)) =>
