@@ -153,9 +153,18 @@ def module_of(v: Path) -> str:
     return ".".join(("Galette",) + rel.parts)
 
 
-def scan(exclude: str | None = None) -> tuple[list[dict], list[str]]:
+def tracked_files() -> set[Path]:
+    out = subprocess.run(["git", "-C", str(ROOT), "ls-files", "theories"],
+                         capture_output=True, text=True, check=True).stdout
+    return {ROOT / line for line in out.splitlines()}
+
+
+def scan(exclude: str | None = None, tracked: bool = False) -> tuple[list[dict], list[str]]:
     tags, errors = [], []
+    only = tracked_files() if tracked else None
     for v in sorted(THEORIES.rglob("*.v")):
+        if only is not None and v not in only:
+            continue
         if exclude and re.search(exclude, str(v.relative_to(ROOT))):
             continue
         text = v.read_text()
@@ -299,6 +308,8 @@ def main() -> int:
     ap.add_argument("--mapping", action="store_true", help="print HOL -> Rocq mapping")
     ap.add_argument("--no-manifest", action="store_true",
                     help="skip the manifest check (for work in progress)")
+    ap.add_argument("--tracked", action="store_true",
+                    help="only git-tracked files (what a commit contains)")
     ap.add_argument("--exclude", metavar="REGEX",
                     help="ignore Rocq files whose path matches (work in progress)")
     ap.add_argument("--only", metavar="PREFIX",
@@ -307,7 +318,7 @@ def main() -> int:
     if not REFERENCE.is_dir():
         print(f"reference checkout not found: {REFERENCE}", file=sys.stderr)
         return 2
-    tags, errors = scan(args.exclude)
+    tags, errors = scan(args.exclude, args.tracked)
     errors += check(tags)
     if not args.no_manifest:
         errors += check_manifest(tags, args.update_manifest)
