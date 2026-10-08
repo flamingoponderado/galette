@@ -20571,16 +20571,6 @@
  },
  {
   "hol_path": "cakeml/misc/miscScript.sml",
-  "hol_name": "lookup_any_def",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/misc/misc.v",
-  "rocq_name": "lookup_any"
- },
- {
-  "hol_path": "cakeml/misc/miscScript.sml",
   "hol_name": "lookup_vars_def",
   "hol_line": null,
   "case": null,
@@ -20730,46 +20720,6 @@
   "rocq_name": "the_nil_eq_cons"
  },
  {
-  "hol_path": "cakeml/misc/miscScript.sml",
-  "hol_name": "tlookup_def",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/misc/misc.v",
-  "rocq_name": "tlookup"
- },
- {
-  "hol_path": "cakeml/semantics/astScript.sml",
-  "hol_name": "conN",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/semantics/ast.v",
-  "rocq_name": "conN"
- },
- {
-  "hol_path": "cakeml/semantics/astScript.sml",
-  "hol_name": "modN",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/semantics/ast.v",
-  "rocq_name": "modN"
- },
- {
-  "hol_path": "cakeml/semantics/astScript.sml",
-  "hol_name": "opb",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/semantics/ast.v",
-  "rocq_name": "opb"
- },
- {
   "hol_path": "cakeml/semantics/astScript.sml",
   "hol_name": "shift",
   "hol_line": null,
@@ -20778,56 +20728,6 @@
   "note": "",
   "rocq_path": "theories/cakeml/semantics/ast.v",
   "rocq_name": "shift"
- },
- {
-  "hol_path": "cakeml/semantics/astScript.sml",
-  "hol_name": "test",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/semantics/ast.v",
-  "rocq_name": "test"
- },
- {
-  "hol_path": "cakeml/semantics/astScript.sml",
-  "hol_name": "thunk_mode",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/semantics/ast.v",
-  "rocq_name": "thunk_mode"
- },
- {
-  "hol_path": "cakeml/semantics/astScript.sml",
-  "hol_name": "thunk_op",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/semantics/ast.v",
-  "rocq_name": "thunk_op"
- },
- {
-  "hol_path": "cakeml/semantics/astScript.sml",
-  "hol_name": "varN",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/semantics/ast.v",
-  "rocq_name": "varN"
- },
- {
-  "hol_path": "cakeml/semantics/astScript.sml",
-  "hol_name": "word_size",
-  "hol_line": null,
-  "case": null,
-  "status": "pending_review",
-  "note": "",
-  "rocq_path": "theories/cakeml/semantics/ast.v",
-  "rocq_name": "word_size"
  },
  {
   "hol_path": "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml",

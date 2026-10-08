@@ -167,7 +167,11 @@ def scan(exclude: str | None = None, tracked: bool = False) -> tuple[list[dict],
             continue
         if exclude and re.search(exclude, str(v.relative_to(ROOT))):
             continue
-        text = v.read_text()
+        # In --tracked mode read the staged (index) contents, so concurrent
+        # uncommitted edits by others do not leak into the manifest.
+        text = (subprocess.run(["git", "-C", str(ROOT), "show", ":" + str(v.relative_to(ROOT))],
+                               capture_output=True, text=True, check=True).stdout
+                if only is not None else v.read_text())
         clean = strip_comments(text)
         for m in TAG_RE.finditer(text):
             rest = clean[m.end():]
