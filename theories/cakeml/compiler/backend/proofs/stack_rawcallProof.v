@@ -559,3 +559,672 @@ Proof.
 Qed.
 
 End Simple.
+
+Section Correct.
+Context {a : N} {c ffi_t : Type}.
+Implicit Types s t : state a c ffi_t.
+
+(** Galette-only: HOL's conclusion of [comp_correct] for one compiled program. *)
+Definition rc_post (i : spt N) (r : option (result a)) (s1 t : state a c ffi_t) (q : prog a) : Prop :=
+  exists ck t1 k1,
+    state_rel i s1 t1 /\
+    evaluate (q, set_clock (clock t + ck) t) = (r, set_stack_space k1 t1) /\
+    (r <> SOME TimeOut /\ r <> SOME (Halt (Word (n2w 2))) -> k1 = stack_space t1).
+
+Lemma set_clock_clock t : set_clock (clock t) t = t.
+Proof. destruct t; reflexivity. Qed.
+
+Lemma set_clock_set_clock k1 k2 t : set_clock k1 (set_clock k2 t) = set_clock k1 t.
+Proof. reflexivity. Qed.
+
+Lemma clock_set_clock' k t : clock (set_clock k t) = k.
+Proof. reflexivity. Qed.
+
+Lemma state_rel_inv i s t :
+  state_rel i s t -> exists c0, t = set_code c0 s /\ state_rel i s (set_code c0 s).
+Proof. intros H; pose proof H as (c0 & _ & -> & _); exists c0; split; [reflexivity|exact H]. Qed.
+
+Lemma state_rel_same_code i s s1 c0 :
+  state_rel i s (set_code c0 s) -> code s1 = code s -> state_rel i s1 (set_code c0 s1).
+Proof.
+  intros (c1 & D & E & O & L) Ec.
+  assert (c1 = c0) as -> by (apply (f_equal code) in E; exact (eq_sym E)).
+  exists c0; rewrite Ec; repeat split; auto.
+Qed.
+
+Lemma simple_comp i (p : prog a) : simple p = true -> comp i p = p /\ comp_top i p = p.
+Proof. destruct p; intros H; try discriminate H; split; reflexivity. Qed.
+
+Lemma simple_post i (p : prog a) s t r s1 :
+  simple p = true -> evaluate (p, s) = (r, s1) -> state_rel i s t -> rc_post i r s1 t p.
+Proof.
+  intros Hs He Hr. destruct (state_rel_inv _ _ _ Hr) as (c0 & -> & Hr').
+  destruct (evaluate_simple_set_code p s r s1 c0 Hs He) as [Ec E].
+  exists 0, (set_code c0 s1), (stack_space s1). split; [|split].
+  - exact (state_rel_same_code _ _ _ _ Hr' Ec).
+  - rewrite N.add_0_r, set_clock_clock, E. f_equal.
+  - intros _; reflexivity.
+Qed.
+
+Lemma get_var_set_clock v k s : get_var v (set_clock k s) = get_var v s. Proof. reflexivity. Qed.
+Lemma get_var_imm_set_clock ri k s : get_var_imm ri (set_clock k s) = get_var_imm ri s.
+Proof. destruct ri; reflexivity. Qed.
+
+Lemma state_ok_mono i (c1 c2 : spt (prog a)) : state_ok i c1 -> sptree.subspt c1 c2 -> state_ok i c2.
+Proof.
+  intros H Hs n v Hn; destruct (H n v Hn) as [q Hq]; exists q.
+  exact (proj1 (sptree.subspt_lookup _ _) Hs _ _ Hq).
+Qed.
+
+Lemma state_rel_reindex i i' s t : state_rel i s t -> state_ok i' (code s) -> state_rel i' s t.
+Proof. intros (c1 & D & E & O & L) O'; exists c1; repeat split; auto. Qed.
+
+Lemma dec_clock_add s ck :
+  clock s <> 0 -> dec_clock (set_clock (clock s + ck) s) = set_clock (clock (dec_clock s) + ck) (dec_clock s).
+Proof. intros H; unfold dec_clock; rewrite !clock_set_clock', !set_clock_set_clock; f_equal; lia. Qed.
+
+Lemma set_code_set_code k1 k2 s : set_code k1 (set_code k2 s) = set_code k1 s.
+Proof. reflexivity. Qed.
+
+Lemma install_set_code (n n0 n1 n2 n3 : N) k s :
+  evaluate (Install n n0 n1 n2 n3, set_code k s) =
+  match evaluate (Install n n0 n1 n2 n3, s) with
+  | (NONE, s') => (NONE, set_code (sptree.union k (sptree.fromAList (FST (SND (compile_oracle s 0))))) s')
+  | (r, s') => (r, set_code k s')
+  end.
+Proof.
+  rewrite !evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode.
+  destruct (compile_oracle s 0) as [cfg [progs bm]] eqn:Eo; cbn [FST SND].
+  repeat (match goal with
+          | |- context [match ?x with _ => _ end] =>
+              lazymatch x with context [match _ with _ => _ end] => fail | _ => destruct x eqn:? end
+          end; cbn beta iota zeta); try reflexivity.
+  all: autorewrite with stkcode; rewrite ?set_code_set_code; reflexivity.
+Qed.
+
+Lemma install_result (n n0 n1 n2 n3 : N) s r s1 :
+  evaluate (Install n n0 n1 n2 n3, s) = (r, s1) ->
+  (r = NONE /\ code s1 = sptree.union (code s) (sptree.fromAList (FST (SND (compile_oracle s 0))))) \/
+  (r = SOME Error /\ s1 = s).
+Proof.
+  rewrite evaluate_eqn; cbn [evaluate_body].
+  destruct (compile_oracle s 0) as [cfg [progs bm]] eqn:Eo; cbn [FST SND].
+  repeat (match goal with
+          | |- context [match ?x with _ => _ end] =>
+              lazymatch x with context [match _ with _ => _ end] => fail | _ => destruct x eqn:? end
+          end; cbn beta iota zeta).
+  all: intros H; injection H as <- <-; auto.
+Qed.
+
+Lemma regs_set_clock k s : regs (set_clock k s) = regs s. Proof. reflexivity. Qed.
+
+Lemma find_code_rel i s cd dest (regs0 : fmap N (word_loc a)) b :
+  state_rel i s (set_code cd s) -> find_code dest regs0 (code s) = SOME b ->
+  exists i', state_ok i' (code s) /\ find_code dest regs0 cd = SOME (comp_top i' b).
+Proof.
+  intros (c1 & D & Ec1 & O & L) H. apply (f_equal code) in Ec1; cbn in Ec1; subst c1.
+  destruct dest as [l|r]; cbn [find_code] in H |- *.
+  - exact (L _ _ H).
+  - destruct (FLOOKUP regs0 r) as [[w|l n]|]; try discriminate H.
+    destruct (n =? 0); [exact (L _ _ H)|discriminate H].
+Qed.
+
+Lemma call_state x v s ck :
+  clock s <> 0 ->
+  dec_clock (set_var x v (set_clock (clock s + ck) s)) =
+  set_clock (clock (dec_clock (set_var x v s)) + ck) (dec_clock (set_var x v s)).
+Proof. intros H; apply (dec_clock_add (set_var x v s)); exact H. Qed.
+
+Lemma ev_rawcall dest (X : state a c ffi_t) x0 body0 :
+  sptree.lookup dest (code X) = SOME (Seq x0 body0) ->
+  evaluate (RawCall dest, X) =
+  if (clock X =? 0) then (SOME TimeOut, empty_env X) else
+  match evaluate (body0, dec_clock X) with
+  | (res, s) => if bad_fun_return res then (SOME Error, s) else (res, s)
+  end.
+Proof. intros H; rewrite evaluate_eqn; cbn [evaluate_body]; rewrite H; reflexivity. Qed.
+
+Lemma ev_seq_none (p1 p2 : prog a) (X Y : state a c ffi_t) :
+  evaluate (p1, X) = (NONE, Y) -> evaluate (Seq p1 p2, X) = evaluate (p2, Y).
+Proof. intros H; rewrite evaluate_eqn; cbn [evaluate_body]; rewrite fix_clock_evaluate, H; reflexivity. Qed.
+
+Lemma ev_seq_some (p1 p2 : prog a) (X Y : state a c ffi_t) r :
+  evaluate (p1, X) = (SOME r, Y) -> evaluate (Seq p1 p2, X) = (SOME r, Y).
+Proof. intros H; rewrite evaluate_eqn; cbn [evaluate_body]; rewrite fix_clock_evaluate, H; reflexivity. Qed.
+
+Lemma ev_tick (X : state a c ffi_t) :
+  evaluate (Tick, X) = if (clock X =? 0) then (SOME TimeOut, empty_env X) else (NONE, dec_clock X).
+Proof. rewrite evaluate_eqn; reflexivity. Qed.
+
+Lemma ev_stackalloc n (X : state a c ffi_t) :
+  use_stack X = true ->
+  evaluate (StackAlloc n, X) =
+  if (stack_space X <? n) then (SOME (Halt (Word (n2w 2))), empty_env X)
+  else (NONE, set_stack_space (stack_space X - n) X).
+Proof. intros H; rewrite evaluate_eqn; cbn [evaluate_body]; rewrite H; reflexivity. Qed.
+
+Lemma ev_stackfree n (X : state a c ffi_t) :
+  use_stack X = true -> stack_space X + n <= LENGTH (stack X) ->
+  evaluate (StackFree n, X) = (NONE, set_stack_space (stack_space X + n) X).
+Proof.
+  intros H H2; rewrite evaluate_eqn; cbn [evaluate_body]; rewrite H; cbn [negb].
+  replace (LENGTH (stack X) <? stack_space X + n) with false by (symmetry; apply N.ltb_ge; lia).
+  reflexivity.
+Qed.
+
+Lemma state_ss_clock (X : state a c ffi_t) k1 k2 c1 c2 :
+  k1 = k2 -> c1 = c2 ->
+  set_stack_space k1 (set_clock c1 X) = set_stack_space k2 (set_clock c2 X).
+Proof. intros -> ->; reflexivity. Qed.
+
+Lemma post_same_code i (q : prog a) s s1 c0 r :
+  state_rel i s (set_code c0 s) -> code s1 = code s ->
+  evaluate (q, set_code c0 s) = (r, set_code c0 s1) ->
+  rc_post i r s1 (set_code c0 s) q.
+Proof.
+  intros Hr Ec E. exists 0, (set_code c0 s1), (stack_space s1). split; [|split].
+  - exact (state_rel_same_code _ _ _ _ Hr Ec).
+  - rewrite N.add_0_r, set_clock_clock, E. reflexivity.
+  - intros _; reflexivity.
+Qed.
+
+Lemma eval_lt_psize (p q : prog a) s : (psize p < psize q)%nat -> eval_lt (p, s) (q, s).
+Proof. intros H; right; split; [reflexivity|exact H]. Qed.
+
+Lemma eval_lt_clock (p q : prog a) s s' : clock s' < clock s -> eval_lt (p, s') (q, s).
+Proof. intros H; left; exact H. Qed.
+
+Theorem comp_correct_gen : forall (x : prog a * state a c ffi_t) t i r s1,
+  evaluate x = (r, s1) -> r <> SOME Error -> state_rel i (snd x) t ->
+  rc_post i r s1 t (comp_top i (fst x)) /\ rc_post i r s1 t (comp i (fst x)).
+Proof.
+  intros x; induction x as [[p s] IH] using (well_founded_induction eval_lt_wf).
+  intros t i r s1 He Hr Hrel; cbn [fst snd] in *.
+  destruct (simple p) eqn:Hs.
+  { destruct (simple_comp i p Hs) as [E1 E2]; rewrite E1, E2; split; eapply simple_post; eauto. }
+  destruct p; try discriminate Hs.
+  - (* Call *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    pose proof Hr' as (c1 & D & Ec1 & O & L). apply (f_equal code) in Ec1; cbn in Ec1; subst c1.
+    rewrite evaluate_eqn in He; cbn [evaluate_body] in He.
+    destruct o as [[rh [lr [l1 l2]]]|].
+    2: { (* no return handler: comp is the identity *)
+      cbn [comp_top comp]; enough (G : rc_post i r s1 (set_code cd s) (Call NONE s0 o0)) by (split; exact G).
+      destruct (find_code s0 (regs s) (code s)) as [prog0|] eqn:Ef; [|injection He as <- <-; congruence].
+      destruct (find_code_rel _ _ _ _ _ _ Hr' Ef) as (i' & Oi' & Ef').
+      destruct (negb (bool_decide (o0 = NONE))) eqn:Eh; [injection He as <- <-; congruence|].
+      destruct (clock s =? 0) eqn:Ez.
+      { injection He as <- <-. apply post_same_code; [exact Hr'|reflexivity|].
+        rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode. rewrite Ef', Eh, Ez; reflexivity. }
+      apply N.eqb_neq in Ez. rewrite fix_clock_evaluate in He.
+      destruct (evaluate (prog0, dec_clock s)) as [res s'] eqn:Ev.
+      destruct (bad_fun_return res) eqn:Eb; injection He as <- <-; [congruence|].
+      assert (Hlt : eval_lt (prog0, dec_clock s) (Call NONE s0 o0, s))
+        by (apply eval_lt_clock; unfold dec_clock; rewrite clock_set_clock'; lia).
+      assert (Hd : state_rel i' (dec_clock s) (set_code cd (dec_clock s)))
+        by (apply (state_rel_reindex i); [apply (state_rel_same_code _ _ _ _ Hr'); reflexivity|exact Oi']).
+      destruct (IH _ Hlt _ i' res s' Ev Hr Hd) as [(ck & t1 & k1 & R & E & K) _].
+      exists ck, t1, k1. split; [|split; [|exact K]].
+      + apply (state_rel_reindex i'); [exact R|].
+        apply (state_ok_mono _ (code (dec_clock s))); [exact O|exact (proj2 (evaluate_mono _ _ _ _ Ev))].
+      + cbn [FST fst] in E; autorewrite with stkcode in E.
+        rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode.
+        rewrite regs_set_clock, Ef', Eh, clock_set_clock'.
+        replace (clock s + ck =? 0) with false by (symmetry; apply N.eqb_neq; lia).
+        rewrite dec_clock_add by exact Ez. rewrite fix_clock_evaluate, E, Eb. reflexivity. }
+    set (h' := match o0 with None => None | Some (p2, (k1, k2)) => Some (comp i p2, (k1, k2)) end).
+    enough (G : rc_post i r s1 (set_code cd s) (Call (Some (comp i rh, (lr, (l1, l2)))) s0 h'))
+      by (assert (Hc : comp i (Call (Some (rh, (lr, (l1, l2)))) s0 o0) =
+                       Call (Some (comp i rh, (lr, (l1, l2)))) s0 h')
+            by (subst h'; destruct o0 as [[? [? ?]]|]; reflexivity);
+          cbn [comp_top]; rewrite Hc; split; exact G).
+    destruct (find_code s0 (regs s \\ lr) (code s)) as [prog0|] eqn:Ef; [|injection He as <- <-; congruence].
+    destruct (find_code_rel _ _ _ _ _ _ Hr' Ef) as (i' & Oi' & Ef').
+    destruct (clock s =? 0) eqn:Ez.
+    { injection He as <- <-. apply post_same_code; [exact Hr'|reflexivity|].
+      rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode. rewrite Ef', Ez; reflexivity. }
+    apply N.eqb_neq in Ez. rewrite fix_clock_evaluate in He.
+    destruct (evaluate (prog0, dec_clock (set_var lr (Loc l1 l2) s))) as [res s2] eqn:Ev.
+    assert (Hres : res <> SOME Error) by (intros ->; injection He as <- <-; congruence).
+    assert (Hcs : clock (dec_clock (set_var lr (Loc l1 l2) s)) < clock s)
+      by (unfold dec_clock; rewrite clock_set_clock'; change (clock (set_var lr (Loc l1 l2) s)) with (clock s); lia).
+    assert (Hlt : eval_lt (prog0, dec_clock (set_var lr (Loc l1 l2) s)) (Call (Some (rh, (lr, (l1, l2)))) s0 o0, s))
+      by (apply eval_lt_clock; exact Hcs).
+    assert (Hd : state_rel i' (dec_clock (set_var lr (Loc l1 l2) s)) (set_code cd (dec_clock (set_var lr (Loc l1 l2) s))))
+      by (apply (state_rel_reindex i); [apply (state_rel_same_code _ _ _ _ Hr'); reflexivity|exact Oi']).
+    destruct (IH _ Hlt _ i' res s2 Ev Hres Hd) as [(ck & t1 & k1 & R & E & K) _].
+    cbn [fst FST] in E; autorewrite with stkcode in E.
+    pose proof (evaluate_clock _ _ _ _ Ev) as Hcl.
+    assert (O2 : state_ok i (code s2))
+      by (apply (state_ok_mono _ (code (dec_clock (set_var lr (Loc l1 l2) s)))); [exact O|exact (proj2 (evaluate_mono _ _ _ _ Ev))]).
+    assert (R' : state_rel i s2 t1) by (apply (state_rel_reindex i'); [exact R|exact O2]).
+    (* the related run up to the callee's result, with [ck'] extra clock *)
+    assert (Tcall : forall ck', evaluate (Call (Some (comp i rh, (lr, (l1, l2)))) s0 h',
+                                          set_clock (clock (set_code cd s) + ck') (set_code cd s)) =
+              match evaluate (comp_top i' prog0, set_code cd (set_clock (clock (dec_clock (set_var lr (Loc l1 l2) s)) + ck')
+                                                                  (dec_clock (set_var lr (Loc l1 l2) s)))) with
+              | (SOME (Result x), s3) =>
+                  if negb (bool_decide (x = Loc l1 l2)) then (SOME Error, s3) else evaluate (comp i rh, s3)
+              | (SOME (Exception x), s3) =>
+                  match h' with
+                  | NONE => (SOME (Exception x), s3)
+                  | SOME (h, (l1, l2)) => if negb (bool_decide (x = Loc l1 l2)) then (SOME Error, s3) else evaluate (h, s3)
+                  end
+              | (NONE, s3) => (SOME Error, s3)
+              | (SOME (Break _), s3) => (SOME Error, s3)
+              | (SOME (Continue _), s3) => (SOME Error, s3)
+              | (res, s3) => (res, s3)
+              end).
+    { intros ck'. rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode.
+      rewrite regs_set_clock, Ef', clock_set_clock'.
+      replace (clock s + ck' =? 0) with false by (symmetry; apply N.eqb_neq; lia).
+      rewrite call_state by exact Ez. rewrite fix_clock_evaluate. reflexivity. }
+    destruct res as [[x|x|n|n|w| |f|]|]; try (injection He as <- <-; congruence); try congruence.
+    + (* Result *)
+      destruct (bool_decide (x = Loc l1 l2)) eqn:Ex; cbn [negb] in He; [|injection He as <- <-; congruence].
+      assert (Hk : k1 = stack_space t1) by (apply K; split; discriminate). subst k1.
+      rewrite with_stack_space in E.
+      assert (Hlt2 : eval_lt (rh, s2) (Call (Some (rh, (lr, (l1, l2)))) s0 o0, s)) by (apply eval_lt_clock; lia).
+      destruct (IH _ Hlt2 _ i r s1 He Hr R') as [_ (ck2 & t2 & k2 & R2 & E2 & K2)].
+      cbn [fst FST] in E2.
+      exists (ck + ck2), t2, k2. split; [exact R2|split; [|exact K2]].
+      assert (Hnt : SOME (Result x) <> SOME TimeOut) by discriminate.
+      pose proof (evaluate_add_clock ck2 _ _ _ _ (conj E Hnt)) as E3.
+      autorewrite with stkcode in E3. rewrite clock_set_clock', set_clock_set_clock, <- N.add_assoc in E3.
+      rewrite Tcall, E3, Ex. exact E2.
+    + (* Exception *)
+      subst h'. destruct o0 as [[h [k1' k2']]|]; cbn beta iota in He |- *.
+      * destruct (bool_decide (x = Loc k1' k2')) eqn:Ex; cbn [negb] in He; [|injection He as <- <-; congruence].
+        assert (Hk : k1 = stack_space t1) by (apply K; split; discriminate). subst k1.
+        rewrite with_stack_space in E.
+        assert (Hlt2 : eval_lt (h, s2) (Call (Some (rh, (lr, (l1, l2)))) s0 (Some (h, (k1', k2'))), s))
+          by (apply eval_lt_clock; lia).
+        destruct (IH _ Hlt2 _ i r s1 He Hr R') as [_ (ck2 & t2 & k2 & R2 & E2 & K2)].
+        cbn [fst FST] in E2.
+        exists (ck + ck2), t2, k2. split; [exact R2|split; [|exact K2]].
+        assert (Hnt : SOME (Exception x) <> SOME TimeOut) by discriminate.
+      pose proof (evaluate_add_clock ck2 _ _ _ _ (conj E Hnt)) as E3.
+        autorewrite with stkcode in E3. rewrite clock_set_clock', set_clock_set_clock, <- N.add_assoc in E3.
+        rewrite Tcall, E3. cbn beta iota. rewrite Ex. exact E2.
+      * injection He as <- <-. exists ck, t1, k1. split; [exact R'|split; [|exact K]].
+        rewrite Tcall, E. reflexivity.
+    + (* Halt *) injection He as <- <-. exists ck, t1, k1. split; [exact R'|split; [|exact K]].
+      rewrite Tcall, E. reflexivity.
+    + (* TimeOut *) injection He as <- <-. exists ck, t1, k1. split; [exact R'|split; [|exact K]].
+      rewrite Tcall, E. reflexivity.
+    + (* FinalFFI *) injection He as <- <-. exists ck, t1, k1. split; [exact R'|split; [|exact K]].
+      rewrite Tcall, E. reflexivity.
+  - (* Seq *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    rewrite evaluate_eqn in He; cbn [evaluate_body] in He; rewrite fix_clock_evaluate in He.
+    destruct (evaluate (p1, s)) as [res s'] eqn:Ev.
+    assert (Hlt1 : eval_lt (p1, s) (Seq p1 p2, s)) by (apply eval_lt_psize; cbn [psize]; lia).
+    assert (GA : rc_post i r s1 (set_code cd s) (Seq (comp i p1) (comp i p2))).
+    { destruct res as [res0|].
+      - injection He as <- <-.
+        destruct (IH _ Hlt1 _ i _ _ Ev Hr Hr') as [_ (ck & t1 & k1 & R & E & K)].
+        exists ck, t1, k1; split; [exact R|split; [|exact K]].
+        cbn [FST fst] in E. rewrite evaluate_eqn; cbn [evaluate_body]; rewrite fix_clock_evaluate, E. reflexivity.
+      - destruct (IH _ Hlt1 _ i NONE s' Ev ltac:(discriminate) Hr') as [_ (ck & t1 & k1 & R & E & K)].
+        assert (Hk : k1 = stack_space t1) by (apply K; split; discriminate). subst k1.
+        cbn [FST fst] in E; rewrite with_stack_space in E.
+        pose proof (evaluate_clock _ _ _ _ Ev) as Hcl.
+        assert (Hlt2 : eval_lt (p2, s') (Seq p1 p2, s)).
+        { destruct (N.eq_dec (clock s') (clock s)) as [Ec|Ec];
+            [right; split; [exact Ec|cbn [psize fst]; lia]|left; cbn [snd]; lia]. }
+        destruct (IH _ Hlt2 _ i r s1 He Hr R) as [_ (ck2 & t2 & k2 & R2 & E2 & K2)].
+        cbn [FST fst] in E2.
+        exists (ck + ck2), t2, k2; split; [exact R2|split; [|exact K2]].
+        assert (Hnt : @NONE (result a) <> SOME TimeOut) by discriminate.
+        pose proof (evaluate_add_clock ck2 _ _ _ _ (conj E Hnt)) as E3.
+        rewrite clock_set_clock', set_clock_set_clock, <- N.add_assoc in E3.
+        rewrite evaluate_eqn; cbn [evaluate_body]; rewrite fix_clock_evaluate, E3. exact E2. }
+    split; [cbn [comp_top]; exact GA|].
+    cbn [comp]; unfold comp_seq.
+    destruct (dest_case p1 p2) as [[k dest]|] eqn:Edc; [|exact GA].
+    destruct (sptree.lookup dest i) as [l|] eqn:Eli; [|exact GA].
+    apply dest_case_SOME in Edc as [-> ->]. clear GA Hlt1.
+    pose proof Hr' as (c1 & D & Ec1 & O & L). apply (f_equal code) in Ec1; cbn in Ec1; subst c1.
+    destruct (O _ _ Eli) as [q Eq].
+    destruct (L _ _ Eq) as (i' & Oi' & Eq'). cbn [comp_top comp] in Eq'.
+    (* the original run: StackFree k *)
+    rewrite evaluate_eqn in Ev; cbn [evaluate_body] in Ev.
+    destruct (use_stack s) eqn:Eus; cbn [negb] in Ev; [|injection Ev as <- <-; injection He as <- <-; congruence].
+    destruct (LENGTH (stack s) <? stack_space s + k) eqn:Elen;
+      [injection Ev as <- <-; injection He as <- <-; congruence|].
+    injection Ev as <- <-. apply N.ltb_ge in Elen.
+    (* then the call *)
+    rewrite evaluate_eqn in He; cbn [evaluate_body find_code] in He.
+    change (code (set_stack_space (stack_space s + k) s)) with (code s) in He.
+    rewrite Eq, (proj2 (bool_decide_spec (@NONE (prog a * (N * N)) = NONE)) eq_refl) in He. cbn [negb] in He.
+    change (clock (set_stack_space (stack_space s + k) s)) with (clock s) in He.
+    set (s'' := set_stack_space (stack_space s + k) s) in He.
+    assert (Hcd : forall X : state a c ffi_t, code X = cd -> sptree.lookup dest (code X) = SOME (Seq (StackAlloc l) (comp i' q)))
+      by (intros X ->; exact Eq').
+    destruct (clock s =? 0) eqn:Ez.
+    { (* the call times out *)
+      injection He as <- <-. apply N.eqb_eq in Ez.
+      destruct (l =? k) eqn:E1; [|destruct (l <? k) eqn:E2].
+      - exists 0, (set_code cd (empty_env s'')), (stack_space s). split; [|split].
+        + apply (state_rel_same_code _ _ _ _ Hr'); reflexivity.
+        + rewrite N.add_0_r, set_clock_clock; erewrite ev_rawcall by (apply Hcd; reflexivity).
+          stk_fields; rewrite Ez; reflexivity.
+        + intros [H _]; congruence.
+      - apply N.ltb_lt in E2.
+        exists 0, (set_code cd (empty_env s'')), (stack_space s + (k - l)). split; [|split].
+        + apply (state_rel_same_code _ _ _ _ Hr'); reflexivity.
+        + rewrite N.add_0_r, set_clock_clock.
+          rewrite (ev_seq_none _ _ _ _ (ev_stackfree (k - l) (set_code cd s) Eus ltac:(stk_fields; lia))).
+          erewrite ev_rawcall by (apply Hcd; reflexivity). stk_fields; rewrite Ez; reflexivity.
+        + intros [H _]; congruence.
+      - exists 0, (set_code cd (empty_env s'')), (stack_space s). split; [|split].
+        + apply (state_rel_same_code _ _ _ _ Hr'); reflexivity.
+        + rewrite N.add_0_r, set_clock_clock.
+          rewrite (ev_seq_some _ _ _ (empty_env (set_code cd s)) TimeOut)
+            by (rewrite ev_tick; stk_fields; rewrite Ez; reflexivity).
+          reflexivity.
+        + intros [H _]; congruence. }
+    apply N.eqb_neq in Ez.
+    rewrite fix_clock_evaluate in He.
+    rewrite (evaluate_eqn (Seq (StackAlloc l) q)) in He; cbn [evaluate_body] in He; rewrite fix_clock_evaluate in He.
+    rewrite (ev_stackalloc l (dec_clock s'') Eus) in He.
+    replace (stack_space (dec_clock s'')) with (stack_space s + k) in He by reflexivity.
+    destruct (stack_space s + k <? l) eqn:Ea.
+    { (* StackAlloc halts *)
+      cbn beta iota in He; cbn [bad_fun_return] in He. injection He as <- <-.
+      apply N.ltb_lt in Ea.
+      replace (l =? k) with false by (symmetry; apply N.eqb_neq; lia).
+      replace (l <? k) with false by (symmetry; apply N.ltb_ge; lia).
+      exists 0, (set_code cd (empty_env (dec_clock s''))), (stack_space s). split; [|split].
+      + apply (state_rel_same_code _ _ _ _ Hr'); reflexivity.
+      + rewrite N.add_0_r, set_clock_clock.
+        rewrite (ev_seq_none _ _ _ (dec_clock (set_code cd s)))
+          by (rewrite ev_tick; replace (clock (set_code cd s) =? 0) with false
+                by (symmetry; apply N.eqb_neq; exact Ez); reflexivity).
+        rewrite (ev_seq_some _ _ _ (empty_env (dec_clock (set_code cd s))) (Halt (Word (n2w 2))))
+          by (rewrite ev_stackalloc by exact Eus;
+              replace (stack_space (dec_clock (set_code cd s)) <? l - k) with true
+                by (symmetry; apply N.ltb_lt; unfold dec_clock; stk_fields; lia);
+              reflexivity).
+        reflexivity.
+      + intros [_ H]; congruence. }
+    apply N.ltb_ge in Ea. cbn beta iota in He.
+    set (s3 := set_stack_space (stack_space s + k - l) (dec_clock s'')) in He.
+    destruct (evaluate (q, s3)) as [res2 s4] eqn:Eq3.
+    destruct (bad_fun_return res2) eqn:Eb; injection He as <- <-; [congruence|].
+    assert (Hc3 : clock s3 = clock s - 1) by reflexivity.
+    assert (Hlt3 : eval_lt (q, s3) (Seq (StackFree k) (Call NONE (inl dest) NONE), s))
+      by (apply eval_lt_clock; rewrite Hc3; lia).
+    assert (Hd3 : state_rel i' s3 (set_code cd s3))
+      by (apply (state_rel_reindex i); [apply (state_rel_same_code _ _ _ _ Hr'); reflexivity|exact Oi']).
+    destruct (IH _ Hlt3 _ i' res2 s4 Eq3 Hr Hd3) as [_ (ck2 & t2 & k2 & R2 & E2 & K2)].
+    cbn [FST fst] in E2. autorewrite with stkcode in E2.
+    assert (R2' : state_rel i s4 t2).
+    { apply (state_rel_reindex i'); [exact R2|].
+      apply (state_ok_mono _ (code s3)); [exact O|exact (proj2 (evaluate_mono _ _ _ _ Eq3))]. }
+    destruct (l =? k) eqn:E1; [apply N.eqb_eq in E1; subst l|destruct (l <? k) eqn:E2'].
+    + exists ck2, t2, k2. split; [exact R2'|split; [|exact K2]].
+      erewrite ev_rawcall by (apply Hcd; reflexivity).
+      replace (clock (set_clock (clock (set_code cd s) + ck2) (set_code cd s)) =? 0) with false
+        by (symmetry; apply N.eqb_neq; stk_fields; lia).
+      replace (dec_clock (set_clock (clock (set_code cd s) + ck2) (set_code cd s)))
+        with (set_code cd (set_clock (clock s3 + ck2) s3)).
+      * rewrite E2, Eb; reflexivity.
+      * subst s3 s''; unfold dec_clock; destruct s; cbn in Ez; unfold set_code, set_clock, set_stack_space; cbn; f_equal; lia.
+    + apply N.ltb_lt in E2'.
+      exists ck2, t2, k2. split; [exact R2'|split; [|exact K2]].
+      match goal with |- context [evaluate (Seq (StackFree ?n) ?p2, ?X)] =>
+        rewrite (ev_seq_none _ p2 X _ (ev_stackfree n X Eus
+                   ltac:(unfold set_clock, set_code; cbn [stack_space stack]; lia))) end.
+      erewrite ev_rawcall by (apply Hcd; reflexivity).
+      match goal with |- context [(clock ?X =? 0)] =>
+        replace (clock X =? 0) with false by (symmetry; apply N.eqb_neq; unfold dec_clock, set_clock, set_code, set_stack_space; cbn [clock]; lia) end.
+      match goal with |- context [evaluate (comp i' q, dec_clock ?X)] =>
+        replace (dec_clock X) with (set_code cd (set_clock (clock s3 + ck2) s3)) end.
+      * rewrite E2, Eb; reflexivity.
+      * subst s3 s''; unfold dec_clock; destruct s; cbn in Ez, E2'; unfold set_code, set_clock, set_stack_space; cbn; f_equal; lia.
+    + apply N.ltb_ge in E2'. assert (Hlk : k < l) by (apply N.eqb_neq in E1; lia).
+      exists (ck2 + 1), t2, k2. split; [exact R2'|split; [|exact K2]].
+      rewrite (ev_seq_none _ _ _ (dec_clock (set_clock (clock (set_code cd s) + (ck2 + 1)) (set_code cd s))))
+        by (rewrite ev_tick; replace (clock (set_clock (clock (set_code cd s) + (ck2 + 1)) (set_code cd s)) =? 0)
+              with false by (symmetry; apply N.eqb_neq; stk_fields; lia); reflexivity).
+      match goal with |- context [evaluate (Seq (StackAlloc ?n) _, ?X)] =>
+        rewrite (ev_seq_none _ _ _ (set_stack_space (stack_space X - n) X))
+          by (rewrite ev_stackalloc by exact Eus;
+              replace (stack_space X <? n) with false by (symmetry; apply N.ltb_ge; unfold dec_clock, set_clock, set_code, set_stack_space; cbn [stack_space]; lia);
+              reflexivity) end.
+      erewrite ev_rawcall by (apply Hcd; reflexivity).
+      match goal with |- context [(clock ?X =? 0)] =>
+        replace (clock X =? 0) with false by (symmetry; apply N.eqb_neq; unfold dec_clock, set_clock, set_code, set_stack_space; cbn [clock]; lia) end.
+      match goal with |- context [evaluate (comp i' q, dec_clock ?X)] =>
+        replace (dec_clock X) with (set_code cd (set_clock (clock s3 + ck2) s3)) end.
+      * rewrite E2, Eb; reflexivity.
+      * subst s3 s''; unfold dec_clock; destruct s; cbn in Ez, Ea; unfold set_code, set_clock, set_stack_space; cbn; f_equal; lia.
+  - (* If *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    rewrite evaluate_eqn in He; cbn [evaluate_body] in He.
+    destruct (get_var n s) as [x|] eqn:Ex; [|injection He as <- <-; congruence].
+    destruct (get_var_imm r0 s) as [y|] eqn:Ey; [|injection He as <- <-; congruence].
+    cbn [comp_top comp].
+    destruct (wordSem.word_cmp c0 x y) as [[|]|] eqn:Ec; [| |injection He as <- <-; congruence];
+      [assert (Hlt : eval_lt (p1, s) (If c0 n r0 p1 p2, s)) by (apply eval_lt_psize; cbn [psize]; lia)
+      |assert (Hlt : eval_lt (p2, s) (If c0 n r0 p1 p2, s)) by (apply eval_lt_psize; cbn [psize]; lia)];
+      (destruct (IH _ Hlt (set_code cd s) i r s1 He Hr Hr') as [_ (ck & t1 & k1 & R & E & K)];
+       enough (G : rc_post i r s1 (set_code cd s) (If c0 n r0 (comp i p1) (comp i p2))) by (split; exact G);
+       exists ck, t1, k1; split; [exact R|split; [|exact K]];
+       rewrite evaluate_eqn; cbn [evaluate_body];
+       rewrite get_var_set_clock, get_var_imm_set_clock, get_var_set_code, get_var_imm_set_code, Ex, Ey, Ec;
+       exact E).
+  - (* Loop *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    cbn [comp_top comp]; enough (G : rc_post i r s1 (set_code cd s) (Loop (comp i p))) by (split; exact G).
+    rewrite evaluate_eqn in He; cbn [evaluate_body] in He; rewrite fix_clock_evaluate in He.
+    destruct (evaluate (p, s)) as [res s'] eqn:Ev.
+    assert (Hlt : eval_lt (p, s) (Loop p, s)) by (apply eval_lt_psize; cbn [psize]; lia).
+    assert (Hres : res <> SOME Error) by (intros ->; cbn in He; injection He as <- <-; congruence).
+    destruct (IH _ Hlt _ i res s' Ev Hres Hr') as [_ (ck & t1 & k1 & R & E & K)].
+    cbn [fst FST] in E.
+    destruct (cont_loop res) eqn:Ecl.
+    2: { injection He as <- <-. exists ck, t1, k1. split; [exact R|split].
+         - rewrite evaluate_eqn; cbn [evaluate_body]; rewrite fix_clock_evaluate, E, Ecl; reflexivity.
+         - intros [H1 H2]; apply K; split; intros ->; [apply H1|apply H2]; reflexivity. }
+    assert (Hk : k1 = stack_space t1)
+      by (apply K; destruct (cont_loop_IMP res Ecl) as [->| ->]; split; discriminate).
+    subst k1. rewrite with_stack_space in E.
+    pose proof R as (cd1 & D1 & Et1 & O1 & L1).
+    destruct (clock s' =? 0) eqn:Ez.
+    { injection He as <- <-. exists ck, (empty_env t1), (stack_space (empty_env t1)). split; [|split].
+      - subst t1; rewrite empty_env_set_code; apply (state_rel_same_code _ _ _ _ R); reflexivity.
+      - rewrite evaluate_eqn; cbn [evaluate_body]; rewrite fix_clock_evaluate, E, Ecl.
+        replace (clock t1) with (clock s') by (subst t1; reflexivity). rewrite Ez, with_stack_space; reflexivity.
+      - intros [H _]; congruence. }
+    apply N.eqb_neq in Ez.
+    assert (Hcl : clock s' <= clock s) by exact (evaluate_clock _ _ _ _ Ev).
+    assert (Hlt2 : eval_lt (STOP (Loop p), dec_clock s') (Loop p, s))
+      by (apply eval_lt_clock; unfold dec_clock; rewrite clock_set_clock'; lia).
+    assert (Hd : state_rel i (dec_clock s') (dec_clock t1))
+      by (subst t1; rewrite dec_clock_set_code; apply (state_rel_same_code _ _ _ _ R); reflexivity).
+    destruct (IH _ Hlt2 _ i r s1 He Hr Hd) as [_ (ck2 & t2 & k2 & R2 & E2 & K2)].
+    cbn [fst FST] in E2; unfold STOP in E2; cbn [comp] in E2.
+    exists (ck + ck2), t2, k2. split; [exact R2|split; [|exact K2]].
+    assert (Hnt : res <> SOME TimeOut) by (destruct (cont_loop_IMP res Ecl) as [->| ->]; discriminate).
+    pose proof (evaluate_add_clock ck2 _ _ _ _ (conj E Hnt)) as E3.
+    rewrite clock_set_clock', set_clock_set_clock, <- N.add_assoc in E3.
+    rewrite evaluate_eqn; cbn [evaluate_body]; rewrite fix_clock_evaluate, E3, Ecl, clock_set_clock'.
+    assert (Hc1 : clock t1 = clock s') by (subst t1; reflexivity).
+    replace (clock t1 + ck2 =? 0) with false by (symmetry; apply N.eqb_neq; lia).
+    rewrite dec_clock_add by lia. unfold STOP; exact E2.
+  - (* JumpLower *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    cbn [comp_top comp]; enough (G : rc_post i r s1 (set_code cd s) (JumpLower n n0 n1)) by (split; exact G).
+    rewrite evaluate_eqn in He; cbn [evaluate_body] in He.
+    destruct (get_var n s) as [[x|]|] eqn:Ex; try (injection He as <- <-; congruence).
+    destruct (get_var n0 s) as [[y|]|] eqn:Ey; try (injection He as <- <-; congruence).
+    destruct (word_cmp Lower x y) eqn:Ec.
+    2: { injection He as <- <-. apply post_same_code; [exact Hr'|reflexivity|].
+         rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode;
+         rewrite Ex, Ey, Ec; reflexivity. }
+    cbn [find_code] in He.
+    destruct (sptree.lookup n1 (code s)) as [prog0|] eqn:El; [|injection He as <- <-; congruence].
+    pose proof Hr' as (c1 & D & Ec1 & O & L). apply (f_equal code) in Ec1; cbn in Ec1; subst c1.
+    destruct (L _ _ El) as (i' & Oi' & El').
+    destruct (clock s =? 0) eqn:Ez.
+    { injection He as <- <-. apply post_same_code; [exact Hr'|reflexivity|].
+      rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode; rewrite Ex, Ey, Ec.
+      cbn [find_code]; rewrite El', Ez; reflexivity. }
+    apply N.eqb_neq in Ez.
+    destruct (evaluate (prog0, dec_clock s)) as [res s'] eqn:Ev.
+    destruct (bad_fun_return res) eqn:Eb; injection He as <- <-; [congruence|].
+    assert (Hlt : eval_lt (prog0, dec_clock s) (JumpLower n n0 n1, s))
+      by (apply eval_lt_clock; unfold dec_clock; rewrite clock_set_clock'; lia).
+    assert (Hd : state_rel i' (dec_clock s) (set_code cd (dec_clock s)))
+      by (apply (state_rel_reindex i); [apply (state_rel_same_code _ _ _ _ Hr'); reflexivity|exact Oi']).
+    destruct (IH _ Hlt _ i' res s' Ev Hr Hd) as [(ck & t1 & k1 & R & E & K) _].
+    exists ck, t1, k1. split; [|split; [|exact K]].
+    + apply (state_rel_reindex i'); [exact R|].
+      apply (state_ok_mono _ (code (dec_clock s))); [exact O|exact (proj2 (evaluate_mono _ _ _ _ Ev))].
+    + cbn [FST fst] in E; autorewrite with stkcode in E.
+      rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode; rewrite ?get_var_set_clock, Ex, Ey, Ec.
+      cbn [find_code]; rewrite El', clock_set_clock'.
+      replace (clock s + ck =? 0) with false by (symmetry; apply N.eqb_neq; lia).
+      rewrite dec_clock_add by exact Ez. rewrite E, Eb. reflexivity.
+  - (* StoreConsts *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    cbn [comp_top comp]; enough (G : rc_post i r s1 (set_code cd s) (StoreConsts n n0 o)) by (split; exact G).
+    rewrite evaluate_eqn in He; cbn [evaluate_body] in He.
+    destruct (negb (use_store s)) eqn:E1; [injection He as <- <-; congruence|].
+    destruct (negb (use_alloc s) && IS_SOME o)%bool eqn:E2; [injection He as <- <-; congruence|].
+    destruct (check_store_consts_opt n n0 o (code s)) eqn:E3; cbn [negb] in He; [|injection He as <- <-; congruence].
+    destruct (store_const_sem n n0 s) as [r' s'] eqn:E4; injection He as -> ->.
+    apply post_same_code; [exact Hr'|apply (store_const_sem_const _ _ _ _ _ E4)|].
+    rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode; rewrite E1, E2.
+    replace (check_store_consts_opt n n0 o cd) with true.
+    + cbn [negb]; rewrite E4; reflexivity.
+    + symmetry; destruct o as [m|]; [|reflexivity]. cbn [check_store_consts_opt] in E3 |- *.
+      apply bool_decide_spec in E3; apply bool_decide_spec.
+      destruct Hr' as (c1 & _ & Ec1 & _ & L). apply (f_equal code) in Ec1; cbn in Ec1; subst c1.
+      destruct (L _ _ E3) as (i' & _ & ->). reflexivity.
+  - (* LocValue *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    cbn [comp_top comp]; enough (G : rc_post i r s1 (set_code cd s) (LocValue n n0 n1)) by (split; exact G).
+    rewrite evaluate_eqn in He; cbn [evaluate_body] in He.
+    destruct (classical_dec (loc_check (code s) (n0, n1))) as [Hl|]; [|injection He as <- <-; congruence].
+    injection He as <- <-.
+    apply post_same_code; [exact Hr'|reflexivity|].
+    rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode.
+    destruct (classical_dec (loc_check cd (n0, n1))) as [_|Hn]; [reflexivity|exfalso; apply Hn].
+    destruct Hr' as (c1 & D & Ec1 & _ & L). apply (f_equal code) in Ec1; cbn in Ec1; subst c1.
+    destruct Hl as [[-> Hd]|(m & e & Hm & Hin)]; [left; split; [reflexivity|rewrite D; exact Hd]|].
+    right. destruct (L _ _ Hm) as (i' & _ & Hm'). exists m, (comp_top i' e); split; [exact Hm'|].
+    rewrite (proj2 (get_labels_comp i' e)); exact Hin.
+  - (* Install *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    cbn [comp_top comp]; enough (G : rc_post i r s1 (set_code cd s) (Install n n0 n1 n2 n3)) by (split; exact G).
+    pose proof (install_set_code n n0 n1 n2 n3 cd s) as Ei. rewrite He in Ei.
+    destruct (install_result _ _ _ _ _ _ _ _ He) as [[-> Ec]|[-> ->]]; [|congruence].
+    set (F := sptree.fromAList (FST (SND (compile_oracle s 0)))) in *.
+    exists 0, (set_code (sptree.union cd F) s1), (stack_space s1). split; [|split].
+    + pose proof Hr' as (c1 & D & Ec1 & O & L). apply (f_equal code) in Ec1; cbn in Ec1; subst c1.
+      exists (sptree.union cd F). rewrite Ec. split; [rewrite !sptree.domain_union, D; reflexivity|].
+      split; [reflexivity|].
+      assert (Hsub : sptree.subspt (code s) (sptree.union (code s) F)).
+      { apply sptree.subspt_lookup; intros x y Hx; rewrite sptree.lookup_union, Hx; reflexivity. }
+      split; [exact (state_ok_mono _ _ _ O Hsub)|].
+      intros m b Hm. rewrite sptree.lookup_union in Hm |- *.
+      destruct (sptree.lookup m (code s)) as [b0|] eqn:Em.
+      * injection Hm as <-. destruct (L _ _ Em) as (i' & Oi' & Em').
+        exists i'; split; [exact (state_ok_mono _ _ _ Oi' Hsub)|rewrite Em'; reflexivity].
+      * assert (Hn : sptree.lookup m cd = NONE).
+        { destruct (sptree.lookup m cd) eqn:Ec'; [|reflexivity]. exfalso.
+          assert (Hd : sptree.domain cd m) by (apply sptree.domain_lookup; eexists; exact Ec').
+          rewrite D in Hd; apply sptree.domain_lookup in Hd as [v Hv]; congruence. }
+        exists LN; split.
+        -- intros x v Hx; discriminate Hx.
+        -- rewrite Hn, Hm; f_equal; symmetry; apply (proj1 (comp_LN i b)).
+    + rewrite N.add_0_r, set_clock_clock, Ei. reflexivity.
+    + intros _; reflexivity.
+  - (* RawCall *)
+    destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
+    cbn [comp_top comp]; enough (G : rc_post i r s1 (set_code cd s) (RawCall n)) by (split; exact G).
+    rewrite evaluate_eqn in He; cbn [evaluate_body] in He.
+    destruct (sptree.lookup n (code s)) as [prog0|] eqn:El; [|injection He as <- <-; congruence].
+    destruct (dest_Seq prog0) as [[x body]|] eqn:Eds; [|injection He as <- <-; congruence].
+    assert (prog0 = Seq x body) as -> by (destruct prog0; cbn in Eds; congruence).
+    pose proof Hr' as (c1 & D & Ec1 & O & L). apply (f_equal code) in Ec1; cbn in Ec1; subst c1.
+    destruct (L _ _ El) as (i' & Oi' & El'). cbn [comp_top] in El'.
+    destruct (clock s =? 0) eqn:Ez.
+    { injection He as <- <-. apply post_same_code; [exact Hr'|reflexivity|].
+      rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode.
+      rewrite El'; cbn [dest_Seq]; rewrite Ez; reflexivity. }
+    apply N.eqb_neq in Ez.
+    destruct (evaluate (body, dec_clock s)) as [res s'] eqn:Ev.
+    destruct (bad_fun_return res) eqn:Eb; injection He as <- <-; [congruence|].
+    assert (Hlt : eval_lt (body, dec_clock s) (RawCall n, s))
+      by (apply eval_lt_clock; unfold dec_clock; rewrite clock_set_clock'; lia).
+    assert (Hd : state_rel i' (dec_clock s) (set_code cd (dec_clock s)))
+      by (apply (state_rel_reindex i); [apply (state_rel_same_code _ _ _ _ Hr'); reflexivity|exact Oi']).
+    destruct (IH _ Hlt _ i' res s' Ev Hr Hd) as [_ (ck & t1 & k1 & R & E & K)].
+    exists ck, t1, k1. split; [|split; [|exact K]].
+    + apply (state_rel_reindex i'); [exact R|].
+      apply (state_ok_mono _ (code (dec_clock s))); [exact O|exact (proj2 (evaluate_mono _ _ _ _ Ev))].
+    + cbn [FST fst] in E; autorewrite with stkcode in E.
+      rewrite evaluate_eqn; cbn [evaluate_body]; autorewrite with stkcode.
+      rewrite El'; cbn [dest_Seq]; rewrite clock_set_clock'.
+      replace (clock s + ck =? 0) with false by (symmetry; apply N.eqb_neq; lia).
+      rewrite dec_clock_add by exact Ez. rewrite E, Eb. reflexivity.
+Qed.
+
+End Correct.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml" "evaluate_comp_Inst" *)
+Theorem evaluate_comp_Inst {a : N} {c ffi_t : Type} : forall (i : asm.inst a) (s t : state a c ffi_t) i' r s1,
+  evaluate (Inst i, s) = (r, s1) /\ r <> SOME Error /\ state_rel i' s t ->
+  exists ck t1 k1,
+    state_rel i' s1 t1 /\
+    evaluate (comp i' (Inst i), set_clock (ck + clock t) t) = (r, set_stack_space k1 t1) /\
+    (r <> SOME TimeOut /\ r <> SOME (Halt (Word (n2w 2))) -> k1 = stack_space t1).
+Proof.
+  intros i s t i' r s1 (He & _ & Hrel).
+  destruct (simple_post i' (Inst i) s t r s1 eq_refl He Hrel) as (ck & t1 & k1 & R & E & K).
+  exists ck, t1, k1. rewrite N.add_comm. split; [exact R|split; [exact E|exact K]].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml" "comp_correct" *)
+Theorem comp_correct {a : N} {c ffi_t : Type} : forall p (s t : state a c ffi_t) i r s1,
+  evaluate (p, s) = (r, s1) /\ r <> SOME Error /\ state_rel i s t ->
+  (exists ck t1 k1,
+     state_rel i s1 t1 /\
+     evaluate (comp_top i p, set_clock (clock t + ck) t) = (r, set_stack_space k1 t1) /\
+     (r <> SOME TimeOut /\ r <> SOME (Halt (Word (n2w 2))) -> k1 = stack_space t1)) /\
+  (exists ck t1 k1,
+     state_rel i s1 t1 /\
+     evaluate (comp i p, set_clock (clock t + ck) t) = (r, set_stack_space k1 t1) /\
+     (r <> SOME TimeOut /\ r <> SOME (Halt (Word (n2w 2))) -> k1 = stack_space t1)).
+Proof.
+  intros p s t i r s1 (He & Hr & Hrel). exact (comp_correct_gen (p, s) t i r s1 He Hr Hrel).
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml" "compile_semantics" *)
+Theorem compile_semantics {a : N} {c ffi_t : Type} : forall (code0 : list (N * prog a)) (s : state a c ffi_t) start,
+  ALL_DISTINCT (MAP FST code0) /\ use_stack s /\ code s = fromAList code0 /\ semantics start s <> Fail ->
+  semantics start (set_code (fromAList (compile code0)) s) = semantics start s.
+Proof.
+  intros code0 s start (HD & Hus & Hc & HF).
+  apply semantics_sim; [exact HF|].
+  intros k r s1 E Hr.
+  set (i := collect_info code0 LN).
+  assert (Hrel : state_rel i (set_clock k s) (set_clock k (set_code (fromAList (compile code0)) s))).
+  { exists (fromAList (compile code0)). split; [|split; [reflexivity|split]].
+    - change (code (set_clock k s)) with (code s); rewrite Hc; apply domain_fromAList_compile.
+    - change (code (set_clock k s)) with (code s); rewrite Hc; apply state_ok_collect_info; exact HD.
+    - change (code (set_clock k s)) with (code s); rewrite Hc. intros n b Hn.
+      exists i; split; [apply state_ok_collect_info; exact HD|].
+      rewrite sptree.lookup_fromAList in Hn |- *. unfold compile; fold i.
+      rewrite ALOOKUP_MAP; cbv beta; rewrite Hn; reflexivity. }
+  destruct (comp_correct_gen (Call NONE (inl start) NONE, set_clock k s) _ i r s1 E Hr Hrel)
+    as [(ck & t1 & k1 & R & E' & _) _].
+  cbn [FST fst] in E'.
+  exists ck, (set_stack_space k1 t1). split.
+  - exact E'.
+  - destruct R as (c1 & _ & -> & _); reflexivity.
+Qed.

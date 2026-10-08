@@ -25481,6 +25481,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml",
+  "hol_name": "comp_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_rawcallProof.v",
+  "rocq_name": "comp_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml",
   "hol_name": "comp_seq_neq_IMP",
   "hol_line": null,
   "case": null,
@@ -25491,6 +25501,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml",
+  "hol_name": "compile_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_rawcallProof.v",
+  "rocq_name": "compile_semantics"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml",
   "hol_name": "domain_fromAList_compile",
   "hol_line": null,
   "case": null,
@@ -25498,6 +25518,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_rawcallProof.v",
   "rocq_name": "domain_fromAList_compile"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml",
+  "hol_name": "evaluate_comp_Inst",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_rawcallProof.v",
+  "rocq_name": "evaluate_comp_Inst"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_rawcallProofScript.sml",

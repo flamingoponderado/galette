@@ -1637,3 +1637,107 @@ Proof.
     assert (L3 := IH ts' ws' rest ltac:(lia) Ed). rewrite !LENGTH_length in *.
     rewrite ?LENGTH_length; cbn [length app]; rewrite ?length_app; lia.
 Qed.
+
+(** ** Galette-only: [semantics] is preserved by a clock-adjusting simulation
+
+    If every non-[Error] run of the start call from [s] is matched by a run
+    from [t] with some extra clock, with the same result and FFI state, and
+    [s] does not [Fail], then [t] has the same [semantics].  This is the
+    argument of the [compile_semantics] theorems of the stack-to-stack
+    passes (HOL proves it inline each time). *)
+Section SemSim.
+Context {a : N} {c1 c2 ffi_t : Type}.
+
+Lemma io_chain_stack {c} start (x : state a c ffi_t) :
+  lprefix_chain (IMAGE (fun k => fromList (io_events (ffi (SND (evaluate (@Call a NONE (inl start) NONE, set_clock k x))))))
+                       UNIV).
+Proof.
+  set (g := fun k => io_events (ffi (SND (evaluate (@Call a NONE (inl start) NONE, set_clock k x))))).
+  replace (IMAGE _ UNIV) with (IMAGE fromList (IMAGE g UNIV)) by (rewrite <- IMAGE_COMPOSE; reflexivity).
+  apply prefix_chain_lprefix_chain.
+  intros l1 l2 [[k1 [-> _]] [k2 [-> _]]].
+  assert (M : forall k d, isPREFIX (g k) (g (k + d))).
+  { intros k d; unfold g.
+    exact (evaluate_add_clock_io_events_mono d (@Call a NONE (inl start) NONE) (set_clock k x)). }
+  destruct (N.le_ge_cases k1 k2) as [Hle|Hle].
+  - left; replace k2 with (k1 + (k2 - k1)) by lia; apply M.
+  - right; replace k1 with (k2 + (k1 - k2)) by lia; apply M.
+Qed.
+
+Lemma semantics_sim start (s : state a c1 ffi_t) (t : state a c2 ffi_t) :
+  semantics start s <> Fail ->
+  (forall k r s1, evaluate (@Call a NONE (inl start) NONE, set_clock k s) = (r, s1) -> r <> SOME Error ->
+     exists ck t1, evaluate (@Call a NONE (inl start) NONE, set_clock (k + ck) t) = (r, t1) /\ ffi t1 = ffi s1) ->
+  semantics start t = semantics start s.
+Proof.
+  intros HF Hsim.
+  set (P := @Call a NONE (inl start) NONE).
+  set (bad := fun res : option (result a) =>
+         res <> SOME TimeOut /\ res <> SOME (Result (Loc 1 0)) /\
+         (forall w, res <> SOME (Halt (Word w))) /\ forall f, res <> SOME (FinalFFI f)).
+  assert (OKs : forall k, ~ bad (FST (evaluate (P, set_clock k s)))).
+  { intros k Hk; apply HF; unfold semantics; cbv zeta.
+    destruct (classical_dec _) as [_|Hn]; [reflexivity|exfalso; apply Hn; exists k; exact Hk]. }
+  assert (NE : forall k, FST (evaluate (P, set_clock k s)) <> SOME Error).
+  { intros k E; apply (OKs k); rewrite E; unfold bad; repeat split; congruence. }
+  assert (A : forall k, exists ck t1,
+            evaluate (P, set_clock (k + ck) t) = (FST (evaluate (P, set_clock k s)), t1) /\
+            ffi t1 = ffi (SND (evaluate (P, set_clock k s)))).
+  { intros k; destruct (evaluate (P, set_clock k s)) as [r s1] eqn:E; cbn [FST SND].
+    apply (Hsim k r s1 E). pose proof (NE k) as H; rewrite E in H; exact H. }
+  assert (B : forall k e r t', evaluate (P, set_clock k t) = (r, t') -> r <> SOME TimeOut ->
+            evaluate (P, set_clock (k + e) t) = (r, set_clock (clock t' + e) t')).
+  { intros k e r t' E Hr. exact (evaluate_add_clock e P (set_clock k t) r t' (conj E Hr)). }
+  assert (OKt : forall k, ~ bad (FST (evaluate (P, set_clock k t)))).
+  { intros k Hk. destruct (A k) as (ck & t1 & E1 & _).
+    destruct (evaluate (P, set_clock k t)) as [r t'] eqn:Et; cbn [FST] in Hk.
+    pose proof (B k ck r t' Et (proj1 Hk)) as E2. rewrite E1 in E2. injection E2 as E2 _.
+    apply (OKs k); subst r; exact Hk. }
+  unfold semantics; cbv zeta; fold P.
+  destruct (classical_dec _) as [[k Hk]|_]; [exfalso; exact (OKt k Hk)|].
+  destruct (classical_dec _) as [[k Hk]|_]; [exfalso; exact (OKs k Hk)|].
+  match goal with |- match some ?Q1 with _ => _ end = match some ?Q2 with _ => _ end =>
+    assert (EQ : Q1 = Q2) end.
+  { apply functional_extensionality; intros res; apply propositional_extensionality; split.
+    - intros (k & t0 & r & o & E & M & R).
+      assert (Hr : SOME r <> SOME TimeOut) by (intros H; injection H as ->; exact M).
+      destruct (A k) as (ck & t1 & E1 & F1).
+      rewrite (B k ck _ _ E Hr) in E1.
+      destruct (evaluate (P, set_clock k s)) as [r0 s0] eqn:Es; cbn [FST SND] in E1, F1.
+      injection E1 as <- <-.
+      exists k, s0, r, o. split; [exact Es|]. split; [exact M|]. rewrite R, <- F1; reflexivity.
+    - intros (k & t0 & r & o & E & M & R).
+      destruct (A k) as (ck & t1 & E1 & F1). rewrite E in E1, F1; cbn [FST SND] in E1, F1.
+      exists (k + ck), t1, r, o. split; [exact E1|split; [exact M|rewrite R, F1; reflexivity]]. }
+  rewrite EQ. destruct (some _); [reflexivity|].
+  f_equal.
+  set (Xt := IMAGE (fun k => fromList (io_events (ffi (SND (evaluate (P, set_clock k t)))))) UNIV).
+  set (Xs := IMAGE (fun k => fromList (io_events (ffi (SND (evaluate (P, set_clock k s)))))) UNIV).
+  assert (Ct : lprefix_chain Xt) by exact (io_chain_stack start t).
+  assert (Cs : lprefix_chain Xs) by exact (io_chain_stack start s).
+  assert (EQV : equiv_lprefix_chain Xs Xt).
+  { apply (equiv_lprefix_chain_thm _ _ (conj Cs Ct)); split.
+    - intros ll1 n x [[k [-> _]] Hx].
+      destruct (A k) as (ck & t1 & E1 & F1).
+      exists (fromList (io_events (ffi (SND (evaluate (P, set_clock (k + ck) t)))))).
+      split; [exists (k + ck); split; [reflexivity|exact Logic.I]|].
+      rewrite E1; cbn [SND]; rewrite F1; exact Hx.
+    - intros ll2 n x [[k [-> _]] Hx].
+      destruct (A k) as (ck & t1 & E1 & F1).
+      exists (fromList (io_events (ffi (SND (evaluate (P, set_clock k s)))))).
+      split; [exists k; split; [reflexivity|exact Logic.I]|].
+      pose proof (evaluate_add_clock_io_events_mono ck P (set_clock k t)) as M.
+      replace (evaluate (P, set_clock (clock (set_clock k t) + ck) (set_clock k t)))
+        with (evaluate (P, set_clock (k + ck) t)) in M by reflexivity.
+      rewrite E1 in M; cbn [SND] in M; rewrite F1 in M.
+      assert (L : LPREFIX (fromList (io_events (ffi (SND (evaluate (P, set_clock k t))))))
+                          (fromList (io_events (ffi (SND (evaluate (P, set_clock k s)))))))
+        by (apply LPREFIX_fromList; rewrite toList_fromList; exact M).
+      apply LPREFIX_pfx in L. exact (L n x Hx). }
+  apply (unique_lprefix_lub Xt); split.
+  - exact (build_lprefix_lub_thm _ Ct).
+  - apply (lprefix_lub_new_chain Xs Xt).
+    split; [exact Ct|split; [exact EQV|exact (build_lprefix_lub_thm _ Cs)]].
+Qed.
+
+End SemSim.
