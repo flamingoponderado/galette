@@ -2,10 +2,13 @@
 
     Partial port of [cakeml/semantics/fpSemScript.sml]: only the operator
     datatypes [fp_cmp], [fp_uop], [fp_bop], [fp_top] (needed by closLang's
-    [word_op]).  The semantic functions ([fp_cmp_def], [fp_uop_def], ...,
-    over [machine_ieee]) are not ported. *)
+    [word_op]) and [fpfma] (used by stackSem/labSem).  The other semantic
+    functions ([fp_cmp_def], [fp_uop_def], ...) are not ported; the
+    [machine_ieee] operations are Galette stand-ins. *)
 
 From Galette Require Import Base.
+From Galette.HOL.src.n_bit Require Import words.
+From Galette.HOL.src.floating_point Require Import binary_ieee machine_ieee.
 
 (*! HOL "cakeml/semantics/fpSemScript.sml" "fp_cmp" 9 *)
 Inductive fp_cmp : Type :=
@@ -35,3 +38,7 @@ Inductive fp_top : Type := FP_Fma.
 #[global] Instance fp_top_eq_dec : EqDecision fp_top.
 Proof. intros x y; unfold Decision; decide equality. Defined.
 #[global] Instance fp_top_inhabited : Inhabited fp_top := FP_Fma.
+
+(*! HOL "cakeml/semantics/fpSemScript.sml" "fpfma_def" *)
+Definition fpfma (v1 v2 v3 : word64) : word64 :=
+  fp64_mul_add roundTiesToEven v2 v3 v1.

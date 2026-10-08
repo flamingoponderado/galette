@@ -34800,6 +34800,16 @@
   "rocq_name": "fp_uop"
  },
  {
+  "hol_path": "cakeml/semantics/fpSemScript.sml",
+  "hol_name": "fpfma_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/fpSem.v",
+  "rocq_name": "fpfma"
+ },
+ {
   "hol_path": "cakeml/semantics/namespaceScript.sml",
   "hol_name": "alist",
   "hol_line": null,
