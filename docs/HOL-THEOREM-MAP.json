@@ -26050,6 +26050,46 @@
   "rocq_name": "word_store"
  },
  {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "write_bytearray_EQ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "write_bytearray_EQ"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "write_bytearray_IGNORE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "write_bytearray_IGNORE"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "write_bytearray_IGNORE_non_aligned",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "write_bytearray_IGNORE_non_aligned"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "write_bytearray_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "write_bytearray_lemma"
+ },
+ {
   "hol_path": "cakeml/compiler/backend/reg_alloc/linear_scanScript.sml",
   "hol_name": "MAP_colors_def",
   "hol_line": null,

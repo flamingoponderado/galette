@@ -416,3 +416,107 @@ Proof.
 Qed.
 
 End MemLemmas.
+
+Section WriteBytes.
+Context {a : N}.
+Implicit Types m : word a -> word_loc a.
+
+Lemma read_bytearray_cons_inv (ad : word a) n (g : word a -> option word8) ys :
+  read_bytearray ad (SUC n) g = SOME ys ->
+  exists b bs, g ad = SOME b /\ read_bytearray (ad + n2w 1)%w n g = SOME bs.
+Proof.
+  rewrite (proj2 (read_bytearray_def _ _ n)). cbv beta.
+  destruct (g ad) as [b|]; [|discriminate].
+  destruct (read_bytearray (ad + n2w 1)%w n g) as [bs|]; [|discriminate]. eauto.
+Qed.
+
+Lemma mem_load_byte_aux_SOME m d be (ad : word a) b :
+  wordSem.mem_load_byte_aux m d be ad = SOME b ->
+  byte_align ad IN d /\ exists v, m (byte_align ad) = Word v.
+Proof.
+  unfold wordSem.mem_load_byte_aux. destruct (m (byte_align ad)) as [v|l1 l2]; [|discriminate].
+  destruct (classical_dec _); [|discriminate]. eauto.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "write_bytearray_IGNORE_non_aligned" *)
+Local Theorem write_bytearray_IGNORE_non_aligned : forall m d be (b : word a) new_bytes (ad : word a),
+  (forall x, b <> byte_align x) -> wordSem.write_bytearray ad new_bytes m d be b = m b.
+Proof.
+  intros m d be b new_bytes; induction new_bytes as [|h t IH]; intros ad Hb; [reflexivity|].
+  cbn [wordSem.write_bytearray]. unfold wordSem.mem_store_byte_aux.
+  destruct (wordSem.write_bytearray (ad + n2w 1)%w t m d be (byte_align ad)); [|reflexivity].
+  destruct (classical_dec _); [|reflexivity].
+  rewrite APPLY_UPDATE_THM. destruct (decide (byte_align ad = b)) as [E|]; [exfalso; apply (Hb ad); auto|].
+  apply IH, Hb.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "write_bytearray_IGNORE" *)
+Local Theorem write_bytearray_IGNORE : forall m m1 (d d1 : word a -> Prop) be new_bytes (ad : word a) x xx,
+  d1 SUBSET d /\
+  read_bytearray ad (LENGTH new_bytes) (wordSem.mem_load_byte_aux m1 d1 be) = SOME x /\ ~ (xx IN d1) ->
+  wordSem.write_bytearray ad new_bytes m d be xx = m xx.
+Proof.
+  intros m m1 d d1 be new_bytes; induction new_bytes as [|h t IH]; intros ad x xx (Hs & Hr & Hx); [reflexivity|].
+  rewrite LENGTH_cons_N in Hr. destruct (read_bytearray_cons_inv _ _ _ _ Hr) as (b & bs & Hb & Hbs).
+  destruct (mem_load_byte_aux_SOME _ _ _ _ _ Hb) as [Hd1 _].
+  cbn [wordSem.write_bytearray]. unfold wordSem.mem_store_byte_aux.
+  destruct (wordSem.write_bytearray (ad + n2w 1)%w t m d be (byte_align ad)); [|reflexivity].
+  destruct (classical_dec _); [|reflexivity].
+  rewrite APPLY_UPDATE_THM. destruct (decide (byte_align ad = xx)) as [<-|]; [contradiction|].
+  exact (IH _ _ _ (conj Hs (conj Hbs Hx))).
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "write_bytearray_EQ" *)
+Local Theorem write_bytearray_EQ : forall (d d1 : word a -> Prop) be new_bytes (ad : word a) m1 m y x,
+  d1 SUBSET d /\ (forall a0, a0 IN d1 -> m1 a0 = m a0 /\ a0 IN d) /\
+  read_bytearray ad (LENGTH new_bytes) (wordSem.mem_load_byte_aux m1 d1 be) = SOME y /\ m1 x = m x ->
+  wordSem.write_bytearray ad new_bytes m1 d1 be x = wordSem.write_bytearray ad new_bytes m d be x.
+Proof.
+  intros d d1 be new_bytes; induction new_bytes as [|h t IH]; intros ad m1 m y x (Hs & Hm & Hr & Hx); [exact Hx|].
+  rewrite LENGTH_cons_N in Hr. destruct (read_bytearray_cons_inv _ _ _ _ Hr) as (b & bs & Hb & Hbs).
+  destruct (mem_load_byte_aux_SOME _ _ _ _ _ Hb) as [Hd1 _].
+  destruct (Hm _ Hd1) as [Hma Hd].
+  assert (IHa : forall z, m1 z = m z ->
+            wordSem.write_bytearray (ad + n2w 1)%w t m1 d1 be z = wordSem.write_bytearray (ad + n2w 1)%w t m d be z)
+    by (intros z Hz; exact (IH _ _ _ _ _ (conj Hs (conj Hm (conj Hbs Hz))))).
+  cbn [wordSem.write_bytearray]. unfold wordSem.mem_store_byte_aux.
+  rewrite (IHa _ Hma).
+  destruct (wordSem.write_bytearray (ad + n2w 1)%w t m d be (byte_align ad)); [|exact Hx].
+  destruct (classical_dec (byte_align ad IN d1)) as [_|]; [|contradiction].
+  destruct (classical_dec (byte_align ad IN d)) as [_|]; [|contradiction].
+  rewrite !APPLY_UPDATE_THM. destruct (decide (byte_align ad = x)); [reflexivity|exact (IHa _ Hx)].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "write_bytearray_lemma" *)
+Local Theorem write_bytearray_lemma : forall new_bytes (ad : word a) m1 d1 be x p m d,
+  STAR (memory m1 d1) p (fun2set (m, d)) /\
+  read_bytearray ad (LENGTH new_bytes) (wordSem.mem_load_byte_aux m1 d1 be) = SOME x ->
+  STAR (memory (wordSem.write_bytearray ad new_bytes m1 d1 be) d1) p
+    (fun2set (wordSem.write_bytearray ad new_bytes m d be, d)).
+Proof.
+  intros new_bytes ad m1 d1 be x p m d [H Hr]. apply STAR_alt in H as (u & Hu & Hmu & Hp).
+  unfold memory in Hmu; subst u.
+  assert (Hin : forall a0, a0 IN d1 -> m1 a0 = m a0 /\ a0 IN d).
+  { intros a0 Ha. assert (Hf : fun2set (m1, d1) (a0, m1 a0)) by (apply fun2set_thm; split; [reflexivity|exact Ha]).
+    apply Hu, fun2set_thm in Hf as [E Hd]. split; [symmetry; exact E|exact Hd]. }
+  assert (Hs : d1 SUBSET d) by (intros a0 Ha; exact (proj2 (Hin a0 Ha))).
+  assert (Weq : forall a0, a0 IN d1 ->
+            wordSem.write_bytearray ad new_bytes m1 d1 be a0 = wordSem.write_bytearray ad new_bytes m d be a0)
+    by (intros a0 Ha; exact (write_bytearray_EQ _ _ _ _ _ _ _ _ _ (conj Hs (conj Hin (conj Hr (proj1 (Hin a0 Ha))))))).
+  apply STAR_alt. exists (fun2set (wordSem.write_bytearray ad new_bytes m1 d1 be, d1)).
+  split; [|split; [reflexivity|]].
+  - intros [a0 z] Hz. apply fun2set_thm in Hz as [E Ha]. apply fun2set_thm.
+    split; [rewrite <- E; symmetry; apply Weq, Ha|exact (Hs _ Ha)].
+  - replace (fun2set (wordSem.write_bytearray ad new_bytes m d be, d) DIFF
+               fun2set (wordSem.write_bytearray ad new_bytes m1 d1 be, d1))
+      with (fun2set (m, d) DIFF fun2set (m1, d1)); [exact Hp|].
+    apply set_ext; intros [a0 z]. unfold pred_set.DIFF, pred_set.IN.
+    rewrite !fun2set_thm. unfold pred_set.IN.
+    destruct (classic (d1 a0)) as [Ha|Ha].
+    + rewrite (Weq a0 Ha), (proj1 (Hin a0 Ha)).
+      split; intros [[E _] Hn]; exfalso; apply Hn; (split; [exact E|exact Ha]).
+    + rewrite (write_bytearray_IGNORE m m1 d d1 be new_bytes ad x a0 (conj Hs (conj Hr Ha))).
+      split; intros [[E Hd] _]; (split; [split; assumption|intros [_ Ha']; exact (Ha Ha')]).
+Qed.
+
+End WriteBytes.
