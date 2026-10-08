@@ -6,7 +6,7 @@
     their main theorems.  Remaining definitions and why they are not ported:
 
     - need [sptree] ([theories/HOL/src/finite_maps/sptree.v]):
-      [lookup_any_def], [fromList2_def], [zlookup_def], [tlookup_def],
+      [fromList2_def], [zlookup_def],
       [eq_shape_def], [copy_shape_def], [range_def] (and the [num_set] /
       [num_map] type abbreviations);
     - need finite maps: [fmap_linv_def], [fmap_update_def];
@@ -35,6 +35,7 @@ From Galette.HOL.src.n_bit Require Import words.
 From Galette.HOL.src.combin Require combin.
 From Galette.HOL.src.coretypes Require pair.
 From Galette.HOL.src.sort Require Import ternaryComparisons.
+From Galette.HOL.src.finite_maps Require sptree.
 Open Scope N_scope.
 
 (** ** Options and lists *)
@@ -488,3 +489,19 @@ End Words.
 (** HOL [good_dimindex(:'a)]: the word width is 32 or 64. *)
 (*! HOL "cakeml/misc/miscScript.sml" "good_dimindex_def" *)
 Definition good_dimindex (a : N) : Prop := dimindex a = 32 \/ dimindex a = 64.
+
+(** ** Lookups in [sptree]s *)
+
+(*! HOL "cakeml/misc/miscScript.sml" "lookup_any_def" *)
+Definition lookup_any {A} (x : N) (sp : sptree.spt A) (d : A) : A :=
+  match sptree.lookup x sp with
+  | None => d
+  | Some m => m
+  end.
+
+(*! HOL "cakeml/misc/miscScript.sml" "tlookup_def" *)
+Definition tlookup (m : sptree.spt N) (k : N) : N :=
+  match sptree.lookup k m with
+  | None => k
+  | Some k => k
+  end.
