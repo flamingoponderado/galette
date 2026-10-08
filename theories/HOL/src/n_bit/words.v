@@ -18,7 +18,6 @@ From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
 From Galette.HOL.src.num.extra_theories Require Import bit.
 From Galette.HOL.src.n_bit Require Import sum_num.
-From Stdlib Require Import Eqdep_dec.
 Open Scope N_scope.
 
 (** ** Widths *)
@@ -46,9 +45,25 @@ Proof. unfold dimword; apply N.neq_0_lt_0, N.pow_nonzero; lia. Qed.
 
 (** ** The carrier *)
 
+(** The bound is an [SProp] (definitionally proof-irrelevant), so two words
+    with the same [w2n] are convertible: word equalities can be decided by
+    computation, and extraction erases the bound.  Prove concrete word
+    equalities with [reflexivity] (or [vm_compute] on [w2n] values): Rocq's
+    VM read-back of [SProp] fields makes [vm_compute; reflexivity] fail on
+    word-typed goals. *)
+Inductive sTrue : SProp := sI.
+Inductive sFalse : SProp := .
+Definition sbool (b : bool) : SProp := if b then sTrue else sFalse.
+
+Lemma sbool_true {b : bool} : b = true -> sbool b.
+Proof. intros ->; exact sI. Defined.
+
+Lemma sbool_is_true {b : bool} : sbool b -> b = true.
+Proof. destruct b; [reflexivity|intros []]. Qed.
+
 Record word (a : N) : Type := mk_word {
   w2n_val : N;
-  w2n_bound : N.ltb w2n_val (dimword a) = true
+  w2n_bound : sbool (N.ltb w2n_val (dimword a))
 }.
 Arguments mk_word {a} _ _.
 Arguments w2n_val {a} _.
@@ -81,16 +96,18 @@ Context {a : N}.
     below once [fcp_index] is available.) *)
 Definition w2n (w : word a) : N := w2n_val w.
 
-Lemma n2w_bound n : N.ltb (n MOD dimword a) (dimword a) = true.
+Lemma n2w_bound_eq n : N.ltb (n MOD dimword a) (dimword a) = true.
 Proof. apply N.ltb_lt, N.mod_lt. pose proof (ZERO_LT_dimword a); lia. Qed.
+
+Definition n2w_bound n : sbool (N.ltb (n MOD dimword a) (dimword a)) :=
+  sbool_true (n2w_bound_eq n).
 
 (** HOL [n2w]. *)
 Definition n2w (n : N) : word a := mk_word (n MOD dimword a) (n2w_bound n).
 
 Lemma word_eq_w2n (v w : word a) : w2n v = w2n w -> v = w.
 Proof.
-  destruct v as [v Hv], w as [w Hw]; cbn; intros ->.
-  f_equal; apply UIP_dec, bool_dec.
+  destruct v as [v Hv], w as [w Hw]; cbn; intros ->; reflexivity.
 Qed.
 
 #[global] Instance word_eq_dec : EqDecision (word a).
@@ -104,7 +121,7 @@ Defined.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "w2n_lt" *)
 Theorem w2n_lt : forall w : word a, w2n w < dimword a.
-Proof. intros [w Hw]; apply N.ltb_lt, Hw. Qed.
+Proof. intros [w Hw]; apply N.ltb_lt, sbool_is_true, Hw. Qed.
 
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "w2n_n2w" *)
 Theorem w2n_n2w : forall n, w2n (n2w n : word a) = n MOD dimword a.
