@@ -15,11 +15,11 @@
     [spts_to_alist] recurses on a measure; it uses a fuel argument that
     provably never runs out ([spts_to_alist_def] is HOL's equation).
 
-    HOL's [pred_set] and [alist] theories are not ported yet: HOL sets
-    (['a set]) are Rocq predicates [N -> Prop] and set operations are
-    written out ([s UNION t] is [fun x => s x \/ t x], [IMAGE f s] is
-    [fun y => exists x, y = f x /\ s x], ...), and [ALOOKUP] is defined
-    locally (untagged) until [alistScript] is ported. *)
+    HOL sets (['a set]) are Rocq predicates [N -> Prop].  This file was
+    written before [pred_set.v] existed, so its set operations are written
+    out ([s UNION t] is [fun x => s x \/ t x], [IMAGE f s] is
+    [fun y => exists x, y = f x /\ s x], ...); they are convertible with the
+    [pred_set] operators. *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
