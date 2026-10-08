@@ -27,22 +27,10 @@ From Galette.HOL.src.finite_maps Require Import sptree.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.cakeml.pancake Require Import loopLang.
 From Galette.cakeml.pancake Require loop_call.
+From Galette.HOL.src.list.src.list Require Import extra.
+From Galette.cakeml.compiler.backend Require backend_common.
+#[local] Abbreviation list_delete := backend_common.list_delete.
 Open Scope N_scope.
-
-(** HOL [oEL] (from [listScript]; Galette-local until ported there). *)
-#[local] Fixpoint oEL {A} (n : N) (l : list A) : option A :=
-  match l with
-  | [] => None
-  | x :: xs => if decide (n = 0) then Some x else oEL (n - 1) xs
-  end.
-
-(** HOL [list_delete] (from [backend_commonScript]; Galette-local until
-    that script is ported). *)
-#[local] Fixpoint list_delete {A} (l : list N) (s : spt A) : spt A :=
-  match l with
-  | [] => s
-  | v :: vs => list_delete vs (delete v s)
-  end.
 
 Section Defs.
 Context {a : N}.

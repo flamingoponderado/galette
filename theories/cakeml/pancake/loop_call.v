@@ -14,15 +14,9 @@ From Galette.HOL.src.coretypes Require Import option pair.
 From Galette.HOL.src.finite_maps Require Import sptree.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.cakeml.pancake Require Import loopLang.
+From Galette.cakeml.compiler.backend Require backend_common.
+#[local] Abbreviation list_delete := backend_common.list_delete.
 Open Scope N_scope.
-
-(** HOL [list_delete] (from [backend_commonScript]; Galette-local until
-    that script is ported). *)
-#[local] Fixpoint list_delete {A} (l : list N) (s : spt A) : spt A :=
-  match l with
-  | [] => s
-  | v :: vs => list_delete vs (delete v s)
-  end.
 
 (*! HOL "cakeml/pancake/loop_callScript.sml" "is_load_def" *)
 Definition is_load (m : memop) : bool :=

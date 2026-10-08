@@ -38,14 +38,9 @@ From Galette.cakeml.semantics Require Import ast.
 From Galette.cakeml.pancake Require Import panLang.
 From Galette.HOL.examples.formal_languages.context_free Require Import location grammar peg pegexec.
 From Galette.cakeml.pancake.parser Require Import panLexer panPEG.
+From Galette.HOL.src.list.src.list Require Import extra.
 Open Scope N_scope.
 Open Scope hol_string_scope.
-
-#[local] Fixpoint OPT_MMAP {A B} (f : A -> option B) (l : list A) : option (list B) :=
-  match l with
-  | [] => SOME []
-  | h0 :: t0 => OPTION_BIND (f h0) (fun h => OPTION_BIND (OPT_MMAP f t0) (fun t => SOME (h :: t)))
-  end.
 
 #[local] Instance word_inhabited {a} : Inhabited (word a) := n2w 0.
 

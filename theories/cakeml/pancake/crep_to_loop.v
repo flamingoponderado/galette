@@ -30,14 +30,8 @@ From Galette.cakeml.semantics Require Import ast.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.cakeml.pancake Require Import crepLang loopLang.
 From Galette.cakeml.pancake Require loop_live crep_arith.
+From Galette.HOL.src.list.src.list Require Import extra.
 Open Scope N_scope.
-
-(** HOL [OPT_MMAP] (from [listScript]; Galette-local until ported there). *)
-#[local] Fixpoint OPT_MMAP {A B} (f : A -> option B) (l : list A) : option (list B) :=
-  match l with
-  | [] => Some []
-  | h0 :: t0 => OPTION_BIND (f h0) (fun h => OPTION_BIND (OPT_MMAP f t0) (fun t => Some (h :: t)))
-  end.
 
 (** HOL [MAPi] (from [indexedListsScript]; Galette-local until ported
     there): [MAPi f l = [f 0 x0; f 1 x1; ...]]. *)

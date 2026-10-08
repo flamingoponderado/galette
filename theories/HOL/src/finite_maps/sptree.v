@@ -24,6 +24,7 @@
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
 From Galette.HOL.src.list.src Require Import list.
+From Galette.HOL.src.finite_maps Require Import alist.
 Open Scope N_scope.
 
 
@@ -1333,13 +1334,6 @@ Proof.
   intros A t; unfold is_true; rewrite ALL_DISTINCT_NoDup; unfold toAList.
   apply NoDup_foldi; [constructor|]. intros n v _ [].
 Qed.
-
-(** HOL [ALOOKUP] (from [alistScript], not yet ported; Galette-local). *)
-#[local] Fixpoint ALOOKUP {K V} `{EqDecision K} (l : list (K * V)) (q : K) : option V :=
-  match l with
-  | [] => None
-  | (x, y) :: t => if decide (x = q) then Some y else ALOOKUP t q
-  end.
 
 Lemma ALOOKUP_In {K V} `{EqDecision K} (l : list (K * V)) q v :
   ALOOKUP l q = Some v -> In (q, v) l.

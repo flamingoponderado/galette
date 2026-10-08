@@ -34,14 +34,8 @@ From Galette.cakeml.translator.monadic.monad_base Require Import ml_monadBase.
 From Galette.cakeml.compiler.backend.reg_alloc Require Import reg_alloc linear_scan.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.cakeml.compiler.backend Require Import stackLang wordLang.
+From Galette.HOL.src.list.src.list Require Import extra.
 Open Scope N_scope.
-
-(** HOL [oEL] ([listScript]; Galette-local until ported there). *)
-#[local] Fixpoint oEL {A} (n : N) (l : list A) : option A :=
-  match l with
-  | [] => None
-  | x :: xs => if decide (n = 0) then Some x else oEL (n - 1) xs
-  end.
 
 Definition is_Skip {a} (p : prog a) : bool := match p with Skip => true | _ => false end.
 

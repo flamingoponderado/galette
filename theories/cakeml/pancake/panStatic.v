@@ -54,6 +54,7 @@ From Galette.cakeml.basis.pure Require Import mlstring mlint mllist.
 From Galette.cakeml.basis.pure Require mlmap.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.cakeml.pancake Require Import panLang.
+From Galette.HOL.src.list.src.list Require Import extra.
 Open Scope N_scope.
 Open Scope hol_string_scope.
 Open Scope errorLog_scope.
@@ -63,20 +64,6 @@ Open Scope errorLog_scope.
 
 (** The newline character (HOL's ["\n"]). *)
 #[local] Definition NL : ascii := "010"%char.
-
-(** HOL [dropWhile] (from [listScript]; Galette-local until ported there). *)
-#[local] Fixpoint dropWhile {A} (P : A -> bool) (l : list A) : list A :=
-  match l with
-  | [] => []
-  | h :: t => if P h then dropWhile P t else h :: t
-  end.
-
-(** HOL [OPT_MMAP] (from [listScript]; Galette-local until ported there). *)
-#[local] Fixpoint OPT_MMAP {A B} (f : A -> option B) (l : list A) : option (list B) :=
-  match l with
-  | [] => Some []
-  | h0 :: t0 => OPTION_BIND (f h0) (fun h => OPTION_BIND (OPT_MMAP f t0) (fun t => Some (h :: t)))
-  end.
 
 (** HOL [LLOOKUP l n] ([listScript]'s [oEL n l]; Galette-local until ported
     there). *)

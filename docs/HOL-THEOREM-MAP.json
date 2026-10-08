@@ -7481,6 +7481,16 @@
  },
  {
   "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "OPT_MMAP_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list/extra.v",
+  "rocq_name": "OPT_MMAP"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
   "hol_name": "PAD_LEFT",
   "hol_line": null,
   "case": null,
@@ -7568,6 +7578,16 @@
   "note": "",
   "rocq_path": "theories/HOL/src/list/src/list.v",
   "rocq_name": "ZIP"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "dropWhile_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list/extra.v",
+  "rocq_name": "dropWhile"
  },
  {
   "hol_path": "HOL/src/list/src/listScript.sml",

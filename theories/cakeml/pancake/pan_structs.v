@@ -25,22 +25,9 @@ From Galette.HOL.src.coretypes Require Import option pair.
 From Galette.HOL.src.finite_maps Require Import alist.
 From Galette.cakeml.basis.pure Require Import mlstring.
 From Galette.cakeml.pancake Require Import panLang.
+From Galette.HOL.src.list.src.list Require Import extra.
 Open Scope N_scope.
 
-
-(** HOL [dropWhile] (from [listScript]; Galette-local until ported there). *)
-#[local] Fixpoint dropWhile {A} (P : A -> bool) (l : list A) : list A :=
-  match l with
-  | [] => []
-  | h :: t => if P h then dropWhile P t else h :: t
-  end.
-
-(** HOL [oEL] (from [listScript]; Galette-local until ported there). *)
-#[local] Fixpoint oEL {A} (n : N) (l : list A) : option A :=
-  match l with
-  | [] => None
-  | x :: xs => if decide (n = 0) then Some x else oEL (n - 1) xs
-  end.
 
 Lemma dropWhile_cons_length {A} (P : A -> bool) l x l' :
   dropWhile P l = x :: l' -> (length l' < length l)%nat.

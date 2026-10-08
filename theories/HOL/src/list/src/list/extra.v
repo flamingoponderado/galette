@@ -1,12 +1,13 @@
 (** * HOL4 [list]: further list functions used by the compiler backend
 
     Part of the [listScript] counterpart, kept apart from [list.v]:
-    [oEL], [PAD_LEFT], [PAD_RIGHT] and [splitAtPki]. *)
+    [oEL], [PAD_LEFT], [PAD_RIGHT], [splitAtPki], [dropWhile], [OPT_MMAP]. *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
 From Galette.HOL.src.combin Require Import combin.
 From Galette.HOL.src.list.src Require Import list.
+From Galette.HOL.src.coretypes Require Import option.
 Open Scope N_scope.
 
 Section Extra.
@@ -53,3 +54,14 @@ Proof.
   destruct (N.ltb_spec m (LENGTH xs)), (N.ltb_spec (SUC m) (SUC (LENGTH xs)));
     try reflexivity; lia.
 Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "dropWhile_def" *)
+Fixpoint dropWhile {A} (P : A -> bool) (l : list A) : list A :=
+  match l with [] => [] | h :: t => if P h then dropWhile P t else h :: t end.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "OPT_MMAP_def" *)
+Fixpoint OPT_MMAP {A B} (f : A -> option B) (l : list A) : option (list B) :=
+  match l with
+  | [] => SOME []
+  | h0 :: t0 => OPTION_BIND (f h0) (fun h => OPTION_BIND (OPT_MMAP f t0) (fun t => SOME (h :: t)))
+  end.
