@@ -71,13 +71,13 @@ Definition mknt {A C E} (ntsym : pancakeNT) : pegsym A pancakeNT C E := nt (inl 
 Definition mkleaf {A B L} (t : A * L) : list (parsetree A B L) := [Lf (TOK (FST t), SND t)].
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "mknode_def" *)
-Definition mknode {A} (x : pancakeNT) (ts : list (parsetree A pancakeNT locs))
-    : parsetree A pancakeNT locs :=
+Definition mknode {A B} (x : B) (ts : list (parsetree A B locs))
+    : parsetree A B locs :=
   Nd (inl x, ptree_list_loc ts) ts.
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "mksubtree_def" *)
-Definition mksubtree {A} (x : pancakeNT) (ts : list (parsetree A pancakeNT locs))
-    : list (parsetree A pancakeNT locs) :=
+Definition mksubtree {A B} (x : B) (ts : list (parsetree A B locs))
+    : list (parsetree A B locs) :=
   [mknode x ts].
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "consume_tok_def" *)
@@ -85,7 +85,8 @@ Definition consume_tok {B C E} (t : token) : pegsym token B (list C) E :=
   tok (fun x => bool_decide (t = x)) (fun t => []).
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "keep_tok_def" *)
-Definition keep_tok {E} (t : token) : pegsym token pancakeNT (list ptree) E :=
+Definition keep_tok {A B C E} `{EqDecision A} (t : A)
+    : pegsym A B (list (parsetree A C locs)) E :=
   tok (fun x => bool_decide (t = x)) mkleaf.
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "consume_kw_def" *)
@@ -93,27 +94,27 @@ Definition consume_kw {B C E} (k : keyword) : pegsym token B (list C) E :=
   consume_tok (KeywordT k).
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "keep_kw_def" *)
-Definition keep_kw {E} (k : keyword) : pegsym token pancakeNT (list ptree) E :=
+Definition keep_kw {B C E} (k : keyword) : pegsym token B (list (parsetree token C locs)) E :=
   keep_tok (KeywordT k).
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "keep_ident_def" *)
-Definition keep_ident {E} : pegsym token pancakeNT (list ptree) E :=
+Definition keep_ident {B C E} : pegsym token B (list (parsetree token C locs)) E :=
   tok (fun t => match t with IdentT _ => true | _ => false end) mkleaf.
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "keep_annot_def" *)
-Definition keep_annot {E} : pegsym token pancakeNT (list ptree) E :=
+Definition keep_annot {B C E} : pegsym token B (list (parsetree token C locs)) E :=
   tok (fun t => match t with AnnotCommentT _ => true | _ => false end) mkleaf.
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "keep_ffi_ident_def" *)
-Definition keep_ffi_ident {E} : pegsym token pancakeNT (list ptree) E :=
+Definition keep_ffi_ident {B C E} : pegsym token B (list (parsetree token C locs)) E :=
   tok (fun t => match t with ForeignIdent _ => true | _ => false end) mkleaf.
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "keep_int_def" *)
-Definition keep_int {E} : pegsym token pancakeNT (list ptree) E :=
+Definition keep_int {B C E} : pegsym token B (list (parsetree token C locs)) E :=
   tok (fun t => match t with IntT _ => true | _ => false end) mkleaf.
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "keep_nat_def" *)
-Definition keep_nat {E} : pegsym token pancakeNT (list ptree) E :=
+Definition keep_nat {B C E} : pegsym token B (list (parsetree token C locs)) E :=
   tok (fun t => match t with IntT n => if (n >=? 0)%Z then true else false | _ => false end) mkleaf.
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "extract_sum_def" *)
@@ -141,8 +142,8 @@ Definition try {A B X E} (s : pegsym A B (list X) E) : pegsym A B (list X) E :=
   choicel [s; empty []].
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "try_default_def" *)
-Definition try_default {B E} (s : pegsym token B (list (parsetree token B locs)) E) (t : token)
-    : pegsym token B (list (parsetree token B locs)) E :=
+Definition try_default {A B T NT E} (s : pegsym A B (list (parsetree T NT locs)) E) (t : T)
+    : pegsym A B (list (parsetree T NT locs)) E :=
   choicel [s; empty (mkleaf (t, unknown_loc))].
 
 (*! HOL "cakeml/pancake/parser/panPEGScript.sml" "try_ProgNT_def" *)

@@ -25,7 +25,7 @@ Section Defs.
 Context {a : N}.
 
 (*! HOL "cakeml/compiler/backend/semantics/wordConvsScript.sml" "labels_rel_def" *)
-Definition labels_rel (old_labs new_labs : list (N * N)) : Prop :=
+Definition labels_rel {A} `{EqDecision A} (old_labs new_labs : list A) : Prop :=
   (is_true (ALL_DISTINCT old_labs) -> is_true (ALL_DISTINCT new_labs)) /\
   set new_labs SUBSET set old_labs.
 
@@ -569,8 +569,9 @@ End Mono.
 (** ** [labels_rel] *)
 
 Section LabelsRel.
+Context {A : Type} {EA : EqDecision A}.
 
-Local Lemma ALL_DISTINCT_app (l1 l2 : list (N * N)) :
+Local Lemma ALL_DISTINCT_app (l1 l2 : list A) :
   is_true (ALL_DISTINCT (l1 ++ l2)) <->
   is_true (ALL_DISTINCT l1) /\ is_true (ALL_DISTINCT l2) /\
   (forall x, In x l1 -> ~ In x l2).
@@ -584,11 +585,11 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/semantics/wordConvsScript.sml" "labels_rel_refl" *)
-Theorem labels_rel_refl : forall xs, labels_rel xs xs.
+Theorem labels_rel_refl : forall (xs : list A), labels_rel xs xs.
 Proof. intros xs; split; [auto|intros x Hx; exact Hx]. Qed.
 
 (*! HOL "cakeml/compiler/backend/semantics/wordConvsScript.sml" "labels_rel_APPEND" *)
-Theorem labels_rel_APPEND : forall xs xs1 ys ys1,
+Theorem labels_rel_APPEND : forall (xs xs1 ys ys1 : list A),
   labels_rel xs xs1 /\ labels_rel ys ys1 -> labels_rel (xs ++ ys) (xs1 ++ ys1).
 Proof.
   intros xs xs1 ys ys1 [[Hd1 Hs1] [Hd2 Hs2]]; unfold pred_set.SUBSET in *; split.
@@ -599,13 +600,13 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/semantics/wordConvsScript.sml" "labels_rel_CONS" *)
-Theorem labels_rel_CONS : forall x x1 ys ys1,
+Theorem labels_rel_CONS : forall (x x1 : A) (ys ys1 : list A),
   labels_rel [x] [x1] /\ labels_rel ys ys1 -> labels_rel (x :: ys) (x1 :: ys1).
 Proof. intros x x1 ys ys1 H; exact (labels_rel_APPEND [x] [x1] ys ys1 H). Qed.
 
 (** HOL's [PERM_IMP_labels_rel], with Rocq's [Permutation] for HOL's
     [sorting$PERM] (not ported). *)
-Theorem PERM_IMP_labels_rel : forall xs ys,
+Theorem PERM_IMP_labels_rel : forall (xs ys : list A),
   Permutation xs ys -> labels_rel ys xs.
 Proof.
   intros xs ys HP; split.
@@ -615,7 +616,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/semantics/wordConvsScript.sml" "labels_rel_TRANS" *)
-Theorem labels_rel_TRANS : forall xs ys zs,
+Theorem labels_rel_TRANS : forall (xs ys zs : list A),
   labels_rel xs ys /\ labels_rel ys zs -> labels_rel xs zs.
 Proof.
   intros xs ys zs [[H1 H2] [H3 H4]]; split; [auto|].

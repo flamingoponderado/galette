@@ -111,7 +111,7 @@ Definition get_label (x : asm_with_lab a) : lab :=
   end.
 
 (*! HOL "cakeml/compiler/backend/lab_to_targetScript.sml" "get_ffi_index_def" *)
-Definition get_ffi_index (ffis : list ffiname) (s : ffiname) : N :=
+Definition get_ffi_index {A} `{EqDecision A} (ffis : list A) (s : A) : N :=
   the 0 (find_index s ffis 0).
 
 (*! HOL "cakeml/compiler/backend/lab_to_targetScript.sml" "get_jump_offset_def" *)
@@ -290,7 +290,7 @@ Definition get_zero_labs_acc (code : list (sec a)) : num_set :=
   FOLDR sec_get_zero_labs_acc LN code.
 
 (*! HOL "cakeml/compiler/backend/lab_to_targetScript.sml" "zero_labs_acc_exist_def" *)
-Definition zero_labs_acc_exist (labs : spt (spt N)) (code : list (sec a)) : bool :=
+Definition zero_labs_acc_exist {B} (labs : spt (spt B)) (code : list (sec a)) : bool :=
   let zlabs := toAList (get_zero_labs_acc code) in
   EVERY (fun '(n, _) =>
            match lookup n labs with

@@ -53,14 +53,14 @@ Definition destTOK {A B} (s : symbol A B) : option A :=
   match s with TOK t => SOME t | _ => NONE end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "tokcheck_def" *)
-Definition tokcheck (pt : ptree) (expected : token) : bool :=
+Definition tokcheck {A B L} `{EqDecision A} (pt : parsetree A B L) (expected : A) : bool :=
   match OPTION_BIND (destLf pt) destTOK with
   | SOME actual => bool_decide (actual = expected)
   | NONE => false
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "dest_annot_tok_def" *)
-Definition dest_annot_tok (pt : ptree) : option string :=
+Definition dest_annot_tok {B L} (pt : parsetree token B L) : option string :=
   match OPTION_BIND (destLf pt) destTOK with
   | SOME (AnnotCommentT c) => SOME c
   | _ => NONE
@@ -70,11 +70,13 @@ Definition dest_annot_tok (pt : ptree) : option string :=
 Definition kw (k : keyword) : token := KeywordT k.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "isNT_def" *)
-Definition isNT (nodeNT : inf pancakeNT * locs) (ntm : pancakeNT) : bool :=
+Definition isNT {B X L} `{EqDecision B} `{EqDecision X} (nodeNT : (B + X) * L) (ntm : B)
+    : bool :=
   bool_decide (FST nodeNT = inl ntm).
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "argsNT_def" *)
-Definition argsNT (t : ptree) (ntm : pancakeNT) : option (list ptree) :=
+Definition argsNT {A B L} `{EqDecision B} (t : parsetree A B L) (ntm : B)
+    : option (list (parsetree A B L)) :=
   match t with
   | Lf _ => NONE
   | Nd nodeNT args => if decide (FST nodeNT = inl ntm) then SOME args else NONE
@@ -84,39 +86,39 @@ Definition argsNT (t : ptree) (ntm : pancakeNT) : option (list ptree) :=
 Definition is_add_with_carry (s : mlstring) : bool := bool_decide (s = strlit "__add_with_carry__").
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_int_def" *)
-Definition conv_int (tree : ptree) : option Z :=
+Definition conv_int {B L} (tree : parsetree token B L) : option Z :=
   match OPTION_BIND (destLf tree) destTOK with
   | SOME (IntT n) => SOME n
   | _ => NONE
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_nat_def" *)
-Definition conv_nat (tree : ptree) : option N :=
+Definition conv_nat {B L} (tree : parsetree token B L) : option N :=
   match conv_int tree with
   | SOME n => if (n >=? 0)%Z then SOME (Z.to_N n) else NONE
   | _ => NONE
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_const_def" *)
-Definition conv_const {a} (t : ptree) : option (exp a) :=
+Definition conv_const {a B L} (t : parsetree token B L) : option (exp a) :=
   OPTION_MAP (fun i => Const (i2w i)) (conv_int t).
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_ident_def" *)
-Definition conv_ident (tree : ptree) : option mlstring :=
+Definition conv_ident {B L} (tree : parsetree token B L) : option mlstring :=
   match OPTION_BIND (destLf tree) destTOK with
   | SOME (IdentT s) => SOME (implode s)
   | _ => NONE
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_ffi_ident_def" *)
-Definition conv_ffi_ident (tree : ptree) : option mlstring :=
+Definition conv_ffi_ident {B L} (tree : parsetree token B L) : option mlstring :=
   match OPTION_BIND (destLf tree) destTOK with
   | SOME (ForeignIdent s) => SOME (implode s)
   | _ => NONE
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_var_def" *)
-Definition conv_var {a} (t : ptree) : option (exp a) := OPTION_MAP (Var Global) (conv_ident t).
+Definition conv_var {a B L} (t : parsetree token B L) : option (exp a) := OPTION_MAP (Var Global) (conv_ident t).
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "binaryExps_def" *)
 Definition binaryExps : list pancakeNT := [EOrNT; EXorNT; EAndNT; EAddNT].
@@ -129,7 +131,7 @@ Definition isSubOp {a} (e : exp a) : bool :=
   match e with Op Sub [e1; e2] => true | _ => false end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_binop_def" *)
-Fixpoint conv_binop (t : ptree) : option binop :=
+Fixpoint conv_binop {L} (t : parsetree token pancakeNT L) : option binop :=
   match t with
   | Nd nodeNT args =>
       if isNT nodeNT AddOpsNT then
@@ -145,7 +147,7 @@ Fixpoint conv_binop (t : ptree) : option binop :=
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_panop_def" *)
-Fixpoint conv_panop (t : ptree) : option panop :=
+Fixpoint conv_panop {L} (t : parsetree token pancakeNT L) : option panop :=
   match t with
   | Nd nodeNT args =>
       if isNT nodeNT MulOpsNT then
@@ -155,7 +157,7 @@ Fixpoint conv_panop (t : ptree) : option panop :=
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_shift_def" *)
-Fixpoint conv_shift (t : ptree) : option shift :=
+Fixpoint conv_shift {L} (t : parsetree token pancakeNT L) : option shift :=
   match t with
   | Nd nodeNT args =>
       if isNT nodeNT ShiftOpsNT then
@@ -170,7 +172,7 @@ Fixpoint conv_shift (t : ptree) : option shift :=
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_cmp_def" *)
-Fixpoint conv_cmp (t : ptree) : option (cmp * bool) :=
+Fixpoint conv_cmp {L} (t : parsetree token pancakeNT L) : option (cmp * bool) :=
   match t with
   | Nd nodeNT args =>
       if isNT nodeNT CmpOpsNT || isNT nodeNT EqOpsNT then
@@ -191,13 +193,13 @@ Fixpoint conv_cmp (t : ptree) : option (cmp * bool) :=
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_default_shape_def" *)
-Definition conv_default_shape (tree : ptree) : option shape :=
+Definition conv_default_shape {B L} (tree : parsetree token B L) : option shape :=
   match OPTION_BIND (destLf tree) destTOK with
   | SOME DefaultShT => SOME One
   | _ => NONE
   end.
 
-Fixpoint conv_Shape (tree : ptree) : option shape :=
+Fixpoint conv_Shape {L} (tree : parsetree token pancakeNT L) : option shape :=
   match conv_default_shape tree with
   | SOME s => SOME s
   | _ =>
@@ -222,7 +224,7 @@ Fixpoint conv_Shape (tree : ptree) : option shape :=
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_Shape_def" *)
-Theorem conv_Shape_def : forall tree,
+Theorem conv_Shape_def {L} : forall (tree : parsetree token pancakeNT L),
   conv_Shape tree =
   match conv_default_shape tree with
   | SOME s => SOME s
@@ -253,7 +255,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_params_def" *)
-Fixpoint conv_params (as_ : list ptree) : option (list (mlstring * shape)) :=
+Fixpoint conv_params {L} (as_ : list (parsetree token pancakeNT L)) : option (list (mlstring * shape)) :=
   match as_ with
   | s :: t :: ps =>
       match conv_Shape s with
@@ -271,11 +273,11 @@ Fixpoint conv_params (as_ : list ptree) : option (list (mlstring * shape)) :=
 (** ** Expressions *)
 
 Section ExpHelpers.
-Context {a : N}.
-Variable conv_Exp : ptree -> option (exp a).
+Context {a : N} {L : Type}.
+Variable conv_Exp : parsetree token pancakeNT L -> option (exp a).
 
 (** HOL [conv_ArgList], given [conv_Exp]. *)
-Definition conv_ArgList_with (tree : ptree) : option (list (exp a)) :=
+Definition conv_ArgList_with (tree : parsetree token pancakeNT L) : option (list (exp a)) :=
   if tokcheck tree NotT then SOME []
   else
     match tree with
@@ -287,7 +289,7 @@ Definition conv_ArgList_with (tree : ptree) : option (list (exp a)) :=
     end.
 
 (** HOL [conv_Field], given [conv_Exp]. *)
-Definition conv_Field_with (tree : ptree) : option (mlstring * exp a) :=
+Definition conv_Field_with (tree : parsetree token pancakeNT L) : option (mlstring * exp a) :=
   match tree with
   | Nd nodeNT args =>
       if decide (FST nodeNT = inl NmdFieldNT) then
@@ -302,7 +304,7 @@ Definition conv_Field_with (tree : ptree) : option (mlstring * exp a) :=
   end.
 
 (** HOL [conv_FieldList], given [conv_Exp]. *)
-Definition conv_FieldList_with (tree : ptree) : option (list (mlstring * exp a)) :=
+Definition conv_FieldList_with (tree : parsetree token pancakeNT L) : option (list (mlstring * exp a)) :=
   match tree with
   | Nd nodeNT args =>
       if decide (FST nodeNT = inl NmdFieldListNT) then
@@ -312,7 +314,7 @@ Definition conv_FieldList_with (tree : ptree) : option (list (mlstring * exp a))
   end.
 
 (** HOL [conv_binaryExps], given [conv_Exp]. *)
-Fixpoint conv_binaryExps_with (l : list ptree) (res : exp a) {struct l} : option (exp a) :=
+Fixpoint conv_binaryExps_with (l : list (parsetree token pancakeNT L)) (res : exp a) {struct l} : option (exp a) :=
   match l with
   | [] => SOME res
   | t1 :: t2 :: ts =>
@@ -329,7 +331,7 @@ Fixpoint conv_binaryExps_with (l : list ptree) (res : exp a) {struct l} : option
   end.
 
 (** HOL [conv_panops], given [conv_Exp]. *)
-Fixpoint conv_panops_with (l : list ptree) (res : exp a) {struct l} : option (exp a) :=
+Fixpoint conv_panops_with (l : list (parsetree token pancakeNT L)) (res : exp a) {struct l} : option (exp a) :=
   match l with
   | [] => SOME res
   | t1 :: t2 :: ts =>
@@ -343,7 +345,7 @@ Fixpoint conv_panops_with (l : list ptree) (res : exp a) {struct l} : option (ex
   end.
 
 (** HOL [conv_shifts], given [conv_Exp]. *)
-Fixpoint conv_shifts_with (l : list ptree) (res : exp a) {struct l} : option (exp a) :=
+Fixpoint conv_shifts_with (l : list (parsetree token pancakeNT L)) (res : exp a) {struct l} : option (exp a) :=
   match l with
   | [] => SOME res
   | t1 :: t2 :: ts =>
@@ -355,7 +357,7 @@ Fixpoint conv_shifts_with (l : list ptree) (res : exp a) {struct l} : option (ex
 
 End ExpHelpers.
 
-Fixpoint conv_Exp {a} (t : ptree) {struct t} : option (exp a) :=
+Fixpoint conv_Exp {a L} (t : parsetree token pancakeNT L) {struct t} : option (exp a) :=
   match t with
   | Nd nodeNT args =>
     if isNT nodeNT EFieldNT then
@@ -451,36 +453,36 @@ Fixpoint conv_Exp {a} (t : ptree) {struct t} : option (exp a) :=
     else OPTION_CHOICE (conv_const leaf) (conv_var leaf)
   end.
 
-Definition conv_ArgList {a} : ptree -> option (list (exp a)) := conv_ArgList_with conv_Exp.
-Definition conv_FieldList {a} : ptree -> option (list (mlstring * exp a)) :=
+Definition conv_ArgList {a L} : parsetree token pancakeNT L -> option (list (exp a)) := conv_ArgList_with conv_Exp.
+Definition conv_FieldList {a L} : parsetree token pancakeNT L -> option (list (mlstring * exp a)) :=
   conv_FieldList_with conv_Exp.
-Definition conv_Field {a} : ptree -> option (mlstring * exp a) := conv_Field_with conv_Exp.
-Definition conv_binaryExps {a} : list ptree -> exp a -> option (exp a) :=
+Definition conv_Field {a L} : parsetree token pancakeNT L -> option (mlstring * exp a) := conv_Field_with conv_Exp.
+Definition conv_binaryExps {a L} : list (parsetree token pancakeNT L) -> exp a -> option (exp a) :=
   conv_binaryExps_with conv_Exp.
-Definition conv_panops {a} : list ptree -> exp a -> option (exp a) := conv_panops_with conv_Exp.
-Definition conv_shifts {a} : list ptree -> exp a -> option (exp a) := conv_shifts_with conv_Exp.
+Definition conv_panops {a L} : list (parsetree token pancakeNT L) -> exp a -> option (exp a) := conv_panops_with conv_Exp.
+Definition conv_shifts {a L} : list (parsetree token pancakeNT L) -> exp a -> option (exp a) := conv_shifts_with conv_Exp.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_Exp_def" *)
-Theorem conv_Exp_def {a} :
-  (forall tree, @conv_ArgList a tree =
+Theorem conv_Exp_def {a L} :
+  (forall tree, @conv_ArgList a L tree =
      if tokcheck tree NotT then SOME []
      else match argsNT tree ArgListNT with
           | SOME (t :: ts) => OPT_MMAP conv_Exp (t :: ts)
           | _ => NONE
           end) /\
-  (forall tree, @conv_FieldList a tree =
+  (forall tree, @conv_FieldList a L tree =
      match argsNT tree NmdFieldListNT with
      | SOME (t :: ts) => OPT_MMAP conv_Field (t :: ts)
      | _ => NONE
      end) /\
-  (forall tree, @conv_Field a tree =
+  (forall tree, @conv_Field a L tree =
      match argsNT tree NmdFieldNT with
      | SOME [t1; t2] =>
          OPTION_BIND (conv_ident t1) (fun fld =>
          OPTION_BIND (conv_Exp t2) (fun exp => SOME (fld, exp)))
      | _ => NONE
      end) /\
-  (forall nodeNT args, @conv_Exp a (Nd nodeNT args) =
+  (forall nodeNT args, @conv_Exp a L (Nd nodeNT args) =
     if isNT nodeNT EFieldNT then
       match args with
       | [] => NONE
@@ -565,7 +567,7 @@ Theorem conv_Exp_def {a} :
       | e :: es => OPTION_BIND (conv_Exp e) (conv_panops es)
       end
     else NONE) /\
-  (forall l, @conv_Exp a (Lf l) =
+  (forall l, @conv_Exp a L (Lf l) =
     let leaf := Lf l in
     if tokcheck leaf (kw BaseK) then SOME BaseAddr
     else if tokcheck leaf (kw TopK) then SOME TopAddr
@@ -573,8 +575,8 @@ Theorem conv_Exp_def {a} :
     else if tokcheck leaf (kw TrueK) then SOME (Const (n2w 1))
     else if tokcheck leaf (kw FalseK) then SOME (Const (n2w 0))
     else OPTION_CHOICE (conv_const leaf) (conv_var leaf)) /\
-  (forall e, @conv_binaryExps a [] e = SOME e) /\
-  (forall t1 t2 ts res, @conv_binaryExps a (t1 :: t2 :: ts) res =
+  (forall e, @conv_binaryExps a L [] e = SOME e) /\
+  (forall t1 t2 ts res, @conv_binaryExps a L (t1 :: t2 :: ts) res =
       OPTION_BIND (conv_binop t1) (fun op =>
       OPTION_BIND (conv_Exp t2) (fun e =>
       match res with
@@ -583,21 +585,21 @@ Theorem conv_Exp_def {a} :
           else conv_binaryExps ts (Op bop (APPEND es [e]))
       | e' => conv_binaryExps ts (Op op [e'; e])
       end))) /\
-  (forall t e, @conv_binaryExps a [t] e = NONE) /\
-  (forall e, @conv_panops a [] e = SOME e) /\
-  (forall t1 t2 ts res, @conv_panops a (t1 :: t2 :: ts) res =
+  (forall t e, @conv_binaryExps a L [t] e = NONE) /\
+  (forall e, @conv_panops a L [] e = SOME e) /\
+  (forall t1 t2 ts res, @conv_panops a L (t1 :: t2 :: ts) res =
       OPTION_BIND (conv_panop t1) (fun op =>
       OPTION_BIND (conv_Exp t2) (fun e =>
       match res with
       | Panop bop es => conv_panops ts (Panop op [res; e])
       | e' => conv_panops ts (Panop op [e'; e])
       end))) /\
-  (forall t e, @conv_panops a [t] e = NONE) /\
-  (forall e, @conv_shifts a [] e = SOME e) /\
-  (forall t1 t2 ts res, @conv_shifts a (t1 :: t2 :: ts) res =
+  (forall t e, @conv_panops a L [t] e = NONE) /\
+  (forall e, @conv_shifts a L [] e = SOME e) /\
+  (forall t1 t2 ts res, @conv_shifts a L (t1 :: t2 :: ts) res =
       OPTION_BIND (conv_shift t1) (fun op =>
       OPTION_BIND (conv_Exp t2) (fun e => conv_shifts ts (Shift op res e)))) /\
-  (forall t e, @conv_shifts a [t] e = NONE).
+  (forall t e, @conv_shifts a L [t] e = NONE).
 Proof.
   repeat split; intros; try reflexivity; destruct tree as [p|p l]; try reflexivity;
     unfold argsNT, conv_ArgList, conv_ArgList_with, conv_FieldList, conv_FieldList_with,
@@ -609,7 +611,7 @@ Qed.
 (** ** Statements *)
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_NonRecStmt_def" *)
-Definition conv_NonRecStmt {a} (t : ptree) : option (prog a) :=
+Definition conv_NonRecStmt {a L} (t : parsetree token pancakeNT L) : option (prog a) :=
   match t with
   | Nd nodeNT args =>
     if isNT nodeNT AssignNT then
@@ -742,7 +744,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "parsetree_locs_def" *)
-Definition parsetree_locs (tree : ptree) : locn * locn :=
+Definition parsetree_locs {A B} (tree : parsetree A B locs) : locn * locn :=
   match tree with
   | Nd (_, Locs p1 p2) _ => (p1, p2)
   | Lf (_, Locs p1 p2) => (p1, p2)
@@ -762,7 +764,7 @@ Definition locs_comment (p : locn * locn) : mlstring :=
   concat [strlit "("; posn_string p1; strlit " "; posn_string p2; strlit ")"].
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "add_locs_annot_def" *)
-Definition add_locs_annot {a} (ptree : ptree) (prog : prog a) : panLang.prog a :=
+Definition add_locs_annot {a A B} (ptree : parsetree A B locs) (prog : prog a) : panLang.prog a :=
   Seq (Annot (strlit "location") (locs_comment (parsetree_locs ptree))) prog.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_Dec_def" *)
@@ -798,7 +800,7 @@ Definition conv_GlobalDec {a} (t : ptree) : option (shape * (mlstring * exp a)) 
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_ExnDec_def" *)
-Definition conv_ExnDec (tree : ptree) : option (mlstring * shape) :=
+Definition conv_ExnDec {L} (tree : parsetree token pancakeNT L) : option (mlstring * shape) :=
   match argsNT tree ExnDecNT with
   | SOME [id; sh] =>
       OPTION_BIND (conv_ident id) (fun eid =>
@@ -826,7 +828,7 @@ Definition conv_DecCall {a} (t : ptree)
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_Ret_def" *)
-Definition conv_Ret (tree : ptree) : option (option (option (varkind * mlstring))) :=
+Definition conv_Ret {L} (tree : parsetree token pancakeNT L) : option (option (option (varkind * mlstring))) :=
   if tokcheck tree (kw RetK) then SOME NONE
   else if tokcheck tree NotT then SOME (SOME NONE)
   else
@@ -1027,7 +1029,7 @@ Qed.
 (** ** Declarations *)
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_inline_def" *)
-Definition conv_inline (tree : ptree) : option bool :=
+Definition conv_inline {B L} (tree : parsetree token B L) : option bool :=
   match OPTION_BIND (destLf tree) destTOK with
   | SOME (KeywordT InlineK) => SOME true
   | SOME NoinlineT => SOME false
@@ -1035,7 +1037,7 @@ Definition conv_inline (tree : ptree) : option bool :=
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_export_def" *)
-Definition conv_export (tree : ptree) : option bool :=
+Definition conv_export {B L} (tree : parsetree token B L) : option bool :=
   match OPTION_BIND (destLf tree) destTOK with
   | SOME (KeywordT ExportK) => SOME true
   | SOME StaticT => SOME false
@@ -1043,7 +1045,7 @@ Definition conv_export (tree : ptree) : option bool :=
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "conv_FieldNameList_def" *)
-Definition conv_FieldNameList (tree : ptree) : option (list (mlstring * shape)) :=
+Definition conv_FieldNameList {L} (tree : parsetree token pancakeNT L) : option (list (mlstring * shape)) :=
   match argsNT tree FieldNameListNT with
   | SOME args => conv_params args
   | _ => NONE
@@ -1164,7 +1166,7 @@ Fixpoint collect_globals {a} (l : list (decl a)) : mlmap.map mlstring unit :=
   end.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "localise_exp_def" *)
-Fixpoint localise_exp {a} (ls : mlmap.map mlstring unit) (e : exp a) {struct e} : exp a :=
+Fixpoint localise_exp {a V} (ls : mlmap.map mlstring V) (e : exp a) {struct e} : exp a :=
   match e with
   | Var varkind varname =>
       match mlmap.lookup ls varname with
@@ -1185,7 +1187,7 @@ Fixpoint localise_exp {a} (ls : mlmap.map mlstring unit) (e : exp a) {struct e} 
   end.
 
 (** HOL's [localise_exps] (defined mutually with [localise_exp]). *)
-Definition localise_exps {a} (ls : mlmap.map mlstring unit) (es : list (exp a)) : list (exp a) :=
+Definition localise_exps {a V} (ls : mlmap.map mlstring V) (es : list (exp a)) : list (exp a) :=
   MAP (localise_exp ls) es.
 
 (*! HOL "cakeml/pancake/parser/panPtreeConversionScript.sml" "localise_prog_def" *)

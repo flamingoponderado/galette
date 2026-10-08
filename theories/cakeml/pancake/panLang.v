@@ -226,7 +226,7 @@ Abbreviation StandAloneCall h := (Call (Some (None, h))).
 (** ** Shapes *)
 
 (*! HOL "cakeml/pancake/panLangScript.sml" "is_wf_shape_def" *)
-Fixpoint is_wf_shape (ctxt : list (stcname * struct_info)) (sh : shape) : bool :=
+Fixpoint is_wf_shape {A} (ctxt : list (stcname * A)) (sh : shape) : bool :=
   match sh with
   | One => true
   | Comb shs => EVERY (is_wf_shape ctxt) shs
@@ -238,7 +238,7 @@ Fixpoint is_wf_shape (ctxt : list (stcname * struct_info)) (sh : shape) : bool :
   end.
 
 (*! HOL "cakeml/pancake/panLangScript.sml" "is_wf_flds_def" *)
-Fixpoint is_wf_flds (ctxt : list (stcname * struct_info)) (l : list (fldname * shape)) : bool :=
+Fixpoint is_wf_flds {A B} (ctxt : list (stcname * A)) (l : list (B * shape)) : bool :=
   match l with
   | [] => true
   | (fld, sh) :: flds => is_wf_shape ctxt sh && is_wf_flds ctxt flds

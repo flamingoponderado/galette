@@ -1766,3 +1766,165 @@ Proof.
 Qed.
 
 End FunFmap2.
+
+(** ** [MAP_KEYS]
+
+    HOL introduces [MAP_KEYS] by [new_specification] ([MAP_KEYS_def]); the
+    Galette definition looks up the chosen preimage of a key (HOL's [some]),
+    and the specification is proved.  Not executable. *)
+Section MapKeys.
+Context {K1 K2 V : Type} `{Inhabited K1}.
+
+Lemma MAP_KEYS_finite (f : K1 -> K2) (fm : fmap K1 V) :
+  exists l : list K2, forall k,
+    (fun k => if classical_dec (exists x, k = f x /\ x IN FDOM fm)
+              then FLOOKUP fm (select (fun x => k = f x /\ x IN FDOM fm)) else None) k <> None ->
+    In k l.
+Proof.
+  destruct (FLOOKUP_finite fm) as [l Hl]; exists (List.map f l); intros k; cbn.
+  destruct (classical_dec _) as [[x [-> Hx]]|]; [|tauto]. intros _. apply in_map, Hl, Hx.
+Qed.
+
+Definition MAP_KEYS (f : K1 -> K2) (fm : fmap K1 V) : fmap K2 V :=
+  mk_fmap (fun k => if classical_dec (exists x, k = f x /\ x IN FDOM fm)
+                    then FLOOKUP fm (select (fun x => k = f x /\ x IN FDOM fm)) else None)
+    (MAP_KEYS_finite f fm).
+
+Lemma FLOOKUP_MAP_KEYS_INJ_gen (f : K1 -> K2) (fm : fmap K1 V) D x :
+  INJ f D UNIV -> (forall y, y IN FDOM fm -> y IN D) -> x IN D ->
+  FLOOKUP (MAP_KEYS f fm) (f x) = FLOOKUP fm x.
+Proof.
+  intros [_ HI] HD Hx; cbn. destruct (classical_dec _) as [Ex|Nx].
+  - destruct (select_spec _ Ex) as [E Hy].
+    set (y := select _) in *.
+    replace y with x; [reflexivity|]. apply HI; [split; [exact Hx|apply HD, Hy]|exact E].
+  - destruct (FLOOKUP fm x) eqn:F; [|reflexivity].
+    exfalso; apply Nx; exists x; split; [reflexivity|]. change (FLOOKUP fm x <> None); rewrite F; discriminate.
+Qed.
+
+Lemma FLOOKUP_MAP_KEYS_none (f : K1 -> K2) (fm : fmap K1 V) k :
+  (forall x, x IN FDOM fm -> k <> f x) -> FLOOKUP (MAP_KEYS f fm) k = None.
+Proof.
+  intros N; cbn; destruct (classical_dec _) as [[x [E Hx]]|]; [|reflexivity].
+  exfalso; exact (N x Hx E).
+Qed.
+
+(*! HOL "HOL/src/finite_maps/finite_mapScript.sml" "MAP_KEYS_def" *)
+Theorem MAP_KEYS_def `{Inhabited V} : forall (f : K1 -> K2) (fm : fmap K1 V),
+  (FDOM (MAP_KEYS f fm) = IMAGE f (FDOM fm)) /\
+  (INJ f (FDOM fm) UNIV -> forall x, x IN FDOM fm -> FAPPLY (MAP_KEYS f fm) (f x) = FAPPLY fm x).
+Proof.
+  intros f fm; split.
+  - apply functional_extensionality; intros k; apply propositional_extensionality.
+    unfold FDOM, IMAGE; cbn. destruct (classical_dec _) as [Ex|Nx].
+    + split; [intros _; destruct Ex as [x [E Hx]]; exists x; split; assumption|].
+      intros _; exact (proj2 (select_spec _ Ex)).
+    + split; [tauto|]. intros [x [E Hx]]; exfalso; apply Nx; exists x; split; assumption.
+  - intros HI x Hx; unfold FAPPLY.
+    rewrite (FLOOKUP_MAP_KEYS_INJ_gen f fm (FDOM fm) x HI); auto.
+Qed.
+
+(*! HOL "HOL/src/finite_maps/finite_mapScript.sml" "MAP_KEYS_FEMPTY" *)
+Theorem MAP_KEYS_FEMPTY : forall f : K1 -> K2, MAP_KEYS f (FEMPTY : fmap K1 V) = FEMPTY.
+Proof.
+  intros f; apply fmap_ext; intros k; apply FLOOKUP_MAP_KEYS_none.
+  intros x Hx; exfalso; apply Hx; reflexivity.
+Qed.
+
+(*! HOL "HOL/src/finite_maps/finite_mapScript.sml" "FLOOKUP_MAP_KEYS" *)
+Theorem FLOOKUP_MAP_KEYS : forall (f : K1 -> K2) (m : fmap K1 V) k,
+  INJ f (FDOM m) UNIV ->
+  FLOOKUP (MAP_KEYS f m) k = OPTION_BIND (some (fun x => k = f x /\ x IN FDOM m)) (FLOOKUP m).
+Proof.
+  intros f m k _; cbn; unfold some; destruct (classical_dec _); reflexivity.
+Qed.
+
+(*! HOL "HOL/src/finite_maps/finite_mapScript.sml" "FLOOKUP_MAP_KEYS_MAPPED" *)
+Theorem FLOOKUP_MAP_KEYS_MAPPED : forall (f : K1 -> K2) (m : fmap K1 V) k,
+  INJ f UNIV UNIV -> FLOOKUP (MAP_KEYS f m) (f k) = FLOOKUP m k.
+Proof.
+  intros f m k HI; apply (FLOOKUP_MAP_KEYS_INJ_gen f m UNIV k HI); intros; exact I.
+Qed.
+
+Lemma FLOOKUP_MAP_KEYS_cases (f : K1 -> K2) (m : fmap K1 V) k :
+  INJ f UNIV UNIV ->
+  (exists x, k = f x /\ FLOOKUP (MAP_KEYS f m) k = FLOOKUP m x) \/
+  ((forall x, k <> f x) /\ FLOOKUP (MAP_KEYS f m) k = None).
+Proof.
+  intros HI; destruct (classical_dec (exists x, k = f x)) as [[x ->]|N].
+  - left; exists x; split; [reflexivity|apply FLOOKUP_MAP_KEYS_MAPPED, HI].
+  - right; split; [intros x E; apply N; exists x; exact E|].
+    apply FLOOKUP_MAP_KEYS_none; intros x _ E; apply N; exists x; exact E.
+Qed.
+
+(*! HOL "HOL/src/finite_maps/finite_mapScript.sml" "DRESTRICT_MAP_KEYS_IMAGE" *)
+Theorem DRESTRICT_MAP_KEYS_IMAGE : forall (f : K1 -> K2) (fm : fmap K1 V) s,
+  INJ f UNIV UNIV -> DRESTRICT (MAP_KEYS f fm) (IMAGE f s) = MAP_KEYS f (DRESTRICT fm s).
+Proof.
+  intros f fm s HI; apply fmap_ext; intros k.
+  rewrite FLOOKUP_DRESTRICT.
+  destruct (FLOOKUP_MAP_KEYS_cases f fm k HI) as [[x [-> E]]|[N E]].
+  - rewrite E, FLOOKUP_MAP_KEYS_MAPPED, FLOOKUP_DRESTRICT by exact HI.
+    destruct (classical_dec (f x IN IMAGE f s)) as [[y [Ey Hy]]|Ny];
+      destruct (classical_dec (x IN s)) as [Hx|Nx]; try reflexivity.
+    + destruct HI as [_ HI]. exfalso; apply Nx.
+      rewrite (HI x y); [exact Hy|split; exact I|exact Ey].
+    + exfalso; apply Ny; exists x; split; [reflexivity|exact Hx].
+  - rewrite (FLOOKUP_MAP_KEYS_none f (DRESTRICT fm s) k) by (intros x _; apply N).
+    destruct (classical_dec _) as [[y [Ey _]]|]; [exfalso; exact (N y Ey)|reflexivity].
+Qed.
+
+Context `{EqDecision K1} `{EqDecision K2}.
+
+(*! HOL "HOL/src/finite_maps/finite_mapScript.sml" "MAP_KEYS_FUPDATE" *)
+Theorem MAP_KEYS_FUPDATE : forall (f : K1 -> K2) (fm : fmap K1 V) k v,
+  INJ f (k INSERT FDOM fm) UNIV ->
+  MAP_KEYS f (fm |+ (k, v)) = (MAP_KEYS f fm) |+ (f k, v).
+Proof.
+  intros f fm k v HI; apply fmap_ext; intros k2.
+  rewrite FLOOKUP_UPDATE.
+  assert (HD1 : forall y, y IN FDOM (fm |+ (k, v)) -> y IN (k INSERT FDOM fm)).
+  { intros y Hy; change (FLOOKUP (fm |+ (k, v)) y <> None) in Hy; change (y = k \/ FLOOKUP fm y <> None); cbn in Hy.
+    destruct (decide (k = y)) as [->|]; [left; reflexivity|right; exact Hy]. }
+  assert (HD2 : forall y, y IN FDOM fm -> y IN (k INSERT FDOM fm)) by (intros y Hy; right; exact Hy).
+  destruct (classical_dec (exists x, x IN (k INSERT FDOM fm) /\ k2 = f x)) as [[x [Hx ->]]|N].
+  - rewrite (FLOOKUP_MAP_KEYS_INJ_gen f _ _ x HI HD1 Hx), FLOOKUP_UPDATE.
+    destruct (decide (f k = f x)) as [E|E].
+    + destruct HI as [_ HI]. rewrite (HI k x); [|split; [left; reflexivity|exact Hx]|exact E].
+      destruct (decide (x = x)); [reflexivity|contradiction].
+    + destruct (decide (k = x)) as [->|]; [contradiction|].
+      rewrite (FLOOKUP_MAP_KEYS_INJ_gen f _ _ x HI HD2 Hx); reflexivity.
+  - rewrite FLOOKUP_MAP_KEYS_none by (intros x Hx E; apply N; exists x; split; [apply HD1, Hx|exact E]).
+    destruct (decide (f k = k2)) as [E|E].
+    + exfalso; apply N; exists k; split; [left; reflexivity|symmetry; exact E].
+    + symmetry; apply FLOOKUP_MAP_KEYS_none.
+      intros x Hx E'; apply N; exists x; split; [apply HD2, Hx|exact E'].
+Qed.
+
+(*! HOL "HOL/src/finite_maps/finite_mapScript.sml" "DOMSUB_MAP_KEYS" *)
+Theorem DOMSUB_MAP_KEYS : forall (f : K1 -> K2) (fm : fmap K1 V) s,
+  BIJ f UNIV UNIV -> (MAP_KEYS f fm) \\ (f s) = MAP_KEYS f (fm \\ s).
+Proof.
+  intros f fm s [HI _]; apply fmap_ext; intros k.
+  rewrite DOMSUB_FLOOKUP_THM.
+  destruct (FLOOKUP_MAP_KEYS_cases f fm k HI) as [[x [-> E]]|[N E]].
+  - rewrite E, FLOOKUP_MAP_KEYS_MAPPED, DOMSUB_FLOOKUP_THM by exact HI.
+    destruct (decide (f s = f x)) as [E2|E2]; destruct (decide (s = x)) as [E3|Ne]; try reflexivity.
+    + destruct HI as [_ HI]. exfalso; apply Ne, HI; [split; exact I|exact E2].
+    + subst; contradiction.
+  - rewrite (FLOOKUP_MAP_KEYS_none f (fm \\ s) k) by (intros x _; apply N).
+    destruct (decide _); [reflexivity|exact E].
+Qed.
+
+End MapKeys.
+
+(*! HOL "HOL/src/finite_maps/finite_mapScript.sml" "MAP_KEYS_BIJ_LINV" *)
+Theorem MAP_KEYS_BIJ_LINV : forall {V} (f : num -> num) (t : fmap num V),
+  BIJ f UNIV UNIV -> MAP_KEYS f (MAP_KEYS (LINV f UNIV) t) = t.
+Proof.
+  intros V f t HB; apply fmap_ext; intros k.
+  pose proof (BIJ_LINV_INV f UNIV UNIV HB k I) as Ek.
+  pose proof (BIJ_LINV_BIJ f UNIV UNIV HB) as [HIg _].
+  rewrite <- Ek at 1. rewrite FLOOKUP_MAP_KEYS_MAPPED by (destruct HB; assumption).
+  rewrite FLOOKUP_MAP_KEYS_MAPPED by exact HIg. reflexivity.
+Qed.

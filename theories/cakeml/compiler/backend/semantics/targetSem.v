@@ -145,8 +145,8 @@ Definition read_ffi_bytearrays (mc : machine_config a B C) (ms : B)
    read_ffi_bytearray mc mc.(ptr2_reg) mc.(len2_reg) ms).
 
 (*! HOL "cakeml/compiler/backend/semantics/targetSemScript.sml" "is_valid_mapped_read_def" *)
-Definition is_valid_mapped_read (pc0 : word a) (nb : word8) (ad : asm.addr a) (r : N)
-    (pc' : word a) (t : asmProps.target a B C) (ms : B) (md : word a -> Prop) : Prop :=
+Definition is_valid_mapped_read {P} (pc0 : word a) (nb : word8) (ad : asm.addr a) (r : N)
+    (pc' : P) (t : asmProps.target a B C) (ms : B) (md : word a -> Prop) : Prop :=
   if decide (nb = n2w 1)
   then
     (bytes_in_memory pc0 (encode (config t) (Inst (Mem Load8 r ad)))
@@ -166,8 +166,8 @@ Definition is_valid_mapped_read (pc0 : word a) (nb : word8) (ad : asm.addr a) (r
   else False.
 
 (*! HOL "cakeml/compiler/backend/semantics/targetSemScript.sml" "is_valid_mapped_write_def" *)
-Definition is_valid_mapped_write (pc0 : word a) (nb : word8) (ad : asm.addr a) (r : N)
-    (pc' : word a) (t : asmProps.target a B C) (ms : B) (md : word a -> Prop) : Prop :=
+Definition is_valid_mapped_write {P} (pc0 : word a) (nb : word8) (ad : asm.addr a) (r : N)
+    (pc' : P) (t : asmProps.target a B C) (ms : B) (md : word a -> Prop) : Prop :=
   if decide (nb = n2w 1)
   then
     (bytes_in_memory pc0 (encode (config t) (Inst (Mem Store8 r ad)))

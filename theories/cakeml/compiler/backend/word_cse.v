@@ -65,7 +65,7 @@ Definition empty_data : knowledge :=
 #[global] Instance knowledge_inhabited : Inhabited knowledge := empty_data.
 
 (*! HOL "cakeml/compiler/backend/word_cseScript.sml" "keep_data_def" *)
-Definition keep_data (canon : num_map N) (write_to_reg : N) : bool :=
+Definition keep_data {A} (canon : num_map A) (write_to_reg : N) : bool :=
   IS_NONE (lookup write_to_reg canon).
 
 (*! HOL "cakeml/compiler/backend/word_cseScript.sml" "invalidate_data_def" *)
@@ -462,8 +462,8 @@ End Cse2.
 (** ** If-join merge *)
 
 (*! HOL "cakeml/compiler/backend/word_cseScript.sml" "bm_inter_eq_acc_def" *)
-Fixpoint bm_inter_eq_acc (m2 m1 acc : balanced_map.balanced_map (list N) N)
-    : balanced_map.balanced_map (list N) N :=
+Fixpoint bm_inter_eq_acc {A} `{EqDecision A} (m2 m1 acc : balanced_map.balanced_map (list N) A)
+    : balanced_map.balanced_map (list N) A :=
   match m1 with
   | balanced_map.Tip => acc
   | balanced_map.Bin n k v l r =>
@@ -475,8 +475,8 @@ Fixpoint bm_inter_eq_acc (m2 m1 acc : balanced_map.balanced_map (list N) N)
   end.
 
 (*! HOL "cakeml/compiler/backend/word_cseScript.sml" "bm_inter_eq_def" *)
-Definition bm_inter_eq (m1 m2 : balanced_map.balanced_map (list N) N)
-    : balanced_map.balanced_map (list N) N :=
+Definition bm_inter_eq {A} `{EqDecision A} (m1 m2 : balanced_map.balanced_map (list N) A)
+    : balanced_map.balanced_map (list N) A :=
   bm_inter_eq_acc m2 m1 balanced_map.empty.
 
 (*! HOL "cakeml/compiler/backend/word_cseScript.sml" "merge_data_def" *)

@@ -228,8 +228,8 @@ Definition ref_assign {S} (n : N) (x : S) : list S -> list S :=
   fun s => LUPDATE x (LENGTH s - n - 1) s.
 
 (*! HOL "cakeml/translator/monadic/monad_base/ml_monadBaseScript.sml" "ref_bind_def" *)
-Definition ref_bind {S A B E} (create : M S A E) (f : A -> M S B E)
-    (pop : exc B E * S -> exc B E * S) : M S B E :=
+Definition ref_bind {S0 S A B E R} (create : S0 -> exc A E * S) (f : A -> S -> R)
+    (pop : R -> exc B E * S) : S0 -> exc B E * S :=
   fun s =>
     match create s with
     | (M_success x, s) => pop (f x s)

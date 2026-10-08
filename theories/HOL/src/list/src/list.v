@@ -312,3 +312,30 @@ Proof.
   intros e n x l; cbn [LUPDATE]; destruct (N.eqb_spec (SUC n) 0); [lia|].
   rewrite N.pred_succ; reflexivity.
 Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "isPREFIX_REFL" *)
+Theorem isPREFIX_REFL : forall {A} `{EqDecision A} (x : list A), isPREFIX x x.
+Proof.
+  intros A EA x; induction x as [|h x IH]; cbn; [reflexivity|].
+  unfold is_true in *; rewrite IH, Bool.andb_true_r; apply bool_decide_spec; reflexivity.
+Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "isPREFIX_TRANS" *)
+Theorem isPREFIX_TRANS : forall {A} `{EqDecision A} (x y z : list A),
+  isPREFIX x y /\ isPREFIX y z -> isPREFIX x z.
+Proof.
+  intros A EA x; induction x as [|h x IH]; intros [|h' y] [|h'' z] [H1 H2]; cbn in *;
+    unfold is_true in *; try reflexivity; try discriminate.
+  rewrite Bool.andb_true_iff in *. destruct H1 as [E1 H1], H2 as [E2 H2].
+  apply bool_decide_spec in E1, E2; subst.
+  split; [apply bool_decide_spec; reflexivity|apply (IH y); split; assumption].
+Qed.
+
+(*! HOL "HOL/src/list/src/listScript.sml" "GENLIST_APPEND" *)
+Theorem GENLIST_APPEND : forall {A} (f : N -> A) a b,
+  GENLIST f (a + b) = GENLIST f b ++ GENLIST (fun t => f (t + b)) a.
+Proof.
+  intros A f a b; induction a as [|a IH] using N.peano_ind.
+  - rewrite N.add_0_l, app_nil_r; reflexivity.
+  - rewrite N.add_succ_l, !(proj2 (GENLIST_thm _ _)), !SNOC_app, IH, app_assoc; reflexivity.
+Qed.

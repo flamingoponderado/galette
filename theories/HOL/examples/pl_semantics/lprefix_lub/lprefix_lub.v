@@ -316,3 +316,19 @@ Proof.
 Qed.
 
 End Thms.
+
+Section PrefixChain.
+Context {A : Type} `{EqDecision A} `{Inhabited A}.
+
+(*! HOL "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml" "prefix_chain_def" *)
+Definition prefix_chain (ls : list A -> Prop) : Prop :=
+  forall l1 l2, l1 IN ls /\ l2 IN ls -> isPREFIX l1 l2 \/ isPREFIX l2 l1.
+
+(*! HOL "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml" "prefix_chain_lprefix_chain" *)
+Theorem prefix_chain_lprefix_chain : forall ls, prefix_chain ls -> lprefix_chain (IMAGE fromList ls).
+Proof.
+  intros ls Hc ll1 ll2 [[l1 [-> H1]] [l2 [-> H2]]].
+  rewrite !LPREFIX_fromList, !toList_fromList. apply Hc; split; assumption.
+Qed.
+
+End PrefixChain.

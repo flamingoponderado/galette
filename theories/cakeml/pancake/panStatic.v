@@ -808,7 +808,7 @@ Fixpoint check_struct_fields (ctxt : context) (sname : stcname)
 
 (** HOL [check_shape] (with the nested [check_shapes]); see
     [check_shape_def]. *)
-Fixpoint check_shape (sctxt : list (stcname * struct_info)) (loc : mlstring) (scope : scope)
+Fixpoint check_shape {A} (sctxt : list (stcname * A)) (loc : mlstring) (scope : scope)
     (sh : shape) {struct sh} : static_result unit :=
   match sh with
   | One => return_ tt
@@ -827,7 +827,7 @@ Fixpoint check_shape (sctxt : list (stcname * struct_info)) (loc : mlstring) (sc
       end
   end.
 
-Fixpoint check_shapes (sctxt : list (stcname * struct_info)) (loc : mlstring) (scope : scope)
+Fixpoint check_shapes {A} (sctxt : list (stcname * A)) (loc : mlstring) (scope : scope)
     (shs : list shape) : static_result unit :=
   match shs with
   | [] => return_ tt
@@ -837,7 +837,7 @@ Fixpoint check_shapes (sctxt : list (stcname * struct_info)) (loc : mlstring) (s
   end.
 
 (*! HOL "cakeml/pancake/panStaticScript.sml" "check_shape_def" *)
-Theorem check_shape_def : forall sctxt loc scope shs nm sh,
+Theorem check_shape_def {A} : forall (sctxt : list (stcname * A)) loc scope shs nm sh,
   check_shape sctxt loc scope One = return_ tt /\
   check_shape sctxt loc scope (Comb shs) = check_shapes sctxt loc scope shs /\
   check_shape sctxt loc scope (Named nm) =
@@ -856,7 +856,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/pancake/panStaticScript.sml" "check_id_shapes_def" *)
-Fixpoint check_id_shapes (sctxt : list (stcname * struct_info)) (loc : mlstring)
+Fixpoint check_id_shapes {A} (sctxt : list (stcname * A)) (loc : mlstring)
     (scope : scope) (l : list (mlstring * shape)) : static_result unit :=
   match l with
   | [] => return_ tt

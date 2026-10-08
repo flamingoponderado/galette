@@ -56,7 +56,7 @@ Section Defs.
 Context {a : N}.
 
 (*! HOL "cakeml/pancake/pan_to_crepScript.sml" "cexp_heads_def" *)
-Fixpoint cexp_heads (l : list (list (exp a))) : option (list (exp a)) :=
+Fixpoint cexp_heads {A} (l : list (list A)) : option (list A) :=
   match l with
   | [] => Some []
   | e :: es =>
@@ -151,7 +151,7 @@ Fixpoint compile_exp (ctxt : context a) (e : panLang.exp a) : list (exp a) * sha
   end.
 
 (*! HOL "cakeml/pancake/pan_to_crepScript.sml" "exp_hdl_def" *)
-Definition exp_hdl (fm : fmap panLang.varname (shape * list N)) (v : panLang.varname) : prog a :=
+Definition exp_hdl {K S} (fm : fmap K (S * list N)) (v : K) : prog a :=
   match FLOOKUP fm v with
   | None => Skip
   | Some (vshp, ns) => nested_seq (MAP2 Assign ns (load_globals (n2w 0) (LENGTH ns)))
@@ -160,7 +160,7 @@ Definition exp_hdl (fm : fmap panLang.varname (shape * list N)) (v : panLang.var
 End Defs.
 
 (*! HOL "cakeml/pancake/pan_to_crepScript.sml" "ret_var_def" *)
-Definition ret_var (sh : shape) (ns : list N) : option N :=
+Definition ret_var {A} (sh : shape) (ns : list A) : option A :=
   match sh with
   | One => oHD ns
   | Comb sh => if decide (size_of_shape (Comb sh) = 1) then oHD ns else None
@@ -181,7 +181,7 @@ Definition ret_hdl (sh : shape) (ns : list N) : prog a :=
 End Defs2.
 
 (*! HOL "cakeml/pancake/pan_to_crepScript.sml" "wrap_rt_def" *)
-Definition wrap_rt (n : option (shape * list N)) : option (shape * list N) :=
+Definition wrap_rt {A} (n : option (shape * list A)) : option (shape * list A) :=
   match n with
   | None => None
   | Some (One, []) => None
@@ -383,8 +383,8 @@ Definition mk_ctxt (vmap : fmap panLang.varname (shape * list N))
   {| vars := vmap; funcs := fs; eids := es; vmax := m |}.
 
 (*! HOL "cakeml/pancake/pan_to_crepScript.sml" "make_vmap_def" *)
-Definition make_vmap (params : list (panLang.varname * shape))
-    : fmap panLang.varname (shape * list N) :=
+Definition make_vmap {K} `{EqDecision K} (params : list (K * shape))
+    : fmap K (shape * list N) :=
   let pvars := MAP FST params in
   let shs := MAP SND params in
   let ns := GENLIST combin.I (size_of_shape (Comb shs)) in
@@ -408,9 +408,8 @@ Definition get_eids_from_decls (decls : list (decl a)) : fmap panLang.eid (word 
   alist_to_fmap es.
 
 (*! HOL "cakeml/pancake/pan_to_crepScript.sml" "make_funcs_def" *)
-Definition make_funcs
-    (prog : list (panLang.funname * (list (panLang.varname * shape) * (panLang.prog a * shape))))
-    : fmap panLang.funname (list (panLang.varname * shape) * shape) :=
+Definition make_funcs {A B C D} `{EqDecision A} (prog : list (A * (B * (C * D))))
+    : fmap A (B * D) :=
   let fnames := MAP FST prog in
   let params := MAP (FST ∘ SND) prog in
   let returns := MAP (SND ∘ SND ∘ SND) prog in
@@ -418,7 +417,7 @@ Definition make_funcs
   alist_to_fmap fs.
 
 (*! HOL "cakeml/pancake/pan_to_crepScript.sml" "crep_vars_def" *)
-Definition crep_vars (params : list (panLang.varname * shape)) : list N :=
+Definition crep_vars {K} (params : list (K * shape)) : list N :=
   let shapes := MAP SND params in
   let len := size_of_shape (Comb shapes) in
   GENLIST combin.I len.

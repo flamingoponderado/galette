@@ -1901,6 +1901,26 @@
  },
  {
   "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "prefix_chain_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "prefix_chain"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "prefix_chain_lprefix_chain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "prefix_chain_lprefix_chain"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
   "hol_name": "unique_lprefix_lub",
   "hol_line": null,
   "case": null,
@@ -3231,6 +3251,16 @@
  },
  {
   "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
+  "hol_name": "DOMSUB_MAP_KEYS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
+  "rocq_name": "DOMSUB_MAP_KEYS"
+ },
+ {
+  "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
   "hol_name": "DOMSUB_NOT_IN_DOM",
   "hol_line": null,
   "case": null,
@@ -3368,6 +3398,16 @@
   "note": "reviewer: compared with finite_mapScript.sml; fmap as lookup+finiteness, sets as K -> Prop, HOL if on equality/FDOM via decide and on arbitrary sets via classical_dec, FAPPLY = THE (FLOOKUP) (ARB outside domain, uniform like HOL)",
   "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
   "rocq_name": "DRESTRICT_IS_FEMPTY"
+ },
+ {
+  "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
+  "hol_name": "DRESTRICT_MAP_KEYS_IMAGE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
+  "rocq_name": "DRESTRICT_MAP_KEYS_IMAGE"
  },
  {
   "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
@@ -3888,6 +3928,26 @@
   "note": "reviewer: compared with finite_mapScript.sml; fmap as lookup+finiteness, sets as K -> Prop, HOL if on equality/FDOM via decide and on arbitrary sets via classical_dec, FAPPLY = THE (FLOOKUP) (ARB outside domain, uniform like HOL)",
   "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
   "rocq_name": "FLOOKUP_FUN_FMAP"
+ },
+ {
+  "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
+  "hol_name": "FLOOKUP_MAP_KEYS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
+  "rocq_name": "FLOOKUP_MAP_KEYS"
+ },
+ {
+  "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
+  "hol_name": "FLOOKUP_MAP_KEYS_MAPPED",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
+  "rocq_name": "FLOOKUP_MAP_KEYS_MAPPED"
  },
  {
   "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
@@ -4418,6 +4478,46 @@
   "note": "reviewer: compared with finite_mapScript.sml; FAPPLY needs Inhabited (THE of FLOOKUP), sets as predicates, if-IN as decide; LEAST over num predicate (While.v)",
   "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
   "rocq_name": "LEAST_NOTIN_FDOM"
+ },
+ {
+  "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
+  "hol_name": "MAP_KEYS_BIJ_LINV",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
+  "rocq_name": "MAP_KEYS_BIJ_LINV"
+ },
+ {
+  "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
+  "hol_name": "MAP_KEYS_FEMPTY",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
+  "rocq_name": "MAP_KEYS_FEMPTY"
+ },
+ {
+  "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
+  "hol_name": "MAP_KEYS_FUPDATE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
+  "rocq_name": "MAP_KEYS_FUPDATE"
+ },
+ {
+  "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
+  "hol_name": "MAP_KEYS_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/finite_maps/finite_map.v",
+  "rocq_name": "MAP_KEYS_def"
  },
  {
   "hol_path": "HOL/src/finite_maps/finite_mapScript.sml",
@@ -7921,6 +8021,16 @@
  },
  {
   "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "GENLIST_APPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "GENLIST_APPEND"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
   "hol_name": "HD",
   "hol_line": null,
   "case": null,
@@ -8258,6 +8368,26 @@
   "note": "coordinator 2026-10-08: compared with listScript; same equations/clauses. HOL partial functions (HD, LAST) give ARB outside their domain; HOL 'if t = []' rendered as a match on t; LENGTH/EL/TAKE/DROP/GENLIST/LUPDATE over num = N (num_rec definitions with HOL equations as tagged theorems)",
   "rocq_path": "theories/HOL/src/list/src/list.v",
   "rocq_name": "isPREFIX"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "isPREFIX_REFL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "isPREFIX_REFL"
+ },
+ {
+  "hol_path": "HOL/src/list/src/listScript.sml",
+  "hol_name": "isPREFIX_TRANS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/list.v",
+  "rocq_name": "isPREFIX_TRANS"
  },
  {
   "hol_path": "HOL/src/list/src/listScript.sml",
@@ -31691,6 +31821,76 @@
  },
  {
   "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "RTC_asm_step_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "RTC_asm_step_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "RTC_asm_step_outside_mem_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "RTC_asm_step_outside_mem_domain"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "SND_read_mem_word_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "SND_read_mem_word_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "all_pcs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "all_pcs_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "all_pcs_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "all_pcs_thm"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "arith_upd_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "arith_upd_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asm_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asm_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
   "hol_name": "asm_deterministic",
   "hol_line": null,
   "case": null,
@@ -31698,6 +31898,136 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
   "rocq_name": "asm_deterministic"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asm_failed_ignore_new_pc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asm_failed_ignore_new_pc"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asm_mem_ignore_new_pc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asm_mem_ignore_new_pc"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asm_outside_mem_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asm_outside_mem_domain"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asm_step_outside_mem_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asm_step_outside_mem_domain"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asserts2_change_interfer",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asserts2_change_interfer"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asserts2_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asserts2_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asserts2_first",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asserts2_first"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asserts_IMP_FOLDR_COUNT_LIST",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asserts_IMP_FOLDR_COUNT_LIST"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asserts_IMP_FOLDR_COUNT_LIST_LESS",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asserts_IMP_FOLDR_COUNT_LIST_LESS"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asserts_WEAKEN",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asserts_WEAKEN"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asserts_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asserts_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "binop_upd_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "binop_upd_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "bytes_in_memory_all_pcs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "bytes_in_memory_all_pcs"
  },
  {
   "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
@@ -31711,6 +32041,36 @@
  },
  {
   "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "encoder_correct_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "encoder_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "fp_upd_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "fp_upd_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "inst_outside_mem_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "inst_outside_mem_domain"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
   "hol_name": "interference_ok_def",
   "hol_line": null,
   "case": null,
@@ -31721,6 +32081,16 @@
  },
  {
   "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "mem_op_outside_mem_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "mem_op_outside_mem_domain"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
   "hol_name": "offset_monotonic_def",
   "hol_line": null,
   "case": null,
@@ -31728,6 +32098,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
   "rocq_name": "offset_monotonic"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "read_bytearray_IMP_bytes_in_memory",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "read_bytearray_IMP_bytes_in_memory"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "read_mem_word_IMP_mem_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "read_mem_word_IMP_mem_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "sym_target_state_rel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "sym_target_state_rel"
  },
  {
   "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
@@ -31758,6 +32158,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
   "rocq_name": "target_state_rel"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "upd_pc_simps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "upd_pc_simps"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "write_mem_word_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "write_mem_word_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "write_mem_word_mem_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "write_mem_word_mem_domain"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "write_mem_word_mem_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "write_mem_word_mem_eq"
  },
  {
   "hol_path": "cakeml/compiler/encoders/asm/asmScript.sml",

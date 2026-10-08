@@ -531,6 +531,10 @@ Definition canonize_move (x y : N) : RA (N * N) :=
   else st_ex_return (y, x).
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "st_ex_FIRST_def" *)
+(** HOL's move priority component is a type variable ['a]; here it is
+    [N] (the only instance used by the compiler), because the committed
+    statements in [reg_allocProof] (heuristics.v) quantify over the move list
+    without a type annotation and would no longer elaborate. *)
 Fixpoint st_ex_FIRST {B} (P : N -> N -> RA bool) (Q : N -> N -> RA (option B))
     (l : list (N * (N * N))) (unavail : list (N * (N * N)))
     : RA (option ((N * N) * (B * list (N * (N * N)))) * list (N * (N * N))) :=
@@ -580,6 +584,10 @@ Definition do_coalesce (k : N) : RA bool :=
   end.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "reset_move_related_def" *)
+(** HOL's move priority component is a type variable ['a]; here it is
+    [N] (the only instance used by the compiler), because the committed
+    statements in [reg_allocProof] (heuristics.v) quantify over the move list
+    without a type annotation and would no longer elaborate. *)
 Definition reset_move_related (ls : list (N * (N * N))) : RA unit :=
   d <- get_dim ;;
   st_ex_FOREACH (COUNT_LIST d) (fun x => update_move_related x false) ;;
@@ -960,7 +968,7 @@ Definition sp_default (t : num_map N) (i : N) : N :=
   end.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "extend_graph_def" *)
-Fixpoint extend_graph (ta : N -> N) (l : list (N * N)) : RA unit :=
+Fixpoint extend_graph {A} (ta : A -> N) (l : list (A * A)) : RA unit :=
   match l with
   | [] => st_ex_return tt
   | (x, y) :: xs => insert_edge (ta x) (ta y) ;; extend_graph ta xs
@@ -1016,21 +1024,21 @@ Definition extract_color (ta : num_map N) : RA (num_map N) :=
   st_ex_return (fromAList itags).
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "pri_move_insert_def" *)
-Definition pri_move_insert {A} (p : N) (x : N) (y : A) (acc : num_map (list (N * A)))
-    : num_map (list (N * A)) :=
+Definition pri_move_insert {A B} (p : A) (x : N) (y : B) (acc : num_map (list (A * B)))
+    : num_map (list (A * B)) :=
   match lookup x acc with
   | None => insert x [(p, y)] acc
   | Some ls => insert x ((p, y) :: ls) acc
   end.
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "undir_move_insert_def" *)
-Definition undir_move_insert (p x y : N) (acc : num_map (list (N * N)))
-    : num_map (list (N * N)) :=
+Definition undir_move_insert {A} (p : A) (x y : N) (acc : num_map (list (A * N)))
+    : num_map (list (A * N)) :=
   pri_move_insert p x y (pri_move_insert p y x acc).
 
 (*! HOL "cakeml/compiler/backend/reg_alloc/reg_allocScript.sml" "moves_to_sp_def" *)
-Fixpoint moves_to_sp (l : list (N * (N * N))) (acc : num_map (list (N * N)))
-    : num_map (list (N * N)) :=
+Fixpoint moves_to_sp {A} (l : list (A * (N * N))) (acc : num_map (list (A * N)))
+    : num_map (list (A * N)) :=
   match l with
   | [] => acc
   | move :: xs =>

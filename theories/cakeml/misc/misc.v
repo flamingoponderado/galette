@@ -461,7 +461,7 @@ Fixpoint bytes_in_memory (w : word a) (l : list word8) (m : word a -> word8)
   end.
 
 (*! HOL "cakeml/misc/miscScript.sml" "bytes_in_mem_def" *)
-Fixpoint bytes_in_mem (w : word a) (l : list word8) (m : word a -> word8)
+Fixpoint bytes_in_mem {B} (w : word a) (l : list B) (m : word a -> B)
   (md k : word a -> Prop) : Prop :=
   match l with
   | [] => True

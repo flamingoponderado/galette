@@ -87,7 +87,7 @@ Definition remove_unreach (e : prog a) : prog a := Seq_assoc_right e Skip.
 End Unreach.
 
 (*! HOL "cakeml/compiler/backend/word_unreachScript.sml" "remove_unreach_test" *)
-Theorem remove_unreach_test :
-  remove_unreach (Seq (Move 1 [(1, 11); (2, 22); (3, 33)]) (Move 1 [(3, 1); (2, 99)]) : prog 64)
+Theorem remove_unreach_test {a : N} :
+  remove_unreach (Seq (Move 1 [(1, 11); (2, 22); (3, 33)]) (Move 1 [(3, 1); (2, 99)]) : prog a)
   = Move 1 [(3, 11); (2, 99); (1, 11)].
 Proof. reflexivity. Qed.
