@@ -1363,3 +1363,217 @@ Proof.
 Qed.
 
 End Props4.
+
+Section Props5.
+Context {a : N} {ffi_t : Type}.
+Implicit Types s t : state a ffi_t.
+
+Lemma io_whole (p : prog a) s q u :
+  evaluate (p, s) = (q, u) -> is_true (isPREFIX (io_events (ffi s)) (io_events (ffi u))).
+Proof. apply evaluate_io_events_mono. Qed.
+
+Lemma io_cut l r s r' s' : cut_res l (r, s) = (r', s') -> io_events (ffi s') = io_events (ffi s).
+Proof. intros H. rewrite (cut_res_ffi _ _ _ _ _ H). reflexivity. Qed.
+
+(*! HOL "cakeml/pancake/semantics/loopPropsScript.sml" "evaluate_add_clock_io_events_mono" *)
+Theorem evaluate_add_clock_io_events_mono : forall (exps : prog a) s extra,
+  is_true (isPREFIX (io_events (ffi (snd (evaluate (exps, s)))))
+    (io_events (ffi (snd (evaluate (exps, set_clock (clock s + extra) s)))))).
+Proof.
+  enough (G : forall x : prog a * state a ffi_t, forall extra,
+            is_true (isPREFIX (io_events (ffi (snd (evaluate x))))
+              (io_events (ffi (snd (evaluate (fst x, set_clock (clock (snd x) + extra) (snd x))))))))
+    by (intros p s extra; exact (G (p, s) extra)).
+  intros x; induction x as [[p s] IH] using (well_founded_induction eval_lt_wf).
+  intros e; cbn [fst snd].
+  assert (IH' : forall p' s', eval_lt (p', s') (p, s) -> forall e r t q u,
+             evaluate (p', s') = (r, t) -> evaluate (p', set_clock (clock s' + e) s') = (q, u) ->
+             is_true (isPREFIX (io_events (ffi t)) (io_events (ffi u)))).
+  { intros p' s' Hlt e' r t q u E1 E2. pose proof (IH (p', s') Hlt e') as G.
+    cbn [fst snd] in G. rewrite E1, E2 in G. exact G. }
+  clear IH.
+  destruct (evaluate (p, s)) as [r t] eqn:H.
+  destruct (decide (r = SOME TimeOut)) as [->|Hr].
+  2: { rewrite (evaluate_add_clock_eq p s r t e (conj H Hr)). cbn [snd ffi set_clock].
+       apply pre_refl. }
+  cbn [snd].
+  destruct (evaluate (p, set_clock (clock s + e) s)) as [q u] eqn:H2. cbn [snd].
+  pose proof (io_whole _ _ _ _ H2) as Hw. cbn [ffi set_clock] in Hw.
+  assert (Hnt : forall {B} (x : B), (NONE : option (result a)) <> SOME TimeOut) by discriminate.
+  destruct p as [ | | | | | | | | | | p1 p2 | c n ri p1 p2 live | li body lo | | | | | | | p | | |
+                 ret dest args handler | ];
+    unfold_eval_in H; unfold_eval_in H2.
+  - (* Skip *) injection H as Hx _; discriminate.
+  - (* Assign *) split_eval H; injection H as Hx _; discriminate.
+  - (* Primitive *) split_eval H; injection H as Hx _; discriminate.
+  - (* Arith *) split_eval H; injection H as Hx _; discriminate.
+  - (* Store *) split_eval H; injection H as Hx _; discriminate.
+  - (* SetGlobal *) split_eval H; injection H as Hx _; discriminate.
+  - (* Load32 *) split_eval H; injection H as Hx _; discriminate.
+  - (* LoadByte *) split_eval H; injection H as Hx _; discriminate.
+  - (* Store32 *) split_eval H; injection H as Hx _; discriminate.
+  - (* StoreByte *) split_eval H; injection H as Hx _; discriminate.
+  - (* Seq *)
+    destruct (evaluate (p1, s)) as [r1 s1] eqn:E1.
+    destruct r1 as [r1|].
+    + injection H as -> <-.
+      destruct (evaluate (p1, set_clock (clock s + e) s)) as [r1' s1'] eqn:E1'.
+      pose proof (IH' p1 s ltac:(prove_lt) e _ _ _ _ E1 E1') as P1.
+      destruct r1' as [r1'|]; [injection H2 as _ <-; exact P1|].
+      eapply pre_trans; [exact P1|exact (io_whole _ _ _ _ H2)].
+    + rewrite (evaluate_add_clock_eq p1 s NONE s1 e (conj E1 (Hnt _ tt))) in H2.
+      cbv beta iota in H2.
+      exact (IH' p2 s1 ltac:(prove_lt) e _ _ _ _ H H2).
+  - (* If *)
+    cbn [locals set_clock get_var_imm] in H2.
+    destruct (lookup n (locals s)) as [[x|]|]; try (injection H as Hx _; discriminate).
+    replace (get_var_imm ri (set_clock (clock s + e) s)) with (get_var_imm ri s) in H2
+      by (destruct ri; reflexivity).
+    destruct (get_var_imm ri s) as [[y|]|]; try (injection H as Hx _; discriminate).
+    cbv zeta in H, H2.
+    destruct (word_cmp c x y);
+    [ destruct (evaluate (p1, s)) as [rb tb] eqn:Eb | destruct (evaluate (p2, s)) as [rb tb] eqn:Eb ];
+    (destruct (decide (rb = SOME TimeOut)) as [->|Hrb];
+     [ cbn [cut_res IS_SOME] in H; injection H as <-;
+       match type of H2 with cut_res _ (evaluate (?c, ?X)) = _ =>
+         destruct (evaluate (c, X)) as [rb' tb'] eqn:Eb' end;
+       rewrite (io_cut _ _ _ _ _ H2);
+       (eapply IH'; [|exact Eb|exact Eb']); prove_lt
+     | rewrite (evaluate_add_clock_eq _ s rb tb e (conj Eb Hrb)) in H2;
+       rewrite (io_cut _ _ _ _ _ H), (io_cut _ _ _ _ _ H2); cbn [ffi set_clock]; apply pre_refl ]).
+  - (* Loop *)
+    destruct (cut_res li (NONE, s)) as [[c|] s'] eqn:Ec.
+    + injection H as _ <-. rewrite (io_cut _ _ _ _ _ Ec). exact Hw.
+    + rewrite (cut_res_add_clock' _ _ _ _ _ e Ec (Hnt _ tt)) in H2. cbv beta iota in H2.
+      rewrite fix_clock_evaluate in H, H2.
+      destruct (evaluate (body, s')) as [rb tb] eqn:Eb.
+      destruct (decide (rb = SOME TimeOut)) as [->|Hrb].
+      * cbv beta iota in H. injection H as <-.
+        destruct (evaluate (body, set_clock (clock s' + e) s')) as [rb' tb'] eqn:Eb'.
+        pose proof (IH' body s' ltac:(prove_lt) e _ _ _ _ Eb Eb') as P.
+        eapply pre_trans; [exact P|].
+        destruct rb' as [[ | | k | k | | | ]|]; cbv beta iota in H2;
+          try (destruct k); try (injection H2 as _ <-; apply pre_refl);
+          try exact (io_whole _ _ _ _ H2);
+          rewrite (io_cut _ _ _ _ _ H2); apply pre_refl.
+      * rewrite (evaluate_add_clock_eq body s' rb tb e (conj Eb Hrb)) in H2.
+        destruct rb as [[ | | k | k | | | ]|]; cbv beta iota in H, H2;
+          try (destruct k; cbv beta iota in H, H2);
+          try (injection H as Hx _; cbn in Hx; discriminate);
+          try congruence;
+          try exact (IH' (Loop li body lo) tb ltac:(prove_lt) e _ _ _ _ H H2);
+          (rewrite (io_cut _ _ _ _ _ H), (io_cut _ _ _ _ _ H2); cbn [ffi set_clock]; apply pre_refl).
+  - (* Break *) injection H as Hx _; discriminate.
+  - (* Continue *) injection H as Hx _; discriminate.
+  - (* Raise *) split_eval H; injection H as Hx _; discriminate.
+  - (* Return *) split_eval H; injection H as Hx _; discriminate.
+  - (* ShMem *)
+    split_eval H; try (injection H as Hx _; discriminate);
+      apply sh_mem_op_res in H as [Hx|[Hx|[? Hx]]]; discriminate.
+  - (* Tick *)
+    destruct (clock s =? 0) eqn:Ec; [injection H as <-|injection H as Hx _; discriminate].
+    cbn [clock set_clock] in H2.
+    destruct (clock s + e =? 0); injection H2 as _ <-; cbn [ffi set_locals dec_clock set_clock];
+      apply pre_refl.
+  - (* Mark *) exact (IH' p s ltac:(prove_lt) e _ _ _ _ H H2).
+  - (* Fail *) injection H as Hx _; discriminate.
+  - (* LocValue *) split_eval H; injection H as Hx _; discriminate.
+  - (* Call *)
+    rewrite get_vars_set_clock in H2.
+    destruct (get_vars args s) as [vals|]; [|injection H as Hx _; discriminate].
+    cbn [code set_clock] in H2.
+    destruct (find_code dest vals (code s)) as [[env prog0]|]; [|injection H as Hx _; discriminate].
+    destruct ret as [[ns live]|].
+    + destruct (ALL_DISTINCT ns); cbn [negb] in H, H2; [|injection H as Hx _; discriminate].
+      destruct (cut_res live (NONE, s)) as [[c|] s'] eqn:Ec.
+      * injection H as _ <-. rewrite (io_cut _ _ _ _ _ Ec). exact Hw.
+      * rewrite (cut_res_add_clock' _ _ _ _ _ e Ec (Hnt _ tt)) in H2. cbv beta iota in H, H2.
+        rewrite fix_clock_evaluate in H, H2.
+        change (set_locals env (set_clock (clock s' + e) s'))
+          with (set_clock (clock (set_locals env s') + e) (set_locals env s')) in H2.
+        destruct (evaluate (prog0, set_locals env s')) as [rb tb] eqn:Eb.
+        destruct (decide (rb = SOME TimeOut)) as [->|Hrb].
+        -- cbv beta iota in H. injection H as <-.
+           destruct (evaluate (prog0, set_clock (clock (set_locals env s') + e) (set_locals env s')))
+             as [rb' tb'] eqn:Eb'.
+           pose proof (IH' prog0 (set_locals env s') ltac:(prove_lt) e _ _ _ _ Eb Eb') as P.
+           eapply pre_trans; [exact P|].
+           destruct rb' as [[retvs|exn| | | | |]|]; cbv beta iota in H2;
+             try (injection H2 as _ <-; apply pre_refl).
+           ++ destruct (negb _); cbv beta iota in H2; [injection H2 as _ <-; apply pre_refl|].
+              destruct handler as [[n [h [r lo]]]|];
+                [|injection H2 as _ <-; cbn [ffi set_vars set_locals]; apply pre_refl].
+              match type of H2 with cut_res _ (evaluate ?y) = _ =>
+                destruct (evaluate y) as [rr tr] eqn:Er end.
+              rewrite (io_cut _ _ _ _ _ H2). pose proof (io_whole _ _ _ _ Er) as Pr.
+              cbn [ffi set_vars set_locals] in Pr. exact Pr.
+           ++ destruct handler as [[n [h [r lo]]]|];
+                [|injection H2 as _ <-; cbn [ffi set_locals]; apply pre_refl].
+              match type of H2 with cut_res _ (evaluate ?y) = _ =>
+                destruct (evaluate y) as [rr tr] eqn:Er end.
+              rewrite (io_cut _ _ _ _ _ H2). pose proof (io_whole _ _ _ _ Er) as Pr.
+              cbn [ffi set_var set_locals] in Pr. exact Pr.
+        -- rewrite (evaluate_add_clock_eq _ _ rb tb e (conj Eb Hrb)) in H2.
+           destruct rb as [[retvs|exn| | | | |]|]; cbv beta iota in H, H2;
+             try congruence; try (injection H as Hx _; congruence).
+           ++ destruct (negb _); cbv beta iota in H, H2; [injection H as Hx _; discriminate|].
+              destruct handler as [[n [h [r lo]]]|]; [|injection H as Hx _; discriminate].
+              set (X := set_vars ns retvs (set_locals (locals s') tb)) in H.
+              change (set_vars ns retvs (set_locals (locals (set_clock (clock s' + e) s'))
+                                           (set_clock (clock tb + e) tb)))
+                with (set_clock (clock X + e) X) in H2.
+              destruct (evaluate (r, X)) as [rr tr] eqn:Er.
+              destruct (decide (rr = SOME TimeOut)) as [->|Hrr].
+              ** cbn [cut_res IS_SOME] in H. injection H as <-.
+                 destruct (evaluate (r, set_clock (clock X + e) X)) as [rr' tr'] eqn:Er'.
+                 rewrite (io_cut _ _ _ _ _ H2).
+                 assert (Hlt : eval_lt (r, X) (Call (SOME (ns, live)) dest args
+                                                 (SOME (n, (h, (r, lo)))), s)).
+                 { pose proof (evaluate_clock _ _ _ _ Eb). pose proof (cut_res_NONE_clock _ _ _ Ec).
+                   unfold eval_lt, X. cbn [fst snd]. left. state_cbn. lia. }
+                 exact (IH' r X Hlt e _ _ _ _ Er Er').
+              ** rewrite (evaluate_add_clock_eq _ _ rr tr e (conj Er Hrr)) in H2.
+                 rewrite (io_cut _ _ _ _ _ H), (io_cut _ _ _ _ _ H2). cbn [ffi set_clock].
+                 apply pre_refl.
+           ++ destruct handler as [[n [h [r lo]]]|]; [|injection H as Hx _; discriminate].
+              set (X := set_var n exn (set_locals (locals s') tb)) in H.
+              change (set_var n exn (set_locals (locals (set_clock (clock s' + e) s'))
+                                       (set_clock (clock tb + e) tb)))
+                with (set_clock (clock X + e) X) in H2.
+              destruct (evaluate (h, X)) as [rr tr] eqn:Er.
+              destruct (decide (rr = SOME TimeOut)) as [->|Hrr].
+              ** cbn [cut_res IS_SOME] in H. injection H as <-.
+                 destruct (evaluate (h, set_clock (clock X + e) X)) as [rr' tr'] eqn:Er'.
+                 rewrite (io_cut _ _ _ _ _ H2).
+                 assert (Hlt : eval_lt (h, X) (Call (SOME (ns, live)) dest args
+                                                 (SOME (n, (h, (r, lo)))), s)).
+                 { pose proof (evaluate_clock _ _ _ _ Eb). pose proof (cut_res_NONE_clock _ _ _ Ec).
+                   unfold eval_lt, X. cbn [fst snd]. left. state_cbn. lia. }
+                 exact (IH' h X Hlt e _ _ _ _ Er Er').
+              ** rewrite (evaluate_add_clock_eq _ _ rr tr e (conj Er Hrr)) in H2.
+                 rewrite (io_cut _ _ _ _ _ H), (io_cut _ _ _ _ _ H2). cbn [ffi set_clock].
+                 apply pre_refl.
+    + destruct (IS_SOME handler); cbv beta iota in H, H2; [congruence|].
+      destruct (clock s =? 0) eqn:Ec.
+      * injection H as <-. exact Hw.
+      * apply N.eqb_neq in Ec. cbn [clock set_clock] in H2.
+        destruct (N.eqb_spec (clock s + e) 0) as [|_]; [lia|].
+        replace (set_locals env (dec_clock (set_clock (clock s + e) s)))
+          with (set_clock (clock (set_locals env (dec_clock s)) + e) (set_locals env (dec_clock s)))
+          in H2 by (destruct s; cbn in *; unfold set_locals, dec_clock, set_clock; cbn; f_equal; lia).
+        destruct (evaluate (prog0, set_locals env (dec_clock s))) as [rb tb] eqn:Eb.
+        destruct (evaluate (prog0, set_clock (clock (set_locals env (dec_clock s)) + e)
+                                     (set_locals env (dec_clock s)))) as [rb' tb'] eqn:Eb'.
+        assert (Ht : t = tb)
+          by (destruct rb as [[]|]; cbv beta iota in H; apply (f_equal snd) in H; cbn in H; congruence).
+        assert (Hu : u = tb')
+          by (destruct rb' as [[]|]; cbv beta iota in H2; apply (f_equal snd) in H2; cbn in H2; congruence).
+        subst t u.
+        assert (Hlt : eval_lt (prog0, set_locals env (dec_clock s)) (Call NONE dest args handler, s)).
+        { unfold eval_lt. cbn [fst snd]. left. state_cbn. lia. }
+        exact (IH' _ _ Hlt e _ _ _ _ Eb Eb').
+  - (* FFI *)
+    split_eval H; injection H as Hx _; discriminate.
+Qed.
+
+End Props5.

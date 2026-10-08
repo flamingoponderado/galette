@@ -46920,6 +46920,936 @@
   "rocq_name": "state_rel"
  },
  {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "all_distinct_ctxt_lookup_all_distinct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "all_distinct_ctxt_lookup_all_distinct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "assigned_vars_MAPi_Assign",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "assigned_vars_MAPi_Assign"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "assigned_vars_nested_seq_assign",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "assigned_vars_nested_seq_assign"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "call_preserve_state_code_locals_rel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "call_preserve_state_code_locals_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "code_rel2_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "code_rel2"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "code_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "code_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "code_rel_evaluate_call_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "code_rel_evaluate_call_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "code_rel_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "code_rel_intro"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "comp_exp_assigned_vars_tmp_bound",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "comp_exp_assigned_vars_tmp_bound"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "comp_exp_assigned_vars_tmp_bound_cases",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "comp_exp_assigned_vars_tmp_bound_cases"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "comp_exp_preserves_eval",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "comp_exp_preserves_eval"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "comp_exps_assigned_vars_tmp_bound",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "comp_exps_assigned_vars_tmp_bound"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "comp_exps_preserves_eval",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "comp_exps_preserves_eval"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "compile_exp_le_tmp_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "compile_exp_le_tmp_domain"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "compile_exp_le_tmp_domain_cases",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "compile_exp_le_tmp_domain_cases"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "compile_exp_out_rel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "compile_exp_out_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "compile_exp_out_rel_cases",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "compile_exp_out_rel_cases"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "compile_exps_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "compile_exps_alt"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "compile_exps_le_tmp_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "compile_exps_le_tmp_domain"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "compile_exps_out_rel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "compile_exps_out_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "compile_prog_distinct_params",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "compile_prog_distinct_params"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "crep_primop_loop_primop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "crep_primop_loop_primop"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "crep_sem_is_wrapper",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "crep_sem_is_wrapper"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "crep_to_loop_compile_prog_lab_min",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "crep_to_loop_compile_prog_lab_min"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "ctxt_fc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "ctxt_fc"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "ctxt_max_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "ctxt_max"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "cut_sets_MAPi_Assign",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "cut_sets_MAPi_Assign"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "distinct_funcs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "distinct_funcs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "distinct_make_funcs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "distinct_make_funcs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "distinct_vars_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "distinct_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "evaluate_Seq_Skip",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "evaluate_Seq_Skip"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "evaluate_comb_seq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "evaluate_comb_seq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "evaluate_nested_seq_append_first",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "evaluate_nested_seq_append_first"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "evaluate_none_nested_seq_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "evaluate_none_nested_seq_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "evaluate_not_none_nested_seq_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "evaluate_not_none_nested_seq_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "first_compile_prog_all_distinct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "first_compile_prog_all_distinct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "globals_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "globals_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "globals_rel_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "globals_rel_intro"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "insert_insert_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "insert_insert_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "list_insert_SNOC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "list_insert_SNOC"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "list_insert_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "list_insert_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "list_insert_insert",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "list_insert_insert"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "locals_rel_cutset_prop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "locals_rel_cutset_prop"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "locals_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "locals_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "locals_rel_insert_gt_vmax",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "locals_rel_insert_gt_vmax"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "locals_rel_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "locals_rel_intro"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "loop_sem_is_wrapper",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "loop_sem_is_wrapper"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "make_funcs_domain_compile_prog",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "make_funcs_domain_compile_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "map_map2_fst",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "map_map2_fst"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "mem_lookup_fromalist_some",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "mem_lookup_fromalist_some"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "mem_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "mem_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "mem_rel_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "mem_rel_intro"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "member_cutset_survives_comp_exp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "member_cutset_survives_comp_exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "member_cutset_survives_comp_exp_cases",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "member_cutset_survives_comp_exp_cases"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "member_cutset_survives_comp_exps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "member_cutset_survives_comp_exps"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "member_cutset_survives_comp_prog",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "member_cutset_survives_comp_prog"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "mk_ctxt_code_imp_code_rel2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "mk_ctxt_code_imp_code_rel2"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "ncompile_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "ncompile_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "not_mem_assigned_mem_gt_comp_exp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "not_mem_assigned_mem_gt_comp_exp"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "not_mem_assigned_mem_gt_comp_exp_cases",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "not_mem_assigned_mem_gt_comp_exp_cases"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "not_mem_assigned_mem_gt_comp_exps",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "not_mem_assigned_mem_gt_comp_exps"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "not_mem_context_assigned_mem_gt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "not_mem_context_assigned_mem_gt"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "ocompile_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "ocompile_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "semantics_run_res",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "semantics_run_res"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "semantics_wrapper_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "semantics_wrapper"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "semantics_wrapper_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "semantics_wrapper_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "state_rel_clock_add_zero",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "state_rel_clock_add_zero"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "state_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "state_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "state_rel_imp_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "state_rel_imp_semantics"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "state_rel_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "state_rel_intro"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "survives_MAPi_Assign",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "survives_MAPi_Assign"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "wlab_wloc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "wlab_wloc"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/crep_to_loopProofScript.sml",
+  "hol_name": "write_bytearray_mem_rel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/crep_to_loopProof.v",
+  "rocq_name": "write_bytearray_mem_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_callProofScript.sml",
+  "hol_name": "compile_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_callProof.v",
+  "rocq_name": "compile_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_callProofScript.sml",
+  "hol_name": "evaluate_ShMem_neq_locals",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_callProof.v",
+  "rocq_name": "evaluate_ShMem_neq_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_callProofScript.sml",
+  "hol_name": "evaluate_ShMem_not_load_locals",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_callProof.v",
+  "rocq_name": "evaluate_ShMem_not_load_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_callProofScript.sml",
+  "hol_name": "get_vars_front",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_callProof.v",
+  "rocq_name": "get_vars_front"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_callProofScript.sml",
+  "hol_name": "get_vars_last",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_callProof.v",
+  "rocq_name": "get_vars_last"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_callProofScript.sml",
+  "hol_name": "labels_in_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_callProof.v",
+  "rocq_name": "labels_in"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "comp_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "comp_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "compile_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "compile_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "dom_vars_of_exp_in",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "dom_vars_of_exp_in"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "domain_list_delete",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "domain_list_delete"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "eval_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "eval_lemma"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "eval_lemma'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "eval_lemma'"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "get_vars_subspt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "get_vars_subspt"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "mark_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "mark_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "optimise_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "optimise_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "subspt_IMP_domain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "subspt_IMP_domain"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "subspt_inter_domain_cut",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "subspt_inter_domain_cut"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "subspt_inter_union_R",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "subspt_inter_union_R"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "vars_of_exp_acc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "vars_of_exp_acc"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/loop_liveProofScript.sml",
+  "hol_name": "vars_of_exp_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/loop_liveProof.v",
+  "rocq_name": "vars_of_exp_mono"
+ },
+ {
   "hol_path": "cakeml/pancake/proofs/pan_simpProofScript.sml",
   "hol_name": "OPT_MMAP_NONE",
   "hol_line": null,
@@ -48328,6 +49258,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/loopProps.v",
   "rocq_name": "evaluate_add_clock_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/loopPropsScript.sml",
+  "hol_name": "evaluate_add_clock_io_events_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/loopProps.v",
+  "rocq_name": "evaluate_add_clock_io_events_mono"
  },
  {
   "hol_path": "cakeml/pancake/semantics/loopPropsScript.sml",
