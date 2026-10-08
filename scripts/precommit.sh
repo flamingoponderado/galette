@@ -16,8 +16,14 @@ git checkout-index -a --prefix="$NEW/"
 rsync -a --delete --checksum --exclude=_build "$NEW/" "$SHADOW/"
 rm -rf "$NEW"
 cd "$SHADOW"
-find theories -name '*.v' | sed 's/\.v$/.vo/' | xargs dune build 2>&1 \
-  | grep -E '^Error' -B3 && exit 1
+LOG="$SHADOW/.precommit-build.log"
+if ! find theories -name '*.v' | sed 's/\.v$/.vo/' | xargs dune build --root . >"$LOG" 2>&1; then
+  # Errors, but also actions killed by a signal (e.g. a runaway proof
+  # search), which print no "Error" line.
+  grep -E '^Error|signal' -B3 "$LOG"
+  echo "precommit: build failed (full log: $LOG)"
+  exit 1
+fi
 FLAPJACK="$FLAPJACK" python3 scripts/check-hol-refs.py --update-manifest >/dev/null
 cp docs/HOL-THEOREM-MAP.json "$ROOT/docs/HOL-THEOREM-MAP.json"
 cd "$ROOT"; git add docs/HOL-THEOREM-MAP.json
