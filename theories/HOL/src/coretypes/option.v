@@ -50,3 +50,9 @@ Definition OPTION_MAP2 {A B C} `{Inhabited A} `{Inhabited B} (f : A -> B -> C)
     (x : option A) (y : option B) : option C :=
   if IS_SOME x && IS_SOME y then SOME (f (THE x) (THE y)) else NONE.
 
+
+(** HOL [some x. P x]: [SOME] of a chosen witness, or [NONE] if there is
+    none.  Not computable. *)
+(*! HOL "HOL/src/coretypes/optionScript.sml" "some_def" *)
+Definition some {A} `{Inhabited A} (P : A -> Prop) : option A :=
+  if classical_dec (exists x, P x) then SOME (select P) else NONE.

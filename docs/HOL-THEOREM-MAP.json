@@ -1430,6 +1430,186 @@
   "rocq_name": "opc"
  },
  {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "build_lprefix_lub_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "build_lprefix_lub"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "build_lprefix_lub_f_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "build_lprefix_lub_f"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_chain_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_chain"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_chain_nth_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_chain_nth"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_lub_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_lub"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LFINITE_rules",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LFINITE"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LHD",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LHD"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LHD_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LHD_THM"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LLENGTH",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LLENGTH"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LNIL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LNIL"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LPREFIX_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LPREFIX"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LTL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LTL"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LTL_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LTL_THM"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "LUNFOLD_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "LUNFOLD"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "fromList_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "fromList"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "llength_rel_rules",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "llength_rel"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "llist_CASES",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "llist_CASES"
+ },
+ {
+  "hol_path": "HOL/src/coalgebras/llistScript.sml",
+  "hol_name": "toList",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coalgebras/llist.v",
+  "rocq_name": "toList"
+ },
+ {
   "hol_path": "HOL/src/combin/combinScript.sml",
   "hol_name": "APPLY_UPDATE_THM",
   "hol_line": null,
@@ -1598,6 +1778,16 @@
   "note": "",
   "rocq_path": "theories/HOL/src/coretypes/option.v",
   "rocq_name": "THE"
+ },
+ {
+  "hol_path": "HOL/src/coretypes/optionScript.sml",
+  "hol_name": "some_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coretypes/option.v",
+  "rocq_name": "some"
  },
  {
   "hol_path": "HOL/src/coretypes/pairScript.sml",
@@ -30621,6 +30811,26 @@
  },
  {
   "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "behaviour",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "behaviour"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "call_FFI_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "call_FFI"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
   "hol_name": "ffi_outcome",
   "hol_line": null,
   "case": null,
@@ -30628,6 +30838,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
   "rocq_name": "ffi_outcome"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "ffi_result",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "ffi_result"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "ffi_state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "ffi_state"
  },
  {
   "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
@@ -30641,6 +30871,76 @@
  },
  {
   "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "final_event",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "final_event"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "initial_ffi_state_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "initial_ffi_state"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "io_event",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "io_event"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "oracle",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "oracle"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "oracle_function",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "oracle_function"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "oracle_result",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "oracle_result"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "outcome",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "outcome"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
   "hol_name": "shmem_op",
   "hol_line": null,
   "case": null,
@@ -30648,6 +30948,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
   "rocq_name": "shmem_op"
+ },
+ {
+  "hol_path": "cakeml/semantics/ffi/ffiScript.sml",
+  "hol_name": "trace_oracle_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/semantics/ffi/ffi.v",
+  "rocq_name": "trace_oracle"
  },
  {
   "hol_path": "cakeml/semantics/fpSemScript.sml",
