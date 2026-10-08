@@ -757,10 +757,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/pancake/semantics/panSemScript.sml" "lookup_code_def" *)
-Definition lookup_code
-    (code0 : fmap funname (list (varname * shape) * (prog a * shape)))
-    (fname : funname) (args : list (v a))
-    : option (prog a * (fmap varname (v a) * shape)) :=
+Definition lookup_code {K Nm P R} `{EqDecision Nm}
+    (code0 : fmap K (list (Nm * shape) * (P * R)))
+    (fname : K) (args : list (v a))
+    : option (P * (fmap Nm (v a) * R)) :=
   match FLOOKUP code0 fname with
   | SOME (vshapes, (prog0, rshape)) =>
       if andb (ALL_DISTINCT (MAP fst vshapes))
@@ -778,7 +778,7 @@ Definition is_valid_value (s : state a ffi_t) (vk : varkind) (v0 : varname) (val
   end.
 
 (*! HOL "cakeml/pancake/semantics/panSemScript.sml" "res_var_def" *)
-Definition res_var (lc : fmap varname (v a)) (p : varname * option (v a)) : fmap varname (v a) :=
+Definition res_var {K V} `{EqDecision K} (lc : fmap K V) (p : K * option V) : fmap K V :=
   match p with
   | (n, NONE) => lc \\ n
   | (n, SOME v0) => lc |+ (n, v0)
@@ -809,7 +809,7 @@ Definition sh_mem_load (vk : varkind) (v0 : varname) (addr : word a) (nb : N) (s
      else (SOME Error, s)).
 
 (*! HOL "cakeml/pancake/semantics/panSemScript.sml" "sh_mem_store_def" *)
-Definition sh_mem_store (w addr : word a) (nb : N) (s : state a ffi_t)
+Definition sh_mem_store {b} (w : word b) (addr : word a) (nb : N) (s : state a ffi_t)
     : option (result a) * state a ffi_t :=
   if (nb =? 0)%N then
     (if classical_dec (addr IN sh_memaddrs s) then
@@ -1688,11 +1688,11 @@ Theorem kvar_defs :
 Proof. repeat split. Qed.
 
 (*! HOL "cakeml/pancake/semantics/panSemScript.sml" "vshapes_args_rel_imp_eq_len_MAP" *)
-Theorem vshapes_args_rel_imp_eq_len_MAP : forall (vshapes : list (varname * shape)) (args : list (v a)),
+Theorem vshapes_args_rel_imp_eq_len_MAP : forall {B} (vshapes : list (B * shape)) (args : list (v a)),
   LIST_REL (fun vshape arg => snd vshape = shape_of arg) vshapes args ->
   LENGTH vshapes = LENGTH args /\ MAP snd vshapes = MAP shape_of args.
 Proof.
-  intros vshapes args H; induction H as [|x y l1 l2 Hxy Hl IH]; [split; reflexivity|].
+  intros B vshapes args H; induction H as [|x y l1 l2 Hxy Hl IH]; [split; reflexivity|].
   destruct IH as [IH1 IH2]; cbn [LENGTH MAP List.map]; rewrite IH1, Hxy, IH2; split; reflexivity.
 Qed.
 

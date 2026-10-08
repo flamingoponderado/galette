@@ -121,8 +121,8 @@ Definition upd_locals (varargs : list (varname * word_lab a)) (s : state a ffi_t
 Definition empty_locals (s : state a ffi_t) : state a ffi_t := set_locals FEMPTY s.
 
 (*! HOL "cakeml/pancake/semantics/crepSemScript.sml" "lookup_code_def" *)
-Definition lookup_code (code0 : fmap funname (list varname * prog a)) (fname : funname)
-    (args : list (word_lab a)) (len : N) : option (prog a * fmap varname (word_lab a)) :=
+Definition lookup_code {K Nm P C} `{EqDecision Nm} (code0 : fmap K (list Nm * P)) (fname : K)
+    (args : list (word_lab a)) (len : C) : option (P * fmap Nm (word_lab a)) :=
   match FLOOKUP code0 fname with
   | SOME (ns, prog0) =>
       if andb (LENGTH ns =? LENGTH args) (ALL_DISTINCT ns)
@@ -214,8 +214,8 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/pancake/semantics/crepSemScript.sml" "res_var_def" *)
-Definition res_var (lc : fmap varname (word_lab a)) (p : varname * option (word_lab a))
-    : fmap varname (word_lab a) :=
+Definition res_var {K V} `{EqDecision K} (lc : fmap K V) (p : K * option V)
+    : fmap K V :=
   match p with
   | (n, NONE) => lc \\ n
   | (n, SOME v) => lc |+ (n, v)

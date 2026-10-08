@@ -285,8 +285,8 @@ Definition loop_arith (s : state a ffi_t) (arith : loopLang.loop_arith) : option
   end.
 
 (*! HOL "cakeml/pancake/semantics/loopSemScript.sml" "find_code_def" *)
-Definition find_code (dest : option N) (args : list (word_loc a))
-    (code0 : spt (list N * prog a)) : option (spt (word_loc a) * prog a) :=
+Definition find_code {B} (dest : option N) (args : list (word_loc a))
+    (code0 : spt (list N * B)) : option (spt (word_loc a) * B) :=
   match dest with
   | SOME p =>
       match lookup p code0 with
