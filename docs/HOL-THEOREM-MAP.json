@@ -41881,6 +41881,16 @@
  },
  {
   "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
+  "hol_name": "asserts2_every",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/asm/asmProps.v",
+  "rocq_name": "asserts2_every"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
   "hol_name": "asserts2_first",
   "hol_line": null,
   "case": null,
