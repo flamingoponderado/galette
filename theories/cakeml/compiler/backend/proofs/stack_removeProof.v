@@ -606,3 +606,106 @@ Proof.
 Qed.
 
 End Labels.
+
+Section Syntax.
+Context {a : N}.
+
+Lemma In_store_list_Temp n : n < 32 -> In (Temp (n2w n)) stack_remove.store_list.
+Proof.
+  intros H. assert (Hd : n = 0 \/ n = 1 \/ n = 2 \/ n = 3 \/ n = 4 \/ n = 5 \/ n = 6 \/ n = 7 \/ n = 8 \/ n = 9 \/ n = 10 \/ n = 11 \/ n = 12 \/ n = 13 \/ n = 14 \/ n = 15 \/ n = 16 \/ n = 17 \/ n = 18 \/ n = 19 \/ n = 20 \/ n = 21 \/ n = 22 \/ n = 23 \/ n = 24 \/ n = 25 \/ n = 26 \/ n = 27 \/ n = 28 \/ n = 29 \/ n = 30 \/ n = 31) by lia.
+  unfold stack_remove.store_list.
+  repeat (destruct Hd as [->|Hd]; [cbn [In]; repeat (first [left; reflexivity|right])|]).
+  subst n; cbn [In]; repeat (first [left; reflexivity|right]).
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "name_cases" *)
+Local Theorem name_cases : forall name, name <> CurrHeap -> MEM name stack_remove.store_list.
+Proof.
+  intros name H; apply MEM_In. destruct name; try (exfalso; apply H; reflexivity).
+  all: try (unfold stack_remove.store_list; cbn [In]; repeat (first [left; reflexivity|right]); fail).
+  rewrite <- (n2w_w2n w). apply In_store_list_Temp.
+  pose proof (w2n_lt w) as Hl. exact Hl.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "prog_comp_eta" *)
+Theorem prog_comp_eta : @stack_remove.prog_comp a = fun jump off k '(n, p) => (n, stack_remove.comp jump off k p).
+Proof. reflexivity. Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "FST_prog_comp" *)
+Theorem FST_prog_comp : forall jump off k (pp : N * prog a), FST (stack_remove.prog_comp jump off k pp) = FST pp.
+Proof. intros jump off k [n p]; reflexivity. Qed.
+
+End Syntax.
+
+Section SyntaxThms.
+Context {a : N}.
+
+Lemma extract_labels_alloc_f : forall f jump k n,
+  extract_labels (@stack_remove.stack_alloc_f a f jump k n) = [].
+Proof.
+  induction f as [|f IH]; intros jump k n; cbn [stack_remove.stack_alloc_f]; [reflexivity|].
+  destruct (n =? 0); [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); cbn [stack_remove.single_stack_alloc stack_remove.halt_inst];
+    destruct jump; cbn [extract_labels app]; rewrite ?IH; reflexivity.
+Qed.
+
+Lemma extract_labels_free_f : forall f k n, extract_labels (@stack_remove.stack_free_f a f k n) = [].
+Proof.
+  induction f as [|f IH]; intros k n; cbn [stack_remove.stack_free_f]; [reflexivity|].
+  destruct (n =? 0); [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); cbn [stack_remove.single_stack_free extract_labels app];
+    rewrite ?IH; reflexivity.
+Qed.
+
+Lemma extract_labels_upshift_f : forall f r n, extract_labels (@stack_remove.upshift_f a f r n) = [].
+Proof.
+  induction f as [|f IH]; intros r n; cbn [stack_remove.upshift_f]; [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); cbn [extract_labels app]; rewrite ?IH; reflexivity.
+Qed.
+
+Lemma extract_labels_downshift_f : forall f r n, extract_labels (@stack_remove.downshift_f a f r n) = [].
+Proof.
+  induction f as [|f IH]; intros r n; cbn [stack_remove.downshift_f]; [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); cbn [extract_labels app]; rewrite ?IH; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "stack_remove_lab_pres" *)
+Theorem stack_remove_lab_pres : forall jump off k (p : prog a),
+  extract_labels p = extract_labels (stack_remove.comp jump off k p).
+Proof.
+  intros jump off k p.
+  induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|c0 r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind.
+  - destruct ret as [[p1 [lr [l1 l2]]]|]; [|reflexivity].
+    destruct h as [[p2 [k1 k2]]|]; cbn [stack_remove.comp extract_labels];
+      rewrite <- (Hr p1 _ eq_refl); [rewrite <- (Hh p2 _ eq_refl)|]; reflexivity.
+  - cbn [stack_remove.comp extract_labels]; rewrite <- IH1, <- IH2; reflexivity.
+  - cbn [stack_remove.comp extract_labels]; rewrite <- IH1, <- IH2; reflexivity.
+  - cbn [stack_remove.comp extract_labels]; exact IH.
+  - destruct p; try contradiction; cbn [stack_remove.comp]; try reflexivity.
+    all: repeat (match goal with |- context [if ?b then _ else _] => destruct b end);
+         unfold stack_remove.stack_store, stack_remove.stack_load, stack_remove.copy_loop,
+                stack_remove.copy_each, stack_remove.stack_alloc, stack_remove.stack_free,
+                stack_remove.upshift, stack_remove.downshift; cbn [list_Seq];
+         cbn [extract_labels app];
+         rewrite ?extract_labels_alloc_f, ?extract_labels_free_f, ?extract_labels_upshift_f,
+                 ?extract_labels_downshift_f; cbn [app]; reflexivity.
+Qed.
+
+Lemma call_args_upshift_f : forall f r n, call_args (@stack_remove.upshift_f a f r n) 1 2 3 4 0 = true.
+Proof.
+  induction f as [|f IH]; intros r n; cbn [stack_remove.upshift_f]; [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); cbn [call_args andb]; rewrite ?IH; reflexivity.
+Qed.
+
+Lemma call_args_downshift_f : forall f r n, call_args (@stack_remove.downshift_f a f r n) 1 2 3 4 0 = true.
+Proof.
+  induction f as [|f IH]; intros r n; cbn [stack_remove.downshift_f]; [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); cbn [call_args andb]; rewrite ?IH; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "upshift_downshift_call_args" *)
+Theorem upshift_downshift_call_args : forall n n0,
+  call_args (@stack_remove.upshift a n n0) 1 2 3 4 0 /\ call_args (@stack_remove.downshift a n n0) 1 2 3 4 0.
+Proof. intros; split; [apply call_args_upshift_f|apply call_args_downshift_f]. Qed.
+
+End SyntaxThms.

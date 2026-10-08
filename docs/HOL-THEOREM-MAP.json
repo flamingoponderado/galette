@@ -25761,6 +25761,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "FST_prog_comp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "FST_prog_comp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
   "hol_name": "LESS_LENGTH_IMP_APPEND",
   "hol_line": null,
   "case": null,
@@ -25941,6 +25951,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "name_cases",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "name_cases"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "prog_comp_eta",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "prog_comp_eta"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
   "hol_name": "read_bytearray_IMP_read_bytearray",
   "hol_line": null,
   "case": null,
@@ -25958,6 +25988,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "set_var_set_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "stack_remove_lab_pres",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "stack_remove_lab_pres"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
@@ -26038,6 +26078,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "the_SOME_Word"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
+  "hol_name": "upshift_downshift_call_args",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
+  "rocq_name": "upshift_downshift_call_args"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_removeProofScript.sml",
