@@ -520,3 +520,89 @@ Proof.
 Qed.
 
 End WriteBytes.
+
+Section Labels.
+Context {a : N}.
+
+Lemma EMPTY_UNION_EMPTY {B} : (EMPTY : B -> Prop) UNION EMPTY = EMPTY.
+Proof. sets. Qed.
+
+Ltac lab_simpl := cbn [get_labels stack_remove.single_stack_alloc stack_remove.single_stack_free
+                       stack_remove.halt_inst]; rewrite ?EMPTY_UNION_EMPTY.
+
+Lemma get_labels_stack_alloc_f : forall f jump k n,
+  get_labels (@stack_remove.stack_alloc_f a f jump k n) = EMPTY.
+Proof.
+  induction f as [|f IH]; intros jump k n; cbn [stack_remove.stack_alloc_f]; [reflexivity|].
+  destruct (n =? 0); [reflexivity|]. destruct (n <=? stack_remove.max_stack_alloc);
+    lab_simpl; [destruct jump; lab_simpl; reflexivity|].
+  rewrite IH. destruct jump; lab_simpl; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "get_labels_stack_alloc" *)
+Local Theorem get_labels_stack_alloc : forall jump k n, get_labels (@stack_remove.stack_alloc a jump k n) = EMPTY.
+Proof. intros; apply get_labels_stack_alloc_f. Qed.
+
+Lemma get_labels_stack_free_f : forall f k n, get_labels (@stack_remove.stack_free_f a f k n) = EMPTY.
+Proof.
+  induction f as [|f IH]; intros k n; cbn [stack_remove.stack_free_f]; [reflexivity|].
+  destruct (n =? 0); [reflexivity|]. destruct (n <=? stack_remove.max_stack_alloc); lab_simpl; [reflexivity|].
+  rewrite IH; lab_simpl; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "get_labels_stack_free" *)
+Local Theorem get_labels_stack_free : forall k n, get_labels (@stack_remove.stack_free a k n) = EMPTY.
+Proof. intros; apply get_labels_stack_free_f. Qed.
+
+Lemma get_labels_upshift_f : forall f r n, get_labels (@stack_remove.upshift_f a f r n) = EMPTY.
+Proof.
+  induction f as [|f IH]; intros r n; cbn [stack_remove.upshift_f]; [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); lab_simpl; [reflexivity|]. rewrite IH; lab_simpl; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "get_labels_upshift" *)
+Local Theorem get_labels_upshift : forall n n0, get_labels (@stack_remove.upshift a n n0) = EMPTY.
+Proof. intros; apply get_labels_upshift_f. Qed.
+
+Lemma get_labels_downshift_f : forall f r n, get_labels (@stack_remove.downshift_f a f r n) = EMPTY.
+Proof.
+  induction f as [|f IH]; intros r n; cbn [stack_remove.downshift_f]; [reflexivity|].
+  destruct (n <=? stack_remove.max_stack_alloc); lab_simpl; [reflexivity|]. rewrite IH; lab_simpl; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "get_labels_downshift" *)
+Local Theorem get_labels_downshift : forall n n0, get_labels (@stack_remove.downshift a n n0) = EMPTY.
+Proof. intros; apply get_labels_downshift_f. Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "get_labels_comp" *)
+Theorem get_labels_comp : forall jump off k (e : prog a),
+  get_labels (stack_remove.comp jump off k e) = get_labels e.
+Proof.
+  intros jump off k e.
+  induction e as [ret dest h Hr Hh|p1 p2 IH1 IH2|c0 r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind.
+  - destruct ret as [[p1 [lr [l1 l2]]]|]; [|reflexivity].
+    destruct h as [[p2 [k1 k2]]|]; cbn [stack_remove.comp get_labels];
+      rewrite (Hr p1 _ eq_refl); [rewrite (Hh p2 _ eq_refl)|]; reflexivity.
+  - cbn [stack_remove.comp get_labels]; rewrite IH1, IH2; reflexivity.
+  - cbn [stack_remove.comp get_labels]; rewrite IH1, IH2; reflexivity.
+  - cbn [stack_remove.comp get_labels]; exact IH.
+  - destruct p; try contradiction; cbn [stack_remove.comp]; try reflexivity.
+    all: repeat (match goal with |- context [if ?b then _ else _] => destruct b end);
+         cbn [get_labels stack_remove.stack_store stack_remove.stack_load stack_remove.copy_loop
+              stack_remove.copy_each list_Seq];
+         rewrite ?get_labels_stack_alloc, ?get_labels_stack_free, ?get_labels_upshift,
+                 ?get_labels_downshift, ?EMPTY_UNION_EMPTY; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "code_rel_loc_check" *)
+Theorem code_rel_loc_check : forall jump off k (c1 c2 : spt (prog a)) l1 l2,
+  code_rel jump off k c1 c2 /\ loc_check c1 (l1, l2) -> loc_check c2 (l1, l2).
+Proof.
+  intros jump off k c1 c2 l1 l2 [[Hc Hd] Hl]. unfold loc_check in *.
+  destruct Hl as [[-> Hin]|(n & e & He & Hin)].
+  - left; split; [reflexivity|]. rewrite Hd. left; exact Hin.
+  - right. destruct (Hc _ _ He) as [_ He']. exists n, (stack_remove.comp jump off k e).
+    split; [exact He'|rewrite get_labels_comp; exact Hin].
+Qed.
+
+End Labels.
