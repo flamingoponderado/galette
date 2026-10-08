@@ -5491,6 +5491,16 @@
  },
  {
   "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_CLAUSES",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_CLAUSES"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
   "hol_name": "SEP_DISJ_def",
   "hol_line": null,
   "case": null,
@@ -5518,6 +5528,16 @@
   "note": "reviewer: compared with set_sepScript.sml; 'a set as A -> Prop, set predicates (A -> Prop) -> Prop, {x} as x INSERT {}, binder SEP_EXISTS as function argument, set-builder fun2set as existential",
   "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
   "rocq_name": "SEP_EXISTS"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "SEP_EXISTS_THM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "SEP_EXISTS_THM"
  },
  {
   "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
@@ -5581,6 +5601,26 @@
  },
  {
   "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "STAR_ASSOC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "STAR_ASSOC"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "STAR_COMM",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "STAR_COMM"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
   "hol_name": "STAR_def",
   "hol_line": null,
   "case": null,
@@ -5588,6 +5628,16 @@
   "note": "reviewer: compared with set_sepScript.sml; 'a set as A -> Prop, set predicates (A -> Prop) -> Prop, {x} as x INSERT {}, binder SEP_EXISTS as function argument, set-builder fun2set as existential",
   "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
   "rocq_name": "STAR"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "cond_STAR",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "cond_STAR"
  },
  {
   "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
@@ -5631,6 +5681,16 @@
  },
  {
   "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "fun2set_STAR_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "fun2set_STAR_IMP"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
   "hol_name": "fun2set_def",
   "hol_line": null,
   "case": null,
@@ -5661,6 +5721,16 @@
  },
  {
   "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "one_STAR",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "one_STAR"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
   "hol_name": "one_def",
   "hol_line": null,
   "case": null,
@@ -5668,6 +5738,16 @@
   "note": "reviewer: compared with set_sepScript.sml; 'a set as A -> Prop, set predicates (A -> Prop) -> Prop, {x} as x INSERT {}, binder SEP_EXISTS as function argument, set-builder fun2set as existential",
   "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
   "rocq_name": "one"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "one_fun2set",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "one_fun2set"
  },
  {
   "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
@@ -5688,6 +5768,16 @@
   "note": "reviewer: compared with set_sepScript.sml; 'a set as A -> Prop, set predicates (A -> Prop) -> Prop, {x} as x INSERT {}, binder SEP_EXISTS as function argument, set-builder fun2set as existential",
   "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
   "rocq_name": "sidecond"
+ },
+ {
+  "hol_path": "HOL/examples/machine-code/hoare-triple/set_sepScript.sml",
+  "hol_name": "write_fun2set",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/machine_code/hoare_triple/set_sep.v",
+  "rocq_name": "write_fun2set"
  },
  {
   "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
@@ -42308,6 +42398,26 @@
   "note": "reviewer: same statement",
   "rocq_path": "theories/cakeml/misc/misc.v",
   "rocq_name": "tlookup"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "word_list_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "word_list"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "word_list_exists_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc.v",
+  "rocq_name": "word_list_exists"
  },
  {
   "hol_path": "cakeml/pancake/crepLangScript.sml",

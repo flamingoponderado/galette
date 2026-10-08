@@ -9,6 +9,7 @@
 From Galette Require Import Base.
 From Galette.HOL.src.n_bit Require Import words.
 From Galette.HOL.src.pred_set.src Require Import pred_set.
+From Galette.HOL.src.combin Require Import combin.
 Open Scope N_scope.
 
 Section Defs.
@@ -152,3 +153,204 @@ Proof.
 Qed.
 
 End Thms.
+
+Section StarThms.
+Context {A : Type}.
+Implicit Types p q r : (A -> Prop) -> Prop.
+
+(** Galette-only: [STAR] without [SPLIT]. *)
+Lemma STAR_alt p q s : STAR p q s <-> exists u, u SUBSET s /\ p u /\ q (s DIFF u).
+Proof.
+  unfold STAR; split.
+  - intros (u & v & Hs & Hp & Hq). apply SPLIT_EQ in Hs as [Hu ->]. exists u; auto.
+  - intros (u & Hu & Hp & Hq). exists u, (s DIFF u); split; [apply SPLIT_EQ; auto|auto].
+Qed.
+
+Lemma DIFF_DIFF_SUBSET (s u : A -> Prop) : u SUBSET s -> s DIFF (s DIFF u) = u.
+Proof. sets_cl. Qed.
+
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "STAR_COMM" *)
+Theorem STAR_COMM : forall p q, STAR p q = STAR q p.
+Proof.
+  enough (H : forall p q s, STAR p q s -> STAR q p s).
+  { intros p q; apply functional_extensionality; intros s; apply propositional_extensionality; split; apply H. }
+  intros p q s H; apply STAR_alt in H as (u & Hu & Hp & Hq); apply STAR_alt.
+  exists (s DIFF u); split; [sets|]. rewrite DIFF_DIFF_SUBSET by exact Hu. auto.
+Qed.
+
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "STAR_ASSOC" *)
+Theorem STAR_ASSOC : forall p q r, STAR p (STAR q r) = STAR (STAR p q) r.
+Proof.
+  intros p q r; apply functional_extensionality; intros s; apply propositional_extensionality.
+  rewrite !STAR_alt; split.
+  - intros (u & Hu & Hp & Hqr). apply STAR_alt in Hqr as (w & Hw & Hq & Hr).
+    exists (u UNION w); split; [sets|split].
+    + apply STAR_alt; exists u; split; [sets|split; [exact Hp|]].
+      replace ((u UNION w) DIFF u) with w by sets_cl. exact Hq.
+    + replace (s DIFF (u UNION w)) with ((s DIFF u) DIFF w) by sets_cl. exact Hr.
+  - intros (uw & Huw & Hpq & Hr). apply STAR_alt in Hpq as (u & Hu & Hp & Hq).
+    exists u; split; [sets|split; [exact Hp|]].
+    apply STAR_alt; exists (uw DIFF u); split; [sets|split; [exact Hq|]].
+    replace ((s DIFF u) DIFF (uw DIFF u)) with (s DIFF uw) by sets_cl. exact Hr.
+Qed.
+
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "SEP_EXISTS_THM" *)
+Theorem SEP_EXISTS_THM : forall {B} (p : B -> (A -> Prop) -> Prop) s,
+  SEP_EXISTS (fun x => p x) s <-> exists x, p x s.
+Proof. reflexivity. Qed.
+
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "cond_STAR" *)
+Theorem cond_STAR : forall (c : Prop) s p,
+  (STAR (cond c) p s <-> c /\ p s) /\ (STAR p (cond c) s <-> c /\ p s).
+Proof.
+  intros c s p.
+  assert (H : STAR (cond c) p s <-> c /\ p s).
+  { rewrite STAR_alt; split.
+    - intros (u & _ & [-> Hc] & Hp). split; [exact Hc|]. replace s with (s DIFF {}) by sets. exact Hp.
+    - intros [Hc Hp]. exists {}; split; [sets|split; [split; [reflexivity|exact Hc]|]].
+      replace (s DIFF {}) with s by sets. exact Hp. }
+  split; [exact H|rewrite STAR_COMM; exact H].
+Qed.
+
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "one_STAR" *)
+Theorem one_STAR : forall (x : A) s p, STAR (one x) p s <-> x IN s /\ p (s DELETE x).
+Proof.
+  intros x s p; rewrite STAR_alt; split.
+  - intros (u & Hu & -> & Hp). split; [apply Hu; sets|].
+    replace (s DELETE x) with (s DIFF (x INSERT {})) by sets. exact Hp.
+  - intros [Hx Hp]. exists (x INSERT {}); split; [sets|split; [reflexivity|]].
+    replace (s DIFF (x INSERT {})) with (s DELETE x) by sets. exact Hp.
+Qed.
+
+End StarThms.
+
+Section Fun2setStar.
+Context {A B : Type}.
+
+Lemma fun2set_DELETE (f : B -> A) d a :
+  fun2set (f, d) DELETE (a, f a) = fun2set (f, d DELETE a).
+Proof.
+  apply set_ext; intros [b y]. unfold pred_set.DELETE, pred_set.DIFF, pred_set.IN, pred_set.INSERT, pred_set.EMPTY.
+  change (fun2set (f, d) (b, y)) with (fun2set (f, d) (b, y)).
+  rewrite !fun2set_thm. unfold pred_set.DELETE, pred_set.DIFF, pred_set.IN, pred_set.INSERT, pred_set.EMPTY.
+  split.
+  - intros [[E Hb] Hn]. split; [exact E|split; [exact Hb|]]. intros [Eb|[]]; subst b; apply Hn; left; f_equal; congruence.
+  - intros [E [Hb Hn]]. split; [split; assumption|]. intros [Ex|[]]. injection Ex as -> _. apply Hn; left; reflexivity.
+Qed.
+
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "one_fun2set" *)
+Theorem one_fun2set : forall (d : B -> Prop) a (x : A) (p : (B * A -> Prop) -> Prop) f,
+  STAR (one (a, x)) p (fun2set (f, d)) <-> f a = x /\ a IN d /\ p (fun2set (f, d DELETE a)).
+Proof.
+  intros d a x p f. rewrite one_STAR, IN_fun2set. split.
+  - intros [[Hfa Ha] Hp]. subst x. rewrite fun2set_DELETE in Hp. auto.
+  - intros (Hfa & Ha & Hp). subst x. split; [split; [reflexivity|exact Ha]|]. rewrite fun2set_DELETE; exact Hp.
+Qed.
+
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "write_fun2set" *)
+Theorem write_fun2set `{EqDecision B} : forall (d : B -> Prop) (y : A) a (x : A) (p : (B * A -> Prop) -> Prop) f,
+  STAR (one (a, x)) p (fun2set (f, d)) -> STAR p (one (a, y)) (fun2set ((a =+ y) f, d)).
+Proof.
+  intros d y a x p f Hs. rewrite STAR_COMM, one_fun2set. apply one_fun2set in Hs as (_ & Ha & Hp).
+  split; [rewrite APPLY_UPDATE_THM; destruct (decide (a = a)); [reflexivity|congruence]|].
+  split; [exact Ha|].
+  replace (fun2set ((a =+ y) f, d DELETE a)) with (fun2set (f, d DELETE a)); [exact Hp|].
+  apply fun2set_eq; intros b Hb. rewrite APPLY_UPDATE_THM.
+  destruct (decide (a = b)) as [<-|]; [|reflexivity].
+  exfalso; apply Hb; left; reflexivity.
+Qed.
+
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "fun2set_STAR_IMP" *)
+Theorem fun2set_STAR_IMP : forall (p q : (B * A -> Prop) -> Prop) (f : B -> A) df,
+  STAR p q (fun2set (f, df)) ->
+  exists x y, p (fun2set (f, df DIFF y)) /\ q (fun2set (f, df DIFF x)).
+Proof.
+  intros p q f df H. apply STAR_alt in H as (u & Hu & Hp & Hq).
+  set (du := fun a => u (a, f a)).
+  exists du, (df DIFF du). split.
+  - replace (fun2set (f, df DIFF (df DIFF du))) with u; [exact Hp|].
+    apply set_ext; intros [b z]. rewrite fun2set_thm.
+    unfold pred_set.DIFF, pred_set.IN, du. split.
+    + intros Hb. pose proof (Hu _ Hb) as Hg. apply fun2set_thm in Hg as [<- Hd].
+      split; [reflexivity|split; [exact Hd|intros [_ Hn]; exact (Hn Hb)]].
+    + intros [<- [Hd Hn]]. destruct (classic (u (b, f b))) as [Hy|Hy]; [exact Hy|exfalso; exact (Hn (conj Hd Hy))].
+  - replace (fun2set (f, df DIFF du)) with (fun2set (f, df) DIFF u); [exact Hq|].
+    apply set_ext; intros [b z]. unfold pred_set.DIFF at 1, pred_set.IN at 1 2.
+    rewrite !fun2set_thm. unfold pred_set.DIFF, pred_set.IN, du. split.
+    + intros [[<- Hd] Hn]; split; [reflexivity|split; [exact Hd|exact Hn]].
+    + intros [<- [Hd Hn]]; split; [split; [reflexivity|exact Hd]|exact Hn].
+Qed.
+
+End Fun2setStar.
+
+Section SepClauses.
+Context {A : Type}.
+
+Lemma DIFF_EMPTY' (s : A -> Prop) : s DIFF {} = s. Proof. sets. Qed.
+
+Ltac sep_ext := apply functional_extensionality; intros ?s; apply propositional_extensionality.
+
+(** HOL's [p \/ q] on assertions is [SEP_DISJ p q]; HOL's [T]/[F] are [True]/[False].
+    The quantified type of [SEP_EXISTS] is inhabited, as every HOL type. *)
+(*! HOL "HOL/examples/machine-code/hoare-triple/set_sepScript.sml" "SEP_CLAUSES" *)
+Theorem SEP_CLAUSES : forall {B} `{Inhabited B} (p : B -> (A -> Prop) -> Prop) (q t r : (A -> Prop) -> Prop)
+    (c c' : Prop) (x : B),
+  (STAR (SEP_EXISTS (fun v => p v)) q = SEP_EXISTS (fun v => STAR (p v) q)) /\
+  (STAR q (SEP_EXISTS (fun v => p v)) = SEP_EXISTS (fun v => STAR q (p v))) /\
+  (SEP_DISJ (SEP_EXISTS (fun v => p v)) q = SEP_EXISTS (fun v => SEP_DISJ (p v) q)) /\
+  (SEP_DISJ q (SEP_EXISTS (fun v => p v)) = SEP_EXISTS (fun v => SEP_DISJ q (p v))) /\
+  (SEP_EXISTS (fun v : B => q) = q) /\
+  (SEP_EXISTS (fun v => STAR (p v) (cond (v = x))) = p x) /\
+  (SEP_DISJ q SEP_F = q) /\ (SEP_DISJ SEP_F q = q) /\ (STAR SEP_F q = SEP_F) /\ (STAR q SEP_F = SEP_F) /\
+  (SEP_DISJ r r = r) /\ (STAR q (SEP_DISJ r t) = SEP_DISJ (STAR q r) (STAR q t)) /\
+  (STAR (SEP_DISJ r t) q = SEP_DISJ (STAR r q) (STAR t q)) /\
+  (SEP_DISJ (@cond A c) (cond c') = cond (c \/ c')) /\ (STAR (@cond A c) (cond c') = cond (c /\ c')) /\
+  (@cond A True = emp) /\ (@cond A False = SEP_F) /\ (STAR emp q = q) /\ (STAR q emp = q).
+Proof.
+  intros B HB p q t r c c' x.
+  assert (Eemp : forall q0 : (A -> Prop) -> Prop, STAR emp q0 = q0).
+  { intros q0; sep_ext. rewrite STAR_alt; split.
+    - intros (u & _ & -> & Hq). rewrite DIFF_EMPTY' in Hq; exact Hq.
+    - intros Hq. exists {}; split; [sets|split; [reflexivity|rewrite DIFF_EMPTY'; exact Hq]]. }
+  assert (EF : forall q0 : (A -> Prop) -> Prop, STAR SEP_F q0 = SEP_F).
+  { intros q0; sep_ext. rewrite STAR_alt; split; [intros (u & _ & [] & _)|intros []]. }
+  assert (Ec : forall (d : Prop) (q0 : (A -> Prop) -> Prop) s0, STAR (cond d) q0 s0 <-> d /\ q0 s0)
+    by (intros d q0 s0; exact (proj1 (cond_STAR d s0 q0))).
+  repeat split.
+  - sep_ext; rewrite STAR_alt; unfold SEP_EXISTS; split.
+    + intros (u & Hu & [v Hp] & Hq). exists v; apply STAR_alt; exists u; auto.
+    + intros [v Hs]; apply STAR_alt in Hs as (u & Hu & Hp & Hq). exists u; split; [exact Hu|split; [exists v; exact Hp|exact Hq]].
+  - rewrite STAR_COMM; sep_ext; rewrite STAR_alt; unfold SEP_EXISTS; split.
+    + intros (u & Hu & [v Hp] & Hq). exists v; rewrite STAR_COMM; apply STAR_alt; exists u; auto.
+    + intros [v Hs]; rewrite STAR_COMM in Hs; apply STAR_alt in Hs as (u & Hu & Hp & Hq).
+      exists u; split; [exact Hu|split; [exists v; exact Hp|exact Hq]].
+  - sep_ext; unfold SEP_DISJ, SEP_EXISTS; split.
+    + intros [[v Hp]|Hq]; [exists v; left; exact Hp|exists (@inhabitant B HB); right; exact Hq].
+    + intros [v [Hp|Hq]]; [left; exists v; exact Hp|right; exact Hq].
+  - sep_ext; unfold SEP_DISJ, SEP_EXISTS; split.
+    + intros [Hq|[v Hp]]; [exists (@inhabitant B HB); left; exact Hq|exists v; right; exact Hp].
+    + intros [v [Hq|Hp]]; [left; exact Hq|right; exists v; exact Hp].
+  - sep_ext; unfold SEP_EXISTS; split; [intros [_ Hq]; exact Hq|intros Hq; exists (@inhabitant B HB); exact Hq].
+  - sep_ext; unfold SEP_EXISTS; split.
+    + intros [v Hs]. rewrite STAR_COMM, Ec in Hs. destruct Hs as [-> Hp]; exact Hp.
+    + intros Hp. exists x. rewrite STAR_COMM, Ec. split; [reflexivity|exact Hp].
+  - sep_ext; unfold SEP_DISJ, SEP_F; tauto.
+  - sep_ext; unfold SEP_DISJ, SEP_F; tauto.
+  - apply EF.
+  - rewrite STAR_COMM; apply EF.
+  - sep_ext; unfold SEP_DISJ; tauto.
+  - sep_ext; unfold SEP_DISJ; rewrite !STAR_alt; split.
+    + intros (u & Hu & Hq & [Hr|Ht]); [left|right]; exists u; auto.
+    + intros [(u & Hu & Hq & Hr)|(u & Hu & Hq & Ht)]; exists u; auto.
+  - sep_ext; unfold SEP_DISJ; rewrite !STAR_alt; split.
+    + intros (u & Hu & [Hr|Ht] & Hq); [left|right]; exists u; auto.
+    + intros [(u & Hu & Hr & Hq)|(u & Hu & Ht & Hq)]; exists u; auto.
+  - sep_ext; unfold SEP_DISJ, cond; tauto.
+  - sep_ext; rewrite Ec; unfold cond; tauto.
+  - sep_ext; unfold cond, emp; tauto.
+  - sep_ext; unfold cond, SEP_F; tauto.
+  - apply Eemp.
+  - rewrite STAR_COMM; apply Eemp.
+Qed.
+
+End SepClauses.

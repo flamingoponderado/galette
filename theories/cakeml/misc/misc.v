@@ -10,8 +10,6 @@
       [eq_shape_def], [copy_shape_def], [range_def] (and the [num_set] /
       [num_map] type abbreviations);
     - need finite maps: [fmap_linv_def], [fmap_update_def];
-    - need [set_sep] / [byte] ([bytes_in_word]): [word_list_def],
-      [word_list_exists_def];
     - need [listTheory.oEL]: the [LLOOKUP] overload and its theorems;
     - need [rich_list] ([REPLICATE], [SPLITP]/[FIELDS]):
       [update_resize_def], [splitlines_def];
@@ -36,6 +34,8 @@ From Galette.HOL.src.combin Require combin.
 From Galette.HOL.src.coretypes Require pair.
 From Galette.HOL.src.sort Require Import ternaryComparisons.
 From Galette.HOL.src.finite_maps Require sptree.
+From Galette.HOL.src.n_bit Require byte.
+From Galette.HOL.examples.machine_code.hoare_triple Require set_sep.
 Open Scope N_scope.
 
 (** ** Options and lists *)
@@ -505,3 +505,21 @@ Definition tlookup (m : sptree.spt N) (k : N) : N :=
   | None => k
   | Some k => k
   end.
+
+(** [word_list a xs]: the words [xs] stored from address [a] on, as a
+    [set_sep] assertion. *)
+Section WordList.
+Context {a : N} {B : Type}.
+
+(*! HOL "cakeml/misc/miscScript.sml" "word_list_def" *)
+Fixpoint word_list (ad : word a) (xs : list B) : (word a * B -> Prop) -> Prop :=
+  match xs with
+  | [] => set_sep.emp
+  | x :: xs => set_sep.STAR (set_sep.one (ad, x)) (word_list (ad + byte.bytes_in_word)%w xs)
+  end.
+
+(*! HOL "cakeml/misc/miscScript.sml" "word_list_exists_def" *)
+Definition word_list_exists (ad : word a) (n : N) : (word a * B -> Prop) -> Prop :=
+  set_sep.SEP_EXISTS (fun xs => set_sep.STAR (word_list ad xs) (set_sep.cond (LENGTH xs = n))).
+
+End WordList.
