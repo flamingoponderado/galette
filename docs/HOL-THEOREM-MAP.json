@@ -1431,6 +1431,16 @@
  },
  {
   "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "LPREFIX_NTH",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "LPREFIX_NTH"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
   "hol_name": "build_lprefix_lub_def",
   "hol_line": null,
   "case": null,
@@ -1448,6 +1458,106 @@
   "note": "",
   "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
   "rocq_name": "build_lprefix_lub_f"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "build_lprefix_lub_lem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "build_lprefix_lub_lem"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "build_lprefix_lub_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "build_lprefix_lub_thm"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "build_prefix_lub_intro",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "build_prefix_lub_intro"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "equiv_lprefix_chain_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "equiv_lprefix_chain"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "equiv_lprefix_chain_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "equiv_lprefix_chain_thm"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "exists_lprefix_chain_nth",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "exists_lprefix_chain_nth"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "less_opt_LLENGTH_LNTH_SOME",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "less_opt_LLENGTH_LNTH_SOME"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "less_opt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "less_opt"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lnth_some_length",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lnth_some_length"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_chain_LNTHs_agree",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_chain_LNTHs_agree"
  },
  {
   "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
@@ -1471,6 +1581,26 @@
  },
  {
   "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_chain_nth_none_mono",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_chain_nth_none_mono"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_chain_subset",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_chain_subset"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
   "hol_name": "lprefix_lub_def",
   "hol_line": null,
   "case": null,
@@ -1478,6 +1608,86 @@
   "note": "",
   "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
   "rocq_name": "lprefix_lub"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_lub_equiv_chain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_lub_equiv_chain"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_lub_equiv_chain2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_lub_equiv_chain2"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_lub_is_chain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_lub_is_chain"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_lub_new_chain",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_lub_new_chain"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_lub_nth",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_lub_nth"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "lprefix_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "lprefix_rel"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "not_exists_lprefix_chain_nth",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "not_exists_lprefix_chain_nth"
+ },
+ {
+  "hol_path": "HOL/examples/pl-semantics/lprefix_lub/lprefix_lubScript.sml",
+  "hol_name": "unique_lprefix_lub",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/examples/pl_semantics/lprefix_lub/lprefix_lub.v",
+  "rocq_name": "unique_lprefix_lub"
  },
  {
   "hol_path": "HOL/src/coalgebras/llistScript.sml",
