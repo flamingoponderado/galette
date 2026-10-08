@@ -64,6 +64,28 @@ END = re.compile(r"^End\b")
 INDUCTIVE = re.compile(r"^(?:Co)?Inductive\s+([A-Za-z0-9_']+)\s*:")
 
 
+def strip_sml_comments(text: str) -> str:
+    """Blank out (nested) SML comments, keeping line breaks, so declarations
+    that HOL has commented out are not counted."""
+    out, depth, i, n = [], 0, 0, len(text)
+    while i < n:
+        if text.startswith("(*", i) and not text.startswith("(*)", i):
+            depth += 1
+            out.append("  ")
+            i += 2
+        elif depth and text.startswith("*)", i):
+            depth -= 1
+            out.append("  ")
+            i += 2
+        elif depth:
+            out.append("\n" if text[i] == "\n" else " ")
+            i += 1
+        else:
+            out.append(text[i])
+            i += 1
+    return "".join(out)
+
+
 def hol_declarations(path: Path, cache: dict) -> dict[str, list[int]]:
     """Names declared by a HOL script, with their source lines."""
     if path in cache:
@@ -75,7 +97,7 @@ def hol_declarations(path: Path, cache: dict) -> dict[str, list[int]]:
 
     in_datatype = False
     expect_name = False
-    for number, line in enumerate(path.read_text(errors="replace").splitlines(), 1):
+    for number, line in enumerate(strip_sml_comments(path.read_text(errors="replace")).splitlines(), 1):
         if in_datatype:
             if END.match(line):
                 in_datatype = False

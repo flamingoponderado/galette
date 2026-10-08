@@ -30740,6 +30740,356 @@
   "rocq_name": "tokcheck"
  },
  {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "dec_clock_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "dec_clock"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "empty_locals_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "empty_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "fix_clock_IMP_LESS_EQ",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "fix_clock_IMP_LESS_EQ"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "fix_clock_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "fix_clock"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "flatten_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "flatten_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "isValWord_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "isValWord"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "isWord_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "isWord"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "is_valid_value_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "is_valid_value"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "lookup_code_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "lookup_code"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "lookup_kvar_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "lookup_kvar"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_load_32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_load_32"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_load_byte_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_load_byte"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_load_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_store_32_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_store_32"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_store_byte_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_store_byte"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_store"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "mem_stores_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "mem_stores"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "nb_op_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "nb_op"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "pan_op_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "pan_op"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "pan_primop_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "pan_primop"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "res_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "res_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "result",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "result"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "set_global_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "set_global"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "set_kvar_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "set_kvar"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "set_var_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "set_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "sh_mem_load_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "sh_mem_load"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "sh_mem_store_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "sh_mem_store"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "shape_of_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "shape_of"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "state"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "theValWord_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "theValWord"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "theWord_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "theWord"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "upd_locals_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "upd_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "v",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "v"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "word_lab",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "word_lab"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panSemScript.sml",
+  "hol_name": "write_bytearray_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panSem.v",
+  "rocq_name": "write_bytearray"
+ },
+ {
   "hol_path": "cakeml/semantics/astScript.sml",
   "hol_name": "conN",
   "hol_line": null,
