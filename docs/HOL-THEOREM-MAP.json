@@ -8291,6 +8291,16 @@
  },
  {
   "hol_path": "HOL/src/list/src/rich_listScript.sml",
+  "hol_name": "LASTN_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/list/src/rich_list/lastn.v",
+  "rocq_name": "LASTN"
+ },
+ {
+  "hol_path": "HOL/src/list/src/rich_listScript.sml",
   "hol_name": "LENGTH_COUNT_LIST",
   "hol_line": null,
   "case": null,
@@ -23191,6 +23201,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
+  "hol_name": "mem_load_32_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
+  "rocq_name": "mem_load_32_alt"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
   "hol_name": "mem_load_32_def",
   "hol_line": null,
   "case": null,
@@ -28638,6 +28658,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/misc/misc.v",
   "rocq_name": "find_index"
+ },
+ {
+  "hol_path": "cakeml/misc/miscScript.sml",
+  "hol_name": "fromList2_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/misc/misc/fromList2.v",
+  "rocq_name": "fromList2"
  },
  {
   "hol_path": "cakeml/misc/miscScript.sml",

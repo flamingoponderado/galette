@@ -27,14 +27,8 @@
     - The floating-point instructions of [inst] use the [machine_ieee]
       stand-ins (unspecified values until [machine_ieee] is ported).
 
-    Not ported (see the docstrings):
-    - [mem_load_32_alt] (needs bit-blasting of [word_of_bytes]);
-    - HOL's [evaluate_ind] (the recursion-induction principle; use
-      well-founded induction on [eval_lt] instead).
-
-    [fromList2] (HOL [miscScript]) and [LASTN] (HOL [rich_listScript]) are
-    not yet in the shared libraries; local untagged copies are defined
-    below. *)
+    Not ported: HOL's [evaluate_ind] (the recursion-induction principle;
+    use well-founded induction on [eval_lt] instead). *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -43,6 +37,7 @@ From Galette.HOL.src.list.src Require Import list rich_list.
 From Galette.HOL.src.coretypes Require Import option pair.
 From Galette.HOL.src.combin Require Import combin.
 From Galette.HOL.src.n_bit Require Import words alignment byte.
+From Galette.HOL.src.n_bit.byte Require Import word_of_bytes4.
 From Galette.HOL.src.integer Require Import integer_word.
 From Galette.HOL.src.pred_set.src Require Import pred_set.
 From Galette.HOL.src.finite_maps Require Import finite_map sptree.
@@ -51,18 +46,14 @@ From Galette.HOL.src.floating_point Require Import binary_ieee machine_ieee.
 From Galette.HOL.examples.pl_semantics.lprefix_lub Require Import lprefix_lub.
 From Galette.cakeml.basis.pure Require Import mlstring mllist.
 From Galette.cakeml.misc Require Import misc.
+From Galette.cakeml.misc.misc Require Import fromList2.
+From Galette.HOL.src.list.src.rich_list Require Import lastn.
 From Galette.cakeml.semantics.ffi Require Import ffi.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.cakeml.compiler.backend Require Import backend_common stackLang wordLang.
 Open Scope N_scope.
 
-(** Local copies of library definitions not yet ported in their own
-    modules (HOL [miscScript]'s [fromList2_def], [rich_listScript]'s
-    [LASTN_def]); untagged here, to be moved. *)
-Definition fromList2 {A} (l : list A) : num_map A :=
-  snd (FOLDL (fun '(i, t) a0 => (i + 2, insert i a0 t)) (0, LN) l).
 
-Definition LASTN {A} (n : N) (xs : list A) : list A := REVERSE (TAKE n (REVERSE xs)).
 
 (** ** Code and data buffers *)
 
@@ -161,6 +152,32 @@ Definition mem_load_32 (m : word a -> word_loc a) (dm : word a -> Prop) (be : bo
         else NONE
     end
   else NONE.
+
+(*! HOL "cakeml/compiler/backend/semantics/wordSemScript.sml" "mem_load_32_alt" *)
+Theorem mem_load_32_alt : forall m dm be (w : word a),
+  mem_load_32 m dm be w =
+  if aligned 2 w then
+    match m (byte_align w) with
+    | Loc _ _ => NONE
+    | Word v =>
+        if classical_dec (byte_align w IN dm) then
+          let b0 := get_byte w v be in
+          let b1 := get_byte (w + n2w 1)%w v be in
+          let b2 := get_byte (w + n2w 2)%w v be in
+          let b3 := get_byte (w + n2w 3)%w v be in
+          let v' := (if be
+                     then (w2w b0 << 24 || w2w b1 << 16 || w2w b2 << 8 || w2w b3)%w
+                     else (w2w b0 || w2w b1 << 8 || w2w b2 << 16 || w2w b3 << 24)%w) in
+          SOME (v' : word32)
+        else NONE
+    end
+  else NONE.
+Proof.
+  intros m dm be w; unfold mem_load_32.
+  destruct (aligned 2 w); [|reflexivity].
+  destruct (m (byte_align w)) as [v|? ?]; [|reflexivity]. destruct (classical_dec _); [|reflexivity].
+  cbv zeta; f_equal; destruct be; [apply word_of_bytes_4_be|apply word_of_bytes_4_le].
+Qed.
 
 (*! HOL "cakeml/compiler/backend/semantics/wordSemScript.sml" "mem_store_32_def" *)
 Definition mem_store_32 (m : word a -> word_loc a) (dm : word a -> Prop) (be : bool)
