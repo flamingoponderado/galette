@@ -21,13 +21,11 @@
     [call_preserve_state_code_locals_rel].  The observable-semantics
     theorems use [crep_to_loopProof.semantics_wrapper]: by
     [pc_compile_correct] the Pancake and CrepLang runs agree for every
-    clock, so the two wrapped functions are equal.
+    clock, so the two wrapped functions are equal.  [state_rel_imp_semantics]
+    composes [state_rel_imp_semantics_to_crep] (on the target state with the
+    un-inlined code) with [crep_inlineProof.state_rel_imp_semantics].
 
     Not ported:
-    - [state_rel_imp_semantics], [state_rel_imp_semantics_decls]: they go
-      through [crep_inlineProof]'s [state_rel_imp_semantics], which is not
-      ported yet ([state_rel_imp_semantics_to_crep] and
-      [state_rel_imp_semantics_decls_to_crep] are).
     - [evaluate_shape_invariant_ret_inst], [evaluate_shape_invariant_ret_inst2],
       [call_preserve_state_code_locals_rel]: see above.
     - [compile_exp_not_mem_load_glob], [load_shape_el_rel], [mem_comp_field],
@@ -56,7 +54,7 @@ From Galette.cakeml.compiler.backend Require wordLang.
 From Galette.cakeml.pancake Require Import panLang pan_common crepLang pan_to_crep.
 From Galette.cakeml.pancake.semantics Require panSem panProps.
 From Galette.cakeml.pancake.semantics Require Import pan_commonProps crepSem crepProps.
-From Galette.cakeml.pancake.proofs Require crep_to_loopProof.
+From Galette.cakeml.pancake.proofs Require crep_to_loopProof crep_inlineProof.
 Import crep_to_loopProof(semantics_run_res(..)).
 Import panSem(word_lab(..), shape_of, flatten).
 Open Scope N_scope.
@@ -3052,6 +3050,87 @@ Proof.
   rewrite (panProps.evaluate_decls_only_funs_and_exn_decls _ _ _ (conj Hfe Ed)) in Hsem |- *.
   cbn [panSem.set_structs panSem.eshapes panSem.code] in Hsem |- *. rewrite Hsc, Hse in Hsem |- *.
   apply (state_rel_imp_semantics_to_crep _ _ pan_code). pcbn. cbn [panSem.set_eshapes panSem.set_code panSem.set_structs
+    panSem.eshapes panSem.code panSem.locals].
+  split; [|split; [exact Hd|]].
+  { unfold state_rel in *. pcbn. cbn [panSem.set_eshapes panSem.set_code panSem.set_structs] in *.
+    pcbn. exact Hs. }
+  split.
+  { apply fmap_ext. intros k. rewrite FLOOKUP_FEMPTY_FUPDATE_LIST_distinct, FLOOKUP_alist_to_fmap; [reflexivity|].
+    apply ALL_DISTINCT_iff. exact Hd. }
+  split; [exact Htc|]. split; [exact Hsl|]. split; [exact Hloc|]. split; [exact Hsz|].
+  split; [|exact Hsem].
+  apply functional_extensionality. intros k. apply propositional_extensionality.
+  rewrite FDOM_FEMPTY_FUPDATE_LIST. unfold get_eids_from_decls. cbv zeta. unfold FDOM.
+  rewrite FLOOKUP_alist_to_fmap. split.
+  - intros Hin E. apply ALOOKUP_None_iff in E. apply E.
+    rewrite map_fst_MAP2_pair by (rewrite LENGTH_GENLIST'; reflexivity). exact Hin.
+  - intros Hn. destruct (in_dec (fun x y => decide (x = y)) k (map fst (exceptions pan_code))) as [Hin|Hnin];
+      [exact Hin|]. exfalso. apply Hn. apply ALOOKUP_None_iff.
+    rewrite map_fst_MAP2_pair by (rewrite LENGTH_GENLIST'; reflexivity). exact Hnin.
+Qed.
+
+(** Galette-only: [semantics] is [Fail] when the start function is not in
+    the code. *)
+Lemma semantics_no_start (t : state a ffi_t) start :
+  FLOOKUP (code t) start = NONE -> semantics t start = Fail.
+Proof.
+  intros Hf. unfold semantics. cbv zeta. destruct (classical_dec _) as [_|Hn]; [reflexivity|].
+  exfalso. apply Hn. exists 0. rewrite crepProps.evaluate_unfold. cbn [evaluate_body OPT_MMAP].
+  unfold lookup_code. cbn [code set_clock]. rewrite Hf. exact Logic.I.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/pan_to_crepProofScript.sml" "state_rel_imp_semantics" *)
+Theorem state_rel_imp_semantics :
+  forall (s : panSem.state a ffi_t) (t : state a ffi_t) (pan_code : list (decl a)) start,
+    state_rel s t /\
+    ALL_DISTINCT (MAP FST (functions pan_code)) /\
+    panSem.code s = alist_to_fmap (functions pan_code) /\
+    code t = alist_to_fmap (compile_prog pan_code) /\
+    panSem.locals s = FEMPTY /\
+    EVERY (panProps.localised_prog ∘ FST ∘ SND ∘ SND) (functions pan_code) /\
+    size_of_eids pan_code < dimword a /\
+    FDOM (panSem.eshapes s) = FDOM (get_eids_from_decls pan_code) /\
+    panSem.semantics s start <> Fail ->
+    semantics t start = panSem.semantics s start.
+Proof.
+  intros s t pan_code start (Hs & Hd & Hsc & Htc & Hsl & Hloc & Hsz & Hfd & Hsem).
+  set (crep_code := compile_to_crep pan_code).
+  set (t_un := set_code (alist_to_fmap crep_code) t).
+  assert (E1 : semantics t_un start = panSem.semantics s start).
+  { apply (state_rel_imp_semantics_to_crep s t_un pan_code start).
+    split; [exact Hs|]. split; [exact Hd|]. split; [exact Hsc|]. split; [reflexivity|].
+    split; [exact Hsl|]. split; [exact Hloc|]. split; [exact Hsz|]. split; [exact Hfd|exact Hsem]. }
+  rewrite <- E1. rewrite <- E1 in Hsem.
+  destruct (FLOOKUP (code t_un) start) as [[ns prog]|] eqn:Hf.
+  - apply (crep_inlineProof.state_rel_imp_semantics t_un t crep_code start
+             (MAP FST (functions (FILTER inlinable pan_code))) ns prog).
+    split; [repeat split|]. split; [reflexivity|].
+    split; [apply first_compile_to_crep_all_distinct, Hd|]. split; [reflexivity|].
+    split; [rewrite Htc; reflexivity|]. split; [exact Hf|exact Hsem].
+  - exfalso. apply Hsem. apply semantics_no_start, Hf.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/pan_to_crepProofScript.sml" "state_rel_imp_semantics_decls" *)
+Theorem state_rel_imp_semantics_decls :
+  forall (s : panSem.state a ffi_t) (t : state a ffi_t) (pan_code : list (decl a)) start,
+    state_rel (panSem.set_structs [] s) t /\
+    ALL_DISTINCT (MAP FST (functions pan_code)) /\
+    panSem.code s = FEMPTY /\
+    code t = alist_to_fmap (compile_prog pan_code) /\
+    panSem.locals s = FEMPTY /\
+    panSem.eshapes s = FEMPTY /\
+    EVERY (panProps.localised_prog ∘ FST ∘ SND ∘ SND) (functions pan_code) /\
+    EVERY (fun x => is_function x || is_exn_decl x) pan_code /\
+    size_of_eids pan_code < dimword a /\
+    panSem.semantics_decls s start pan_code <> Fail ->
+    semantics t start = panSem.semantics_decls s start pan_code.
+Proof.
+  intros s t pan_code start (Hs & Hd & Hsc & Htc & Hsl & Hse & Hloc & Hfe & Hsz & Hsem).
+  unfold panSem.semantics_decls in *. rewrite decs_stcnames_lemma in * by exact Hfe.
+  destruct (panSem.evaluate_decls (panSem.set_structs [] s) pan_code) as [s'|] eqn:Ed; [|contradiction].
+  rewrite (panProps.evaluate_decls_only_funs_and_exn_decls _ _ _ (conj Hfe Ed)) in Hsem |- *.
+  cbn [panSem.set_structs panSem.eshapes panSem.code] in Hsem |- *. rewrite Hsc, Hse in Hsem |- *.
+  apply (state_rel_imp_semantics _ _ pan_code). pcbn. cbn [panSem.set_eshapes panSem.set_code panSem.set_structs
     panSem.eshapes panSem.code panSem.locals].
   split; [|split; [exact Hd|]].
   { unfold state_rel in *. pcbn. cbn [panSem.set_eshapes panSem.set_code panSem.set_structs] in *.
