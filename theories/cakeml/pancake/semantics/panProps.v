@@ -1636,3 +1636,97 @@ Proof.
 Qed.
 
 End EvalWf.
+
+(** ** Localised programs *)
+
+Section Localised.
+Context {a : N}.
+
+(** HOL's [every_exp]; the [NStruct] clause maps over the pairs instead of
+    over [MAP SND nm_es] (structural recursion), and HOL's equations are
+    [every_exp_def] below. *)
+Fixpoint every_exp (P : exp a -> bool) (e : exp a) : bool :=
+  match e with
+  | Const w => P (Const w)
+  | Var vk v => P (Var vk v)
+  | panLang.RStruct es => P (panLang.RStruct es) && EVERY (every_exp P) es
+  | RField i e => P (RField i e) && every_exp P e
+  | panLang.NStruct nm nm_es =>
+      P (panLang.NStruct nm nm_es) && EVERY (fun p => every_exp P (SND p)) nm_es
+  | NField i e => P (NField i e) && every_exp P e
+  | Load sh e => P (Load sh e) && every_exp P e
+  | Load32 e => P (Load32 e) && every_exp P e
+  | LoadByte e => P (LoadByte e) && every_exp P e
+  | Op bop es => P (Op bop es) && EVERY (every_exp P) es
+  | Panop op es => P (Panop op es) && EVERY (every_exp P) es
+  | Cmp c e1 e2 => P (Cmp c e1 e2) && every_exp P e1 && every_exp P e2
+  | Shift sh e1 e2 => P (Shift sh e1 e2) && every_exp P e1 && every_exp P e2
+  | BaseAddr => P BaseAddr
+  | TopAddr => P TopAddr
+  | BytesInWord => P BytesInWord
+  end.
+
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "every_exp_def" *)
+Theorem every_exp_def : forall P,
+  (forall w, every_exp P (Const w) = P (Const w)) /\
+  (forall vk v, every_exp P (Var vk v) = P (Var vk v)) /\
+  (forall es, every_exp P (panLang.RStruct es) = (P (panLang.RStruct es) && EVERY (every_exp P) es)) /\
+  (forall i e, every_exp P (RField i e) = (P (RField i e) && every_exp P e)) /\
+  (forall nm nm_es, every_exp P (panLang.NStruct nm nm_es) =
+     (P (panLang.NStruct nm nm_es) && EVERY (every_exp P) (MAP SND nm_es))) /\
+  (forall i e, every_exp P (NField i e) = (P (NField i e) && every_exp P e)) /\
+  (forall sh e, every_exp P (Load sh e) = (P (Load sh e) && every_exp P e)) /\
+  (forall e, every_exp P (Load32 e) = (P (Load32 e) && every_exp P e)) /\
+  (forall e, every_exp P (LoadByte e) = (P (LoadByte e) && every_exp P e)) /\
+  (forall bop es, every_exp P (Op bop es) = (P (Op bop es) && EVERY (every_exp P) es)) /\
+  (forall op es, every_exp P (Panop op es) = (P (Panop op es) && EVERY (every_exp P) es)) /\
+  (forall c e1 e2, every_exp P (Cmp c e1 e2) = (P (Cmp c e1 e2) && every_exp P e1 && every_exp P e2)) /\
+  (forall sh e1 e2, every_exp P (Shift sh e1 e2) = (P (Shift sh e1 e2) && every_exp P e1 && every_exp P e2)) /\
+  every_exp P BaseAddr = P BaseAddr /\
+  every_exp P TopAddr = P TopAddr /\
+  every_exp P BytesInWord = P BytesInWord.
+Proof.
+  intros P. repeat split; intros; try reflexivity.
+  cbn [every_exp]. f_equal. induction nm_es as [|[n e] l IH]; [reflexivity|]. cbn. rewrite IH. reflexivity.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "localised_exp_real_def" *)
+Definition localised_exp : exp a -> bool :=
+  every_exp (fun e => match e with Var tp _ => bool_decide (tp = Local) | _ => true end).
+
+(** HOL's catch-all clause [localised_prog _ ⇔ T] covers the remaining
+    constructors. *)
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "localised_prog_def" *)
+Fixpoint localised_prog (p : prog a) : bool :=
+  match p with
+  | Raise _ e => localised_exp e
+  | Dec _ _ e p => localised_exp e && localised_prog p
+  | Seq p q => localised_prog p && localised_prog q
+  | If e p q => localised_exp e && localised_prog p && localised_prog q
+  | While e p => localised_exp e && localised_prog p
+  | Store e1 e2 => localised_exp e1 && localised_exp e2
+  | Store32 e1 e2 => localised_exp e1 && localised_exp e2
+  | StoreByte e1 e2 => localised_exp e1 && localised_exp e2
+  | ExtCall fn e1 e2 e3 e4 =>
+      localised_exp e1 && localised_exp e2 && localised_exp e3 && localised_exp e4
+  | panLang.Return e => localised_exp e
+  | ShMemStore op e1 e2 => localised_exp e1 && localised_exp e2
+  | ShMemLoad op vk v e => bool_decide (vk = Local) && localised_exp e
+  | Call hdl f args =>
+      EVERY localised_exp args &&
+      match hdl with
+      | SOME (_, SOME (_, (_, p))) => localised_prog p
+      | _ => true
+      end &&
+      match hdl with
+      | SOME (SOME (Global, _), _) => false
+      | _ => true
+      end
+  | DecCall vn sh fn args p => EVERY localised_exp args && localised_prog p
+  | Assign Local _ e => localised_exp e
+  | Assign Global _ _ => false
+  | Primitive _ _ es => EVERY localised_exp es
+  | _ => true
+  end.
+
+End Localised.

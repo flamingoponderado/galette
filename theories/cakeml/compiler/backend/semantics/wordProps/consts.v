@@ -969,3 +969,48 @@ Proof.
 Qed.
 
 End ConstLemmas3.
+
+Section ConstLemmas4.
+Context {a : N} {c ffi_t : Type}.
+Local Abbreviation state := (state a c ffi_t).
+
+(*! HOL "cakeml/compiler/backend/semantics/wordPropsScript.sml" "inst_const" *)
+Theorem inst_const : forall i (s s' : state),
+  inst i s = SOME s' ->
+  clock s' = clock s /\
+  ffi s' = ffi s.
+Proof.
+  intros i s s' H;
+    destruct i as [|r w|ar|m r [ad w]|f]; [|cbn [inst] in H|destruct ar|destruct m|destruct f];
+    cbn [inst] in H; unfold assign in H; split_H H; leaf H; repeat match goal with E : mem_store _ _ _ = SOME _ |- _ => apply mem_store_const in E end;
+    destr_conj; unfold flush_state, set_var, set_vars, set_fp_var in *;
+    repeat match goal with |- context [if ?b then _ else _] => destruct b end; unfold_sets; split; congruence.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/semantics/wordPropsScript.sml" "share_inst_const" *)
+Theorem share_inst_const : forall op v c0 (s : state) res s',
+  share_inst op v c0 s = (res, s') ->
+  be s' = be s /\
+  gc_fun s' = gc_fun s /\
+  mdomain s' = mdomain s /\
+  sh_mdomain s' = sh_mdomain s /\
+  code s' = code s /\
+  code_buffer s' = code_buffer s /\
+  data_buffer s' = data_buffer s /\
+  compile s' = compile s /\
+  compile_oracle s' = compile_oracle s /\
+  permute s' = permute s /\
+  clock s' = clock s /\
+  handler s' = handler s /\
+  stack_limit s' = stack_limit s /\
+  stack_max s' = stack_max s.
+Proof.
+  intros op v c0 s res s' H; destruct op; cbn [share_inst] in H;
+    unfold sh_mem_set_var, sh_mem_load, sh_mem_load_byte, sh_mem_load16, sh_mem_load32,
+      sh_mem_store, sh_mem_store_byte, sh_mem_store16, sh_mem_store32 in H;
+    split_H H; leaf H; repeat match goal with E : mem_store _ _ _ = SOME _ |- _ => apply mem_store_const in E end;
+    destr_conj; unfold flush_state, set_var, set_vars, set_fp_var in *;
+    repeat match goal with |- context [if ?b then _ else _] => destruct b end; unfold_sets; repeat split; reflexivity.
+Qed.
+
+End ConstLemmas4.

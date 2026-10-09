@@ -48,9 +48,9 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/proofs/pan_structsProof, pan_globalsProof | todo |
 | pancake/proofs/crep_arithProof, crep_inlineProof | partial |
 | pancake/proofs/loop_callProof, loop_liveProof | done |
-| pancake/proofs/pan_to_crepProof | wip |
+| pancake/proofs/pan_to_crepProof | done except state_rel_imp_semantics(_decls) (needs crep_inlineProof); `_to_crep` variants proved |
 | pancake/proofs/crep_to_loopProof | done (`state_rel_imp_semantics`) |
-| pancake/proofs/loop_to_wordProof | wip |
+| pancake/proofs/loop_to_wordProof | compile_correct + state_rel_imp_semantics done; no_*_code / inst_ok_less lemmas pending |
 | pancake/proofs/pan_to_wordProof | todo |
 | backend/reg_alloc/parmoveScript theorems | done |
 | backend/reg_alloc/proofs/reg_allocProof | done (`reg_alloc_correct`) |

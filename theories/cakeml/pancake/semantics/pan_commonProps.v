@@ -7,18 +7,16 @@
     Carrier notes: HOL's [MEM] is the boolean [MEM]; list indices are [N]
     ([EL], [TAKE], [DROP], [LENGTH]); [set] is [LIST_TO_SET].
 
-    Not yet ported (not needed by [panProps]/[pan_simpProof]):
-    [opt_mmap_some_eq_zip_flookup], [opt_mmap_disj_zip_flookup],
-    [genlist_distinct_max], [genlist_distinct_max'], [mem_genlist_add_suc_val],
-    [update_eq_zip_map_flookup], [map_flookup_fupdate_zip_not_mem],
-    [fm_multi_update], [zero_not_mem_genlist_offset], [fm_empty_zip_alist],
+    Not yet ported (not needed by [panProps]/[pan_simpProof]/[pan_to_crepProof]):
+    [genlist_distinct_max'], [update_eq_zip_map_flookup],
+    [map_flookup_fupdate_zip_not_mem], [fm_multi_update],
+    [zero_not_mem_genlist_offset], [fm_empty_zip_alist],
     [fm_empty_zip_flookup], [fm_empty_zip_flookup_el],
-    [all_distinct_flookup_all_distinct], [no_overlap_flookup_distinct],
     [fupdate_flookup_zip_elim], [not_mem_fst_zip_flookup_empty],
-    [fm_zip_append_take_drop], [max_set_MAX_LIST], [MAX_LIST_add_not_mem],
-    the [subspt_*] lemmas, [max_set_count_length], [MAX_LIST_i_genlist],
-    [lookup_some_el], [max_foldr_lt], [fm_update_diff_vars],
-    [fmap_to_alist_eq_fm], [MAP3_MAP2]. *)
+    [fm_zip_append_take_drop], [max_set_MAX_LIST], the [subspt_*] lemmas,
+    [max_set_count_length], [MAX_LIST_i_genlist], [lookup_some_el],
+    [max_foldr_lt], [fm_update_diff_vars], [fmap_to_alist_eq_fm],
+    [MAP3_MAP2]. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -416,3 +414,104 @@ Proof.
 Qed.
 
 End FmapProps.
+
+(** ** Further list and finite-map lemmas *)
+
+Lemma OPT_MMAP_ext_In'' {A B} (f g : A -> option B) l :
+  (forall x, In x l -> f x = g x) -> OPT_MMAP f l = OPT_MMAP g l.
+Proof.
+  induction l as [|x l IH]; intros H; [reflexivity|]. cbn.
+  rewrite (H x (or_introl eq_refl)), IH by (intros; apply H; right; assumption). reflexivity.
+Qed.
+
+Section MoreProps.
+Context {K V : Type} {HdecK : EqDecision K}.
+
+Lemma In_ZIP_fst_iff (xs : list K) (ys : list V) k :
+  LENGTH xs = LENGTH ys -> In k (map fst (ZIP (xs, ys))) <-> In k xs.
+Proof.
+  revert ys; induction xs as [|x xs IH]; intros [|y ys] Hl; cbn in *; try tauto;
+    try (rewrite !LENGTH_length in Hl; cbn in Hl; lia).
+  rewrite IH by (rewrite !LENGTH_length in *; cbn in Hl; lia). tauto.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/pan_commonPropsScript.sml" "opt_mmap_flookup_update" *)
+Theorem opt_mmap_flookup_update : forall (fm : fmap K V) xs ys x y,
+  OPT_MMAP (FLOOKUP fm) xs = SOME ys /\ ~ is_true (MEM x xs) ->
+  OPT_MMAP (FLOOKUP (fm |+ (x, y))) xs = SOME ys.
+Proof.
+  intros fm xs ys x y [H Hn]. rewrite <- H. apply OPT_MMAP_ext_In''; intros z Hz.
+  rewrite FLOOKUP_UPDATE. destruct (decide (x = z)) as [->|]; [|reflexivity].
+  exfalso; apply Hn; unfold is_true; rewrite MEM_In; exact Hz.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/pan_commonPropsScript.sml" "opt_mmap_some_eq_zip_flookup" *)
+Theorem opt_mmap_some_eq_zip_flookup : forall (xs : list K) (f : fmap K V) ys,
+  is_true (ALL_DISTINCT xs) /\ LENGTH xs = LENGTH ys ->
+  OPT_MMAP (FLOOKUP (f |++ ZIP (xs, ys))) xs = SOME ys.
+Proof.
+  induction xs as [|x xs IH]; intros f [|y ys] [Hd Hl]; try reflexivity;
+    try (rewrite !LENGTH_length in Hl; cbn in Hl; lia).
+  cbn [ALL_DISTINCT] in Hd. unfold is_true in Hd; apply andb_prop in Hd as [Hn Hd].
+  change (ZIP (x :: xs, y :: ys)) with ((x, y) :: ZIP (xs, ys)).
+  change (f |++ ((x, y) :: ZIP (xs, ys))) with ((f |+ (x, y)) |++ ZIP (xs, ys)).
+  assert (Hl' : LENGTH xs = LENGTH ys) by (rewrite !LENGTH_length in *; cbn in Hl; lia).
+  cbn [OPT_MMAP]. rewrite FLOOKUP_FUPDATE_LIST_notin.
+  - rewrite FLOOKUP_UPDATE. destruct (decide (x = x)); [|congruence].
+    rewrite IH; [reflexivity|]. split; [exact Hd|exact Hl'].
+  - rewrite In_ZIP_fst_iff by exact Hl'.
+    intros Hi. apply MEM_In in Hi. rewrite Hi in Hn. discriminate.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/pan_commonPropsScript.sml" "opt_mmap_disj_zip_flookup" *)
+Theorem opt_mmap_disj_zip_flookup : forall (xs : list K) (f : fmap K V) ys zs,
+  is_true (distinct_lists xs ys) /\ LENGTH xs = LENGTH zs ->
+  OPT_MMAP (FLOOKUP (f |++ ZIP (xs, zs))) ys = OPT_MMAP (FLOOKUP f) ys.
+Proof.
+  intros xs f ys zs [Hd Hl]. apply OPT_MMAP_ext_In''; intros y Hy.
+  apply FLOOKUP_FUPDATE_LIST_notin. rewrite In_ZIP_fst_iff by exact Hl.
+  rewrite distinct_lists_iff in Hd. intros Hx; exact (Hd y Hx Hy).
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/pan_commonPropsScript.sml" "all_distinct_flookup_all_distinct" *)
+Theorem all_distinct_flookup_all_distinct : forall {C} (fm : fmap K (C * list N)) x y zs,
+  no_overlap fm /\ FLOOKUP fm x = SOME (y, zs) -> is_true (ALL_DISTINCT zs).
+Proof. intros C fm x y zs [[H _] Hf]. exact (H _ _ _ Hf). Qed.
+
+(*! HOL "cakeml/pancake/semantics/pan_commonPropsScript.sml" "no_overlap_flookup_distinct" *)
+Theorem no_overlap_flookup_distinct : forall {C} (fm : fmap K (C * list N)) x y a0 b xs ys,
+  no_overlap fm /\ x <> y /\ FLOOKUP fm x = SOME (a0, xs) /\ FLOOKUP fm y = SOME (b, ys) ->
+  is_true (distinct_lists xs ys).
+Proof.
+  intros C fm x y a0 b xs ys ([_ H] & Hne & Hx & Hy).
+  apply distinct_lists_eq_disjoint. destruct (classical_dec (DISJOINT (set xs) (set ys))) as [D|D];
+    [exact D|]. exfalso. apply Hne. exact (H x y a0 b xs ys (conj Hx (conj Hy D))).
+Qed.
+
+End MoreProps.
+
+(*! HOL "cakeml/pancake/semantics/pan_commonPropsScript.sml" "genlist_distinct_max" *)
+Theorem genlist_distinct_max : forall n (ys : list N) m,
+  (forall y, is_true (MEM y ys) -> y <= m) ->
+  is_true (distinct_lists (GENLIST (fun x => SUC x + m) n) ys).
+Proof.
+  intros n ys m H. apply distinct_lists_iff. intros x Hx Hy.
+  apply In_GENLIST_iff in Hx as (i & Hi & ->). specialize (H _ (proj2 (MEM_In _ _) Hy)). cbv beta in H. lia.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/pan_commonPropsScript.sml" "mem_genlist_add_suc_val" *)
+Theorem mem_genlist_add_suc_val : forall n x k,
+  is_true (MEM x (GENLIST (fun x => SUC x + k) n)) -> k < x /\ x <= n + k.
+Proof.
+  intros n x k H. apply MEM_In, In_GENLIST_iff in H as (i & Hi & ->). cbv beta. lia.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/pan_commonPropsScript.sml" "MAX_LIST_add_not_mem" *)
+Theorem MAX_LIST_add_not_mem : forall xs, ~ is_true (MEM (MAX_LIST xs + 1) xs).
+Proof.
+  assert (G : forall xs x, In x xs -> x <= MAX_LIST xs).
+  { induction xs as [|y xs IH]; intros x Hx; [destruct Hx|]. cbn [MAX_LIST]. unfold MAX.
+    destruct (N.ltb_spec y (MAX_LIST xs));
+    destruct Hx as [->|Hx]; try lia; specialize (IH _ Hx); lia. }
+  intros xs H. apply MEM_In, G in H. lia.
+Qed.
