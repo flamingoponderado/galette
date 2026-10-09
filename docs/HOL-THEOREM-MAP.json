@@ -43680,6 +43680,256 @@
   "rocq_name": "write_mem_word_def"
  },
  {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "bytes_in_memory_IMP_all_pcs_MEM8",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "bytes_in_memory_IMP_all_pcs_MEM8"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "bytes_in_memory_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "bytes_in_memory_thm"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "bytes_in_memory_thm2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "bytes_in_memory_thm2"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem1",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem1"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem10",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem10"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem12b",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem12b"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem2"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem4",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem4"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem5",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem5"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem6",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem6"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem7",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem7"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem8",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem8"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "lem9",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "lem9"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "length_riscv_encode",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "length_riscv_encode"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "mul_long",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "mul_long"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "riscv_encode_not_nil",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "riscv_encode_not_nil"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "riscv_encoder_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "riscv_encoder_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "riscv_encoding",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "riscv_encoding"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "riscv_overflow",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "riscv_overflow"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "riscv_sub_overflow",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "riscv_sub_overflow"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "riscv_target_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "riscv_target_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "ror",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "ror"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "word_bit_0_add4",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "word_bit_0_add4"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "word_bit_0_lemmas",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "word_bit_0_lemmas"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/riscv/proofs/riscv_targetProofScript.sml",
+  "hol_name": "word_extract_6",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v",
+  "rocq_name": "word_extract_6"
+ },
+ {
   "hol_path": "cakeml/compiler/encoders/riscv/riscv_targetScript.sml",
   "hol_name": "max12",
   "hol_line": null,
