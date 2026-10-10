@@ -61,7 +61,9 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | backend/proofs word_copy, wordConvsProof | done |
 | backend/proofs word_cse | done except balanced_map invariant lemmas (wf_data / sem_inv over map entries; see header) |
 | backend/proofs word_elim | skipped (not on the Pancake path; definitions unported) |
-| backend/proofs word_depth, word_alloc, word_to_word | todo |
+| backend/proofs word_depth | done |
+| backend/proofs word_alloc | mostly done (ssa_cc_trans_correct, evaluate_remove_dead, ...); select_reg_alloc_correct, word_alloc_correct pending |
+| backend/proofs word_to_word | todo |
 | backend/proofs stack_names, stack_rawcall | done |
 | backend/proofs stack_remove | done (`compile_semantics`, `make_init_semantics`, asm_name) |
 | backend/proofs stack_alloc | done (`compile_semantics`, `make_init_semantics`, GC code theorems) |
