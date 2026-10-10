@@ -57,7 +57,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | backend/reg_alloc/parmoveScript theorems | done |
 | backend/reg_alloc/proofs/reg_allocProof | done (`reg_alloc_correct`) |
 | backend/reg_alloc/proofs/linear_scanProof | partial (intervals, allocator) |
-| backend/proofs word_simp, word_inst, word_cse, word_copy, word_remove, word_unreach, word_depth, word_alloc, word_to_word | todo |
+| backend/proofs word_simp, word_inst, word_remove, word_unreach | done (agent-reported; see file headers) |
+| backend/proofs word_cse, word_copy, word_elim, word_depth, word_alloc, word_to_word, wordConvsProof | todo |
 | backend/proofs stack_names, stack_rawcall | done |
 | backend/proofs stack_remove | done (`compile_semantics`, `make_init_semantics`, asm_name) |
 | backend/proofs word_to_stack, stack_alloc, stack_to_lab | todo |
