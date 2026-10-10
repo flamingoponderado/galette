@@ -37501,6 +37501,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_call_push_dec_option_le_stack_max",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_call_push_dec_option_le_stack_max"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "evaluate_code_only_grows",
   "hol_line": null,
   "case": null,
@@ -37538,6 +37548,86 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/clock.v",
   "rocq_name": "evaluate_io_events_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_option_le_stack_max_preserved",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_option_le_stack_max_preserved"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_stack_limit",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_stack_limit"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_stack_limit_stack_max",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_stack_limit_stack_max"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_stack_limit_stack_max_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_stack_limit_stack_max_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_stack_max",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_stack_max"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_stack_max_IS_SOME",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_stack_max_IS_SOME"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_stack_max_le",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_stack_max_le"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_stack_max_only_grows",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "evaluate_stack_max_only_grows"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37798,6 +37888,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "has_space_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "inc_clock_0",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "inc_clock_0"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "inc_clock_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "inc_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "inc_clock_inc_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "inc_clock_inc_clock"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",

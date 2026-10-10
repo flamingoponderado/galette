@@ -35,7 +35,7 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/semantics/panPropsScript, pan_commonPropsScript | partial |
 | pancake/semantics/crepPropsScript, loopPropsScript | partial |
 | backend/semantics/backendPropsScript | done |
-| backend/semantics/wordPropsScript | partial (185 of ~207; stack_max section and permute_swap_lemma2/3 pending) |
+| backend/semantics/wordPropsScript | mostly done (stack_max section complete; see module headers for omissions) |
 | backend/semantics/stackPropsScript, labPropsScript | done |
 | backend/semantics/targetPropsScript | done except encoder_correct_(RTC_)asm_step_target_state_rel |
 | encoders/asm/asmPropsScript | partial |
