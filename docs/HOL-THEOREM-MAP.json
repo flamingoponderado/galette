@@ -28500,6 +28500,746 @@
   "rocq_name": "write_bytearray_lemma"
  },
  {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "ALOOKUP_PARTITION",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "ALOOKUP_PARTITION"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "MAP_prog_to_section_FST",
+  "hol_line": 228,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "MAP_prog_to_section_FST"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "MAP_prog_to_section_Section_num",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "MAP_prog_to_section_Section_num"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "NOT_MEM_find_lab_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "NOT_MEM_find_lab_IMP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "NOT_bad_fun_return_IMP_SOME",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "NOT_bad_fun_return_IMP_SOME"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "asm_fetch_aux_SOME_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "asm_fetch_aux_SOME_append"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "asm_fetch_aux_SOME_append2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "asm_fetch_aux_SOME_append2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "asm_fetch_aux_SOME_isPREFIX",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "asm_fetch_aux_SOME_isPREFIX"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "asm_fetch_aux_add",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "asm_fetch_aux_add"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "asm_fetch_aux_no_label",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "asm_fetch_aux_no_label"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "assert_T",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "assert_T"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed'_cons_label",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed'_cons_label"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed'_cons_non_label",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed'_cons_non_label"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed'_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed'"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed'_simp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed'_simp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_APPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_APPEND"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_append2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_append2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_append_imp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_append_imp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_cons",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_cons"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_get_labels_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_get_labels_IMP"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_isPREFIX",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_isPREFIX"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_prog_to_section",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_prog_to_section"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "code_installed_prog_to_section_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "code_installed_prog_to_section_lemma"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "compile_jump_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "compile_jump_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "dest_to_loc'_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "dest_to_loc'"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "dest_to_loc_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "dest_to_loc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "every_is_some_loc_to_pc_prefix",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "every_is_some_loc_to_pc_prefix"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "find_code_lookup",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "find_code_lookup"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "flatten_T_F",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "flatten_T_F"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "flatten_call_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "flatten_call_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "flatten_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "flatten_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "flatten_leq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "flatten_leq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "flatten_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "flatten_semantics"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "halt_assum_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "halt_assum"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "halt_view_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "halt_view"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "halt_word_view_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "halt_word_view"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "inst_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "inst_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "is_some_loc_to_pc_prefix",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "is_some_loc_to_pc_prefix"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "labels_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "labels_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "labels_ok_imp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "labels_ok_imp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "labels_ok_labs_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "labels_ok_labs_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "labs_correct_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "labs_correct_append"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "labs_correct_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "labs_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "labs_correct_hd",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "labs_correct_hd"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "loc_check_IMP_loc_to_pc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "loc_check_IMP_loc_to_pc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "loc_to_pc_APPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "loc_to_pc_APPEND"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "loc_to_pc_append2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "loc_to_pc_append2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "loc_to_pc_isPREFIX",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "loc_to_pc_isPREFIX"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "loc_to_pc_skip_section",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "loc_to_pc_skip_section"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "mem_store_upd_mem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "mem_store_upd_mem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "next_lab_non_zero",
+  "hol_line": 1022,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "next_lab_non_zero"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "no_ret_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "no_ret_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "not_is_Label_compile_jump",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "not_is_Label_compile_jump"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "prog_to_section_labels_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "prog_to_section_labels_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "result_view",
+  "hol_line": 942,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "result_view_ty"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "result_view_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "result_view"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "set_fp_var_upd_fp_reg",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "set_fp_var_upd_fp_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "set_var_Word_upd_reg",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "set_var_Word_upd_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "set_var_upd_reg",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "set_var_upd_reg"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "stack_to_lab_lab_pres",
+  "hol_line": 1028,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "stack_to_lab_lab_pres"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "stack_to_lab_lab_pres_T",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "stack_to_lab_lab_pres_T"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "state_rel_dec_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "state_rel_dec_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "state_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "state_rel"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "state_rel_get_var_imm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "state_rel_get_var_imm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "state_rel_read_fp_reg_FLOOKUP_fp_regs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "state_rel_read_fp_reg_FLOOKUP_fp_regs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "state_rel_read_reg_FLOOKUP_regs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "state_rel_read_reg_FLOOKUP_regs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "state_rel_with_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "state_rel_with_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "state_rel_with_pc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "state_rel_with_pc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "word_cmp_negate",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "word_cmp_negate"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "word_cmp_negate_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "word_cmp_negate_alt"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "word_cmp_not_NONE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "word_cmp_not_NONE"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "word_sh_word_shift",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "word_sh_word_shift"
+ },
+ {
   "hol_path": "cakeml/compiler/backend/proofs/wordConvsProofScript.sml",
   "hol_name": "ALL_DISTINCT_extract_labels_Seq_assoc_right_lemma",
   "hol_line": null,

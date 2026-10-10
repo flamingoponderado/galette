@@ -734,6 +734,18 @@ Proof. intros H; right; split; [reflexivity|exact H]. Qed.
 Lemma eval_lt_clock (p q : prog a) s s' : clock s' < clock s -> eval_lt (p, s') (q, s).
 Proof. intros H; left; exact H. Qed.
 
+(** Galette-only: equality of states field by field (keeps the
+    [comp_correct_gen] record goals small). *)
+Lemma state_eq_fields (x y : state a c ffi_t) :
+  stackSem.regs x = stackSem.regs y -> stackSem.fp_regs x = stackSem.fp_regs y -> stackSem.store x = stackSem.store y -> stackSem.stack x = stackSem.stack y ->
+  stackSem.stack_space x = stackSem.stack_space y -> stackSem.memory x = stackSem.memory y -> stackSem.mdomain x = stackSem.mdomain y ->
+  stackSem.sh_mdomain x = stackSem.sh_mdomain y -> stackSem.bitmaps x = stackSem.bitmaps y -> stackSem.compile x = stackSem.compile y ->
+  stackSem.compile_oracle x = stackSem.compile_oracle y -> stackSem.code_buffer x = stackSem.code_buffer y ->
+  stackSem.data_buffer x = stackSem.data_buffer y -> stackSem.gc_fun x = stackSem.gc_fun y -> stackSem.use_stack x = stackSem.use_stack y ->
+  stackSem.use_store x = stackSem.use_store y -> stackSem.use_alloc x = stackSem.use_alloc y -> stackSem.clock x = stackSem.clock y ->
+  stackSem.code x = stackSem.code y -> stackSem.ffi x = stackSem.ffi y -> stackSem.ffi_save_regs x = stackSem.ffi_save_regs y -> stackSem.be x = stackSem.be y -> x = y.
+Proof. destruct x, y; cbn; intros; subst; reflexivity. Qed.
+
 Theorem comp_correct_gen : forall (x : prog a * state a c ffi_t) t i r s1,
   evaluate x = (r, s1) -> r <> SOME Error -> state_rel i (snd x) t ->
   rc_post i r s1 t (comp_top i (fst x)) /\ rc_post i r s1 t (comp i (fst x)).
@@ -970,7 +982,7 @@ Proof.
       replace (dec_clock (set_clock (clock (set_code cd s) + ck2) (set_code cd s)))
         with (set_code cd (set_clock (clock s3 + ck2) s3)).
       * rewrite E2, Eb; reflexivity.
-      * subst s3 s''; unfold dec_clock; destruct s; cbn in Ez; unfold set_code, set_clock, set_stack_space; cbn; f_equal; lia.
+      * subst s3 s''; unfold dec_clock; apply state_eq_fields; stk_fields; try reflexivity; lia.
     + apply N.ltb_lt in E2'.
       exists ck2, t2, k2. split; [exact R2'|split; [|exact K2]].
       match goal with |- context [evaluate (Seq (StackFree ?n) ?p2, ?X)] =>
@@ -982,7 +994,7 @@ Proof.
       match goal with |- context [evaluate (comp i' q, dec_clock ?X)] =>
         replace (dec_clock X) with (set_code cd (set_clock (clock s3 + ck2) s3)) end.
       * rewrite E2, Eb; reflexivity.
-      * subst s3 s''; unfold dec_clock; destruct s; cbn in Ez, E2'; unfold set_code, set_clock, set_stack_space; cbn; f_equal; lia.
+      * subst s3 s''; unfold dec_clock; apply state_eq_fields; stk_fields; try reflexivity; lia.
     + apply N.ltb_ge in E2'. assert (Hlk : k < l) by (apply N.eqb_neq in E1; lia).
       exists (ck2 + 1), t2, k2. split; [exact R2'|split; [|exact K2]].
       rewrite (ev_seq_none _ _ _ (dec_clock (set_clock (clock (set_code cd s) + (ck2 + 1)) (set_code cd s))))
@@ -999,7 +1011,7 @@ Proof.
       match goal with |- context [evaluate (comp i' q, dec_clock ?X)] =>
         replace (dec_clock X) with (set_code cd (set_clock (clock s3 + ck2) s3)) end.
       * rewrite E2, Eb; reflexivity.
-      * subst s3 s''; unfold dec_clock; destruct s; cbn in Ez, Ea; unfold set_code, set_clock, set_stack_space; cbn; f_equal; lia.
+      * subst s3 s''; unfold dec_clock; apply state_eq_fields; stk_fields; try reflexivity; lia.
   - (* If *)
     destruct (state_rel_inv _ _ _ Hrel) as (cd & -> & Hr').
     rewrite evaluate_eqn in He; cbn [evaluate_body] in He.
