@@ -32791,6 +32791,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_allocProofScript.sml",
+  "hol_name": "pre_post_conventions_word_alloc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/conv.v",
+  "rocq_name": "pre_post_conventions_word_alloc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_allocProofScript.sml",
   "hol_name": "push_env_s_val_eq",
   "hol_line": null,
   "case": null,
@@ -32818,6 +32828,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "s_key_eq_val_eq_pop_env"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_allocProofScript.sml",
+  "hol_name": "select_reg_alloc_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/clash.v",
+  "rocq_name": "select_reg_alloc_correct"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_allocProofScript.sml",
@@ -33468,6 +33488,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/remove_dead.v",
   "rocq_name": "with_same_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_allocProofScript.sml",
+  "hol_name": "word_alloc_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/clash.v",
+  "rocq_name": "word_alloc_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_allocProofScript.sml",
+  "hol_name": "word_alloc_full_inst_ok_less",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/conv.v",
+  "rocq_name": "word_alloc_full_inst_ok_less"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_allocProofScript.sml",
@@ -37481,6 +37521,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
+  "hol_name": "compile_single_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
+  "rocq_name": "compile_single_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
   "hol_name": "compile_single_eta",
   "hol_line": null,
   "case": null,
@@ -37488,6 +37538,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
   "rocq_name": "compile_single_eta"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
+  "hol_name": "compile_single_lem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
+  "rocq_name": "compile_single_lem"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
+  "hol_name": "compile_to_word_conventions",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
+  "rocq_name": "compile_to_word_conventions"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
+  "hol_name": "compile_word_to_word_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
+  "rocq_name": "compile_word_to_word_thm"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
@@ -37531,6 +37611,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
+  "hol_name": "no_install_no_alloc_compile_single_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
+  "rocq_name": "no_install_no_alloc_compile_single_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
   "hol_name": "no_mt_code_full_compile_single",
   "hol_line": null,
   "case": null,
@@ -37571,6 +37661,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
+  "hol_name": "panLang_compile_word_to_word_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
+  "rocq_name": "panLang_compile_word_to_word_thm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
   "hol_name": "pop_env_termdep",
   "hol_line": null,
   "case": null,
@@ -37598,6 +37698,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
   "rocq_name": "rm_perm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml",
+  "hol_name": "word_to_word_compile_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_to_wordProof.v",
+  "rocq_name": "word_to_word_compile_semantics"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_unreachProofScript.sml",
@@ -39291,6 +39401,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "FOLDL_find_bijection_invariants",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "FOLDL_find_bijection_invariants"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
   "hol_name": "IS_SPARSE_SUBLIST_APPEND_LEFT",
   "hol_line": null,
   "case": null,
@@ -39318,6 +39438,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/allocator.v",
   "rocq_name": "IS_SPARSE_SUBLIST"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "LENGTH_toAList",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "LENGTH_toAList'"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -39431,6 +39561,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "check_clash_tree_apply_bijection",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "check_clash_tree_apply_bijection"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "check_clash_tree_equal_col",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "check_clash_tree_equal_col"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
   "hol_name": "check_clash_tree_output",
   "hol_line": null,
   "case": null,
@@ -39438,6 +39588,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/intervals.v",
   "rocq_name": "check_clash_tree_output"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "check_clash_tree_output_subset",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "check_clash_tree_output_subset"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "check_col_apply_bijection",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "check_col_apply_bijection"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "check_col_equal_col",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "check_col_equal_col"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -39571,6 +39751,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "check_partial_col_apply_bijection",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "check_partial_col_apply_bijection"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
   "hol_name": "check_partial_col_branch_comm",
   "hol_line": null,
   "case": null,
@@ -39588,6 +39778,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/intervals.v",
   "rocq_name": "check_partial_col_branch_domain"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "check_partial_col_equal_col",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "check_partial_col_equal_col"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -39691,6 +39891,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "convention_partitions_or",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "convention_partitions_or"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "domain_apply_bij_set",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "domain_apply_bij_set"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
   "hol_name": "domain_numset_list_add_if",
   "hol_line": null,
   "case": null,
@@ -39788,6 +40008,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/intervals.v",
   "rocq_name": "exists_point_inside_interval_interval_intersect"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "extract_coloration_output",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "extract_coloration_output"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "find_bijection_clash_tree_invariants",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "find_bijection_clash_tree_invariants"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "find_bijection_init_invariants",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "find_bijection_init_invariants"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "find_bijection_invariants",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "find_bijection_invariants"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -39911,6 +40171,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "fix_domination_live_tree_registers",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "fix_domination_live_tree_registers"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "foldi_find_bijection_invariants",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "foldi_find_bijection_invariants"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
   "hol_name": "forbidden_is_from_forced_def",
   "hol_line": null,
   "case": null,
@@ -39971,6 +40251,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "get_intervals_beg_less_end",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "get_intervals_beg_less_end"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
   "hol_name": "get_intervals_beg_less_live",
   "hol_line": null,
   "case": null,
@@ -40028,6 +40318,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/intervals.v",
   "rocq_name": "get_intervals_ct_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "get_intervals_ct_monad_aux_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "get_intervals_ct_monad_aux_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "get_intervals_ct_monad_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "get_intervals_ct_monad_correct"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -40241,6 +40551,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "get_live_backward_in_live_tree_registers",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "get_live_backward_in_live_tree_registers"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
   "hol_name": "get_live_tree_correct",
   "hol_line": null,
   "case": null,
@@ -40268,6 +40588,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/intervals.v",
   "rocq_name": "get_live_tree_correct_lemma"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "good_bijection_state_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "good_bijection_state"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -40318,6 +40648,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/allocator.v",
   "rocq_name": "if_thm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "in_clash_tree_apply_bij",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "in_clash_tree_apply_bij"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "in_clash_tree_eq_live_tree_registers",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "in_clash_tree_eq_live_tree_registers"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "in_clash_tree_set_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "in_clash_tree_set_eq"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -40391,6 +40751,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "linear_reg_alloc_intervals_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/alloc_intervals.v",
+  "rocq_name": "linear_reg_alloc_intervals_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
   "hol_name": "linear_reg_alloc_pass1_initial_state_invariants",
   "hol_line": null,
   "case": null,
@@ -40438,6 +40808,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/allocator.v",
   "rocq_name": "linear_reg_alloc_step_pass2_invariants"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "linear_reg_alloc_without_renaming_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof.v",
+  "rocq_name": "linear_reg_alloc_without_renaming_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "linear_scan_reg_alloc_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof.v",
+  "rocq_name": "linear_scan_reg_alloc_correct"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -40558,6 +40948,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/allocator.v",
   "rocq_name": "lt_div_2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "numset_list_add_if_gt_monad_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "numset_list_add_if_gt_monad_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "numset_list_add_if_lt_monad_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "numset_list_add_if_lt_monad_correct"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
@@ -40788,6 +41198,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/allocator.v",
   "rocq_name": "split_at_indice_sing"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",
+  "hol_name": "sptree_eq_list_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/reg_alloc/proofs/linear_scanProof/renaming.v",
+  "rocq_name": "sptree_eq_list"
  },
  {
   "hol_path": "cakeml/compiler/backend/reg_alloc/proofs/linear_scanProofScript.sml",

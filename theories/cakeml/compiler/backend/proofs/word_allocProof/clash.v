@@ -25,6 +25,7 @@ From Galette.HOL.src.finite_maps Require Import sptree.
 From Galette.cakeml.translator.monadic.monad_base Require Import ml_monadBase.
 From Galette.cakeml.compiler.backend.reg_alloc Require Import reg_alloc linear_scan.
 From Galette.cakeml.compiler.backend.reg_alloc.proofs Require Import reg_allocProof.
+From Galette.cakeml.compiler.backend.reg_alloc.proofs Require linear_scanProof.
 From Galette.cakeml.compiler.backend.reg_alloc.proofs.linear_scanProof Require Import intervals.
 From Galette.cakeml.compiler.encoders.asm Require Import asm.
 From Galette.cakeml.compiler.backend Require Import wordLang word_alloc.
@@ -721,24 +722,8 @@ End Forced.
 
 (** ** Selecting the allocator *)
 
-(** The statement of [linear_scanProofScript]'s [linear_scan_reg_alloc_correct]
-    (Galette-only name for the proposition). *)
-Definition linear_scan_reg_alloc_correct_stmt : Prop :=
-  forall k moves ct forced,
-    EVERY (fun '(r1, r2) => ⌜in_clash_tree ct r1 /\ in_clash_tree ct r2⌝) forced ->
-    exists col livein flivein,
-      linear_scan_reg_alloc k moves ct forced = M_success col /\
-      check_clash_tree (sp_default col) ct LN LN = Some (livein, flivein) /\
-      (forall r, in_clash_tree ct r ->
-         r IN domain col /\
-         (if is_phy_var r then sp_default col r = r DIV 2
-          else if is_stack_var r then k <= sp_default col r
-          else True)) /\
-      (forall r, r IN domain col -> in_clash_tree ct r) /\
-      EVERY (fun '(r1, r2) => ⌜sp_default col r1 = sp_default col r2 -> r1 = r2⌝) forced.
-
-Lemma select_reg_alloc_correct_from : linear_scan_reg_alloc_correct_stmt ->
-  forall alg spillcosts k heu_moves tree forced fs,
+(*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "select_reg_alloc_correct" *)
+Theorem select_reg_alloc_correct : forall alg spillcosts k heu_moves tree forced fs,
   EVERY (fun '(r1, r2) => ⌜in_clash_tree tree r1 /\ in_clash_tree tree r2⌝) forced ->
   exists spcol livein flivein,
     select_reg_alloc alg spillcosts k heu_moves tree forced fs = M_success spcol /\
@@ -751,9 +736,9 @@ Lemma select_reg_alloc_correct_from : linear_scan_reg_alloc_correct_stmt ->
     (forall r, r IN domain spcol -> in_clash_tree tree r) /\
     EVERY (fun '(r1, r2) => ⌜sp_default spcol r1 = sp_default spcol r2 -> r1 = r2⌝) forced.
 Proof.
-  intros Hls alg spillcosts k heu_moves tree forced fs Hf. unfold select_reg_alloc.
+  intros alg spillcosts k heu_moves tree forced fs Hf. unfold select_reg_alloc.
   destruct (4 <=? alg).
-  - exact (Hls k heu_moves tree forced Hf).
+  - exact (linear_scanProof.linear_scan_reg_alloc_correct k heu_moves tree forced Hf).
   - exact (reg_alloc_correct _ spillcosts k heu_moves tree forced fs Hf).
 Qed.
 
@@ -805,8 +790,8 @@ Proof.
   destruct res as [[]|]; auto.
 Qed.
 
-Lemma word_alloc_correct_from : linear_scan_reg_alloc_correct_stmt ->
-  forall fc (c0 : asm_config a) alg (prog : prog a) k col_opt (st : state),
+(*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "word_alloc_correct" *)
+Theorem word_alloc_correct : forall fc (c0 : asm_config a) alg (prog : prog a) k col_opt (st : state),
   even_starting_locals (locals st) /\ wf_cutsets prog ->
   exists perm',
     let '(res, rst) := evaluate (prog, set_permute perm' st) in
@@ -820,7 +805,7 @@ Lemma word_alloc_correct_from : linear_scan_reg_alloc_correct_stmt ->
     | SOME _ => locals rst = locals rcst
     end.
 Proof.
-  intros Hls fc c0 alg prog k col_opt st [He Hwc]. unfold word_alloc. cbv zeta.
+  intros fc c0 alg prog k col_opt st [He Hwc]. unfold word_alloc. cbv zeta.
   destruct (oracle_colour_ok k col_opt (get_clash_tree prog []) prog (get_forced c0 prog [])) as [cp|] eqn:Eo.
   - unfold oracle_colour_ok in Eo. destruct col_opt as [col|]; [|discriminate].
     destruct (every_even_colour col) eqn:Ee; [|discriminate].
@@ -834,7 +819,7 @@ Proof.
     specialize (Ee (n, x) (proj2 (ALOOKUP_toAList_In _ _ _) Ex)). cbn beta iota in Ee. rewrite Hp in Ee.
     apply N.eqb_eq in Ee. unfold is_phy_var in Hp. apply N.eqb_eq in Hp. pose proof (N.div_mod n 2 ltac:(lia)). lia.
   - destruct (get_heuristics alg fc prog) as [heu_moves spillcosts].
-    destruct (select_reg_alloc_correct_from Hls alg spillcosts k heu_moves (get_clash_tree prog [])
+    destruct (select_reg_alloc_correct alg spillcosts k heu_moves (get_clash_tree prog [])
                 (get_forced c0 prog []) (get_stack_only prog) (get_forced_in_get_clash_tree prog [] c0))
       as (spcol & livein & flivein & Es & Hc & Hin & Hdom & _).
     rewrite Es.

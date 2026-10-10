@@ -29,14 +29,9 @@
     - [list_rearrange_perm] is stated with Rocq's [Permutation] and is
       untagged (HOL's [sorting$PERM] is not ported).
 
-    Pending: [select_reg_alloc_correct], [word_alloc_correct],
+    [select_reg_alloc_correct], [word_alloc_correct] (in [clash.v]),
     [pre_post_conventions_word_alloc] and [word_alloc_full_inst_ok_less]
-    need [linear_scanProof]'s [linear_scan_reg_alloc_correct], which is
-    not ported yet; they are proved as the untagged
-    [select_reg_alloc_correct_from], [word_alloc_correct_from] (in
-    [clash.v]), [pre_post_conventions_word_alloc_from] and
-    [word_alloc_full_inst_ok_less_from] (in [conv.v]), with that theorem's
-    statement ([linear_scan_reg_alloc_correct_stmt]) as a hypothesis.
+    (in [conv.v]) use [linear_scanProof]'s [linear_scan_reg_alloc_correct].
 
     Statement conventions: HOL [s with f := v] is [set_f v s]; HOL
     [let (a,b,c) = e in P] is [let '(a, (b, c)) := e in P]; HOL [EVERY]

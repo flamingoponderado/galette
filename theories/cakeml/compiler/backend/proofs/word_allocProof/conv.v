@@ -1013,15 +1013,15 @@ Qed.
 
 (** [pre_post_conventions_word_alloc] and [word_alloc_full_inst_ok_less],
     from [linear_scanProof]'s correctness theorem (Galette-only). *)
-Lemma pre_post_conventions_word_alloc_from : linear_scan_reg_alloc_correct_stmt ->
-  forall fc (c0 : asm_config a) alg (prog : prog a) k col_opt,
+(*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "pre_post_conventions_word_alloc" *)
+Theorem pre_post_conventions_word_alloc : forall fc (c0 : asm_config a) alg (prog : prog a) k col_opt,
   pre_alloc_conventions prog -> post_alloc_conventions k (word_alloc fc c0 alg k prog col_opt).
 Proof.
-  intros Hls fc c0 alg prog k col_opt Hpre. unfold word_alloc. cbv zeta.
+  intros fc c0 alg prog k col_opt Hpre. unfold word_alloc. cbv zeta.
   destruct (oracle_colour_ok k col_opt (get_clash_tree prog []) prog (get_forced c0 prog [])) as [x|] eqn:Eo.
   { exact (oracle_colour_ok_conventions k col_opt prog [] _ x (conj Hpre Eo)). }
   destruct (get_heuristics alg fc prog) as [heu_moves spillcosts].
-  destruct (select_reg_alloc_correct_from Hls alg spillcosts k heu_moves (get_clash_tree prog [])
+  destruct (select_reg_alloc_correct alg spillcosts k heu_moves (get_clash_tree prog [])
               (get_forced c0 prog []) (get_stack_only prog) (get_forced_in_get_clash_tree prog [] c0))
     as (spcol & livein & flivein & Es & _ & Hin & _ & _).
   rewrite Es. set (tree := get_clash_tree prog []) in *.
@@ -1044,18 +1044,18 @@ Proof.
     rewrite Hs. unfold is_phy_var in Ep. apply N.eqb_eq in Ep. pose proof (N.div_mod x 2 ltac:(lia)). lia.
 Qed.
 
-Lemma word_alloc_full_inst_ok_less_from : linear_scan_reg_alloc_correct_stmt ->
-  forall fc alg k (prog : prog a) col_opt c0,
+(*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "word_alloc_full_inst_ok_less" *)
+Theorem word_alloc_full_inst_ok_less : forall fc alg k (prog : prog a) col_opt c0,
   full_inst_ok_less c0 prog -> full_inst_ok_less c0 (word_alloc fc c0 alg k prog col_opt).
 Proof.
-  intros Hls fc alg k prog col_opt c0 Hf. unfold word_alloc. cbv zeta.
+  intros fc alg k prog col_opt c0 Hf. unfold word_alloc. cbv zeta.
   destruct (oracle_colour_ok k col_opt (get_clash_tree prog []) prog (get_forced c0 prog [])) as [x|] eqn:Eo.
   { unfold oracle_colour_ok in Eo. destruct col_opt as [col|]; [|discriminate].
     destruct (every_even_colour col && _); [|discriminate].
     destruct (every_stack_var _ _ && _) eqn:E2; [|discriminate]. apply andb_prop in E2 as [_ Hf2].
     injection Eo as <-. apply word_alloc_full_inst_ok_less_lem. split; [exact Hf|exact Hf2]. }
   destruct (get_heuristics alg fc prog) as [heu_moves spillcosts].
-  destruct (select_reg_alloc_correct_from Hls alg spillcosts k heu_moves (get_clash_tree prog [])
+  destruct (select_reg_alloc_correct alg spillcosts k heu_moves (get_clash_tree prog [])
               (get_forced c0 prog []) (get_stack_only prog) (get_forced_in_get_clash_tree prog [] c0))
     as (spcol & livein & flivein & Es & _ & _ & _ & Hfd).
   rewrite Es. apply word_alloc_full_inst_ok_less_lem. split; [exact Hf|].

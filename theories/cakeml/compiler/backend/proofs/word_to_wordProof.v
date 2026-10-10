@@ -2,21 +2,8 @@
 
     A port of [cakeml/compiler/backend/proofs/word_to_wordProofScript.sml].
 
-    Pending dependency: [word_allocProof]'s [word_alloc_correct],
-    [pre_post_conventions_word_alloc] and [word_alloc_full_inst_ok_less]
-    rest on [linear_scanProof]'s [linear_scan_reg_alloc_correct], which is
-    not ported yet.  The theorems of this file that depend on them are
-    proved as [_from] versions taking that theorem's statement
-    ([linear_scan_reg_alloc_correct_stmt], [word_allocProof]) as a
-    hypothesis, and are not tagged:
-    [compile_single_lem_from], [compile_single_correct_from],
-    [compile_word_to_word_thm_from], [compile_to_word_conventions_from],
-    [no_install_no_alloc_compile_single_correct_from],
-    [panLang_compile_word_to_word_thm_from] and
-    [word_to_word_compile_semantics_from].  Apart from that hypothesis
-    their statements are HOL's.  Nothing here depends on [word_elim]
-    ([word_elimProof] is only an ancestor of the HOL theory); nothing is
-    skipped.
+    Nothing here depends on [word_elim] ([word_elimProof] is only an
+    ancestor of the HOL theory); nothing is skipped.
 
     Statement conventions: HOL [s with <|f1 := v1; ...|>] is
     [set_f1 v1 (...)] (innermost update first); HOL [f ## g] and [f o g]
@@ -96,10 +83,8 @@ Proof.
   - intros H. apply IN_set, In_GENLIST_iff in H. destruct H as (k & Hk & ->). right. exists k. split; [exact Hk|lia].
 Qed.
 
-(** HOL's [compile_single_lem], with [linear_scanProof]'s
-    [linear_scan_reg_alloc_correct] as a hypothesis (see the header). *)
-Theorem compile_single_lem_from : linear_scan_reg_alloc_correct_stmt ->
-  forall t k alg (c0 : asm_config a) name col (prog : prog a) n (st : state),
+(*! HOL "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml" "compile_single_lem" *)
+Theorem compile_single_lem : forall t k alg (c0 : asm_config a) name col (prog : prog a) n (st : state),
   domain (locals st) = set (even_list n) /\ gc_fun_const_ok (gc_fun st) ->
   exists perm',
     let '(res, rst) := evaluate (prog, set_permute perm' st) in
@@ -114,7 +99,7 @@ Theorem compile_single_lem_from : linear_scan_reg_alloc_correct_stmt ->
     | SOME _ => locals rst = locals rcst
     end.
 Proof.
-  intros Hlsc t k alg c0 name col prog n st [Hdom Hgc]. unfold compile_single. cbv zeta.
+  intros t k alg c0 name col prog n st [Hdom Hgc]. unfold compile_single. cbv zeta.
   set (p0 := word_simp.compile_exp prog).
   set (p1 := inst_select c0 (max_var p0 + 1) p0).
   set (p2 := full_ssa_cc_trans n p1).
@@ -139,7 +124,7 @@ Proof.
     apply (remove_dead_prog_conventions (fun _ => true) p2 c0 0), full_ssa_cc_trans_wf_cutsets. }
   assert (Hev : even_starting_locals (locals st)).
   { intros x Hx. rewrite Hdom in Hx. apply IN_set in Hx. apply (proj2 (even_list_props n)), Hx. }
-  destruct (word_alloc_correct_from Hlsc name c0 alg p7 k col st (conj Hev Hwc7)) as [perm1 H7].
+  destruct (word_alloc_correct name c0 alg p7 k col st (conj Hev Hwc7)) as [perm1 H7].
   destruct (full_ssa_cc_trans_correct p1 (set_permute perm1 st) n Hdom) as [perm2 H2].
   exists perm2.
   destruct (evaluate (prog, set_permute perm2 st)) as [res rst] eqn:E.
@@ -544,7 +529,7 @@ Context {a : N} {c ffi_t : Type}.
 Local Abbreviation state := (state a c ffi_t).
 Local Abbreviation compile_fun :=
   (c -> list (N * (N * prog a)) -> option (list word8 * (list (word a) * c))).
-Context (Hlsc : linear_scan_reg_alloc_correct_stmt) (tt : bool) (kk aa : N) (co : asm_config a).
+Context (tt : bool) (kk aa : N) (co : asm_config a).
 
 Local Definition fs (p : N * (N * prog a)) : N * (N * prog a) := compile_single tt kk aa co (p, NONE).
 Local Definition ORC (o : N -> c * list (N * (N * prog a))) : N -> c * list (N * (N * prog a)) :=
@@ -668,7 +653,7 @@ Lemma csl_cor t k alg (c0 : asm_config a) n col (prog : prog a) len prog' (st : 
     | SOME _ => locals rst = locals rcst
     end.
 Proof.
-  intros E Hd Hg. destruct (compile_single_lem_from Hlsc t k alg c0 n col prog len st (conj Hd Hg)) as [perm H].
+  intros E Hd Hg. destruct (compile_single_lem t k alg c0 n col prog len st (conj Hd Hg)) as [perm H].
   exists perm. rewrite compile_single_eta, E in H. exact H.
 Qed.
 
@@ -1024,10 +1009,9 @@ Proof.
     + reflexivity.
 Qed.
 
-(** HOL's [compile_single_correct], with [linear_scanProof]'s
-    [linear_scan_reg_alloc_correct] as a hypothesis (the section variable
-    [Hlsc]); HOL's free [tt kk aa co] are section variables. *)
-Theorem compile_single_correct_from : forall (prog : prog a) (st : state) l coracle cc,
+(** HOL's free [tt kk aa co] are section variables. *)
+(*! HOL "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml" "compile_single_correct" *)
+Theorem compile_single_correct : forall (prog : prog a) (st : state) l coracle cc,
   code_rel (code st) l /\ domain (code st) = domain l /\
   compile st = (fun conf progs => cc conf (MAP (fun p => compile_single tt kk aa co (p, NONE)) progs)) /\
   coracle = (I ## MAP (fun p => compile_single tt kk aa co (p, NONE))) ∘ compile_oracle st /\
@@ -1047,10 +1031,8 @@ Lemma map_full_compile_single (ps : list (N * (N * prog a))) :
   MAP (fun p => full_compile_single tt kk aa co (p, NONE)) ps.
 Proof. induction ps as [|[k0 [n0 p0]] ps IH]; [reflexivity|]. cbn [MAP]. rewrite IH. reflexivity. Qed.
 
-(** HOL's [compile_word_to_word_thm], with [linear_scanProof]'s
-    [linear_scan_reg_alloc_correct] as a hypothesis (the section variable
-    [Hlsc]). *)
-Theorem compile_word_to_word_thm_from : forall (st : state) l cc coracle start,
+(*! HOL "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml" "compile_word_to_word_thm" *)
+Theorem compile_word_to_word_thm : forall (st : state) l cc coracle start,
   code_rel (code st) l /\ domain (code st) = domain l /\
   compile st = (fun conf progs => cc conf (MAP (fun p => full_compile_single tt kk aa co (p, NONE)) progs)) /\
   coracle = (I ## MAP (fun p => full_compile_single tt kk aa co (p, NONE))) ∘ compile_oracle st /\
@@ -1070,7 +1052,7 @@ Proof.
   assert (Hc' : compile st = (fun conf progs => cc' conf (MAP (fun p => compile_single tt kk aa co (p, NONE)) progs))).
   { rewrite Hc. unfold cc'. apply functional_extensionality; intros conf. apply functional_extensionality; intros ps.
     cbv beta. rewrite map_full_compile_single. reflexivity. }
-  destruct (compile_single_correct_from (Call NONE (SOME start) [0] NONE) st l O cc'
+  destruct (compile_single_correct (Call NONE (SOME start) [0] NONE) st l O cc'
               (conj Hcr (conj Hd (conj Hc' (conj eq_refl Hg))))) as [perm H].
   exists perm. cbv zeta.
   destruct (evaluate (Call NONE (SOME start) [0] NONE, set_permute perm st)) as [res rst] eqn:E.
@@ -1487,10 +1469,8 @@ Qed.
 Lemma tgo_self l (s : state) : tgo (compile s) l (compile_oracle s) s = set_code l s.
 Proof. destruct s; reflexivity. Qed.
 
-(** HOL's [no_install_no_alloc_compile_single_correct], with
-    [linear_scanProof]'s [linear_scan_reg_alloc_correct] as a hypothesis
-    (the section variable [Hlsc]). *)
-Theorem no_install_no_alloc_compile_single_correct_from : forall (prog : prog a) (st : state) l,
+(*! HOL "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml" "no_install_no_alloc_compile_single_correct" *)
+Theorem no_install_no_alloc_compile_single_correct : forall (prog : prog a) (st : state) l,
   code_rel (code st) l /\ no_install prog /\ no_alloc prog /\
   no_install_code (code st) /\ no_alloc_code (code st) /\
   domain (code st) = domain l /\ gc_fun_const_ok (gc_fun st) ->
@@ -1512,10 +1492,8 @@ Proof.
   rewrite Hc, tgo_self in H3. exact H3.
 Qed.
 
-(** HOL's [panLang_compile_word_to_word_thm], with [linear_scanProof]'s
-    [linear_scan_reg_alloc_correct] as a hypothesis (the section variable
-    [Hlsc]). *)
-Theorem panLang_compile_word_to_word_thm_from : forall (st : state) l start,
+(*! HOL "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml" "panLang_compile_word_to_word_thm" *)
+Theorem panLang_compile_word_to_word_thm : forall (st : state) l start,
   code_rel (code st) l /\ no_install_code (code st) /\ no_alloc_code (code st) /\ no_mt_code (code st) /\
   domain (code st) = domain l /\ gc_fun_const_ok (gc_fun st) ->
   exists perm' (clk : N),
@@ -1530,7 +1508,7 @@ Proof.
     by (unfold no_install; cbn [not_created_subprogs]; repeat split; discriminate).
   assert (Ha : no_alloc (@Call a NONE (SOME start) [0] NONE))
     by (unfold no_alloc; cbn [not_created_subprogs]; repeat split; discriminate).
-  destruct (no_install_no_alloc_compile_single_correct_from (Call NONE (SOME start) [0] NONE) st l
+  destruct (no_install_no_alloc_compile_single_correct (Call NONE (SOME start) [0] NONE) st l
               (conj Hcr (conj Hi (conj Ha (conj Hic (conj Hac (conj Hd Hg))))))) as [perm H].
   exists perm, 0. cbv zeta.
   destruct (evaluate (Call NONE (SOME start) [0] NONE, set_permute perm st)) as [res rst].
@@ -1547,12 +1525,11 @@ Proof.
   rewrite (proj2 (proj2 ZIP_eqns)). cbn [MAP]. rewrite IH by lia. reflexivity.
 Qed.
 
-(** HOL's [word_to_word_compile_semantics], with [linear_scanProof]'s
-    [linear_scan_reg_alloc_correct] as a hypothesis (the section variable
-    [Hlsc]).  Proof: for every clock the two runs have the same result and
-    the same FFI state ([panLang_compile_word_to_word_thm] and
+(** Proof: for every clock the two runs have the same result and the same
+    FFI state ([panLang_compile_word_to_word_thm] and
     [permute_swap_lemma3]), so the two [semantics] coincide. *)
-Theorem word_to_word_compile_semantics_from : forall wconf (acomf : asm_config a) wprog0 col wprog (s t : state) start,
+(*! HOL "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml" "word_to_word_compile_semantics" *)
+Theorem word_to_word_compile_semantics : forall wconf (acomf : asm_config a) wprog0 col wprog (s t : state) start,
   word_to_word.compile wconf acomf wprog0 = (col, wprog) /\
   gc_fun_const_ok (gc_fun s) /\
   no_install_code (fromAList wprog0) /\ no_alloc_code (fromAList wprog0) /\
@@ -1583,7 +1560,7 @@ Proof.
             fst (evaluate (prog, set_clock k t)) = fst (evaluate (prog, set_clock k s)) /\
             ffi (snd (evaluate (prog, set_clock k t))) = ffi (snd (evaluate (prog, set_clock k s)))).
   { intros k Hne.
-    destruct (panLang_compile_word_to_word_thm_from (set_clock k s) (fromAList wprog) start) as (perm & _ & H).
+    destruct (panLang_compile_word_to_word_thm (set_clock k s) (fromAList wprog) start) as (perm & _ & H).
     { cbn [code set_clock gc_fun]. rewrite Hsc. repeat split; try assumption; rewrite <- Hsc; assumption. }
     cbv zeta in H. fold prog in H.
     pose proof (permute_swap_lemma3 prog (set_clock k s) perm) as H3.
@@ -1678,7 +1655,6 @@ Proof.
 Qed.
 
 Section ConvAlloc.
-Context (Hlsc : linear_scan_reg_alloc_correct_stmt).
 
 Lemma fcs_props (wc : config) (ac : asm_config a) n m (prog : prog a) col :
   (no_share_inst prog \/ ISA ac <> Ag32) ->
@@ -1728,7 +1704,7 @@ Proof.
     apply full_ssa_cc_trans_flat_exp_conventions, inst_select_flat_exp_conventions. }
   split.
   { apply (proj1 (proj2 (proj2 (remove_must_terminate_conventions (fun _ => true) p8 ac k)))).
-    apply pre_post_conventions_word_alloc_from; [exact Hlsc|].
+    apply pre_post_conventions_word_alloc.
     apply (proj1 (proj2 (proj2 (remove_dead_prog_conventions (fun _ => true) p6 ac k)))).
     apply pre_alloc_conventions_remove_unreach, three_to_two_reg_prog_pre_alloc_conventions,
       pre_alloc_conventions_copy_prop, pre_alloc_conventions_word_common_subexp_elim.
@@ -1737,7 +1713,7 @@ Proof.
   split.
   { intros (Hi & Ha & Hh & Hb).
     apply (proj1 (proj2 (remove_must_terminate_conventions (fun _ => true) p8 ac k))).
-    apply word_alloc_full_inst_ok_less_from; [exact Hlsc|].
+    apply word_alloc_full_inst_ok_less.
     apply (proj1 (proj2 (remove_dead_prog_conventions (fun _ => true) p6 ac k))).
     apply full_inst_ok_less_remove_unreach, three_to_two_reg_prog_full_inst_ok_less,
       full_inst_ok_less_copy_prop, full_inst_ok_less_word_common_subexp_elim.
@@ -1791,10 +1767,9 @@ Proof.
       exact (He (n, (m, prog)) (Hin _ (or_introl eq_refl))).
 Qed.
 
-(** HOL's [compile_to_word_conventions], with [linear_scanProof]'s
-    [linear_scan_reg_alloc_correct] as a hypothesis (the section variable
-    [Hlsc]); HOL's [EVERY2] is [LIST_REL]. *)
-Theorem compile_to_word_conventions_from : forall (wc : config) (ac : asm_config a) (p : list (N * (N * prog a))),
+(** HOL's [EVERY2] is [LIST_REL]. *)
+(*! HOL "cakeml/compiler/backend/proofs/word_to_wordProofScript.sml" "compile_to_word_conventions" *)
+Theorem compile_to_word_conventions : forall (wc : config) (ac : asm_config a) (p : list (N * (N * prog a))),
   EVERY (fun '(_, (_, prg)) => ⌜no_share_inst prg \/ ISA ac <> Ag32⌝) p ->
   let '(_, progs) := word_to_word.compile wc ac p in
   MAP FST progs = MAP FST p /\
