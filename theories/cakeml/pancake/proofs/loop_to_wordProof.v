@@ -21,17 +21,13 @@
     of [acc_vars_acc'].  HOL's boolean [EVERY] predicates ([λ(q,r). q = FST l
     ∧ ...]) are written with [=?], [<=?], [<?].
 
-    Not ported: [env_to_list_IMP] (needs wordProps'
-    [env_to_list_lookup_equiv], not ported); [mem_prog_mem_compile_prog]
-    (HOL's [MEM] on programs needs [EqDecision] on [loopLang.prog] and
-    [wordLang.prog], which have none); [loop_to_word_compile_not_created]
-    and the [local] [loop_to_word_compile_not_created_MEM] (HOL's [EVERY]
-    of the [Prop]-valued [not_created_subprogs]); [loop_compile_no_install_code],
-    [loop_compile_no_alloc_code], [loop_compile_no_mt_code] (need wordProps'
-    [no_install_code], [no_alloc_code], [no_mt_code], not ported);
-    [full_imp_inst_ok_less], [loop_inst_ok_def] and the
-    [loop_to_word_*every_inst_ok_less] theorems (instruction-encoding side
-    conditions for the later passes). *)
+    [mem_prog_mem_compile_prog] uses [MEM] on programs, with a local
+    classical [EqDecision] instance on [loopLang.prog] (HOL equality).
+    HOL's [EVERY] of the [Prop]-valued [not_created_subprogs] and
+    [every_prog] is [EVERY] of [⌜...⌝].  [loop_inst_ok] is [Prop]-valued
+    (as [loopProps.every_prog] expects) and HOL's literal set
+    [c.ISA ∈ {ARMv8; MIPS; RISC_V}] is [MEM] on a list, as in
+    [wordConvs.inst_ok_less]. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -54,7 +50,7 @@ From Galette.cakeml.compiler.backend Require stackLang.
 Import stackLang(store_name(..)).
 From Galette.cakeml.compiler.backend Require Import backend_common wordLang.
 From Galette.cakeml.compiler.backend.semantics Require Import wordSem wordConvs.
-From Galette.cakeml.compiler.backend.semantics.wordProps Require consts clock.
+From Galette.cakeml.compiler.backend.semantics.wordProps Require consts clock code.
 From Galette.cakeml.pancake Require loopLang panLang.
 From Galette.cakeml.pancake Require Import loop_to_word.
 From Galette.cakeml.pancake.semantics Require loopSem loopProps.
@@ -549,6 +545,20 @@ Proof.
   rewrite lookup_inter_alt. destruct (decide _) as [|Hn']; [exact Hm'|].
   exfalso; apply Hn'. apply lookup_mk_new_cutset. right. exists n. split; [exact Hd|].
   unfold find_var; rewrite Hm; reflexivity.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "env_to_list_IMP" *)
+Theorem env_to_list_IMP : forall (t : state a c ffi_t) (env1 : num_map (word_loc a)) l permute,
+  env_to_list env1 (wordSem.permute t) = (l, permute) ->
+  domain (fromAList l) = domain env1 /\
+  forall x, lookup x (fromAList l) = lookup x env1.
+Proof.
+  intros t env1 l permute H.
+  destruct (code.env_to_list_lookup_equiv _ _ _ _ H) as [H1 _].
+  assert (Hl : forall x, lookup x (fromAList l) = lookup x env1)
+    by (intros x; rewrite lookup_fromAList; apply H1).
+  split; [|exact Hl].
+  apply set_ext; intros x. rewrite !domain_lookup, Hl. reflexivity.
 Qed.
 
 (*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "cut_env_LN_IMP" *)
@@ -2284,6 +2294,11 @@ End Semantics.
 Section Programs.
 Context {a : N}.
 
+(** Decidable equality on loopLang programs, classically (HOL equality);
+    used by [MEM] in [mem_prog_mem_compile_prog]. *)
+#[local] Instance lprog_eq_dec_classical : EqDecision (loopLang.prog a) :=
+  fun x y => classical_dec (x = y).
+
 Lemma MAP_FST_compile_prog (prog : list (N * (list N * loopLang.prog a))) :
   MAP FST (compile_prog prog) = MAP FST prog.
 Proof.
@@ -2299,6 +2314,15 @@ Proof. intros prog H. rewrite MAP_FST_compile_prog. exact H. Qed.
 Theorem first_compile_all_distinct : forall (prog : list (N * (list N * loopLang.prog a))),
   ALL_DISTINCT (MAP FST prog) -> ALL_DISTINCT (MAP FST (compile prog)).
 Proof. intros prog H. unfold compile. apply first_compile_prog_all_distinct, H. Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "mem_prog_mem_compile_prog" *)
+Theorem mem_prog_mem_compile_prog : forall (prog : list (N * (list N * loopLang.prog a))) name params body,
+  MEM (name, (params, body)) prog ->
+  MEM (name, (LENGTH params + 1, comp_func name params body)) (compile_prog prog).
+Proof.
+  intros prog name params body H. apply MEM_In in H. apply MEM_In.
+  unfold compile_prog. apply in_map_iff. exists (name, (params, body)). split; [reflexivity|exact H].
+Qed.
 
 (*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "lookup_prog_some_lookup_compile_prog" *)
 Theorem lookup_prog_some_lookup_compile_prog : forall (prog : list (N * (list N * loopLang.prog a)))
@@ -2581,4 +2605,256 @@ Proof.
   exact (loop_to_word_comp_not_created P HP _ _ _ _ _ E).
 Qed.
 
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_to_word_compile_not_created" *)
+Theorem loop_to_word_compile_not_created : forall (P : prog a -> Prop)
+    (pan_prog : list (N * (list N * loopLang.prog a))),
+  (forall x, match x with
+             | ShareInst _ _ _ => True | Call _ _ _ _ => True | LocValue _ _ => True
+             | _ => False end -> P x) ->
+  EVERY (fun p => ⌜not_created_subprogs P p⌝) (MAP (SND ∘ SND) (compile_prog pan_prog)).
+Proof.
+  intros P pan_prog HP. unfold compile_prog.
+  induction pan_prog as [|[n [ps b]] l IH]; [reflexivity|].
+  cbn [List.map EVERY]. unfold is_true in *. apply andb_true_intro. split; [|exact IH].
+  apply bool_decide_spec. exact (loop_to_word_comp_func_not_created P HP b n ps).
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_to_word_compile_not_created_MEM" *)
+Local Theorem loop_to_word_compile_not_created_MEM : forall (P : prog a -> Prop)
+    (pan_prog : list (N * (list N * loopLang.prog a))) a0 b p,
+  MEM (a0, (b, p)) (compile_prog pan_prog) ->
+  (forall x, match x with
+             | ShareInst _ _ _ => True | Call _ _ _ _ => True | LocValue _ _ => True
+             | _ => False end -> P x) ->
+  not_created_subprogs P p.
+Proof.
+  intros P pan_prog a0 b p Hm HP. apply MEM_In in Hm.
+  unfold compile_prog in Hm. apply in_map_iff in Hm as [[n [ps body]] [Heq _]].
+  injection Heq as _ _ <-. exact (loop_to_word_comp_func_not_created P HP body n ps).
+Qed.
+
+Local Lemma compile_code_not_created (P : prog a -> Prop)
+    (prog0 : list (N * (list N * loopLang.prog a))) k n p :
+  (forall x, match x with
+             | ShareInst _ _ _ => True | Call _ _ _ _ => True | LocValue _ _ => True
+             | _ => False end -> P x) ->
+  lookup k (fromAList (compile prog0)) = SOME (n, p) -> not_created_subprogs P p.
+Proof.
+  intros HP H. rewrite lookup_fromAList in H. apply ALOOKUP_MEM in H.
+  exact (loop_to_word_compile_not_created_MEM P prog0 k n p H HP).
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_compile_no_install_code" *)
+Theorem loop_compile_no_install_code : forall (prog : list (N * (list N * loopLang.prog a))),
+  code.no_install_code (fromAList (compile prog)).
+Proof.
+  intros prog k n p H. apply (compile_code_not_created _ prog k n p); [|exact H].
+  intros x Hx; destruct x; try contradiction Hx; discriminate.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_compile_no_alloc_code" *)
+Theorem loop_compile_no_alloc_code : forall (prog : list (N * (list N * loopLang.prog a))),
+  code.no_alloc_code (fromAList (compile prog)).
+Proof.
+  intros prog k n p H. apply (compile_code_not_created _ prog k n p); [|exact H].
+  intros x Hx; destruct x; try contradiction Hx; discriminate.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_compile_no_mt_code" *)
+Theorem loop_compile_no_mt_code : forall (prog : list (N * (list N * loopLang.prog a))),
+  code.no_mt_code (fromAList (compile prog)).
+Proof.
+  intros prog k n p H. apply (compile_code_not_created _ prog k n p); [|exact H].
+  intros x Hx; destruct x; try contradiction Hx; discriminate.
+Qed.
+
 End NotCreated.
+
+(** ** Instruction side conditions *)
+
+Section InstOk.
+Context {a : N}.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "full_imp_inst_ok_less" *)
+Theorem full_imp_inst_ok_less : forall (c : asm_config a) (prog : prog a),
+  full_inst_ok_less c prog -> every_inst (inst_ok_less c) prog.
+Proof.
+  intros c prog. unfold is_true.
+  induction prog as [| | | | | | |p IHp|ret dest args h Hr Hh|p1 p2 IHp1 IHp2|cc r ri p1 p2 IHp1 IHp2
+                    |n1 p n2 IHp| | | | | | | | | | | | | |]
+    using prog_nested_ind; cbn [full_inst_ok_less every_inst]; intros H; try reflexivity;
+    try exact H; try (apply IHp, H).
+  - destruct ret as [[n [names [rh [l1 l2]]]]|]; [|reflexivity].
+    apply andb_prop in H as [H1 H2]. rewrite (Hr H1).
+    destruct h as [[n' [hp [l1' l2']]]|]; [exact (Hh H2)|reflexivity].
+  - apply andb_prop in H as [H1 H2]. rewrite (IHp1 H1), (IHp2 H2). reflexivity.
+  - apply andb_prop in H as [H1 H2]. rewrite (IHp1 H1), (IHp2 H2). reflexivity.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_inst_ok_def" *)
+Definition loop_inst_ok (c : asm_config a) (p : loopLang.prog a) : Prop :=
+  match p with
+  | loopLang.Arith (loopLang.LDiv r1 r2 r3) => is_true (MEM (ISA c) [ARMv8; MIPS; RISC_V])
+  | loopLang.Arith (loopLang.LLongMul r1 r2 r3 r4) =>
+      (ISA c = ARMv7 -> r1 <> r2) /\
+      (ISA c = ARMv8 \/ ISA c = RISC_V \/ ISA c = Ag32 -> r1 <> r3 /\ r1 <> r4)
+  | loopLang.Arith (loopLang.LLongDiv r1 r2 r3 r4 r5) => ISA c = x86_64
+  | _ => True
+  end.
+
+
+
+Local Lemma fv_neq (ctxt : num_map N) x y :
+  INJ (find_var ctxt) (domain ctxt) UNIV ->
+  (forall n m, lookup n ctxt = SOME m -> m <> 0 /\ EVEN m) ->
+  domain ctxt x -> x <> y -> find_var ctxt x <> find_var ctxt y.
+Proof.
+  intros [_ Hinj] Hc Hx Hxy E.
+  destruct (classical_dec (domain ctxt y)) as [Hy|Hy].
+  - apply Hxy, (Hinj x y); [split; assumption|exact E].
+  - apply domain_lookup in Hx as [m Hm].
+    assert (Hn : lookup y ctxt = NONE) by (destruct (lookup y ctxt) eqn:Ey; [|reflexivity];
+      exfalso; apply Hy, domain_lookup; eauto).
+    unfold find_var in E. rewrite Hm, Hn in E. exact (proj1 (Hc _ _ Hm) E).
+Qed.
+
+Local Lemma neqb x y : x <> y -> negb (x =? y) = true.
+Proof. intros H. destruct (N.eqb_spec x y); [contradiction|reflexivity]. Qed.
+
+Local Lemma acc_sub (p : loopLang.prog a) l (S : N -> Prop) :
+  domain (loopLang.acc_vars p l) SUBSET S ->
+  domain (loopLang.acc_vars p LN) SUBSET S /\ domain l SUBSET S.
+Proof.
+  intros H. split; intros x Hx; apply H; unfold pred_set.IN in *;
+    apply loopProps.acc_vars_acc_iff; tauto.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_to_word_comp_every_inst_ok_less" *)
+Theorem loop_to_word_comp_every_inst_ok_less : forall (c : asm_config a) ctxt (prog : loopLang.prog a) l,
+  byte_offset_ok c (n2w 0) /\ addr_offset_ok c (n2w 0) /\
+  loopProps.every_prog (loop_inst_ok c) prog /\
+  domain (loopLang.acc_vars prog LN) SUBSET domain ctxt /\
+  INJ (find_var ctxt) (domain ctxt) UNIV /\
+  (forall n m, lookup n ctxt = SOME m -> m <> 0 /\ EVEN m) ->
+  every_inst (inst_ok_less c) (FST (comp ctxt prog l)).
+Proof.
+  intros c ctxt prog. unfold is_true.
+  induction prog as [|n e|lhs pop rhs|ar|e n|w e|n m|n m|n m|n m|p1 p2 IHp1 IHp2
+                    |cc n ri p1 p2 l IHp1 IHp2|l1 p1 l2 IHp|n|n|n|vs0|mo n e| |p1 IHp| |n m
+                    |ret dest args h H|str n1 n2 n3 n4 l]
+    using loopProps.prog_nested_ind;
+    intros l0 (Hb & Ha & He & Hd & Hinj & Hc); cbn [comp FST fst every_inst];
+    try reflexivity.
+  - (* Primitive *)
+    destruct pop. destruct (decide _); cbn [FST fst every_inst]; [|reflexivity].
+    cbv zeta. cbn [FST fst every_inst inst_ok_less]. rewrite (neqb 3 (find_var ctxt (EL 1 rhs))).
+    2:{ intros C. symmetry in C. revert C. apply find_var_neq_odd. split; [exact Hc|discriminate]. }
+    cbn. destruct (bool_decide _ || _); reflexivity.
+  - (* Arith *)
+    cbn [loopProps.every_prog loop_inst_ok] in He.
+    destruct ar as [r1 r2 r3 r4|r1 r2 r3 r4 r5|r1 r2 r3]; cbn [FST fst every_inst];
+      cbn [loopLang.acc_vars] in Hd; unfold inst_ok_less.
+    + assert (Hr1 : domain ctxt r1) by (apply Hd; unfold pred_set.IN; rewrite domain_insert; left; reflexivity).
+      destruct He as [He1 He2].
+      destruct (ISA c); cbn [bool_decide decide architecture_eq_dec implb orb andb];
+        try reflexivity; cbn;
+        repeat match goal with
+               | |- context [negb (?x =? ?y)] => rewrite (neqb x y) by
+                   (apply (fv_neq _ _ _ Hinj Hc Hr1); first [apply He1 | apply He2]; tauto)
+               end; reflexivity.
+    + apply bool_decide_spec. exact He.
+    + exact He.
+  - (* Load32 *) cbn. exact Ha.
+  - (* LoadByte *) cbn. exact Hb.
+  - (* Store32 *) cbn. exact Ha.
+  - (* StoreByte *) cbn. exact Hb.
+  - (* Seq *)
+    cbn [loopProps.every_prog] in He. cbn [loopLang.acc_vars] in Hd.
+    destruct (acc_sub _ _ _ Hd) as [Hd1 Hd'']. destruct (acc_sub _ _ _ Hd'') as [Hd2 _].
+    specialize (IHp1 l0 (conj Hb (conj Ha (conj (proj1 (proj2 He)) (conj Hd1 (conj Hinj Hc)))))).
+    destruct (comp ctxt p1 l0) as [wp l1] eqn:E1.
+    specialize (IHp2 l1 (conj Hb (conj Ha (conj (proj2 (proj2 He)) (conj Hd2 (conj Hinj Hc)))))).
+    destruct (comp ctxt p2 l1) as [wq l3] eqn:E2. cbn [FST fst every_inst] in *.
+    rewrite IHp1, IHp2. reflexivity.
+  - (* If *)
+    cbn [loopProps.every_prog] in He. cbn [loopLang.acc_vars] in Hd.
+    destruct (acc_sub _ _ _ Hd) as [Hd1 Hd'']. destruct (acc_sub _ _ _ Hd'') as [Hd2 _].
+    specialize (IHp1 l0 (conj Hb (conj Ha (conj (proj1 (proj2 He)) (conj Hd1 (conj Hinj Hc)))))).
+    destruct (comp ctxt p1 l0) as [wp l1] eqn:E1.
+    specialize (IHp2 l1 (conj Hb (conj Ha (conj (proj2 (proj2 He)) (conj Hd2 (conj Hinj Hc)))))).
+    destruct (comp ctxt p2 l1) as [wq l3] eqn:E2. cbn [FST fst every_inst] in *.
+    rewrite IHp1, IHp2. reflexivity.
+  - (* Loop *)
+    cbn [loopProps.every_prog] in He. cbn [loopLang.acc_vars] in Hd.
+    specialize (IHp l0 (conj Hb (conj Ha (conj (proj2 He) (conj Hd (conj Hinj Hc)))))).
+    destruct (comp ctxt p1 l0) as [wb lb] eqn:E1. cbn [FST fst every_inst] in *.
+    rewrite IHp. reflexivity.
+  - (* Mark *)
+    cbn [loopProps.every_prog] in He. cbn [loopLang.acc_vars] in Hd.
+    exact (IHp l0 (conj Hb (conj Ha (conj (proj2 He) (conj Hd (conj Hinj Hc)))))).
+  - (* Call *)
+    destruct ret as [[vs live]|]; [|reflexivity]. cbv zeta.
+    destruct h as [[n [p1 [p2 lo]]]|]; [|destruct l0; reflexivity].
+    destruct H as [IH1 IH2]. cbn [loopProps.every_prog] in He. destruct He as [_ [He1 He2]].
+    cbn [loopLang.acc_vars] in Hd. cbv zeta in Hd.
+    destruct (acc_sub _ _ _ Hd) as [Hd1 Hd'']. destruct (acc_sub _ _ _ Hd'') as [Hd2 _].
+    specialize (IH1 (FST l0, SND l0 + 1) (conj Hb (conj Ha (conj He1 (conj Hd1 (conj Hinj Hc)))))).
+    destruct (comp ctxt p1 _) as [w1 la] eqn:E1.
+    specialize (IH2 la (conj Hb (conj Ha (conj He2 (conj Hd2 (conj Hinj Hc)))))).
+    destruct (comp ctxt p2 la) as [w2 lb] eqn:E2. cbn [FST fst every_inst] in *.
+    rewrite IH1, IH2. destruct l0, lb; reflexivity.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_to_word_comp_func_every_inst_ok_less" *)
+Theorem loop_to_word_comp_func_every_inst_ok_less : forall (c : asm_config a) n params
+    (body : loopLang.prog a) p,
+  comp_func n params body = p /\
+  loopProps.every_prog (loop_inst_ok c) body /\
+  addr_offset_ok c (n2w 0) /\ byte_offset_ok c (n2w 0) ->
+  every_inst (inst_ok_less c) p.
+Proof.
+  intros c n params body p (<- & He & Ha & Hb). unfold comp_func. cbv zeta.
+  set (vs := fromNumSet (difference (loopLang.acc_vars body LN) (toNumSet params))).
+  assert (H2 : 0 < 2 /\ EVEN 2) by (split; [lia|reflexivity]).
+  destruct (locals_rel_intro _ _ _ (locals_rel_mk_ctxt_ln (B := word_loc a) 2 (params ++ vs) LN H2))
+    as (Hinj & Hc & _).
+  apply loop_to_word_comp_every_inst_ok_less.
+  split; [exact Hb|]. split; [exact Ha|]. split; [exact He|]. split; [|split; [exact Hinj|exact Hc]].
+  intros x Hx. unfold pred_set.IN. rewrite domain_make_ctxt, LIST_TO_SET_APPEND.
+  unfold pred_set.UNION, pred_set.IN. right.
+  destruct (classical_dec (x IN set params)) as [Hp|Hp]; [left; exact Hp|right].
+  unfold vs. change (set (fromNumSet (difference (loopLang.acc_vars body LN) (toNumSet params))) x)
+    with (x IN set (fromNumSet (difference (loopLang.acc_vars body LN) (toNumSet params)))).
+  rewrite set_fromNumSet. unfold pred_set.IN. rewrite domain_difference, domain_toNumSet.
+  split; [exact Hx|exact Hp].
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_to_word_compile_prog_every_inst_ok_less" *)
+Theorem loop_to_word_compile_prog_every_inst_ok_less : forall (c : asm_config a)
+    (lprog : list (N * (list N * loopLang.prog a))) wprog0,
+  compile_prog lprog = wprog0 /\
+  byte_offset_ok c (n2w 0) /\ addr_offset_ok c (n2w 0) /\
+  EVERY (fun '(n, (params, body)) => ⌜loopProps.every_prog (loop_inst_ok c) body⌝) lprog ->
+  EVERY (fun '(n, (m, p)) => every_inst (inst_ok_less c) p) wprog0.
+Proof.
+  intros c lprog wprog0 (<- & Hb & Ha & He). unfold compile_prog.
+  induction lprog as [|[n [ps b]] l IH]; [reflexivity|].
+  cbn [List.map EVERY] in *. unfold is_true in *.
+  apply andb_prop in He as [He1 He2]. apply andb_true_intro. split; [|exact (IH He2)].
+  apply (loop_to_word_comp_func_every_inst_ok_less c n ps b).
+  split; [reflexivity|]. split; [exact (proj1 (bool_decide_spec _) He1)|]. split; assumption.
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/loop_to_wordProofScript.sml" "loop_to_word_every_inst_ok_less" *)
+Theorem loop_to_word_every_inst_ok_less : forall (c : asm_config a)
+    (lprog : list (N * (list N * loopLang.prog a))) wprog0,
+  compile lprog = wprog0 /\
+  byte_offset_ok c (n2w 0) /\ addr_offset_ok c (n2w 0) /\
+  EVERY (fun '(n, (params, body)) => ⌜loopProps.every_prog (loop_inst_ok c) body⌝) lprog ->
+  EVERY (fun '(n, (m, p)) => every_inst (inst_ok_less c) p) wprog0.
+Proof.
+  intros c lprog wprog0 (<- & H). unfold compile.
+  exact (loop_to_word_compile_prog_every_inst_ok_less c lprog _ (conj eq_refl H)).
+Qed.
+
+End InstOk.

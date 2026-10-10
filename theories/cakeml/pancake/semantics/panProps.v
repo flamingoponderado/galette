@@ -2054,3 +2054,34 @@ Theorem semantics_decls_has_main' : forall (s : state a ffi_t) start (code0 : li
 Proof. exact semantics_decls_has_main. Qed.
 
 End DeclsWf.
+
+(** ** Expressions of a program *)
+
+Section ExpsOf.
+Context {a : N}.
+
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "exps_of_def" *)
+Fixpoint exps_of (p : prog a) : list (exp a) :=
+  match p with
+  | Raise _ e => [e]
+  | Dec _ _ e p => e :: exps_of p
+  | Seq p q => exps_of p ++ exps_of q
+  | If e p q => e :: exps_of p ++ exps_of q
+  | While e p => e :: exps_of p
+  | Call NONE _ es => es
+  | Call (SOME (_, SOME (_, (_, ep)))) _ es => es ++ exps_of ep
+  | Call (SOME (_, NONE)) _ es => es
+  | DecCall _ _ _ es p => es ++ exps_of p
+  | Store e1 e2 => [e1; e2]
+  | Store32 e1 e2 => [e1; e2]
+  | StoreByte e1 e2 => [e1; e2]
+  | panLang.Return e => [e]
+  | ExtCall _ e1 e2 e3 e4 => [e1; e2; e3; e4]
+  | Assign _ _ e => [e]
+  | Primitive _ _ es => es
+  | ShMemLoad _ _ _ e => [e]
+  | ShMemStore _ e1 e2 => [e1; e2]
+  | _ => []
+  end.
+
+End ExpsOf.
