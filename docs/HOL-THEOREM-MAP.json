@@ -52841,6 +52841,46 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "ALL_DISTINCT_compile_top",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "ALL_DISTINCT_compile_top"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "ALL_DISTINCT_fperm_decs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "ALL_DISTINCT_fperm_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "ALOOKUP_MAP3",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "ALOOKUP_MAP3"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "ALOOKUP_MAP4",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "ALOOKUP_MAP4"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
   "hol_name": "DISJOINT_addresses_lemma",
   "hol_line": null,
   "case": null,
@@ -52848,6 +52888,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
   "rocq_name": "DISJOINT_addresses_lemma"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "EVERY_fperm_decs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "EVERY_fperm_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "FILTER_decs_fperm_decs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "FILTER_decs_fperm_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "FLOOKUP_fperm_code",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "FLOOKUP_fperm_code"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "FLOOKUP_fperm_code'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "FLOOKUP_fperm_code'"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
@@ -52868,6 +52948,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
   "rocq_name": "LESS_MULT_MONO'"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "LUB_IMAGE_SUC",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "LUB_IMAGE_SUC"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "MEM_functions",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "MEM_functions"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
@@ -52921,6 +53021,136 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decls_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decls_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decls_append_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decls_append_IMP"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_EVERY",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_EVERY"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_EVERY_is_function",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_EVERY_is_function"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_FILTER_decs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_FILTER_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_decls_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_decls_thm"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_exns_are_exns",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_exns_are_exns"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_functions_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_functions_thm"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_localised",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_localised"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_localised'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_localised'"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_localised_main",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_localised_main"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_decs_preserve_functions",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_decs_preserve_functions"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
   "hol_name": "compile_exp_correct",
   "hol_line": null,
   "case": null,
@@ -52928,6 +53158,136 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
   "rocq_name": "compile_exp_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_exp_localised",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_exp_localised"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_localised",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_localised"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_top_localised",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_top_localised"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_top_only_functions_or_exns",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_top_only_functions_or_exns"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_top_semantics_decls",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_top_semantics_decls"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_top_shape_wf",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_top_shape_wf"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_top_shape_wf_nil",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_top_shape_wf_nil"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "dec_shapes_FILTER",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "dec_shapes_FILTER"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "dec_shapes_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "dec_shapes_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "dec_shapes_fperm_decs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "dec_shapes_fperm_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "dec_shapes_functions",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "dec_shapes_functions"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "dec_shapes_resort_decls_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "dec_shapes_resort_decls_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "decl_distinct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "decl_distinct"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
@@ -52961,6 +53321,266 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "eval_state_rel_is_wf_shape",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "eval_state_rel_is_wf_shape"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "eval_upd_code_eta",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "eval_upd_code_eta"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_decls_compile_top",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_decls_compile_top"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_decls_fperm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_decls_fperm"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_decls_functions_wf",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_decls_functions_wf"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_decls_init_globals_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_decls_init_globals_lemma"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_decls_one_fun_last",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_decls_one_fun_last"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_decls_only_functions_SOME",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_decls_only_functions_SOME"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_decls_only_functions_and_exns_SOME",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_decls_only_functions_and_exns_SOME"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_fperm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_fperm"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_fperm'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_fperm'"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_fresh_local",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_fresh_local"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_two",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_two"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_two_fresh_locals",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_two_fresh_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "evaluate_unchanged_local",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "evaluate_unchanged_local"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "exceptions_FILTER_is_function",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "exceptions_FILTER_is_function"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "exceptions_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "exceptions_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "exceptions_compile_top",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "exceptions_compile_top"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fperm_code_FEMPTY",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fperm_code_FEMPTY"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fperm_code_FUPDATE_LIST_functions",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fperm_code_FUPDATE_LIST_functions"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fperm_code_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fperm_code"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fperm_decs_FILTER_is_function",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fperm_decs_FILTER_is_function"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fperm_decs_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fperm_decs_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fperm_decs_decls",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fperm_decs_decls"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fperm_name_cancel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fperm_name_cancel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fperm_name_cong",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fperm_name_cong"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
   "hol_name": "fresh_name_correct",
   "hol_line": null,
   "case": null,
@@ -52981,6 +53601,46 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "functions_FILTER_exn_decl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "functions_FILTER_exn_decl"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "functions_FILTER_is_name",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "functions_FILTER_is_name"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "functions_filter_nil",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "functions_filter_nil"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "functions_fperm_decs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "functions_fperm_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
   "hol_name": "good_dimindex_w2n_add",
   "hol_line": null,
   "case": null,
@@ -52998,6 +53658,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
   "rocq_name": "good_res"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "localised_exp_shape_val",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "localised_exp_shape_val"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "lookup_code_fperm_code",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "lookup_code_fperm_code"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "map_pick_up_first",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "map_pick_up_first"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
@@ -53091,6 +53781,46 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "nested_seqs_localised",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "nested_seqs_localised"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "new_main_name_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "new_main_name_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "not_is_function",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "not_is_function"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "num_cases_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "num_cases_lemma"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
   "hol_name": "res_var_FEMPTY",
   "hol_line": null,
   "case": null,
@@ -53098,6 +53828,76 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
   "rocq_name": "res_var_FEMPTY"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "resort_decls_evaluate",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "resort_decls_evaluate"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "resort_decls_evaluate_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "resort_decls_evaluate_IMP"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "resort_decls_preserve_functions",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "resort_decls_preserve_functions"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "semantics_empty_locals",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "semantics_empty_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "semantics_fperm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "semantics_fperm"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "semantics_init_call",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "semantics_init_call"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "semantics_init_call'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "semantics_init_call'"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
@@ -53158,6 +53958,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
   "rocq_name": "state_rel_globals_wf"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_imp_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_imp_semantics"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
@@ -53248,6 +54058,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
   "rocq_name": "state_rel_write_bytearray"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "tuple_4_o",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "tuple_4_o"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
@@ -56881,6 +57701,16 @@
  },
  {
   "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",
+  "hol_name": "evaluate_decls_exns_wf",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panProps.v",
+  "rocq_name": "evaluate_decls_exns_wf"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",
   "hol_name": "evaluate_decls_functions",
   "hol_line": null,
   "case": null,
@@ -57028,6 +57858,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panProps.v",
   "rocq_name": "every_exp_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",
+  "hol_name": "exns_wf_evaluate_decls",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panProps.v",
+  "rocq_name": "exns_wf_evaluate_decls"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",
@@ -57278,6 +58118,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panProps.v",
   "rocq_name": "pan_primop_is_wf_shape_v"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",
+  "hol_name": "semantics_decls_has_main",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panProps.v",
+  "rocq_name": "semantics_decls_has_main"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",
+  "hol_name": "semantics_decls_has_main'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panProps.v",
+  "rocq_name": "semantics_decls_has_main'"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",

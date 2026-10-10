@@ -44,9 +44,9 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 
 | HOL script | Status |
 | --- | --- |
-| pancake/proofs/pan_simpProof | partial |
+| pancake/proofs/pan_simpProof | done (compile_eval_correct_none is commented out in HOL) |
 | pancake/proofs/pan_structsProof | done |
-| pancake/proofs/pan_globalsProof | partial (~45 of 125) |
+| pancake/proofs/pan_globalsProof | done |
 | pancake/proofs/crep_arithProof | partial |
 | pancake/proofs/crep_inlineProof | done (except `unreach_elim_prog_size`, stated with HOL `prog_size`) |
 | pancake/proofs/loop_callProof, loop_liveProof | done |

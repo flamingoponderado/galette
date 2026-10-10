@@ -1950,3 +1950,107 @@ Proof.
 Qed.
 
 End WfInvariant.
+
+(** ** Exception declarations and the main function *)
+
+Section DeclsWf.
+Context {a : N} {ffi_t : Type}.
+Implicit Types s : state a ffi_t.
+
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "evaluate_decls_exns_wf" *)
+Theorem evaluate_decls_exns_wf : forall s (ds : list (decl a)) s',
+  evaluate_decls s ds = SOME s' ->
+  is_true (ALL_DISTINCT (MAP FST (exceptions ds))) /\
+  is_true (EVERY (fun '(eid, sh) => ⌜FLOOKUP (eshapes s) eid = NONE⌝) (exceptions ds)) /\
+  is_true (EVERY (is_wf_shape (structs s) ∘ SND) (exceptions ds)).
+Proof.
+  intros s ds; revert s; induction ds as [|d ds IH]; intros s s' H; [repeat split|].
+  rewrite evaluate_decls_cons_cases in H.
+  destruct d as [fi|sh v0 e|eid sh|nm flds]; cbn [exceptions].
+  - destruct (_ && _); [|discriminate]. exact (IH _ _ H).
+  - destruct (eval _ e); [|discriminate]. destruct (bool_decide _); [|discriminate]. exact (IH _ _ H).
+  - destruct (_ && _) eqn:Ec; [|discriminate]. apply Bool.andb_true_iff in Ec as [E1 E2].
+    apply bool_decide_spec in E1.
+    destruct (IH _ _ H) as (D & F & W). cbn [eshapes structs set_eshapes] in F, W.
+    cbn [MAP List.map FST fst ALL_DISTINCT EVERY].
+    assert (Hn : ~ is_true (MEM eid (MAP FST (exceptions ds)))).
+    { intros Hm. apply MEM_is_true_In, in_map_iff in Hm as ([e' sh'] & He & Hin). cbn in He. subst e'.
+      clear -F Hin.
+      induction (exceptions ds) as [|[x y] l IHl]; [destruct Hin|].
+      cbn in F. apply Bool.andb_true_iff in F as [F1 F2].
+      destruct Hin as [Heq|Hin].
+      - injection Heq as Hx Hy. subst x. apply bool_decide_spec in F1. rewrite ?FLOOKUP_UPDATE in F1.
+        destruct (decide (eid = eid)) as [|C]; [discriminate|apply C; reflexivity].
+      - exact (IHl F2 Hin). }
+    split; [|split].
+    + apply Bool.andb_true_iff; split; [apply Bool.negb_true_iff, Bool.not_true_iff_false; exact Hn|exact D].
+    + apply Bool.andb_true_iff; split; [apply bool_decide_spec; exact E1|].
+      clear -F. induction (exceptions ds) as [|[x y] l IHl]; [reflexivity|].
+      cbn in F |- *. apply Bool.andb_true_iff in F as [F1 F2]. apply Bool.andb_true_iff; split; [|exact (IHl F2)].
+      apply bool_decide_spec in F1. apply bool_decide_spec. rewrite ?FLOOKUP_UPDATE in F1.
+      destruct (decide (eid = x)); [discriminate|exact F1].
+    + apply Bool.andb_true_iff; split; [exact E2|exact W].
+  - exact (IH _ _ H).
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "exns_wf_evaluate_decls" *)
+Theorem exns_wf_evaluate_decls : forall s (ds : list (decl a)),
+  is_true (EVERY is_exn_decl ds) /\
+  is_true (ALL_DISTINCT (MAP FST (exceptions ds))) /\
+  is_true (EVERY (fun '(eid, sh) => ⌜FLOOKUP (eshapes s) eid = NONE⌝) (exceptions ds)) /\
+  is_true (EVERY (is_wf_shape (structs s) ∘ SND) (exceptions ds)) ->
+  evaluate_decls s ds = SOME (set_eshapes (eshapes s |++ exceptions ds) s).
+Proof.
+  intros s ds; revert s; induction ds as [|d ds IH]; intros s (He & D & F & W).
+  - cbn. f_equal. destruct s; reflexivity.
+  - cbn in He. apply Bool.andb_true_iff in He as [Hd He]. destruct d as [| |eid sh|]; try discriminate.
+    cbn [exceptions MAP List.map FST fst ALL_DISTINCT EVERY] in D, F, W.
+    apply Bool.andb_true_iff in D as [Dn D]. apply Bool.andb_true_iff in F as [F1 F].
+    apply Bool.andb_true_iff in W as [W1 W].
+    cbn [snd] in W1. rewrite evaluate_decls_cons_cases. rewrite F1, W1. cbn [andb].
+    rewrite IH.
+    + cbn [eshapes set_eshapes]. reflexivity.
+    + cbn [eshapes structs set_eshapes]. split; [exact He|split; [exact D|split; [|exact W]]].
+      apply Bool.negb_true_iff, Bool.not_true_iff_false in Dn.
+      clear -F Dn. induction (exceptions ds) as [|[x y] l IHl]; [reflexivity|].
+      cbn in F, Dn |- *. apply Bool.andb_true_iff in F as [F1 F2]. apply Bool.andb_true_iff; split.
+      * apply bool_decide_spec. rewrite ?FLOOKUP_UPDATE. destruct (decide (eid = x)) as [->|Hne].
+        -- exfalso; apply Dn. apply Bool.orb_true_iff; left; apply bool_decide_spec; reflexivity.
+        -- exact (proj1 (bool_decide_spec _) F1).
+      * apply IHl; [|exact F2]. intros Hm. apply Dn. apply Bool.orb_true_iff; right; exact Hm.
+Qed.
+
+Lemma semantics_main_aux (s : state a ffi_t) start :
+  semantics s start <> Fail -> exists body rshape, FLOOKUP (code s) start = SOME ([], (body, rshape)).
+Proof.
+  intros Hs. destruct (FLOOKUP (code s) start) as [[vs [b r]]|] eqn:EF.
+  - destruct vs as [|v0 vs]; [eexists; eexists; reflexivity|].
+    exfalso; apply Hs. unfold semantics. destruct (classical_dec _) as [_|Hn]; [reflexivity|]. exfalso; apply Hn.
+    exists 0. rewrite evaluate_unfold. cbn [evaluate_body OPT_MMAP]. cbn beta iota.
+    unfold lookup_code. cbn [code set_clock]. rewrite EF.
+    destruct (_ && _) eqn:Eb; [|exact Logic.I].
+    apply Bool.andb_true_iff in Eb as [_ Eb]. apply bool_decide_spec in Eb. inversion Eb.
+  - exfalso; apply Hs. unfold semantics. destruct (classical_dec _) as [_|Hn]; [reflexivity|]. exfalso; apply Hn.
+    exists 0. rewrite evaluate_unfold. cbn [evaluate_body OPT_MMAP]. cbn beta iota.
+    unfold lookup_code. cbn [code set_clock]. rewrite EF. exact Logic.I.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "semantics_decls_has_main" *)
+Theorem semantics_decls_has_main : forall (s : state a ffi_t) start (code0 : list (decl a)),
+  semantics_decls s start code0 <> Fail ->
+  exists body rshape, FLOOKUP (code s |++ functions code0) start = SOME ([], (body, rshape)).
+Proof.
+  intros s start code0 H. unfold semantics_decls in H.
+  destruct (decs_stcnames [] code0) as [ctxt|]; [|contradiction H; reflexivity].
+  destruct (evaluate_decls (set_structs ctxt s) code0) as [s'|] eqn:E; [|contradiction H; reflexivity].
+  pose proof (evaluate_decls_functions _ _ _ E) as Ec. cbn [code set_structs] in Ec. rewrite <- Ec.
+  exact (semantics_main_aux s' start H).
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "semantics_decls_has_main'" *)
+Theorem semantics_decls_has_main' : forall (s : state a ffi_t) start (code0 : list (decl a)),
+  semantics_decls s start code0 <> Fail ->
+  exists body rshape, FLOOKUP (code s |++ functions code0) start = SOME ([], (body, rshape)).
+Proof. exact semantics_decls_has_main. Qed.
+
+End DeclsWf.

@@ -7,7 +7,9 @@
     programs, congruences of [evaluate]) have no HOL original.  The
     semantics-preservation theorem [state_rel_imp_semantics] is proved by
     showing that the source and target runs agree, clock by clock, on their
-    results and FFI states (no least-upper-bound reasoning is needed). *)
+    results and FFI states (no least-upper-bound reasoning is needed).
+    HOL's [compile_eval_correct_none] is inside a comment block of the HOL
+    script (it is not a HOL theorem) and is not ported. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
