@@ -64,7 +64,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | backend/proofs word_depth, word_alloc, word_to_word | todo |
 | backend/proofs stack_names, stack_rawcall | done |
 | backend/proofs stack_remove | done (`compile_semantics`, `make_init_semantics`, asm_name) |
-| backend/proofs word_to_stack, stack_alloc, stack_to_lab | todo |
+| backend/proofs stack_alloc | done (`compile_semantics`, `make_init_semantics`, GC code theorems) |
+| backend/proofs word_to_stack, stack_to_lab | todo |
 | backend/proofs lab_filter | done |
 | backend/proofs lab_to_target | todo |
 | encoders/riscv/proofs/riscv_targetProof | done (`riscv_encoder_correct`; lem11/lem12 are ML-generated, see header) |

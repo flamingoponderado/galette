@@ -70,3 +70,9 @@ Definition get_gen_size (l : list N) : word a :=
   end.
 
 End GenSize.
+
+(** HOL [conf_ok (:'a) c] (a boolean conjunction; here a [Prop]). *)
+(*! HOL "cakeml/compiler/backend/data_to_wordScript.sml" "conf_ok_def" *)
+Definition conf_ok (a : N) (c : config) : Prop :=
+  shift_length c < dimindex a /\ word_shift a <= shift_length c /\ len_size c <> 0 /\
+  len_size c + 7 < dimindex a.
