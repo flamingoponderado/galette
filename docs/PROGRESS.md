@@ -35,7 +35,7 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/semantics/panPropsScript, pan_commonPropsScript | partial |
 | pancake/semantics/crepPropsScript, loopPropsScript | partial |
 | backend/semantics/backendPropsScript | done |
-| backend/semantics/wordPropsScript | partial (constant-field lemmas, wordProps/consts.v) |
+| backend/semantics/wordPropsScript | partial (185 of ~207; stack_max section and permute_swap_lemma2/3 pending) |
 | backend/semantics/stackPropsScript, labPropsScript | done |
 | backend/semantics/targetPropsScript | done except encoder_correct_(RTC_)asm_step_target_state_rel |
 | encoders/asm/asmPropsScript | partial |
@@ -45,7 +45,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | HOL script | Status |
 | --- | --- |
 | pancake/proofs/pan_simpProof | partial |
-| pancake/proofs/pan_structsProof, pan_globalsProof | todo |
+| pancake/proofs/pan_structsProof | done |
+| pancake/proofs/pan_globalsProof | partial (~45 of 125) |
 | pancake/proofs/crep_arithProof | partial |
 | pancake/proofs/crep_inlineProof | done (except `unreach_elim_prog_size`, stated with HOL `prog_size`) |
 | pancake/proofs/loop_callProof, loop_liveProof | done |

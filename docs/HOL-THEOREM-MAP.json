@@ -37161,6 +37161,36 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "LASTN_LENGTH_cond",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "LASTN_LENGTH_cond"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "LASTN_stack_size_SOME",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "LASTN_stack_size_SOME"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "LIST_REL_CONJ2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "LIST_REL_CONJ2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "OPTION_CASE_MAP",
   "hol_line": null,
   "case": null,
@@ -37181,6 +37211,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "OPTION_MAP2_ADD_0",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "OPTION_MAP2_ADD_0"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "PAIR_MAP_EQ_PAIR",
   "hol_line": null,
   "case": null,
@@ -37188,6 +37228,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "PAIR_MAP_EQ_PAIR"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "SND_alt_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "SND_alt_def"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37211,6 +37261,46 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "alloc_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "alloc_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "assign_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "assign_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "assign_const_full",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "assign_const_full"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "assign_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "assign_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "call_env_const",
   "hol_line": null,
   "case": null,
@@ -37218,6 +37308,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "call_env_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "call_env_option_le_stack_max",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "call_env_option_le_stack_max"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37231,6 +37331,96 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "call_push_env_option_le_stack_max",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "call_push_env_option_le_stack_max"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "cont_loop_not_timeout",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "cont_loop_not_timeout"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "cut_state_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "cut_state_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "cut_state_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "cut_state_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "dec_clock_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "dec_clock_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "dec_stack_stack_key_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "dec_stack_stack_key_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "dec_stack_stack_size_not_none_not_none",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "dec_stack_stack_size_not_none_not_none"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "dec_stack_stack_size_some_leq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "dec_stack_stack_size_some_leq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "dec_stack_stack_size_some_not_none",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "dec_stack_stack_size_some_not_none"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "domain_fromAList_toAList",
   "hol_line": null,
   "case": null,
@@ -37238,6 +37428,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "domain_fromAList_toAList"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "env_to_list_ALL_DISTINCT",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "env_to_list_ALL_DISTINCT"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "env_to_list_ALL_DISTINCT_FST",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "env_to_list_ALL_DISTINCT_FST"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "env_to_list_lookup_equiv",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "env_to_list_lookup_equiv"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_NONE_stack_size_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "evaluate_NONE_stack_size_const"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37251,6 +37481,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_add_clock_body",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "evaluate_add_clock_body"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "evaluate_add_clock_io_events_mono",
   "hol_line": null,
   "case": null,
@@ -37258,6 +37498,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/clock.v",
   "rocq_name": "evaluate_add_clock_io_events_mono"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_code_only_grows",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "evaluate_code_only_grows"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_consts",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "evaluate_consts"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_dec_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "evaluate_dec_clock"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37271,6 +37541,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "evaluate_stack_swap",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "evaluate_stack_swap"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "flush_state_const",
   "hol_line": null,
   "case": null,
@@ -37278,6 +37558,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "flush_state_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "flush_state_option_le_stack_max_preserved",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "flush_state_option_le_stack_max_preserved"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37301,6 +37591,56 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "gc_fun_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "gc_fun_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "gc_s_key_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "gc_s_key_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "gc_s_val_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "gc_s_val_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "gc_s_val_eq_gen",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "gc_s_val_eq_gen"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "gc_s_val_eq_word_state",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "gc_s_val_eq_word_state"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "gc_with_const",
   "hol_line": null,
   "case": null,
@@ -37308,6 +37648,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "gc_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_code_labels_not_created",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "get_code_labels_not_created"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_fp_var_set_fp_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "get_fp_var_set_fp_var"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37321,6 +37681,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_store_set_store",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "get_store_set_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "get_store_with_const",
   "hol_line": null,
   "case": null,
@@ -37328,6 +37698,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "get_store_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_var_imm_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "get_var_imm_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_var_set_fp_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "get_var_set_fp_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_var_set_store",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "get_var_set_store"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_var_set_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "get_var_set_var"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37341,6 +37751,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_vars_length_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "get_vars_length_lemma"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "get_vars_stack_swap",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "get_vars_stack_swap"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "get_vars_with_const",
   "hol_line": null,
   "case": null,
@@ -37348,6 +37778,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "get_vars_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "handler_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "handler_eq"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37361,6 +37801,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "inst_code_gc_fun_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "inst_code_gc_fun_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "inst_const",
   "hol_line": null,
   "case": null,
@@ -37368,6 +37818,196 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "inst_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "inst_const_full",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "inst_const_full"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "inst_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "inst_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "jump_exc_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "jump_exc_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "jump_exc_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "jump_exc_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_alist_insert",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_alist_insert"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_cut_env",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_cut_env"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_cut_envs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_cut_envs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_delete",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_delete"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_evaluate_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_evaluate_thm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_get_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_get_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_get_var_imm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_get_var_imm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_get_var_imm_simp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_get_var_imm_simp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_get_var_simp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_get_var_simp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_get_vars",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_get_vars"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_get_vars_simp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_get_vars_simp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_set_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_set_var"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_word_exp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_word_exp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "locals_rel_word_exp_simp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "locals_rel_word_exp_simp"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37381,6 +38021,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "mem_load_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "mem_load_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "mem_store_const",
   "hol_line": null,
   "case": null,
@@ -37388,6 +38038,106 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "mem_store_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "mem_store_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "mem_store_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "no_alloc_code_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "no_alloc_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "no_alloc_find_code",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "no_alloc_find_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "no_install_code_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "no_install_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "no_install_evaluate_const_code",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "no_install_evaluate_const_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "no_install_find_code",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "no_install_find_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "no_mt_code_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "no_mt_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "no_mt_find_code",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "no_mt_find_code"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "option_le_stack_size_nil",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "option_le_stack_size_nil"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "permute_swap_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/permute_swap.v",
+  "rocq_name": "permute_swap_lemma"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37411,6 +38161,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "pop_env_option_le_stack_max_preserved",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "pop_env_option_le_stack_max_preserved"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "pop_env_with_const",
   "hol_line": null,
   "case": null,
@@ -37418,6 +38178,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "pop_env_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "push_call_option_le_stack_max_preserved",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "push_call_option_le_stack_max_preserved"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37431,6 +38201,36 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "push_env_dec_clock_stack",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "push_env_dec_clock_stack"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "push_env_pop_env_s_key_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "push_env_pop_env_s_key_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "push_env_stack_max_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "push_env_stack_max_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "push_env_with_const",
   "hol_line": null,
   "case": null,
@@ -37438,6 +38238,416 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "push_env_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_key_eq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_key_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_key_eq_def2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_key_eq_def2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_key_eq_refl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_key_eq_refl"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_key_eq_sym",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_key_eq_sym"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_key_eq_trans",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_key_eq_trans"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_val_and_key_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_val_and_key_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_val_eq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_val_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_val_eq_def2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_val_eq_def2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_val_eq_refl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_val_eq_refl"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_val_eq_sym",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_val_eq_sym"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_frame_val_eq_trans",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_frame_val_eq_trans"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_APPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_APPEND"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_LASTN",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_LASTN"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_LASTN_exists",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_LASTN_exists"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_REVERSE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_REVERSE"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_TAKE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_TAKE"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_def2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_def2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_length",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_length"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_refl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_refl"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_stack_size",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_stack_size"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_sym",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_sym"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_tail",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_tail"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_key_eq_trans",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_key_eq_trans"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_and_key_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_and_key_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_append_eq_stack_size",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_append_eq_stack_size"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_APPEND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_APPEND"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_LASTN",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_LASTN"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_LASTN_exists",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_LASTN_exists"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_REVERSE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_REVERSE"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_TAKE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_TAKE"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_dec_stack",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_dec_stack"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_def2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_def2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_enc_stack",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_enc_stack"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_length",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_length"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_refl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_refl"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_stack_size",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_stack_size"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_sym",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_sym"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_tail",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_tail"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "s_val_eq_trans",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_swap.v",
+  "rocq_name": "s_val_eq_trans"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37468,6 +38678,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "set_store_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "set_store_stack_max_greater_bound",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "set_store_stack_max_greater_bound"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37521,6 +38741,146 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_load16_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_load16_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_load32_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_load32_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_load_byte_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_load_byte_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_load_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_load_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_set_var_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_set_var_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_set_var_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_set_var_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_store16_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_store16_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_store16_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_store16_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_store32_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_store32_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_store32_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_store32_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_store_byte_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_store_byte_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_store_byte_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_store_byte_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_store_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_store_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "sh_mem_store_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "sh_mem_store_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "share_inst_const",
   "hol_line": null,
   "case": null,
@@ -37531,6 +38891,46 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "share_inst_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "share_inst_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "stack_size_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "stack_size_eq"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "stack_size_eq2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "stack_size_eq2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "stack_size_some_at_least_one",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/stack_max.v",
+  "rocq_name": "stack_size_some_at_least_one"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
   "hol_name": "state_const",
   "hol_line": null,
   "case": null,
@@ -37538,6 +38938,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "state_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "the_words_EVERY_IS_SOME",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/locals_rel.v",
+  "rocq_name": "the_words_EVERY_IS_SOME"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
@@ -37558,6 +38968,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts.v",
   "rocq_name": "unset_var_with_const"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "with_locals_same_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/dec_clock.v",
+  "rocq_name": "with_locals_same_clock"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "word_cmp_Word_Word",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/code.v",
+  "rocq_name": "word_cmp_Word_Word"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/wordPropsScript.sml",
+  "hol_name": "word_exp_with_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/wordProps/consts_with.v",
+  "rocq_name": "word_exp_with_const"
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/wordSemScript.sml",
@@ -51280,6 +52720,436 @@
   "rocq_name": "word_sh_SOME_MOD_dimword"
  },
  {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "DISJOINT_addresses_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "DISJOINT_addresses_lemma"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "FLOOKUP_globals_val_state_rel",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "FLOOKUP_globals_val_state_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "LESS_MULT_MONO'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "LESS_MULT_MONO'"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "OPT_MMAP_eval_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "OPT_MMAP_eval_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "OPT_MMAP_eval_fresh_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "OPT_MMAP_eval_fresh_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "OPT_MMAP_eval_two_fresh_vars",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "OPT_MMAP_eval_two_fresh_vars"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "byte_aligned_bytes_in_word_mul",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "byte_aligned_bytes_in_word_mul"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "byte_aligned_mul_bytes_in_word",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "byte_aligned_mul_bytes_in_word"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "compile_exp_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "compile_exp_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "disjoint_globals_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "disjoint_globals"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "eval_shape_val_NONE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "eval_shape_val_NONE"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "eval_shape_val_thm",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "eval_shape_val_thm"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fresh_name_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fresh_name_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "fresh_name_correct'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "fresh_name_correct'"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "good_dimindex_w2n_add",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "good_dimindex_w2n_add"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "good_res_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "good_res"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_load_disjoint",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_load_disjoint"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_load_mem_store",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_load_mem_store"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_stores_addrs_IS_SOME",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_stores_addrs_IS_SOME"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_stores_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_stores_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_stores_bounded_length",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_stores_bounded_length"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_stores_load_disjoint",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_stores_load_disjoint"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_stores_lookup",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_stores_lookup"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_stores_mem_load_back",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_stores_mem_load_back"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "mem_stores_memory_swap",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "mem_stores_memory_swap"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "res_var_FEMPTY",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "res_var_FEMPTY"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_change_ffi",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_change_ffi"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_change_locals",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_change_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_dec_clock",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_dec_clock"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_empty_locals",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_empty_locals"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_globals_wf",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_globals_wf"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_lookup_code",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_lookup_code"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_mem_load",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_mem_load"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_mem_store_byte",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_mem_store_byte"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_memory_update",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_memory_update"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_read_bytearray",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_read_bytearray"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_res_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_res_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_set_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_set_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_structs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_structs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "state_rel_write_bytearray",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "state_rel_write_bytearray"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "v_neq_v'",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "v_neq_v'"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_globalsProofScript.sml",
+  "hol_name": "w2n_add_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_globalsProof.v",
+  "rocq_name": "w2n_add_alt"
+ },
+ {
   "hol_path": "cakeml/pancake/proofs/pan_simpProofScript.sml",
   "hol_name": "OPT_MMAP_NONE",
   "hol_line": null,
@@ -51628,6 +53498,806 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_simpProof.v",
   "rocq_name": "state_rel_upd_inv"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "ALOOKUP_eq_afindi",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "ALOOKUP_eq_afindi"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "FEVERY_res_var",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "FEVERY_res_var"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "UNCURRY_EQ_o_SND",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "UNCURRY_EQ_o_SND"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "afindi_EL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "afindi_EL"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "afindi_MAP_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "afindi_MAP_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "afindi_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "afindi_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "afindi_less_length",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "afindi_less_length"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "alookup_drop_helper",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "alookup_drop_helper"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "alookup_map_structs_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "alookup_map_structs_ok"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_decls_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_decls_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_decs_no_names",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_decs_no_names"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_decs_structs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_decs_structs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_exp_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_exp_correct"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_exp_correct_mmap_helper",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_exp_correct_mmap_helper"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_exps_eq_map",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_exps_eq_map"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_shape_n_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_shape_n_def"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_shape_n_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_shape_n_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_shape_n_eq_rev",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_shape_n_eq_rev"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_shape_n_no_name",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_shape_n_no_name"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_shape_no_name",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_shape_no_name"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_shapes_eq_map",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_shapes_eq_map"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_top_no_names",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_top_no_names"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "compile_top_semantics_decls",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "compile_top_semantics_decls"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_code_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_code"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_code_locals_upd",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_code_locals_upd"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_eshapes_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_eshapes"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_res_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_res"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_res_eq_NONE",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_res_eq_NONE"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_res_eq_case",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_res_eq_case"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_res_eq_case1",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_res_eq_case1"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_s_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_s"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "convert_v_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "convert_v"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "decs_stcnames_compile_decs",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "decs_stcnames_compile_decs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "decs_stcnames_infos_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "decs_stcnames_infos_ok"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "decs_stcnames_to_get_names",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "decs_stcnames_to_get_names"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "dropWhile_MAP_helper",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "dropWhile_MAP_helper"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "dropWhile_afindi",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "dropWhile_afindi"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "eval_upd_code_eq2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "eval_upd_code_eq2"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "evaluate_structs_code_inv",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "evaluate_structs_code_inv"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "every_convert_v_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "every_convert_v_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "fields_in_order_reorder_noop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "fields_in_order_reorder_noop"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "flatten_convert_v",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "flatten_convert_v"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "fupdate_elim2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "fupdate_elim2"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "is_cont_res_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "is_cont_res"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "is_cont_res_eq_disj",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "is_cont_res_eq_disj"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "is_wf_shape_compile_shape",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "is_wf_shape_compile_shape"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "is_wf_shape_drop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "is_wf_shape_drop"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "lookup_code_flds_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "lookup_code_flds_ok"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "map_fst_eq_alookup",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "map_fst_eq_alookup"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "map_uncurry_zip_again",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "map_uncurry_zip_again"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "mem_load_conversion",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "mem_load_conversion"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "mem_load_conversion_inst",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "mem_load_conversion_inst"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "mem_load_flds_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "mem_load_flds_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "mem_load_rec",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "mem_load_rec"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "mem_load_rec1",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "mem_load_rec1"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "mem_loads_EL",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "mem_loads_EL"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "mem_loads_convert_helper",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "mem_loads_convert_helper"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "mem_loads_mem",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "mem_loads_mem"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "old_exp_shapes_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "old_exp_shapes_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "opt_mmap_eq_every",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "opt_mmap_eq_every"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "opt_mmap_eq_some_el",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "opt_mmap_eq_some_el"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "res_var_FMAP_MAP2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "res_var_FMAP_MAP2"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "res_var_FMAP_MAP2_rev",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "res_var_FMAP_MAP2_rev"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "res_vs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "res_vs"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "semantics_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "semantics_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "shape_of_convert_v",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "shape_of_convert_v"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "shape_of_convert_v_ind",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "shape_of_convert_v_ind"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "shape_of_convert_v_rev",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "shape_of_convert_v_rev"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "size_of_compile_shape",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "size_of_compile_shape"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "size_of_compile_shape_n",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "size_of_compile_shape_n"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "size_of_sh_with_ctxt_drop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "size_of_sh_with_ctxt_drop"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "size_of_shape_compile_pass_eq",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "size_of_shape_compile_pass_eq"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "struct_infos_ok_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "struct_infos_ok_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "struct_infos_ok_cons",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "struct_infos_ok_cons"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "struct_infos_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "struct_infos_ok"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "struct_infos_ok_drop",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "struct_infos_ok_drop"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "v_flds_ok_append",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "v_flds_ok_append"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "v_flds_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "v_flds_ok"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_structsProofScript.sml",
+  "hol_name": "wf_shape_struct_infos_ok_helper",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_structsProof.v",
+  "rocq_name": "wf_shape_struct_infos_ok_helper"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_crepProofScript.sml",
@@ -54208,6 +56878,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/semantics/panProps.v",
   "rocq_name": "evaluate_io_events_mono"
+ },
+ {
+  "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",
+  "hol_name": "evaluate_is_wf_shape_invariant",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/semantics/panProps.v",
+  "rocq_name": "evaluate_is_wf_shape_invariant"
  },
  {
   "hol_path": "cakeml/pancake/semantics/panPropsScript.sml",

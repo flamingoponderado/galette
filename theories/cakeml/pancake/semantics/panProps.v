@@ -1730,3 +1730,223 @@ Fixpoint localised_prog (p : prog a) : bool :=
   end.
 
 End Localised.
+
+(** ** Well-formedness of values is invariant under [evaluate] *)
+
+Section WfInvariant.
+Context {a : N} {ffi_t : Type}.
+Implicit Types s t : state a ffi_t.
+
+Local Definition wfl (sc : list (stcname * struct_info)) (m : fmap varname (v a)) : Prop :=
+  FEVERY (fun '(nm, v0) => is_true (is_wf_shape_v sc v0)) m.
+
+Local Lemma wfl_FEMPTY sc : wfl sc FEMPTY.
+Proof. intros k v0 H; discriminate. Qed.
+
+Local Lemma wfl_update sc m k (v0 : v a) :
+  wfl sc m -> is_true (is_wf_shape_v sc v0) -> wfl sc (m |+ (k, v0)).
+Proof.
+  intros Hm Hv k' v' H. rewrite FLOOKUP_UPDATE in H.
+  destruct (decide (k = k')); [injection H as <-; exact Hv|exact (Hm _ _ H)].
+Qed.
+
+Local Lemma wfl_flookup sc m k (v0 : v a) : wfl sc m -> FLOOKUP m k = SOME v0 -> is_true (is_wf_shape_v sc v0).
+Proof. intros Hm H; exact (Hm _ _ H). Qed.
+
+Local Lemma wfl_res_var sc m k (o : option (v a)) :
+  wfl sc m -> (forall v0, o = SOME v0 -> is_true (is_wf_shape_v sc v0)) -> wfl sc (res_var m (k, o)).
+Proof.
+  intros Hm Ho k' v' H. destruct o as [v0|]; cbn [res_var] in H.
+  - rewrite FLOOKUP_UPDATE in H. destruct (decide (k = k')); [injection H as <-; apply Ho; reflexivity|exact (Hm _ _ H)].
+  - rewrite DOMSUB_FLOOKUP_THM in H. destruct (decide _); [discriminate|exact (Hm _ _ H)].
+Qed.
+
+Local Lemma wfl_lookup_code sc (cd : fmap funname (list (varname * shape) * (prog a * shape))) fname
+    (args : list (v a)) p0 nl rsh :
+  lookup_code cd fname args = SOME (p0, (nl, rsh)) ->
+  Forall (fun v0 => is_true (is_wf_shape_v sc v0)) args -> wfl sc nl.
+Proof.
+  unfold lookup_code. destruct (FLOOKUP cd fname) as [[vshs [p rs]]|]; [|discriminate].
+  destruct (_ && _); [|discriminate]. intros H Ha; injection H as _ <- _.
+  intros k v0 Hk. rewrite FLOOKUP_FUPDATE_LIST in Hk.
+  destruct (ALOOKUP (REVERSE _) k) eqn:E; [|discriminate]. injection Hk as <-.
+  apply ALOOKUP_In in E. apply in_rev in E.
+  revert E. generalize (MAP fst vshs) as ks. intros ks. revert ks.
+  induction args as [|x xs IH]; intros [|k' ks] Hin; cbn in Hin; try contradiction.
+  inversion Ha; subst. destruct Hin as [Hin|Hin]; [injection Hin as <- <-; assumption|].
+  apply (IH ltac:(assumption) ks Hin).
+Qed.
+
+Local Lemma wf_args s (es : list (exp a)) args :
+  OPT_MMAP (eval s) es = SOME args -> wfl (structs s) (locals s) -> wfl (structs s) (globals s) ->
+  Forall (fun v0 => is_true (is_wf_shape_v (structs s) v0)) args.
+Proof.
+  intros H Hl Hg. apply Forall_forall. intros v0 Hv.
+  destruct (OPT_MMAP_In _ _ _ _ H Hv) as (e & _ & He). apply (eval_is_wf_shape_v s e v0).
+  split; [exact He|split; assumption].
+Qed.
+
+Local Definition wf_res sc (res : option (result a)) : Prop :=
+  match res with
+  | SOME (Exception eid exn) => is_true (is_wf_shape_v sc exn)
+  | SOME (Return retv) => is_true (is_wf_shape_v sc retv)
+  | _ => True
+  end.
+
+Local Lemma wf_inv_aux : forall x : prog a * state a ffi_t, forall res st,
+  evaluate x = (res, st) -> wfl (structs (snd x)) (locals (snd x)) -> wfl (structs (snd x)) (globals (snd x)) ->
+  wfl (structs (snd x)) (locals st) /\ wfl (structs (snd x)) (globals st) /\ wf_res (structs (snd x)) res.
+Proof.
+  intros x; induction x as [[p s] IH] using (well_founded_induction eval_lt_wf).
+  intros res st H Hl Hg; cbn [fst snd] in *.
+  assert (Hev : forall e v0, eval s e = SOME v0 -> is_true (is_wf_shape_v (structs s) v0))
+    by (intros e v0 He; apply (eval_is_wf_shape_v s e v0); split; [exact He|split; assumption]).
+  assert (Triv : forall r, (match r with SOME (Exception _ _) => False | SOME (Return _) => False | _ => True end) ->
+            wf_res (structs s) r)
+    by (intros [[]|]; cbn; tauto).
+  rewrite evaluate_unfold in H.
+  destruct p as [|vn sh e p|vk vn e|vn pop es|e1 e2|e1 e2|e1 e2|p1 p2|e p1 p2|e p| | |ct f args
+                 |vn sh f args p|f e1 e2 e3 e4|eid e|e|op vk vn e|op e1 e2| |m1 m2];
+    cbn [evaluate_body] in H; unfold sh_mem_load, sh_mem_store in H;
+    rewrite ?fix_clock_evaluate in H.
+  - (* Skip *) injection H as <- <-. split; [exact Hl|split; [exact Hg|exact Logic.I]].
+  - (* Dec *)
+    destruct (eval s e) as [value|] eqn:Ee; [|injection H as <- <-; repeat split; assumption].
+    destruct (bool_decide _); [|injection H as <- <-; repeat split; assumption].
+    destruct (evaluate (p, set_locals (locals s |+ (vn, value)) s)) as [r1 t1] eqn:E1.
+    injection H as <- <-.
+    destruct (IH (p, set_locals (locals s |+ (vn, value)) s) ltac:(prove_lt) r1 t1 E1) as (A1 & A2 & A3);
+      cbn [fst snd] in *; state_cbn; [apply wfl_update; [exact Hl|exact (Hev _ _ Ee)]|exact Hg|].
+    split; [|split; [exact A2|exact A3]].
+    apply wfl_res_var; [exact A1|intros v' Hv'; exact (wfl_flookup _ _ _ _ Hl Hv')].
+  - (* Assign *)
+    destruct (eval s e) as [value|] eqn:Ee; [|injection H as <- <-; repeat split; assumption].
+    destruct (is_valid_value _ _ _ _); [|injection H as <- <-; repeat split; assumption].
+    injection H as <- <-. destruct vk; state_cbn; (split; [|split; [|exact Logic.I]]); try assumption;
+      apply wfl_update; [exact Hl|exact (Hev _ _ Ee)|exact Hg|exact (Hev _ _ Ee)].
+  - (* Primitive *)
+    destruct (OPT_MMAP (eval s) es) as [vs|] eqn:Ee; [|injection H as <- <-; repeat split; assumption].
+    destruct (pan_primop _ _) as [value|] eqn:Ep; [|injection H as <- <-; repeat split; assumption].
+    destruct (is_valid_value _ _ _ _); [|injection H as <- <-; repeat split; assumption].
+    injection H as <- <-. state_cbn. split; [|split; [exact Hg|exact Logic.I]].
+    apply wfl_update; [exact Hl|exact (pan_primop_is_wf_shape_v _ _ _ _ Ep)].
+  - (* Store *)
+    split_all H; leaf_subst H; state_cbn; repeat split; assumption.
+  - split_all H; leaf_subst H; state_cbn; repeat split; assumption.
+  - split_all H; leaf_subst H; state_cbn; repeat split; assumption.
+  - (* Seq *)
+    destruct (evaluate (p1, s)) as [r1 s1] eqn:E1.
+    destruct (IH (p1, s) ltac:(prove_lt) r1 s1 E1) as (A1 & A2 & A3); cbn [fst snd] in *; try assumption.
+    pose proof (evaluate_invariants _ _ _ _ E1) as (_ & _ & _ & _ & _ & Hs1 & _).
+    destruct r1 as [r1|]; [injection H as <- <-; split; [exact A1|split; assumption]|].
+    destruct (IH (p2, s1) ltac:(prove_lt) res st H) as (B1 & B2 & B3); cbn [fst snd] in *; rewrite ?Hs1 in *;
+      try assumption. split; [exact B1|split; [exact B2|exact B3]].
+  - (* If *)
+    destruct (eval s e) as [[[w]| |]|] eqn:Ee; try (injection H as <- <-; repeat split; assumption).
+    destruct (negb _).
+    + exact (IH (p1, s) ltac:(prove_lt) res st H Hl Hg).
+    + exact (IH (p2, s) ltac:(prove_lt) res st H Hl Hg).
+  - (* While *)
+    destruct (eval s e) as [[[w]| |]|] eqn:Ee; try (injection H as <- <-; repeat split; assumption).
+    destruct (negb _); [|injection H as <- <-; repeat split; assumption].
+    destruct (clock s =? 0) eqn:Ec; [injection H as <- <-; state_cbn; repeat split; try assumption; apply wfl_FEMPTY|].
+    destruct (evaluate (p, dec_clock s)) as [r1 s1] eqn:E1.
+    destruct (IH (p, dec_clock s) ltac:(prove_lt) r1 s1 E1) as (A1 & A2 & A3); cbn [fst snd] in *; state_cbn;
+      try assumption.
+    pose proof (evaluate_invariants _ _ _ _ E1) as (_ & _ & _ & _ & _ & Hs1 & _). state_cbn.
+    destruct r1 as [[| | | |rv|eid ev|ff]|];
+      try (injection H as <- <-; split; [exact A1|split; [exact A2|exact A3]]).
+    + destruct (IH (While e p, s1) ltac:(prove_lt) res st H) as (B1 & B2 & B3); cbn [fst snd] in *; rewrite ?Hs1 in *;
+        try assumption. split; [exact B1|split; [exact B2|exact B3]].
+    + destruct (IH (While e p, s1) ltac:(prove_lt) res st H) as (B1 & B2 & B3); cbn [fst snd] in *; rewrite ?Hs1 in *;
+        try assumption. split; [exact B1|split; [exact B2|exact B3]].
+  - injection H as <- <-; repeat split; assumption.
+  - injection H as <- <-; repeat split; assumption.
+  - (* Call *)
+    destruct (OPT_MMAP (eval s) args) as [vals|] eqn:Ea; [|injection H as <- <-; repeat split; assumption].
+    destruct (lookup_code (code s) f vals) as [[p0 [nl rsh]]|] eqn:El;
+      [|injection H as <- <-; repeat split; assumption].
+    destruct (clock s =? 0) eqn:Ec; [injection H as <- <-; state_cbn; repeat split; try assumption; apply wfl_FEMPTY|].
+    rewrite fix_clock_evaluate in H.
+    destruct (evaluate (p0, set_locals nl (dec_clock s))) as [r1 st1] eqn:E1.
+    destruct (IH (p0, set_locals nl (dec_clock s)) ltac:(prove_lt) r1 st1 E1) as (A1 & A2 & A3);
+      cbn [fst snd] in *; state_cbn; [exact (wfl_lookup_code _ _ _ _ _ _ _ El (wf_args _ _ _ Ea Hl Hg))|exact Hg|].
+    pose proof (evaluate_invariants _ _ _ _ E1) as (_ & _ & _ & Hes & _ & Hs1 & _). state_cbn.
+    destruct r1 as [[| | | |rv|eid ev|ff]|];
+      try (injection H as <- <-; state_cbn; repeat split; try assumption; apply wfl_FEMPTY).
+    + destruct (negb _); [injection H as <- <-; repeat split; assumption|].
+      destruct ct as [[[[rk rt]|] hdl]|].
+      * destruct (is_valid_value _ _ _ _); [|injection H as <- <-; repeat split; assumption].
+        injection H as <- <-. destruct rk; state_cbn; (split; [|split; [|exact Logic.I]]); try assumption;
+          apply wfl_update; assumption.
+      * injection H as <- <-. state_cbn. split; [exact Hl|split; [exact A2|exact Logic.I]].
+      * injection H as <- <-. state_cbn. split; [apply wfl_FEMPTY|split; [exact A2|exact A3]].
+    + destruct ct as [[rv' [[eid' [evar hp]]|]]|];
+        try (injection H as <- <-; state_cbn; split; [apply wfl_FEMPTY|split; [exact A2|exact A3]]).
+      destruct (bool_decide _); [|injection H as <- <-; state_cbn; split; [apply wfl_FEMPTY|split; [exact A2|exact A3]]].
+      destruct (FLOOKUP (eshapes s) eid); [|injection H as <- <-; repeat split; assumption].
+      destruct (_ && _); [|injection H as <- <-; repeat split; assumption].
+      destruct (IH (hp, set_var evar ev (set_locals (locals s) st1)) ltac:(prove_lt) res st H)
+        as (B1 & B2 & B3); cbn [fst snd] in *; state_cbn; rewrite ?Hs1 in *; try (apply wfl_update; assumption);
+        try assumption.
+      split; [exact B1|split; [exact B2|exact B3]].
+  - (* DecCall *)
+    destruct (OPT_MMAP (eval s) args) as [vals|] eqn:Ea; [|injection H as <- <-; repeat split; assumption].
+    destruct (lookup_code (code s) f vals) as [[p0 [nl rsh]]|] eqn:El;
+      [|injection H as <- <-; repeat split; assumption].
+    destruct (clock s =? 0) eqn:Ec; [injection H as <- <-; state_cbn; repeat split; try assumption; apply wfl_FEMPTY|].
+    rewrite fix_clock_evaluate in H.
+    destruct (evaluate (p0, set_locals nl (dec_clock s))) as [r1 st1] eqn:E1.
+    destruct (IH (p0, set_locals nl (dec_clock s)) ltac:(prove_lt) r1 st1 E1) as (A1 & A2 & A3);
+      cbn [fst snd] in *; state_cbn; [exact (wfl_lookup_code _ _ _ _ _ _ _ El (wf_args _ _ _ Ea Hl Hg))|exact Hg|].
+    pose proof (evaluate_invariants _ _ _ _ E1) as (_ & _ & _ & _ & _ & Hs1 & _). state_cbn.
+    destruct r1 as [[| | | |rv|eid ev|ff]|];
+      try (injection H as <- <-; state_cbn; repeat split; try assumption; apply wfl_FEMPTY).
+    destruct (_ && _); [|injection H as <- <-; repeat split; assumption].
+    destruct (evaluate (p, set_var vn rv (set_locals (locals s) st1))) as [r2 st2] eqn:E2.
+    injection H as <- <-.
+    destruct (IH (p, set_var vn rv (set_locals (locals s) st1)) ltac:(prove_lt) r2 st2 E2)
+      as (B1 & B2 & B3); cbn [fst snd] in *; state_cbn; rewrite ?Hs1 in *; try (apply wfl_update; assumption);
+      try assumption.
+    state_cbn. split; [|split; [exact B2|exact B3]].
+    apply wfl_res_var; [exact B1|intros v' Hv'; exact (wfl_flookup _ _ _ _ Hl Hv')].
+  - (* ExtCall *)
+    split_all H; leaf_subst H; state_cbn; repeat split; try assumption; apply wfl_FEMPTY.
+  - (* Raise *)
+    destruct (FLOOKUP (eshapes s) eid) as [sh|]; [|injection H as <- <-; repeat split; assumption].
+    destruct (eval s e) as [value|] eqn:Ee; [|injection H as <- <-; repeat split; assumption].
+    destruct (_ && _); [|injection H as <- <-; repeat split; assumption].
+    injection H as <- <-. state_cbn. split; [apply wfl_FEMPTY|split; [exact Hg|exact (Hev _ _ Ee)]].
+  - (* Return *)
+    destruct (eval s e) as [value|] eqn:Ee; [|injection H as <- <-; repeat split; assumption].
+    destruct (_ <=? 32); [|injection H as <- <-; repeat split; assumption].
+    injection H as <- <-. state_cbn. split; [apply wfl_FEMPTY|split; [exact Hg|exact (Hev _ _ Ee)]].
+  - (* ShMemLoad *)
+    split_all H; leaf_subst H; destruct_kvars_all; state_cbn; (split; [|split; [|exact Logic.I]]);
+      try assumption; try apply wfl_FEMPTY; apply wfl_update; try assumption; reflexivity.
+  - (* ShMemStore *)
+    split_all H; leaf_subst H; state_cbn; repeat split; assumption.
+  - (* Tick *)
+    destruct (clock s =? 0); injection H as <- <-; state_cbn; repeat split; try assumption; apply wfl_FEMPTY.
+  - injection H as <- <-; repeat split; assumption.
+Qed.
+
+(*! HOL "cakeml/pancake/semantics/panPropsScript.sml" "evaluate_is_wf_shape_invariant" *)
+Theorem evaluate_is_wf_shape_invariant : forall (p : prog a) s res s',
+  evaluate (p, s) = (res, s') /\
+  FEVERY (fun '(nm, v0) => is_true (is_wf_shape_v (structs s) v0)) (locals s) /\
+  FEVERY (fun '(nm, v0) => is_true (is_wf_shape_v (structs s) v0)) (globals s) ->
+  FEVERY (fun '(nm, v0) => is_true (is_wf_shape_v (structs s') v0)) (locals s') /\
+  FEVERY (fun '(nm, v0) => is_true (is_wf_shape_v (structs s') v0)) (globals s') /\
+  match res with
+  | SOME (Exception eid exn) => is_true (is_wf_shape_v (structs s) exn)
+  | SOME (Return retv) => is_true (is_wf_shape_v (structs s) retv)
+  | _ => True
+  end.
+Proof.
+  intros p s res s' (H & H1 & H2).
+  pose proof (evaluate_invariants _ _ _ _ H) as (_ & _ & _ & _ & _ & Hs & _). rewrite Hs.
+  exact (wf_inv_aux (p, s) res s' H H1 H2).
+Qed.
+
+End WfInvariant.
