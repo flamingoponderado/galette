@@ -8,7 +8,10 @@
 
     Notes: as in [ssa_props.v].  HOL's [FILTER (λ(a,b). a ≠ b)] is
     [FILTER (fun '(a0, b) => negb (a0 =? b))] (the form used by
-    [ssa_reconcile]); HOL [EVERY] with a [Prop]-valued predicate is
+    [ssa_reconcile]) at [num]; at a generic type ([ssa_reconcile_distinct_lemma],
+    [ssa_reconcile_moves_eq]) it is [negb (bool_decide (a0 = b))], and the
+    [num] instance used by [evaluate_ssa_reconcile] is the untagged
+    [ssa_reconcile_moves_eq_N]; HOL [EVERY] with a [Prop]-valued predicate is
     [EVERY (fun x => bool_decide (...))]. *)
 
 From Galette Require Import Base Classical.
@@ -254,18 +257,18 @@ Lemma In_toAList_keys {B} (t : num_map B) x : In x (MAP FST (toAList t)) <-> dom
 Proof. rewrite <- MEM_iff'. apply MEM_toAList_dom. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_reconcile_distinct_lemma" *)
-Theorem ssa_reconcile_distinct_lemma : forall (f g : N -> N) (ns : num_set),
+Theorem ssa_reconcile_distinct_lemma : forall {B C} `{EqDecision B} (f g : N -> B) (ns : num_map C),
   INJ f (domain ns) UNIV ->
   ALL_DISTINCT (MAP FST
-    (FILTER (fun '(a0, b) => negb (a0 =? b))
+    (FILTER (fun '(a0, b) => negb (bool_decide (a0 = b)))
       (MAP (fun v => (f v, g v)) (MAP FST (toAList ns))))).
 Proof.
-  intros f g ns [_ Hi]. apply ALL_DISTINCT_iff'.
+  intros B C EB f g ns [_ Hi]. apply ALL_DISTINCT_iff'.
   assert (Hnd := NoDup_toAList_keys ns).
   assert (Hin : forall v, In v (MAP FST (toAList ns)) -> domain ns v) by (intros v; apply In_toAList_keys).
   revert Hnd Hin. generalize (MAP FST (toAList ns)) as L. induction L as [|v L IH]; intros Hnd Hin; [constructor|].
   inversion Hnd as [|? ? Hn Hnd']; subst. cbn [MAP List.map List.filter].
-  destruct (negb (f v =? g v)); [|apply IH; auto; intros; apply Hin; right; assumption].
+  destruct (negb (bool_decide (f v = g v))); [|apply IH; auto; intros; apply Hin; right; assumption].
   cbn [List.map FST fst]. constructor; [|apply IH; auto; intros; apply Hin; right; assumption].
   intros Hm. apply in_map_iff in Hm as [[x y] [Ex Hm]]. cbn [fst] in Ex.
   apply filter_In in Hm as [Hm _]. apply in_map_iff in Hm as [w [Ew Hw]]. injection Ew as E1 E2.
@@ -274,7 +277,21 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_reconcile_moves_eq" *)
-Theorem ssa_reconcile_moves_eq : forall (m : num_map N) (f : N -> N) L,
+Theorem ssa_reconcile_moves_eq : forall {B} `{EqDecision B, Inhabited B} (m : num_map B) (f : N -> B) L,
+  FILTER (fun '(a0, b) => negb (bool_decide (a0 = b)))
+    (FLAT (MAP (fun v => match lookup v m with None => [] | Some cv => [(f v, cv)] end) L)) =
+  MAP (fun v => (f v, THE (lookup v m)))
+    (FILTER (fun v => match lookup v m with None => false | Some cv => negb (bool_decide (f v = cv)) end) L).
+Proof.
+  intros B EB IB m f; induction L as [|v L IH]; [reflexivity|].
+  cbn [MAP List.map List.concat List.filter]. rewrite filter_app, IH.
+  destruct (lookup v m) as [cv|] eqn:E; cbn [List.filter app]; [|reflexivity].
+  destruct (negb (bool_decide (f v = cv))); cbn [List.map MAP]; rewrite ?E; reflexivity.
+Qed.
+
+(** [ssa_reconcile_moves_eq] at [B = N], with [N.eqb] as in
+    [ssa_reconcile] (Galette-only). *)
+Lemma ssa_reconcile_moves_eq_N : forall (m : num_map N) (f : N -> N) L,
   FILTER (fun '(a0, b) => negb (a0 =? b))
     (FLAT (MAP (fun v => match lookup v m with None => [] | Some cv => [(f v, cv)] end) L)) =
   MAP (fun v => (f v, THE (lookup v m)))
@@ -380,7 +397,7 @@ Proof.
   assert (Hmoves : FILTER (fun '(a0, b) => negb (a0 =? b))
      (FLAT (MAP (fun v => match lookup v cur_ssa with None => [] | Some cv => [(option_lookup tgt_ssa v, cv)] end)
         (MAP FST (toAList ns)))) = MAP (fun v => (f v, g v)) fv)
-    by apply ssa_reconcile_moves_eq.
+    by apply ssa_reconcile_moves_eq_N.
   assert (Hfv : forall v, In v fv -> domain ns v /\ exists cv, lookup v cur_ssa = Some cv /\ f v <> cv /\ g v = cv).
   { intros v Hv. apply (ssa_reconcile_filtered_in_dom cur_ssa tgt_ssa ns v). rewrite MEM_iff'. exact Hv. }
   assert (Hnotfv : forall v, domain ns v -> ~ In v fv -> domain cur_ssa v -> f v = g v).

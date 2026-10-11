@@ -493,9 +493,9 @@ Theorem remove_eq_model_set_var : forall cs st t val,
 Proof. intros cs st t val [Hi Hm]. apply remove_eq_model_insert; assumption. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_copyProofScript.sml" "CPstate_models_same" *)
-Theorem CPstate_models_same : forall cs st (st' : state a c ffi_t),
+Theorem CPstate_models_same : forall {c2 ffi_t2 : Type} cs st (st' : state a c2 ffi_t2),
   CPstate_models cs st /\ locals st' = locals st /\ store st' = store st -> CPstate_models cs st'.
-Proof. intros cs st st' ([M1 M2] & El & Es). split; intros *; rewrite ?El, ?Es; eauto. Qed.
+Proof. intros c2 ffi_t2 cs st st' ([M1 M2] & El & Es). split; intros *; rewrite ?El, ?Es; eauto. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_copyProofScript.sml" "set_fp_var_model" *)
 Theorem set_fp_var_model : forall cs st t val,

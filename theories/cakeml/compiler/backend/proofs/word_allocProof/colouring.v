@@ -13,6 +13,12 @@
     - HOL's [let (res,rst) = evaluate ... in if res = SOME Error then T
       else ...] is a [let '(res, rst)] pattern with
       [if bool_decide (res = SOME Error) then True else ...].
+    - [cut_names_lemma] is the instance of HOL's statement with the names
+      map [names] at payload type [unit] ([num_set]): HOL's [cut_names]
+      takes a name set of any payload type ['b spt], but the Rocq
+      [wordSem.cut_names] (a semantics definition, not edited here) fixes
+      its first argument to [num_set].  The locals payload [A] is generic
+      as in HOL.
     - HOL's [sorting$PERM] is not ported: [list_rearrange_perm] is stated
       with Rocq's [Permutation] and is untagged (as [PERM_list_rearrange]
       in [wordProps.consts]).
@@ -102,13 +108,13 @@ Qed.
 Section Helpers.
 Context {A : Type}.
 
-Lemma INJ_less (f : N -> A) s s' : INJ f s' UNIV /\ s SUBSET s' -> INJ f s UNIV.
+Lemma INJ_less {D} (f : D -> A) s s' : INJ f s' UNIV /\ s SUBSET s' -> INJ f s UNIV.
 Proof.
   intros [[H1 H2] Hs]; split; [intros; exact Logic.I|].
   intros x y [Hx Hy] E; apply H2; [split; apply Hs; assumption|exact E].
 Qed.
 
-Lemma INJ_neq (f : N -> A) s x y : INJ f s UNIV -> x IN s -> y IN s -> x <> y -> f x <> f y.
+Lemma INJ_neq {D} (f : D -> A) s x y : INJ f s UNIV -> x IN s -> y IN s -> x <> y -> f x <> f y.
 Proof. intros [_ H] Hx Hy Hn E; apply Hn, H; [split; assumption|exact E]. Qed.
 
 End Helpers.
@@ -123,17 +129,17 @@ Theorem SUBSET_OF_INSERT : forall {A} (s : A -> Prop) x, s SUBSET x INSERT s.
 Proof. intros A s x y Hy; right; exact Hy. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "INJ_UNION" *)
-Theorem INJ_UNION : forall {B} (f : N -> B) A0 B0,
+Theorem INJ_UNION : forall {D B} (f : D -> B) A0 B0,
   INJ f (A0 UNION B0) UNIV -> INJ f A0 UNIV /\ INJ f B0 UNIV.
 Proof.
-  intros B f A0 B0 H; split; apply (INJ_less f _ (A0 UNION B0)); split; auto;
+  intros D B f A0 B0 H; split; apply (INJ_less f _ (A0 UNION B0)); split; auto;
     intros x Hx; [left|right]; exact Hx.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "INJ_less" *)
-Theorem INJ_less_thm : forall {B} (f : N -> B) s s',
+Theorem INJ_less_thm : forall {D B} (f : D -> B) s s',
   INJ f s' UNIV /\ s SUBSET s' -> INJ f s UNIV.
-Proof. intros B f s s'; apply INJ_less. Qed.
+Proof. intros D B f s s'; apply INJ_less. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "hide_def" *)
 Definition hide {A} (x : A) : A := x.
@@ -161,10 +167,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "INJ_ALL_DISTINCT_MAP" *)
-Theorem INJ_ALL_DISTINCT_MAP : forall {B} `{EqDecision B} (f : N -> B) ls,
+Theorem INJ_ALL_DISTINCT_MAP : forall {D B} `{EqDecision B} (f : D -> B) ls,
   ALL_DISTINCT (MAP f ls) -> INJ f (set ls) UNIV.
 Proof.
-  intros B EB f ls H; rewrite ALL_DISTINCT_iff' in H; split; [intros; exact Logic.I|].
+  intros D B EB f ls H; rewrite ALL_DISTINCT_iff' in H; split; [intros; exact Logic.I|].
   intros x y [Hx Hy] E; rewrite IN_set in Hx, Hy.
   induction ls as [|z ls IH]; [destruct Hx|]. cbn in H; inversion H as [|? ? Hz Hd]; subst.
   destruct Hx as [<-|Hx], Hy as [<-|Hy]; auto.
@@ -180,7 +186,7 @@ Section Colouring.
 Context {a : N}.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "colouring_ok_def" *)
-Fixpoint colouring_ok (f : N -> N) (p : prog a) (live : num_set)
+Fixpoint colouring_ok {B} (f : N -> B) (p : prog a) (live : num_set)
     (lt : list (num_set * num_set)) {struct p} : Prop :=
   match p with
   | Seq s1 s2 =>
@@ -226,6 +232,10 @@ End Colouring.
 Section Rel.
 Context {a : N} {c ffi_t : Type}.
 Local Abbreviation state := (state a c ffi_t).
+(** HOL lets the coloured state [cst] have its own compiler-configuration
+    and FFI types; they are [c2] and [ffi_t2]. *)
+Context {c2 ffi_t2 : Type}.
+Local Abbreviation state2 := (wordSem.state a c2 ffi_t2).
 
 (** Equivalence on everything except the permutation and the locals. *)
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "word_state_eq_rel_def" *)
@@ -307,13 +317,13 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "strong_locals_rel_get_var" *)
-Theorem strong_locals_rel_get_var : forall f live (st cst : state) n x,
+Theorem strong_locals_rel_get_var : forall f live (st : state) (cst : state2) n x,
   strong_locals_rel f live (locals st) (locals cst) /\ n IN live /\ get_var n st = SOME x ->
   get_var (f n) cst = SOME x.
 Proof. intros f live st cst n x (H & Hn & Hg); apply H; split; assumption. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "strong_locals_rel_get_var_imm" *)
-Theorem strong_locals_rel_get_var_imm : forall f live (st cst : state) (n : reg_imm a) x,
+Theorem strong_locals_rel_get_var_imm : forall f live (st : state) (cst : state2) (n : reg_imm a) x,
   strong_locals_rel f live (locals st) (locals cst) /\
   match n with Reg n => n IN live | _ => True end /\
   get_var_imm n st = SOME x ->
@@ -324,7 +334,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "strong_locals_rel_get_vars" *)
-Theorem strong_locals_rel_get_vars : forall ls y f live (st cst : state),
+Theorem strong_locals_rel_get_vars : forall ls y f live (st : state) (cst : state2),
   strong_locals_rel f live (locals st) (locals cst) /\
   (forall x, MEM x ls -> x IN live) /\
   get_vars ls st = SOME y ->
@@ -602,6 +612,10 @@ End Rearrange.
 Section Push.
 Context {a : N} {c ffi_t : Type}.
 Local Abbreviation state := (state a c ffi_t).
+(** HOL lets [cst] in [push_env_s_val_eq] have its own compiler-configuration
+    and FFI types; they are [c2] and [ffi_t2]. *)
+Context {c2 ffi_t2 : Type}.
+Local Abbreviation state2 := (wordSem.state a c2 ffi_t2).
 
 Lemma In_sort_toAList (x : num_map (word_loc a)) k v :
   In (k, v) (sort key_val_compare (toAList x)) <-> lookup k x = Some v.
@@ -683,7 +697,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "push_env_s_val_eq" *)
-Theorem push_env_s_val_eq : forall (st cst : state) (x y x' y' : num_map (word_loc a)) f
+Theorem push_env_s_val_eq : forall (st : state) (cst : state2) (x y x' y' : num_map (word_loc a)) f
     (b b' : option (N * (prog a * (N * N)))) tperm,
   handler st = handler cst /\
   stack st = stack cst /\
@@ -801,13 +815,14 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ALOOKUP_key_remap_2" *)
-Theorem ALOOKUP_key_remap_2 : forall (ls : list N) (vals : list (word_loc a)) (f : N -> N) n v,
+Theorem ALOOKUP_key_remap_2 : forall {A B C} `{EqDecision A} `{EqDecision C}
+    (ls : list A) (vals : list B) (f : A -> C) n v,
   (forall x y, MEM x ls /\ MEM y ls /\ f x = f y -> x = y) /\
   LENGTH ls = LENGTH vals /\
   ALOOKUP (ZIP (ls, vals)) n = SOME v ->
   ALOOKUP (ZIP (MAP f ls, vals)) (f n) = SOME v.
 Proof.
-  induction ls as [|h ls IH]; intros [|w vals] f n v (Hi & Hl & Ha); cbn in Ha; try discriminate.
+  intros A B C EA EC ls; induction ls as [|h ls IH]; intros [|w vals] f n v (Hi & Hl & Ha); cbn in Ha; try discriminate.
   cbn [MAP List.map]. rewrite !ZIP_combine' in *. cbn [combine ALOOKUP] in *.
   destruct (decide (h = n)) as [->|Hn].
   - injection Ha as <-. destruct (decide (f n = f n)); [reflexivity|congruence].
@@ -825,18 +840,20 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ALOOKUP_key_remap_INJ" *)
-Theorem ALOOKUP_key_remap_INJ : forall (f : N -> N) n (ls : list N) (vals : list (word_loc a)),
+Theorem ALOOKUP_key_remap_INJ : forall {A B C} `{EqDecision A} `{EqDecision C}
+    (f : A -> C) n (ls : list A) (vals : list B),
   INJ f (n INSERT set ls) UNIV /\ LENGTH ls = LENGTH vals ->
   ALOOKUP (ZIP (ls, vals)) n = ALOOKUP (ZIP (MAP f ls, vals)) (f n).
 Proof.
-  intros f n ls vals [[_ Hi] Hl].
+  intros A B C EA EC f n ls vals [[_ Hi] Hl].
   destruct (ALOOKUP (ZIP (ls, vals)) n) as [v|] eqn:E.
   - symmetry; apply ALOOKUP_key_remap_2; repeat split; [|exact Hl|exact E].
     intros x y (Hx & Hy & Exy). apply Hi; [|exact Exy].
     rewrite MEM_iff' in Hx, Hy. split; right; apply IN_set; assumption.
   - symmetry. apply ALOOKUP_NONE. intros Hm. apply ALOOKUP_NONE in E. apply E.
-    rewrite MEM_iff' in *. rewrite ZIP_combine' in *.
-    rewrite map_fst_combine in Hm |- * by (rewrite ?length_map; rewrite !LENGTH_length in Hl; lia).
+    rewrite MEM_iff' in Hm. rewrite MEM_iff'. rewrite ZIP_combine' in Hm. rewrite ZIP_combine'.
+    rewrite map_fst_combine in Hm by (rewrite ?length_map; rewrite !LENGTH_length in Hl; lia).
+    rewrite map_fst_combine by (rewrite !LENGTH_length in Hl; lia).
     apply in_map_iff in Hm as [x [Ex Hx]].
     replace n with x; [exact Hx|]. apply Hi; [split; [right; apply IN_set; exact Hx|left; reflexivity]|exact Ex].
 Qed.
@@ -926,10 +943,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "key_map_implies" *)
-Theorem key_map_implies : forall {B} (f : N -> N) (l' l : list (N * B)),
+Theorem key_map_implies : forall {A B C} (f : A -> C) (l' : list (A * B)) (l : list (C * B)),
   MAP (fun '(x, y) => (f x, y)) l' = l -> MAP f (MAP FST l') = MAP FST l.
 Proof.
-  intros B f l' l <-. rewrite !List.map_map. apply map_ext; intros [? ?]; reflexivity.
+  intros A B C f l' l <-. rewrite !List.map_map. apply map_ext; intros [? ?]; reflexivity.
 Qed.
 
 End Frames.
@@ -939,6 +956,10 @@ End Frames.
 Section Exps.
 Context {a : N} {c ffi_t : Type}.
 Local Abbreviation state := (state a c ffi_t).
+(** HOL lets the target state [t] of [strong_locals_rel_set_var(s)_dom]
+    have its own compiler-configuration and FFI types: [c2], [ffi_t2]. *)
+Context {c2 ffi_t2 : Type}.
+Local Abbreviation state2 := (wordSem.state a c2 ffi_t2).
 
 Lemma set_permute_permute (s : state) : set_permute (permute s) s = s.
 Proof. destruct s; reflexivity. Qed.
@@ -1036,7 +1057,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "strong_locals_rel_set_vars_dom" *)
-Theorem strong_locals_rel_set_vars_dom : forall f X d ns ls (s t : state),
+Theorem strong_locals_rel_set_vars_dom : forall f X d ns ls (s : state) (t : state2),
   LENGTH ns = LENGTH ls /\
   INJ f X UNIV /\
   domain (locals s) SUBSET X /\
@@ -1080,7 +1101,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "strong_locals_rel_set_var_dom" *)
-Theorem strong_locals_rel_set_var_dom : forall f X d n l (s t : state),
+Theorem strong_locals_rel_set_var_dom : forall f X d n l (s : state) (t : state2),
   INJ f X UNIV /\
   domain (locals s) SUBSET X /\
   n IN X /\
