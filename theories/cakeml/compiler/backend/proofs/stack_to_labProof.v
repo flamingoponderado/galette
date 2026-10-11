@@ -186,14 +186,14 @@ Section DestToLoc.
 Context {a : N}.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "dest_to_loc_def" *)
-Definition dest_to_loc (regs : fmap N (word_loc a)) (dest : N + N) : N :=
+Definition dest_to_loc {K} `{EqDecision K} (regs : fmap K (word_loc a)) (dest : N + K) : N :=
   match dest with
   | inl p => p
   | inr r => match FAPPLY regs r with Loc loc _ => loc | _ => ARB end
   end.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "dest_to_loc'_def" *)
-Definition dest_to_loc' (regs : N -> word_loc a) (dest : N + N) : N :=
+Definition dest_to_loc' {K} (regs : K -> word_loc a) (dest : N + K) : N :=
   match dest with
   | inl p => p
   | inr r => match regs r with Loc loc _ => loc | _ => ARB end

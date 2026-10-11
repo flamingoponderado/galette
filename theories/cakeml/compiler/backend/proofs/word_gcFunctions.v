@@ -48,7 +48,7 @@ Definition ptr_to_addr (conf : config) (base w : word a) : word a :=
 Definition update_addr (conf : config) (fwd_ptr old_addr : word a) : word a :=
   (fwd_ptr << shift_length conf) || (small_shift_length conf - 1 -- 0) old_addr.
 
-Fixpoint memcpy_f (fuel : nat) (w a0 b : word a) (m : mem) (dm : dom) : word a * (mem * bool) :=
+Fixpoint memcpy_f {B : Type} (fuel : nat) (w a0 b : word a) (m : word a -> B) (dm : dom) : word a * ((word a -> B) * bool) :=
   match fuel with
   | O => (b, (m, true))
   | Datatypes.S fuel =>
@@ -59,7 +59,7 @@ Fixpoint memcpy_f (fuel : nat) (w a0 b : word a) (m : mem) (dm : dom) : word a *
   end.
 
 (** HOL's [memcpy w a b m dm] (Galette-only fuel wrapper; see [memcpy_def]). *)
-Definition memcpy (w a0 b : word a) (m : mem) (dm : dom) : word a * (mem * bool) :=
+Definition memcpy {B : Type} (w a0 b : word a) (m : word a -> B) (dm : dom) : word a * ((word a -> B) * bool) :=
   memcpy_f (Datatypes.S (N.to_nat (w2n w))) w a0 b m dm.
 
 (** Galette-only. *)
@@ -71,25 +71,25 @@ Proof.
   rewrite w2n_n2w; apply N.mod_small; lia.
 Qed.
 
-Lemma memcpy_f_fuel : forall f1 f2 (w a0 b : word a) m dm,
+Lemma memcpy_f_fuel : forall {B : Type} f1 f2 (w a0 b : word a) (m : word a -> B) dm,
   (N.to_nat (w2n w) < f1)%nat -> (N.to_nat (w2n w) < f2)%nat ->
   memcpy_f f1 w a0 b m dm = memcpy_f f2 w a0 b m dm.
 Proof.
-  induction f1 as [|f1 IH]; intros [|f2] w a0 b m dm H1 H2; try lia.
+  intros B; induction f1 as [|f1 IH]; intros [|f2] w a0 b m dm H1 H2; try lia.
   cbn [memcpy_f]; destruct (decide (w = n2w 0)) as [E|E]; [reflexivity|].
   rewrite (IH f2); [reflexivity| |]; rewrite w2n_sub1 by exact E;
     assert (w2n w <> 0%N) by (intros Z; apply E, w2n_eq_0, Z); lia.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "memcpy_def" *)
-Theorem memcpy_def : forall (w a0 b : word a) m dm,
+Theorem memcpy_def : forall {B : Type} (w a0 b : word a) (m : word a -> B) dm,
   memcpy w a0 b m dm =
   if decide (w = n2w 0) then (b, (m, true)) else
     let '(b1, (m1, c1)) :=
       memcpy (w - n2w 1) (a0 + bytes_in_word) (b + bytes_in_word) ((b =+ m a0) m) dm in
     (b1, (m1, andb c1 (andb ⌜a0 IN dm⌝ ⌜b IN dm⌝))).
 Proof.
-  intros w a0 b m dm; unfold memcpy at 1; cbn [memcpy_f].
+  intros B w a0 b m dm; unfold memcpy at 1; cbn [memcpy_f].
   destruct (decide (w = n2w 0)) as [E|E]; [reflexivity|].
   unfold memcpy; rewrite (memcpy_f_fuel _ (Datatypes.S (N.to_nat (w2n (w - n2w 1))))); [reflexivity| |lia].
   rewrite w2n_sub1 by exact E; assert (w2n w <> 0%N) by (intros Z; apply E, w2n_eq_0, Z); lia.
@@ -393,7 +393,7 @@ Definition word_gc_fun_assum (conf : config) (s : fmap store_name (word_loc a)) 
 
 (** HOL's boolean [<=>] definition; here a [Prop]. *)
 (*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_can_do_partial_def" *)
-Definition word_gen_gc_can_do_partial (gen_sizes : list N) (s : fmap store_name (word_loc a)) : Prop :=
+Definition word_gen_gc_can_do_partial {B : Type} (gen_sizes : list B) (s : fmap store_name (word_loc a)) : Prop :=
   gen_sizes <> [] /\
   let allo := theWord (FAPPLY s AllocSize) in
   let trig := theWord (FAPPLY s TriggerGC) in

@@ -212,7 +212,7 @@ Context {a : N} {B C Ffi : Type}.
 Local Open Scope word_scope.
 
 (*! HOL "cakeml/compiler/backend/proofs/lab_to_targetProofScript.sml" "enc_with_nop_def" *)
-Definition enc_with_nop (enc : asm.asm a -> list word8) (b : asm.asm a) (bytes : list word8) : Prop :=
+Definition enc_with_nop {X : Type} (enc : asm.asm a -> list X) (b : asm.asm a) (bytes : list X) : Prop :=
   let init := enc b in
   let step := enc (Inst asm.Skip) in
   if (LENGTH step =? 0)%N then bytes = init else
@@ -240,11 +240,11 @@ Lemma LENGTH_NIL {X} (l : list X) : LENGTH l = 0%N <-> l = [].
 Proof. destruct l; cbn [LENGTH]; split; intros; try discriminate; try reflexivity; lia. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/lab_to_targetProofScript.sml" "enc_with_nop_thm" *)
-Theorem enc_with_nop_thm : forall enc (b : asm.asm a) bytes,
+Theorem enc_with_nop_thm : forall {X : Type} (enc : asm.asm a -> list X) (b : asm.asm a) bytes,
   enc_with_nop enc b bytes <->
   exists n, bytes = enc b ++ FLAT (REPLICATE n (enc (Inst asm.Skip))).
 Proof.
-  intros enc b bytes. unfold enc_with_nop. cbv zeta.
+  intros X enc b bytes. unfold enc_with_nop. cbv zeta.
   destruct (N.eqb_spec (LENGTH (enc (Inst asm.Skip))) 0) as [E|E].
   - apply LENGTH_NIL in E. rewrite E. split.
     + intros ->. exists 0%N. rewrite FLAT_REPLICATE_NIL, app_nil_r; reflexivity.
@@ -1516,13 +1516,14 @@ Theorem share_mem_state_rel_shift_interfer : forall (mc_conf : machine_config a 
 Proof. intros mc_conf s1 t1 x l H. exact H. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/lab_to_targetProofScript.sml" "share_mem_domain_code_rel_shift_interfer" *)
-Theorem share_mem_domain_code_rel_shift_interfer : forall (mc_conf : machine_config a B C) p code2
-    (s1 : labSem.state a config Ffi) l,
+Theorem share_mem_domain_code_rel_shift_interfer : forall {SourceC SourceFfi : Type}
+    (mc_conf : machine_config a B C) p code2
+    (s1 : labSem.state a SourceC SourceFfi) l,
   share_mem_domain_code_rel mc_conf p code2 s1.(shared_mem_domain) ->
   share_mem_domain_code_rel
     (set_next_interfer (fun i => mc_conf.(next_interfer) (i + l)) mc_conf)
     p code2 s1.(shared_mem_domain).
-Proof. intros mc_conf p code2 s1 l H. exact H. Qed.
+Proof. intros SourceC SourceFfi mc_conf p code2 s1 l H. exact H. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/lab_to_targetProofScript.sml" "state_rel_shift_interfer" *)
 Theorem state_rel_shift_interfer : forall (mc_conf : machine_config a B C) code2 labs p s1 t1 (x : B) l,

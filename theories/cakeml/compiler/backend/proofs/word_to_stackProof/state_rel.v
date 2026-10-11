@@ -121,7 +121,7 @@ Definition MAP_FST {A B C} (f : A -> C) (xs : list (A * B)) : list (C * B) :=
 Definition adjust_names (n : N) : N := n DIV 2.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "handler_val_def" *)
-Fixpoint handler_val (stack : list abs_frame) : N :=
+Fixpoint handler_val {H B V : Type} (stack : list (option H * (B * list V))) : N :=
   match stack with
   | [] => 1
   | (NONE, (_, frame)) :: stack => 1 + LENGTH frame + handler_val stack
@@ -181,9 +181,9 @@ Definition stack_rel (k s_handler : N) (s_stack : list (stack_frame a))
     stack_rel_aux k t_stack_length s_stack stack.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "stack_size_rel_def" *)
-Definition stack_size_rel (f : N) (s_locals_size : option N) (s_stack_limit : N)
+Definition stack_size_rel {V : Type} (f : N) (s_locals_size : option N) (s_stack_limit : N)
     (s_stack_max : option N) (s_stack : list (stack_frame a))
-    (t_stack : list (word_loc a)) (t_stack_space : N) (extra : N) : Prop :=
+    (t_stack : list V) (t_stack_space : N) (extra : N) : Prop :=
   (f <> 0 -> the f s_locals_size = f) /\
   s_stack_limit = LENGTH t_stack /\
   forall sm, s_stack_max = SOME sm ->
@@ -643,8 +643,8 @@ Theorem transitive_GT : relation.transitive (fun x y : N => x > y).
 Proof. intros x y z [H1 H2]. lia. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "stack_size_rel_iff" *)
-Theorem stack_size_rel_iff : forall {a} f s_locals_size s_stack_limit s_stack_max (s_stack : list (stack_frame a))
-    t_stack t_stack_space extra,
+Theorem stack_size_rel_iff : forall {a} {V : Type} f s_locals_size s_stack_limit s_stack_max (s_stack : list (stack_frame a))
+    (t_stack : list V) t_stack_space extra,
   stack_size_rel f s_locals_size s_stack_limit s_stack_max s_stack t_stack t_stack_space extra <->
   (f <> 0 -> the f s_locals_size = f) /\
   s_stack_limit = LENGTH t_stack /\
@@ -654,7 +654,7 @@ Theorem stack_size_rel_iff : forall {a} f s_locals_size s_stack_limit s_stack_ma
   (IS_SOME s_stack_max -> the (LENGTH t_stack - t_stack_space - f - extra) (wordSem.stack_size s_stack) =
      LENGTH t_stack - t_stack_space - f - extra).
 Proof.
-  intros a f sl sli sm ss ts tsp extra. unfold stack_size_rel. split.
+  intros a V f sl sli sm ss ts tsp extra. unfold stack_size_rel. split.
   - intros (H1 & H2 & H3). repeat split; auto.
     + destruct sm as [m|]; cbn; [apply (H3 m eq_refl)|lia].
     + intros Hs. destruct sm as [m|]; [|discriminate]. destruct (H3 m eq_refl) as (_ & _ & ss' & E & _).

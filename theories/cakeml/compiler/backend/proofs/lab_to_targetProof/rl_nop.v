@@ -510,7 +510,7 @@ Lemma FLAT_REPLICATE_snoc (nop : list word8) n :
   FLAT (REPLICATE (N.succ n) nop) = FLAT (REPLICATE n nop) ++ nop.
 Proof. rewrite (proj2 (REPLICATE_thm n nop)). cbn [FLAT concat]. apply FLAT_REPLICATE_comm. Qed.
 
-Lemma enc_with_nop_snoc enc (i : asm.asm a) bytes :
+Lemma enc_with_nop_snoc (enc : asm.asm a -> list word8) (i : asm.asm a) bytes :
   enc_with_nop enc i bytes -> enc_with_nop enc i (bytes ++ enc (Inst asm.Skip)).
 Proof.
   intros H. apply enc_with_nop_thm in H as [n ->]. apply enc_with_nop_thm. exists (N.succ n).

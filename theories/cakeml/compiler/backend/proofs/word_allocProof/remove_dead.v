@@ -51,16 +51,16 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "live_store_rel_def" *)
-Definition live_store_rel (nlive : list store_name) (sstore tstore : fmap store_name (word_loc a)) : Prop :=
+Definition live_store_rel {K V : Type} (nlive : list K) (sstore tstore : fmap K V) : Prop :=
   forall n, ~ n IN set nlive -> FLOOKUP sstore n = FLOOKUP tstore n.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "live_store_rel_less" *)
-Theorem live_store_rel_less : forall ls ls' st tt,
+Theorem live_store_rel_less {K V : Type} : forall (ls ls' : list K) (st tt : fmap K V),
   live_store_rel ls st tt /\ set ls SUBSET set ls' -> live_store_rel ls' st tt.
 Proof. intros ls ls' st tt [H Hs] n Hn. apply H. intros Hn'. apply Hn, Hs, Hn'. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "live_store_rel_FLOOKUP_store" *)
-Theorem live_store_rel_FLOOKUP_store : forall ls sstore tstore s,
+Theorem live_store_rel_FLOOKUP_store {K V : Type} : forall (ls : list K) (sstore tstore : fmap K V) s,
   live_store_rel ls sstore tstore /\ ~ s IN set ls -> FLOOKUP tstore s = FLOOKUP sstore s.
 Proof. intros ls sstore tstore s [H Hs]. symmetry; apply H, Hs. Qed.
 
@@ -227,7 +227,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "live_store_rel_NIL" *)
-Theorem live_store_rel_NIL : forall (sstore tstore : fmap store_name (word_loc a)),
+Theorem live_store_rel_NIL {K V : Type} : forall (sstore tstore : fmap K V),
   live_store_rel [] sstore tstore <-> sstore = tstore.
 Proof.
   intros sstore tstore. split; [|intros ->; intros n _; reflexivity].
@@ -235,7 +235,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "live_store_rel_refl" *)
-Theorem live_store_rel_refl : forall ls (sstore : fmap store_name (word_loc a)), live_store_rel ls sstore sstore.
+Theorem live_store_rel_refl {K V : Type} : forall ls (sstore : fmap K V), live_store_rel ls sstore sstore.
 Proof. intros ls sstore n _; reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "with_same_store" *)

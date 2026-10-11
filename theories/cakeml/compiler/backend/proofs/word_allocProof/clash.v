@@ -265,7 +265,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "IMAGE_DIFF" *)
-Theorem IMAGE_DIFF : forall {B} (f : N -> B) s t,
+Theorem IMAGE_DIFF : forall {A B} (f : A -> B) s t,
   INJ f (s UNION t) UNIV -> IMAGE f (s DIFF t) = IMAGE f s DIFF IMAGE f t.
 Proof. intros; apply INJ_IMP_IMAGE_DIFF; assumption. Qed.
 

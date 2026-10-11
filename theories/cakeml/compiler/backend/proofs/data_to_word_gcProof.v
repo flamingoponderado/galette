@@ -97,7 +97,7 @@ Proof.
  repeat match goal with |- context [decide ?P] => destruct (decide P); try discriminate end.
  unfold pred_set.SUBSET, pred_set.IN, pred_set.INSERT, pred_set.EMPTY; firstorder congruence.
 Qed.
-Local Lemma partial_handler gens (s : fmap store_name (word_loc a)) h :
+Local Lemma partial_handler (gens : list N) (s : fmap store_name (word_loc a)) h :
  word_gen_gc_can_do_partial gens (s |+ (Handler,h)) = word_gen_gc_can_do_partial gens s.
 Proof.
  unfold word_gen_gc_can_do_partial; rewrite !FAPPLY_FUPDATE_THM.
