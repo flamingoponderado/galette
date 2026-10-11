@@ -25170,6 +25170,56 @@
   "rocq_name": "word_list_exists_imp"
  },
  {
+  "hol_path": "cakeml/compiler/backend/proofs/data_to_word_gcProofScript.sml",
+  "hol_name": "gc_fun_const_ok_word_gc_fun",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/data_to_word_gcProof.v",
+  "rocq_name": "gc_fun_const_ok_word_gc_fun"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/data_to_word_gcProofScript.sml",
+  "hol_name": "gc_fun_ok_word_gc_fun",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/data_to_word_gcProof.v",
+  "rocq_name": "gc_fun_ok_word_gc_fun"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/data_to_word_gcProofScript.sml",
+  "hol_name": "init_store_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/data_to_word_gcProof.v",
+  "rocq_name": "init_store_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/data_to_word_gcProofScript.sml",
+  "hol_name": "lsr_lsl",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/data_to_word_gcProof.v",
+  "rocq_name": "lsr_lsl"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/data_to_word_gcProofScript.sml",
+  "hol_name": "word_gc_fun_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/data_to_word_gcProof.v",
+  "rocq_name": "word_gc_fun_IMP"
+ },
+ {
   "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
   "hol_name": "adjust_pc_all_skips",
   "hol_line": null,
@@ -41661,6 +41711,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gc_IMP_EVERY2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gc_IMP_EVERY2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gc_fun_LENGTH",
   "hol_line": null,
   "case": null,
@@ -41768,6 +41828,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gc_move_loop_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gc_move_roots_IMP_EVERY2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gc_move_roots_IMP_EVERY2"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -41921,6 +41991,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_move_roots_IMP_EVERY2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_move_roots_IMP_EVERY2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gen_gc_move_roots_def",
   "hol_line": null,
   "case": null,
@@ -42048,6 +42128,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gen_gc_partial_move_ref_list_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_partial_move_roots_IMP_EVERY2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_partial_move_roots_IMP_EVERY2"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",

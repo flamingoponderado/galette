@@ -3,7 +3,8 @@
     Port of the definitions of
     [cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml] (the shallow
     embedding of the GC that [stack_alloc]'s GC code implements) and of
-    [word_gc_fun_LENGTH] and the floating-point flag invariance chain.
+    [word_gc_fun_LENGTH], the root-constant [*_IMP_EVERY2] chain, and the
+    floating-point flag invariance chain.
 
     Notes:
     - HOL tuples nest to the right, so HOL's [(a,b,c)] is [(a, (b, c))].
@@ -13,10 +14,7 @@
       [num] counter ([*_loop], [*_data], [*_refs], [*_ref_list]) run on a
       fuel ([*_f], Galette-only) of the length of the recursion; HOL's
       equations are the tagged [*_def] theorems.
-    - Not ported: [refs_to_addresses] (on [gc_shared]'s heap elements, not
-      ported), the [*_IMP_EVERY2] lemmas (on [word_simpProof]'s
-      [is_gc_word_const], not ported; [word_gc_fun_LENGTH] is proved
-      directly). *)
+    - Not ported: [refs_to_addresses] (on [gc_shared]'s heap elements). *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -1074,3 +1072,141 @@ Proof. intros conf b1 b2; apply functional_extensionality; intros x;
  | match goal with |- context [match ?e with pair _ _ => _ end] => destruct e as [? ?] end];
  reflexivity. Qed.
 End FP.
+
+From Galette.cakeml.compiler.backend Require Import word_simp.
+From Galette.cakeml.compiler.backend.proofs Require Import word_simpProof.
+
+(** Root moves preserve words and GC constants. *)
+Section Rel.
+Context {a : N}.
+Local Definition root_rel (x y : word_loc a) := (isWord x <-> isWord y) /\ (is_gc_word_const x -> x = y).
+Local Ltac moves :=
+  cbn [fst isWord is_gc_word_const] in *;
+  repeat match goal with
+  | |- context [match ?v with _ => _ end] => destruct v eqn:?
+  | |- context [if ?b then _ else _] => destruct b eqn:?
+  end; cbn [fst isWord] in *; split; try tauto; intros HC;
+  unfold is_gc_const in HC; apply bool_decide_spec in HC; contradiction.
+Lemma move_rel c w i pa old m dm :
+ root_rel w (fst (word_gc_move c (w,(i,(pa,(old,(m,dm))))))).
+Proof.
+ destruct w as [w|l1 l2]; unfold word_gc_move, root_rel; cbn beta iota zeta.
+ - destruct (decide (word_and w (n2w 1) = n2w 0)); [cbn; split; [tauto|auto]|moves].
+ - cbn; split; [tauto|auto].
+Qed.
+Lemma partial_move_rel c w i pa old m dm gs rs :
+ root_rel w (fst (word_gen_gc_partial_move c (w,(i,(pa,(old,(m,(dm,(gs,rs))))))))).
+Proof.
+ destruct w as [w|l1 l2]; unfold word_gen_gc_partial_move, root_rel; cbn beta iota zeta.
+ - destruct (decide (word_and w (n2w 1) = n2w 0)); [cbn; split; [tauto|auto]|moves].
+ - cbn; split; [tauto|auto].
+Qed.
+Lemma gen_move_rel c w i pa ib pb old m dm :
+ root_rel w (fst (word_gen_gc_move c (w,(i,(pa,(ib,(pb,(old,(m,dm))))))))).
+Proof.
+ destruct w as [w|l1 l2]; unfold word_gen_gc_move, root_rel; cbn beta iota zeta.
+ - rewrite WORD_AND_COMM.
+   destruct (decide (word_and w (n2w 1) = n2w 0)); [cbn; split; [tauto|auto]|moves].
+ - cbn; split; [tauto|auto].
+Qed.
+
+
+Local Lemma word_gc_roots_rel c : forall xs i pa old m dm,
+ LIST_REL root_rel xs (fst (word_gc_move_roots_f c xs i pa old m dm)).
+Proof.
+ induction xs as [|w xs IH]; intros; cbn [word_gc_move_roots_f]; [constructor|].
+ pose proof (move_rel c w i pa old m dm) as HR.
+ destruct (word_gc_move c (w,(i,(pa,(old,(m,dm)))))) as [rs [i1 [pa1 [m1 c1]]]].
+ specialize (IH i1 pa1 old m1 dm).
+ destruct (word_gc_move_roots_f c xs i1 pa1 old m1 dm) as [ys [i2 [pa2 [m2 c2]]]].
+ cbn [fst] in *; constructor; assumption.
+Qed.
+
+Local Lemma word_gen_gc_partial_roots_rel c : forall xs i pa old m dm gs rs,
+ LIST_REL root_rel xs (fst (word_gen_gc_partial_move_roots_f c xs i pa old m dm gs rs)).
+Proof.
+ induction xs as [|w xs IH]; intros; cbn [word_gen_gc_partial_move_roots_f]; [constructor|].
+ pose proof (partial_move_rel c w i pa old m dm gs rs) as HR.
+ destruct (word_gen_gc_partial_move c (w,(i,(pa,(old,(m,(dm,(gs,rs)))))))) as [ws2 [i1 [pa1 [m1 c1]]]].
+ specialize (IH i1 pa1 old m1 dm gs rs).
+ destruct (word_gen_gc_partial_move_roots_f c xs i1 pa1 old m1 dm gs rs) as [ys [i2 [pa2 [m2 c2]]]].
+ cbn [fst] in *; constructor; assumption.
+Qed.
+
+Local Lemma word_gen_gc_roots_rel c : forall xs i pa ib pb old m dm,
+ LIST_REL root_rel xs (fst (word_gen_gc_move_roots_f c xs i pa ib pb old m dm)).
+Proof.
+ induction xs as [|w xs IH]; intros; cbn [word_gen_gc_move_roots_f]; [constructor|].
+ pose proof (gen_move_rel c w i pa ib pb old m dm) as HR.
+ destruct (word_gen_gc_move c (w,(i,(pa,(ib,(pb,(old,(m,dm)))))))) as [ws2 [i1 [pa1 [ib1 [pb1 [m1 c1]]]]]].
+ specialize (IH i1 pa1 ib1 pb1 old m1 dm).
+ destruct (word_gen_gc_move_roots_f c xs i1 pa1 ib1 pb1 old m1 dm) as [ys [i2 [pa2 [ib2 [pb2 [m2 c2]]]]]].
+ cbn [fst] in *; constructor; assumption.
+Qed.
+
+
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gc_move_roots_IMP_EVERY2" *)
+Theorem word_gc_move_roots_IMP_EVERY2 : forall (xs ys : list (word_loc a)) pa m i c1 m1 pa1 i1 old dm c,
+ word_gc_move_roots c (xs,(i,(pa,(old,(m,dm))))) = (ys,(i1,(pa1,(m1,c1)))) ->
+ LIST_REL (fun x y => (isWord x <-> isWord y) /\ (is_gc_word_const x -> x = y)) xs ys.
+Proof.
+ intros xs ys pa m i c1 m1 pa1 i1 old dm c H.
+ pose proof (word_gc_roots_rel c xs i pa old m dm) as HR.
+ unfold word_gc_move_roots in H; rewrite H in HR; exact HR.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_partial_move_roots_IMP_EVERY2" *)
+Theorem word_gen_gc_partial_move_roots_IMP_EVERY2 : forall (xs ys : list (word_loc a)) pa m i gs rs c1 m1 pa1 i1 old dm c,
+ word_gen_gc_partial_move_roots c (xs,(i,(pa,(old,(m,(dm,(gs,rs))))))) = (ys,(i1,(pa1,(m1,c1)))) ->
+ LIST_REL (fun x y => (isWord x <-> isWord y) /\ (is_gc_word_const x -> x = y)) xs ys.
+Proof.
+ intros xs ys pa m i gs rs c1 m1 pa1 i1 old dm c H.
+ pose proof (word_gen_gc_partial_roots_rel c xs i pa old m dm gs rs) as HR.
+ unfold word_gen_gc_partial_move_roots in H; rewrite H in HR; exact HR.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_move_roots_IMP_EVERY2" *)
+Theorem word_gen_gc_move_roots_IMP_EVERY2 : forall (xs ys : list (word_loc a)) pa m i ib pb c1 m1 pa1 i1 ib1 pb1 old dm c,
+ word_gen_gc_move_roots c (xs,(i,(pa,(ib,(pb,(old,(m,dm))))))) = (ys,(i1,(pa1,(ib1,(pb1,(m1,c1)))))) ->
+ LIST_REL (fun x y => (isWord x <-> isWord y) /\ (is_gc_word_const x -> x = y)) xs ys.
+Proof.
+ intros xs ys pa m i ib pb c1 m1 pa1 i1 ib1 pb1 old dm c H.
+ pose proof (word_gen_gc_roots_rel c xs i pa ib pb old m dm) as HR.
+ unfold word_gen_gc_move_roots in H; rewrite H in HR; exact HR.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gc_IMP_EVERY2" *)
+Theorem word_gc_IMP_EVERY2 : forall c (xs : list (word_loc a)) m dm st ys m1 s1,
+ word_gc_fun c (xs,(m,(dm,st))) = SOME (ys,(m1,s1)) ->
+ LIST_REL (fun x y => (isWord x <-> isWord y) /\ (is_gc_word_const x -> x = y)) xs ys.
+Proof.
+  intros c xs m dm st ys m1 s1 H; unfold word_gc_fun in H; cbv zeta in H.
+  destruct (gc_kind c) as [| |gens].
+  - destruct (⌜word_gc_fun_assum c st⌝); [|discriminate]. injection H as <- _ _; apply word_simpProof.LIST_REL_refl; unfold root_rel; intros; split; [tauto|auto].
+  - unfold word_full_gc, word_gc_move_roots in H.
+    pose proof (word_gc_roots_rel c (FAPPLY st Globals :: xs) (n2w 0)
+      (theWord (FAPPLY st OtherHeap)) (theWord (FAPPLY st CurrHeap)) m dm) as HR.
+    destruct (word_gc_move_roots_f _ _ _ _ _ _ _) as [rs [i1 [pa1 [m1' c1]]]].
+    destruct (word_gc_move_loop _ _ _) as [i2 [pa2 [m2 c2]]].
+    destruct (andb _ _); [|discriminate]. injection H as <- _ _.
+    cbn [fst] in HR; destruct rs as [|v rs]; inversion HR; assumption.
+  - destruct (negb _); [discriminate|].
+    destruct (⌜word_gen_gc_can_do_partial gens st⌝).
+    + unfold word_gen_gc_partial_full, word_gen_gc_partial, word_gen_gc_partial_move_roots in H.
+      match type of H with context [word_gen_gc_partial_move_roots_f ?cc ?ws ?i ?pa ?old ?mm ?d ?g ?r] =>
+        pose proof (word_gen_gc_partial_roots_rel cc ws i pa old mm d g r) as HR;
+        destruct (word_gen_gc_partial_move_roots_f cc ws i pa old mm d g r) as [rs [i1 [pa1 [m1' c1]]]] end.
+      destruct (word_gen_gc_partial_move_ref_list _ _ _) as [i2 [pa2 [m2 c2]]].
+      destruct (word_gen_gc_partial_move_data _ _ _) as [i3 [pa3 [m3 c3]]].
+      destruct (memcpy _ _ _ _ _) as [b1 [m4 c4]].
+      destruct (andb _ _); [|discriminate]. injection H as <- _ _.
+      cbn [fst] in HR; destruct rs as [|v rs]; inversion HR; assumption.
+    + unfold word_gen_gc, word_gen_gc_move_roots in H.
+      match type of H with context [word_gen_gc_move_roots_f ?cc ?ws ?i ?pa ?ib ?pb ?old ?mm ?d] =>
+        pose proof (word_gen_gc_roots_rel cc ws i pa ib pb old mm d) as HR;
+        destruct (word_gen_gc_move_roots_f cc ws i pa ib pb old mm d) as [rs [i1 [pa1 [ib1 [pb1 [m1' c1]]]]]] end.
+      destruct (word_gen_gc_move_loop _ _ _) as [i2 [pa2 [ib2 [pb2 [m2 c2]]]]].
+      destruct (andb _ _); [|discriminate]. injection H as <- _ _.
+      cbn [fst] in HR; destruct rs as [|v rs]; inversion HR; assumption.
+Qed.
+End Rel.
