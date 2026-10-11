@@ -5350,6 +5350,174 @@ Proof.
  { intros k; apply functional_extensionality; intros [n p]; reflexivity. }
  rewrite Eg,Eh,En,En. exact H.
 Qed.
+Local Lemma handler_labels_subset n : forall p : prog a,
+ stack_get_handler_labels n p SUBSET stackSem.get_labels p.
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind;
+ unfold pred_set.SUBSET in *; intros q.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + specialize (Hr p1 _ eq_refl q). destruct h as [[p2 [k1 k2]]|].
+     * specialize (Hh p2 _ eq_refl q). cbn [stack_get_handler_labels stackSem.get_labels].
+       destruct (decide (k1=n)); cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto.
+     * cbn [stack_get_handler_labels stackSem.get_labels]; cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto.
+   + cbn [stack_get_handler_labels stackSem.get_labels]; cbv beta delta [pred_set.IN pred_set.EMPTY]; tauto.
+ - cbn [stack_get_handler_labels stackSem.get_labels]; specialize (IH1 q); specialize (IH2 q);
+   cbv beta delta [pred_set.IN pred_set.UNION] in *; tauto.
+ - cbn [stack_get_handler_labels stackSem.get_labels]; specialize (IH1 q); specialize (IH2 q);
+   cbv beta delta [pred_set.IN pred_set.UNION] in *; tauto.
+ - cbn [stack_get_handler_labels stackSem.get_labels]; apply IH.
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_get_handler_labels stackSem.get_labels]; cbv beta delta [pred_set.IN pred_set.EMPTY]; tauto.
+Qed.
+Local Lemma handler_labels_empty n (p : prog a) : stackSem.get_labels p = {} -> stack_get_handler_labels n p = {}.
+Proof.
+ intros H; apply EXTENSION; intros q; split; [intros Hq|intros Hq; exfalso; exact Hq].
+ apply (handler_labels_subset n p) in Hq; rewrite H in Hq; exact Hq.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_get_code_labels_comp" *)
+Local Theorem stack_remove_get_code_labels_comp : forall jump off k (p : prog a),
+ stackProps.get_code_labels (stack_remove.comp jump off k p) SUBSET
+ (stack_remove.stack_err_lab,0) INSERT stackProps.get_code_labels p.
+Proof. apply get_code_labels_comp_remove. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_stack_get_handler_labels_comp" *)
+Local Theorem stack_remove_stack_get_handler_labels_comp : forall jump off k (p : prog a) m,
+ stack_get_handler_labels m (stack_remove.comp jump off k p) = stack_get_handler_labels m p.
+Proof.
+ intros jump off k p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind; intros m.
+ - destruct ret as [[p1 [lr [l1 l2]]]|]; [|reflexivity].
+   specialize (Hr p1 _ eq_refl m). destruct h as [[p2 [k1 k2]]|]; cbn [stack_remove.comp stack_get_handler_labels]; rewrite Hr;
+   [rewrite (Hh p2 _ eq_refl m)|]; reflexivity.
+ - cbn [stack_remove.comp stack_get_handler_labels]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_remove.comp stack_get_handler_labels]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_remove.comp stack_get_handler_labels]; apply IH.
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_get_handler_labels]; apply handler_labels_empty;
+   rewrite stack_removeProof.get_labels_comp; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_init_code_labels" *)
+Local Theorem stack_remove_init_code_labels : forall x ggc mh sp,
+ x IN stackProps.get_code_labels (@stack_remove.init_code a ggc mh sp) -> x = (1,0).
+Proof. intros x ggc mh sp H; rewrite init_code_code_labels in H; apply IN_SING in H; exact H. Qed.
+Local Definition code_label_context (ps : list (N * prog a)) elabs : N * N -> Prop :=
+ BIGUNION (set (MAP (fun '(n,p) => stack_get_handler_labels n p) ps)) UNION
+ IMAGE (fun n => (n,0)) (set (MAP FST ps)) UNION IMAGE (fun n => (n,0)) elabs UNION
+ IMAGE (fun n => (n,1)) (set (MAP FST ps)) UNION IMAGE (fun n => (n,1)) elabs.
+Local Lemma good_code_labels_pointwise ps elabs : stack_good_code_labels ps elabs <->
+ forall n p q, In (n,p) ps -> q IN stackProps.get_code_labels p -> code_label_context ps elabs q.
+Proof.
+ unfold stack_good_code_labels, pred_set.SUBSET; split.
+ - intros H n p q Hp Hq; apply H. apply IN_BIGUNION_IMAGE_set.
+   exists p; split; [apply in_map_iff; exists (n,p); split; [reflexivity|exact Hp]|exact Hq].
+ - intros H q Hq; apply IN_BIGUNION_IMAGE_set in Hq; destruct Hq as (p & Hp & Hq).
+   apply in_map_iff in Hp; destruct Hp as ([n p1] & E & Hp); cbn [SND] in E; subst p1.
+   apply (H n p q Hp Hq).
+Qed.
+Local Lemma context_handler ps elabs n p q : In (n,p) ps -> stack_get_handler_labels n p q -> code_label_context ps elabs q.
+Proof.
+ intros Hp Hq; unfold code_label_context; cbv beta delta [pred_set.IN pred_set.UNION]; left; left; left; left.
+ apply IN_BIGUNION; exists (stack_get_handler_labels n p); split; [exact Hq|].
+ apply IN_set; apply in_map_iff; exists (n,p); split; [reflexivity|exact Hp].
+Qed.
+Local Lemma context_entry0 ps elabs n p : In (n,p) ps -> code_label_context ps elabs (n,0).
+Proof.
+ intros Hp; unfold code_label_context; cbv beta delta [pred_set.IN pred_set.UNION]; left; left; left; right.
+ apply IN_IMAGE; exists n; split; [reflexivity|].
+ apply IN_set; apply in_map_iff; exists (n,p); split; [reflexivity|exact Hp].
+Qed.
+Local Lemma context_entry1 ps elabs n p : In (n,p) ps -> code_label_context ps elabs (n,1).
+Proof.
+ intros Hp; unfold code_label_context; cbv beta delta [pred_set.IN pred_set.UNION]; left; right.
+ apply IN_IMAGE; exists n; split; [reflexivity|].
+ apply IN_set; apply in_map_iff; exists (n,p); split; [reflexivity|exact Hp].
+Qed.
+Local Lemma context_external0 ps elabs n : n IN elabs -> code_label_context ps elabs (n,0).
+Proof.
+ intros H; unfold code_label_context; cbv beta delta [pred_set.IN pred_set.UNION]; left; left; right.
+ apply IN_IMAGE; exists n; auto.
+Qed.
+Local Lemma context_transport ps qs elabs (f : N * prog a -> N * prog a) :
+ (forall n p, In (n,p) ps -> In (f (n,p)) qs) ->
+ (forall n p, FST (f (n,p)) = n) ->
+ (forall n p, stack_get_handler_labels n (SND (f (n,p))) = stack_get_handler_labels n p) ->
+ forall q, code_label_context ps elabs q -> code_label_context qs elabs q.
+Proof.
+ intros Hi Hn Hh q Hq; unfold code_label_context in Hq; cbv beta delta [pred_set.IN pred_set.UNION] in Hq.
+ destruct Hq as [[[[Hq|Hq]|Hq]|Hq]|Hq].
+ - apply IN_BIGUNION in Hq; destruct Hq as (s & Hq & Hs).
+   apply IN_set in Hs; apply in_map_iff in Hs; destruct Hs as ([n p] & <- & Hp).
+   pose proof (Hi n p Hp) as Hfp. destruct (f (n,p)) as [n1 p1] eqn:F.
+   specialize (Hn n p); rewrite F in Hn; cbn [FST] in Hn; subst n1.
+   specialize (Hh n p); rewrite F in Hh; cbn [SND] in Hh; rewrite <- Hh in Hq.
+   eapply context_handler; eauto.
+ - apply IN_IMAGE_set in Hq; destruct Hq as (n & -> & Hp).
+   apply in_map_iff in Hp; destruct Hp as ([n1 p] & E & Hp); cbn [FST] in E; subst n1.
+   pose proof (Hi n p Hp) as Hfp. destruct (f (n,p)) as [n1 p1] eqn:F.
+   specialize (Hn n p); rewrite F in Hn; cbn [FST] in Hn; subst n1.
+   eapply context_entry0; exact Hfp.
+ - unfold code_label_context; cbv beta delta [pred_set.IN pred_set.UNION]; tauto.
+ - apply IN_IMAGE_set in Hq; destruct Hq as (n & -> & Hp).
+   apply in_map_iff in Hp; destruct Hp as ([n1 p] & E & Hp); cbn [FST] in E; subst n1.
+   pose proof (Hi n p Hp) as Hfp. destruct (f (n,p)) as [n1 p1] eqn:F.
+   specialize (Hn n p); rewrite F in Hn; cbn [FST] in Hn; subst n1.
+   eapply context_entry1; exact Hfp.
+ - unfold code_label_context; cbv beta delta [pred_set.IN pred_set.UNION]; tauto.
+Qed.
+Local Lemma transformed_code_labels ps qs elabs (f : N * prog a -> N * prog a) err :
+ stack_good_code_labels ps elabs ->
+ (forall n p, In (n,p) ps -> In (f (n,p)) qs) ->
+ (forall n p, FST (f (n,p)) = n) ->
+ (forall n p, stack_get_handler_labels n (SND (f (n,p))) = stack_get_handler_labels n p) ->
+ (forall n p, stackProps.get_code_labels (SND (f (n,p))) SUBSET (err,0) INSERT stackProps.get_code_labels p) ->
+ code_label_context qs elabs (err,0) ->
+ forall n p q, In (n,p) (MAP f ps) -> q IN stackProps.get_code_labels p -> code_label_context qs elabs q.
+Proof.
+ intros Hg Hi Hn Hh Hcode Herr n p q Hp Hq.
+ apply in_map_iff in Hp; destruct Hp as ([n0 p0] & E & Hp).
+ assert (He : q IN stackProps.get_code_labels (SND (f (n0,p0)))).
+ { rewrite E; exact Hq. }
+ apply (Hcode n0 p0) in He; apply IN_INSERT in He; destruct He as [->|He]; [exact Herr|].
+ eapply context_transport; [exact Hi|exact Hn|exact Hh|].
+ exact (proj1 (good_code_labels_pointwise ps elabs) Hg n0 p0 q Hp He).
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_stack_good_code_labels" *)
+Theorem stack_remove_stack_good_code_labels : forall (prog0 : list (N * prog a)) loc elabs jump off ggc mh sp,
+ MEM loc (MAP FST prog0) /\ stack_good_code_labels prog0 elabs ->
+ stack_good_code_labels (stack_remove.compile jump off ggc mh sp loc prog0) elabs.
+Proof.
+ intros ps loc elabs jump off ggc mh sp [Hloc Hg].
+ apply MEM_In, in_map_iff in Hloc; destruct Hloc as ([n p] & E & Hp); cbn [FST] in E; subst n.
+ unfold stack_remove.compile. apply good_code_labels_pointwise.
+ assert (Ht : forall n p q, In (n,p) (MAP (stack_remove.prog_comp jump off sp) ps) ->
+   q IN stackProps.get_code_labels p ->
+   code_label_context (stack_remove.init_stubs ggc mh sp loc ++ MAP (stack_remove.prog_comp jump off sp) ps) elabs q).
+ { eapply transformed_code_labels; [exact Hg| | | | |].
+   - intros n p0 Hin; apply in_app_iff; right; apply in_map; exact Hin.
+   - intros n p0; reflexivity.
+   - intros n p0; cbn [stack_remove.prog_comp SND]; apply stack_remove_stack_get_handler_labels_comp.
+   - intros n p0; cbn [stack_remove.prog_comp SND]; apply stack_remove_get_code_labels_comp.
+   - unfold stack_remove.stack_err_lab. eapply context_entry0.
+     apply in_app_iff; left; unfold stack_remove.init_stubs; cbn; right; right; left; reflexivity. }
+ intros n p0 q Hin Hq; apply in_app_iff in Hin; destruct Hin as [Hin|Hin]; [|eapply Ht; eauto].
+ pose proof (init_stubs_labels ggc mh sp loc) as Hv; apply EVERY_Forall in Hv; rewrite Forall_forall in Hv.
+ assert (Hi : In p0 (MAP SND (stack_remove.init_stubs ggc mh sp loc))).
+ { apply in_map_iff; exists (n,p0); split; [reflexivity|exact Hin]. }
+ specialize (Hv _ Hi); apply bool_decide_spec in Hv. specialize (Hv q Hq).
+ apply IN_set in Hv; cbn in Hv; destruct Hv as [<-|[<-|Hv]]; [| |contradiction].
+ - eapply context_entry0; apply in_app_iff; left; unfold stack_remove.init_stubs; cbn; right; left; reflexivity.
+ - eapply context_entry0; apply in_app_iff; right.
+   apply in_map_iff; exists (loc,p); split; [reflexivity|exact Hp].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_stack_good_code_labels_incr" *)
+Theorem stack_remove_stack_good_code_labels_incr : forall (prog0 : list (N * prog a)) elabs jump offset sp,
+ stack_remove.stack_err_lab IN elabs /\ stack_good_code_labels prog0 elabs ->
+ stack_good_code_labels (MAP (stack_remove.prog_comp jump offset sp) prog0) elabs.
+Proof.
+ intros ps elabs jump off sp [Herr Hg]. apply good_code_labels_pointwise.
+ eapply transformed_code_labels; [exact Hg| | | | |].
+ - intros n p Hin; apply in_map; exact Hin.
+ - intros n p; reflexivity.
+ - intros n p; cbn [stack_remove.prog_comp SND]; apply stack_remove_stack_get_handler_labels_comp.
+ - intros n p; cbn [stack_remove.prog_comp SND]; apply stack_remove_get_code_labels_comp.
+ - apply context_external0; exact Herr.
+Qed.
 End CodeLabels.
 
 
