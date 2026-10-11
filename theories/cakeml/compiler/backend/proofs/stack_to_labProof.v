@@ -18,11 +18,9 @@
     [good_code], [full_make_init_semantics], the encoder line preconditions
     and [stack_to_lab_compile_all_enc_ok], plus flattening, section and
     handler label preservation through [stack_to_lab_stack_good_handler_labels_incr],
-    [full_make_init_has_fp_ops],
-    and the earlier stack-removal label-inclusion lemma.
+    [full_make_init_has_fp_ops], and the complete no_shmemop / no_install chains.
 
     NOT YET PORTED:
-    and the no_shmemop / no_install lemmas.
     [IMP_init_store_ok] and [IMP_init_state_ok] are skipped because their
     dependencies are not yet ported.
 
@@ -5953,3 +5951,492 @@ End CodeLabels.
 
 
 
+
+(** Absence of shared-memory operations and installation instructions.
+    HOL predicates with quantified arguments are reflected by [bool_decide]
+    under [EVERY]; [safety_every] exposes their proposition-valued form. *)
+Section Safety.
+Context {a : N}.
+Local Lemma rawcall_no_shmemop_eq i : forall p : prog a,
+ no_shmemop (stack_rawcall.comp i p) = no_shmemop p.
+Proof.
+ intros p; induction p as [p IH] using stack_rawcallProof.psz_ind.
+ stack_rawcallProof.syn_cases IH; cbn [no_shmemop]; stack_rawcallProof.rw_ih IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_comp_no_shmemop" *)
+Theorem stack_rawcall_comp_no_shmemop : forall i (p : prog a), no_shmemop p -> no_shmemop (stack_rawcall.comp i p).
+Proof. intros; rewrite rawcall_no_shmemop_eq; assumption. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_comp_top_no_shmemop" *)
+Theorem stack_rawcall_comp_top_no_shmemop : forall i (p : prog a), no_shmemop p -> no_shmemop (stack_rawcall.comp_top i p).
+Proof. intros i p H; unfold stack_rawcall.comp_top; destruct p; cbn [no_shmemop] in *; rewrite ?rawcall_no_shmemop_eq; exact H. Qed.
+Local Lemma names_no_shmemop_eq f : forall p : prog a, no_shmemop (stack_names.comp f p) = no_shmemop p.
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind.
+ - destruct ret as [[p1 [lr [l1 l2]]]|]; destruct h as [[p2 [k1 k2]]|];
+   cbn [stack_names.comp no_shmemop]; try rewrite (Hr p1 _ eq_refl); try rewrite (Hh p2 _ eq_refl); reflexivity.
+ - cbn [stack_names.comp no_shmemop]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp no_shmemop]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp no_shmemop]; exact IH.
+ - destruct p; cbn in Hp; try contradiction; try reflexivity; match goal with ad : asm.addr _ |- _ => destruct ad end; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_comp_no_shmemop" *)
+Theorem stack_names_comp_no_shmemop : forall f (p : prog a), no_shmemop p -> no_shmemop (stack_names.comp f p).
+Proof. intros; rewrite names_no_shmemop_eq; assumption. Qed.
+Local Lemma rawcall_no_install_eq i : forall p : prog a,
+ no_install (stack_rawcall.comp i p) = no_install p.
+Proof.
+ intros p; induction p as [p IH] using stack_rawcallProof.psz_ind.
+ stack_rawcallProof.syn_cases IH; cbn [no_install]; stack_rawcallProof.rw_ih IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_comp_no_install" *)
+Theorem stack_rawcall_comp_no_install : forall i (p : prog a), no_install p -> no_install (stack_rawcall.comp i p).
+Proof. intros; rewrite rawcall_no_install_eq; assumption. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_comp_top_no_install" *)
+Theorem stack_rawcall_comp_top_no_install : forall i (p : prog a), no_install p -> no_install (stack_rawcall.comp_top i p).
+Proof. intros i p H; unfold stack_rawcall.comp_top; destruct p; cbn [no_install] in *; rewrite ?rawcall_no_install_eq; exact H. Qed.
+Local Lemma names_no_install_eq f : forall p : prog a, no_install (stack_names.comp f p) = no_install p.
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind.
+ - destruct ret as [[p1 [lr [l1 l2]]]|]; destruct h as [[p2 [k1 k2]]|];
+   cbn [stack_names.comp no_install]; try rewrite (Hr p1 _ eq_refl); try rewrite (Hh p2 _ eq_refl); reflexivity.
+ - cbn [stack_names.comp no_install]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp no_install]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp no_install]; exact IH.
+ - destruct p; cbn in Hp; try contradiction; try reflexivity; match goal with ad : asm.addr _ |- _ => destruct ad end; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_comp_no_install" *)
+Theorem stack_names_comp_no_install : forall f (p : prog a), no_install p -> no_install (stack_names.comp f p).
+Proof. intros; rewrite names_no_install_eq; assumption. Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_comp_no_shmemop" *)
+Theorem stack_alloc_comp_no_shmemop : forall n m (p : prog a), no_shmemop p -> no_shmemop (FST (stack_alloc.comp n m p)).
+Proof.
+ intros n m p; revert m; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind; intros m H.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + cbn [no_shmemop] in H; apply Bool.andb_true_iff in H as [H1 H2].
+     pose proof (Hr p1 _ eq_refl m H1) as Hq1; cbn [stack_alloc.comp].
+     destruct (stack_alloc.comp n m p1) as [q1 m1]; cbn [FST] in Hq1.
+     destruct h as [[p2 [k1 k2]]|].
+     * pose proof (Hh p2 _ eq_refl m1 H2) as Hq2;
+       destruct (stack_alloc.comp n m1 p2) as [q2 m2]; cbn [FST] in Hq2;
+       cbn [FST no_shmemop]; rewrite Hq1,Hq2; reflexivity.
+     * cbn [FST no_shmemop]; rewrite Hq1; reflexivity.
+   + cbn [stack_alloc.comp FST no_shmemop]; reflexivity.
+ - cbn [no_shmemop] in H; apply Bool.andb_true_iff in H as [H1 H2];
+   pose proof (IH1 m H1) as Hq1; cbn [stack_alloc.comp].
+   destruct (stack_alloc.comp n m p1) as [q1 m1]; cbn [FST] in Hq1.
+   pose proof (IH2 m1 H2) as Hq2; destruct (stack_alloc.comp n m1 p2) as [q2 m2];
+   cbn [FST] in Hq2; cbn [FST no_shmemop]; rewrite Hq1,Hq2; reflexivity.
+ - cbn [no_shmemop] in H; apply Bool.andb_true_iff in H as [H1 H2];
+   pose proof (IH1 m H1) as Hq1; cbn [stack_alloc.comp].
+   destruct (stack_alloc.comp n m p1) as [q1 m1]; cbn [FST] in Hq1.
+   pose proof (IH2 m1 H2) as Hq2; destruct (stack_alloc.comp n m1 p2) as [q2 m2];
+   cbn [FST] in Hq2; cbn [FST no_shmemop]; rewrite Hq1,Hq2; reflexivity.
+ - pose proof (IH m H) as Hq; cbn [stack_alloc.comp];
+   destruct (stack_alloc.comp n m p) as [q m1]; exact Hq.
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_alloc.comp FST no_shmemop] in H |- *; try exact H; try reflexivity.
+   destruct o; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_comp_no_install" *)
+Theorem stack_alloc_comp_no_install : forall n m (p : prog a), no_install p -> no_install (FST (stack_alloc.comp n m p)).
+Proof.
+ intros n m p; revert m; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind; intros m H.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + cbn [no_install] in H; apply Bool.andb_true_iff in H as [H1 H2].
+     pose proof (Hr p1 _ eq_refl m H1) as Hq1; cbn [stack_alloc.comp].
+     destruct (stack_alloc.comp n m p1) as [q1 m1]; cbn [FST] in Hq1.
+     destruct h as [[p2 [k1 k2]]|].
+     * pose proof (Hh p2 _ eq_refl m1 H2) as Hq2;
+       destruct (stack_alloc.comp n m1 p2) as [q2 m2]; cbn [FST] in Hq2;
+       cbn [FST no_install]; rewrite Hq1,Hq2; reflexivity.
+     * cbn [FST no_install]; rewrite Hq1; reflexivity.
+   + cbn [stack_alloc.comp FST no_install]; reflexivity.
+ - cbn [no_install] in H; apply Bool.andb_true_iff in H as [H1 H2];
+   pose proof (IH1 m H1) as Hq1; cbn [stack_alloc.comp].
+   destruct (stack_alloc.comp n m p1) as [q1 m1]; cbn [FST] in Hq1.
+   pose proof (IH2 m1 H2) as Hq2; destruct (stack_alloc.comp n m1 p2) as [q2 m2];
+   cbn [FST] in Hq2; cbn [FST no_install]; rewrite Hq1,Hq2; reflexivity.
+ - cbn [no_install] in H; apply Bool.andb_true_iff in H as [H1 H2];
+   pose proof (IH1 m H1) as Hq1; cbn [stack_alloc.comp].
+   destruct (stack_alloc.comp n m p1) as [q1 m1]; cbn [FST] in Hq1.
+   pose proof (IH2 m1 H2) as Hq2; destruct (stack_alloc.comp n m1 p2) as [q2 m2];
+   cbn [FST] in Hq2; cbn [FST no_install]; rewrite Hq1,Hq2; reflexivity.
+ - pose proof (IH m H) as Hq; cbn [stack_alloc.comp];
+   destruct (stack_alloc.comp n m p) as [q m1]; exact Hq.
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_alloc.comp FST no_install] in H |- *; try exact H; try reflexivity.
+   destruct o; reflexivity.
+Qed.
+
+Local Lemma upshift_f_no_shmemop : forall fuel k n, no_shmemop (@stack_remove.upshift_f a fuel k n).
+Proof.
+ induction fuel as [|fuel IH]; intros k n; cbn [stack_remove.upshift_f]; [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); cbn [stack_remove.single_stack_alloc stack_remove.single_stack_free stack_remove.halt_inst no_shmemop]; rewrite ?IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "upshift_no_shmemop" *)
+Theorem upshift_no_shmemop : forall k n, no_shmemop (@stack_remove.upshift a k n).
+Proof. intros; apply upshift_f_no_shmemop. Qed.
+Local Lemma downshift_f_no_shmemop : forall fuel k n, no_shmemop (@stack_remove.downshift_f a fuel k n).
+Proof.
+ induction fuel as [|fuel IH]; intros k n; cbn [stack_remove.downshift_f]; [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); cbn [stack_remove.single_stack_alloc stack_remove.single_stack_free stack_remove.halt_inst no_shmemop]; rewrite ?IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "downshift_no_shmemop" *)
+Theorem downshift_no_shmemop : forall k n, no_shmemop (@stack_remove.downshift a k n).
+Proof. intros; apply downshift_f_no_shmemop. Qed.
+Local Lemma stack_free_f_no_shmemop : forall fuel k n, no_shmemop (@stack_remove.stack_free_f a fuel k n).
+Proof.
+ induction fuel as [|fuel IH]; intros k n; cbn [stack_remove.stack_free_f]; [reflexivity|].
+ destruct (n =? 0); [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); cbn [stack_remove.single_stack_alloc stack_remove.single_stack_free stack_remove.halt_inst no_shmemop]; rewrite ?IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_free_no_shmemop" *)
+Theorem stack_free_no_shmemop : forall k n, no_shmemop (@stack_remove.stack_free a k n).
+Proof. intros; apply stack_free_f_no_shmemop. Qed.
+Local Lemma stack_alloc_f_no_shmemop : forall fuel jump k n, no_shmemop (@stack_remove.stack_alloc_f a fuel jump k n).
+Proof.
+ induction fuel as [|fuel IH]; intros jump k n; cbn [stack_remove.stack_alloc_f]; [reflexivity|].
+ destruct (n =? 0); [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); destruct jump; cbn [stack_remove.single_stack_alloc stack_remove.single_stack_free stack_remove.halt_inst no_shmemop]; rewrite ?IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_no_shmemop" *)
+Theorem stack_alloc_no_shmemop : forall jump k n, no_shmemop (@stack_remove.stack_alloc a jump k n).
+Proof. intros; apply stack_alloc_f_no_shmemop. Qed.
+Local Lemma upshift_f_no_install : forall fuel k n, no_install (@stack_remove.upshift_f a fuel k n).
+Proof.
+ induction fuel as [|fuel IH]; intros k n; cbn [stack_remove.upshift_f]; [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); cbn [stack_remove.single_stack_alloc stack_remove.single_stack_free stack_remove.halt_inst no_install]; rewrite ?IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "upshift_no_install" *)
+Theorem upshift_no_install : forall k n, no_install (@stack_remove.upshift a k n).
+Proof. intros; apply upshift_f_no_install. Qed.
+Local Lemma downshift_f_no_install : forall fuel k n, no_install (@stack_remove.downshift_f a fuel k n).
+Proof.
+ induction fuel as [|fuel IH]; intros k n; cbn [stack_remove.downshift_f]; [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); cbn [stack_remove.single_stack_alloc stack_remove.single_stack_free stack_remove.halt_inst no_install]; rewrite ?IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "downshift_no_install" *)
+Theorem downshift_no_install : forall k n, no_install (@stack_remove.downshift a k n).
+Proof. intros; apply downshift_f_no_install. Qed.
+Local Lemma stack_free_f_no_install : forall fuel k n, no_install (@stack_remove.stack_free_f a fuel k n).
+Proof.
+ induction fuel as [|fuel IH]; intros k n; cbn [stack_remove.stack_free_f]; [reflexivity|].
+ destruct (n =? 0); [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); cbn [stack_remove.single_stack_alloc stack_remove.single_stack_free stack_remove.halt_inst no_install]; rewrite ?IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_free_no_install" *)
+Theorem stack_free_no_install : forall k n, no_install (@stack_remove.stack_free a k n).
+Proof. intros; apply stack_free_f_no_install. Qed.
+Local Lemma stack_alloc_f_no_install : forall fuel jump k n, no_install (@stack_remove.stack_alloc_f a fuel jump k n).
+Proof.
+ induction fuel as [|fuel IH]; intros jump k n; cbn [stack_remove.stack_alloc_f]; [reflexivity|].
+ destruct (n =? 0); [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); destruct jump; cbn [stack_remove.single_stack_alloc stack_remove.single_stack_free stack_remove.halt_inst no_install]; rewrite ?IH; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_no_install" *)
+Theorem stack_alloc_no_install : forall jump k n, no_install (@stack_remove.stack_alloc a jump k n).
+Proof. intros; apply stack_alloc_f_no_install. Qed.
+
+Local Lemma remove_no_shmemop_eq jump off k : forall p : prog a, no_shmemop (stack_remove.comp jump off k p) = no_shmemop p.
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind.
+ - destruct ret as [[p1 [lr [l1 l2]]]|]; destruct h as [[p2 [k1 k2]]|];
+   cbn [stack_remove.comp no_shmemop]; try rewrite (Hr p1 _ eq_refl); try rewrite (Hh p2 _ eq_refl); reflexivity.
+ - cbn [stack_remove.comp no_shmemop]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_remove.comp no_shmemop]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_remove.comp no_shmemop]; exact IH.
+ - destruct p; cbn in Hp; try contradiction;
+   cbn [stack_remove.comp stack_remove.copy_loop stack_remove.copy_each stack_remove.stack_store stack_remove.stack_load list_Seq no_shmemop];
+   repeat match goal with |- context [if ?b then _ else _] => destruct b end;
+   cbn [stack_remove.stack_store stack_remove.stack_load no_shmemop no_install];
+   rewrite ?upshift_no_shmemop, ?downshift_no_shmemop, ?stack_free_no_shmemop, ?stack_alloc_no_shmemop; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_comp_no_shmemop" *)
+Theorem stack_remove_comp_no_shmemop : forall jump off k (p : prog a), no_shmemop p -> no_shmemop (stack_remove.comp jump off k p).
+Proof. intros; rewrite remove_no_shmemop_eq; assumption. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_prog_comp_no_shmemop" *)
+Theorem stack_remove_prog_comp_no_shmemop : forall jump off k n (p : prog a),
+ no_shmemop p -> no_shmemop (SND (stack_remove.prog_comp jump off k (n,p))).
+Proof. intros; apply stack_remove_comp_no_shmemop; assumption. Qed.
+Local Lemma remove_no_install_eq jump off k : forall p : prog a, no_install (stack_remove.comp jump off k p) = no_install p.
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind.
+ - destruct ret as [[p1 [lr [l1 l2]]]|]; destruct h as [[p2 [k1 k2]]|];
+   cbn [stack_remove.comp no_install]; try rewrite (Hr p1 _ eq_refl); try rewrite (Hh p2 _ eq_refl); reflexivity.
+ - cbn [stack_remove.comp no_install]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_remove.comp no_install]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_remove.comp no_install]; exact IH.
+ - destruct p; cbn in Hp; try contradiction;
+   cbn [stack_remove.comp stack_remove.copy_loop stack_remove.copy_each stack_remove.stack_store stack_remove.stack_load list_Seq no_install];
+   repeat match goal with |- context [if ?b then _ else _] => destruct b end;
+   cbn [stack_remove.stack_store stack_remove.stack_load no_shmemop no_install];
+   rewrite ?upshift_no_install, ?downshift_no_install, ?stack_free_no_install, ?stack_alloc_no_install; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_comp_no_install" *)
+Theorem stack_remove_comp_no_install : forall jump off k (p : prog a), no_install p -> no_install (stack_remove.comp jump off k p).
+Proof. intros; rewrite remove_no_install_eq; assumption. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_prog_comp_no_install" *)
+Theorem stack_remove_prog_comp_no_install : forall jump off k n (p : prog a),
+ no_install p -> no_install (SND (stack_remove.prog_comp jump off k (n,p))).
+Proof. intros; apply stack_remove_comp_no_install; assumption. Qed.
+
+Local Lemma safety_map (P : prog a -> bool) (f : N * prog a -> N * prog a) ps :
+ (forall n p, P p -> P (SND (f (n,p)))) ->
+ EVERY (fun '(n,p) => P p) ps -> EVERY (fun '(n,p) => P p) (MAP f ps).
+Proof.
+ intros Hf H; apply EVERY_Forall; rewrite Forall_map.
+ eapply Forall_impl; [|apply EVERY_Forall; exact H].
+ intros [n p] Hp; pose proof (Hf n p Hp) as Hq; destruct (f (n,p)); exact Hq.
+Qed.
+Local Lemma safety_append (P : prog a -> bool) (xs ys : list (N * prog a)) :
+ EVERY (fun '(n,p) => P p) xs -> EVERY (fun '(n,p) => P p) ys -> EVERY (fun '(n,p) => P p) (xs ++ ys).
+Proof. intros; apply EVERY_Forall, Forall_app; split; apply EVERY_Forall; assumption. Qed.
+Local Lemma gc_code_no_shmemop dc : no_shmemop (@stack_alloc.word_gc_code a dc).
+Proof. unfold stack_alloc.word_gc_code. destruct (data_to_word.gc_kind dc) as [| |sizes]; try destruct sizes; cbn [stack_alloc.memcpy_code stack_alloc.clear_top_inst stack_alloc.word_gc_move_code stack_alloc.word_gc_move_list_code stack_alloc.word_gc_move_loop_code stack_alloc.word_gc_move_bitmap_code stack_alloc.word_gc_move_bitmaps_code stack_alloc.word_gc_move_roots_bitmaps_code stack_alloc.word_gen_gc_move_code stack_alloc.word_gen_gc_partial_move_code stack_alloc.word_gen_gc_move_bitmap_code stack_alloc.word_gen_gc_partial_move_bitmap_code stack_alloc.word_gen_gc_move_bitmaps_code stack_alloc.word_gen_gc_partial_move_bitmaps_code stack_alloc.word_gen_gc_move_roots_bitmaps_code stack_alloc.word_gen_gc_partial_move_roots_bitmaps_code stack_alloc.word_gen_gc_move_list_code stack_alloc.word_gen_gc_partial_move_list_code stack_alloc.word_gen_gc_move_data_code stack_alloc.word_gen_gc_partial_move_ref_list_code stack_alloc.word_gen_gc_partial_move_data_code stack_alloc.word_gen_gc_move_refs_code stack_alloc.word_gen_gc_move_loop_code stack_alloc.word_gc_partial_or_full stack_alloc.SetNewTrigger stack_alloc.word_gc_code no_shmemop list_Seq APPEND]; reflexivity. Qed.
+Local Transparent stack_remove.init_code stack_remove.store_list_code.
+Local Lemma stores_no_shmemop ad t (ls : list (word a + N)) : no_shmemop (stack_remove.store_list_code ad t ls).
+Proof. induction ls as [|[w|r] ls IH]; cbn [stack_remove.store_list_code no_shmemop list_Seq]; rewrite ?IH; reflexivity. Qed.
+Local Opaque stack_remove.store_list_code.
+Local Lemma init_no_shmemop ggc mh k : no_shmemop (@stack_remove.init_code a ggc mh k).
+Proof. unfold stack_remove.init_code; cbv zeta; cbn [no_shmemop list_Seq];
+ unfold stack_remove.init_memory; cbn [no_shmemop list_Seq]; rewrite stores_no_shmemop; reflexivity. Qed.
+Local Opaque stack_remove.init_code.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_compile_no_shmemop" *)
+Theorem stack_rawcall_compile_no_shmemop : forall ps : list (N * prog a),
+ EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (stack_rawcall.compile ps).
+Proof. intros; unfold stack_rawcall.compile; apply safety_map; [intros; apply stack_rawcall_comp_top_no_shmemop; assumption|assumption]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_prog_comp_no_shmemop" *)
+Theorem stack_alloc_prog_comp_no_shmemop : forall ps : list (N * prog a),
+ EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (MAP stack_alloc.prog_comp ps).
+Proof. intros; apply safety_map; [intros; apply stack_alloc_comp_no_shmemop; assumption|assumption]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_compile_no_shmemop" *)
+Theorem stack_alloc_compile_no_shmemop : forall dc (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (stack_alloc.compile dc ps).
+Proof.
+ intros dc ps H; unfold stack_alloc.compile; apply safety_append; [|apply stack_alloc_prog_comp_no_shmemop; exact H].
+ unfold stack_alloc.stubs; cbn [EVERY no_shmemop]; rewrite gc_code_no_shmemop; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_prog_comp_no_shmemop_MAP" *)
+Theorem stack_remove_prog_comp_no_shmemop_MAP : forall jump off sp (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (MAP (stack_remove.prog_comp jump off sp) ps).
+Proof. intros; apply safety_map; [intros; apply stack_remove_comp_no_shmemop; assumption|assumption]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_compile_no_shmemop" *)
+Theorem stack_remove_compile_no_shmemop : forall jump off ggc mh sp loc (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (stack_remove.compile jump off ggc mh sp loc ps).
+Proof.
+ intros jump off ggc mh sp loc ps H; unfold stack_remove.compile; apply safety_append; [|apply stack_remove_prog_comp_no_shmemop_MAP; exact H].
+ unfold stack_remove.init_stubs; cbn [EVERY no_shmemop stack_remove.halt_inst]; rewrite init_no_shmemop; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_prog_comp_no_shmemop" *)
+Theorem stack_names_prog_comp_no_shmemop : forall f (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (MAP (stack_names.prog_comp f) ps).
+Proof. intros; apply safety_map; [intros; apply stack_names_comp_no_shmemop; assumption|assumption]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_compile_no_shmemop" *)
+Theorem stack_names_compile_no_shmemop : forall f (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (stack_names.compile f ps).
+Proof. intros; apply stack_names_prog_comp_no_shmemop; assumption. Qed.
+Local Lemma gc_code_no_install dc : no_install (@stack_alloc.word_gc_code a dc).
+Proof. unfold stack_alloc.word_gc_code. destruct (data_to_word.gc_kind dc) as [| |sizes]; try destruct sizes; cbn [stack_alloc.memcpy_code stack_alloc.clear_top_inst stack_alloc.word_gc_move_code stack_alloc.word_gc_move_list_code stack_alloc.word_gc_move_loop_code stack_alloc.word_gc_move_bitmap_code stack_alloc.word_gc_move_bitmaps_code stack_alloc.word_gc_move_roots_bitmaps_code stack_alloc.word_gen_gc_move_code stack_alloc.word_gen_gc_partial_move_code stack_alloc.word_gen_gc_move_bitmap_code stack_alloc.word_gen_gc_partial_move_bitmap_code stack_alloc.word_gen_gc_move_bitmaps_code stack_alloc.word_gen_gc_partial_move_bitmaps_code stack_alloc.word_gen_gc_move_roots_bitmaps_code stack_alloc.word_gen_gc_partial_move_roots_bitmaps_code stack_alloc.word_gen_gc_move_list_code stack_alloc.word_gen_gc_partial_move_list_code stack_alloc.word_gen_gc_move_data_code stack_alloc.word_gen_gc_partial_move_ref_list_code stack_alloc.word_gen_gc_partial_move_data_code stack_alloc.word_gen_gc_move_refs_code stack_alloc.word_gen_gc_move_loop_code stack_alloc.word_gc_partial_or_full stack_alloc.SetNewTrigger stack_alloc.word_gc_code no_install list_Seq APPEND]; reflexivity. Qed.
+Local Transparent stack_remove.init_code stack_remove.store_list_code.
+Local Lemma stores_no_install ad t (ls : list (word a + N)) : no_install (stack_remove.store_list_code ad t ls).
+Proof. induction ls as [|[w|r] ls IH]; cbn [stack_remove.store_list_code no_install list_Seq]; rewrite ?IH; reflexivity. Qed.
+Local Opaque stack_remove.store_list_code.
+Local Lemma init_no_install ggc mh k : no_install (@stack_remove.init_code a ggc mh k).
+Proof. unfold stack_remove.init_code; cbv zeta; cbn [no_install list_Seq];
+ unfold stack_remove.init_memory; cbn [no_install list_Seq]; rewrite stores_no_install; reflexivity. Qed.
+Local Opaque stack_remove.init_code.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_compile_no_install" *)
+Theorem stack_rawcall_compile_no_install : forall ps : list (N * prog a),
+ EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (stack_rawcall.compile ps).
+Proof. intros; unfold stack_rawcall.compile; apply safety_map; [intros; apply stack_rawcall_comp_top_no_install; assumption|assumption]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_prog_comp_no_install" *)
+Theorem stack_alloc_prog_comp_no_install : forall ps : list (N * prog a),
+ EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (MAP stack_alloc.prog_comp ps).
+Proof. intros; apply safety_map; [intros; apply stack_alloc_comp_no_install; assumption|assumption]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_compile_no_install" *)
+Theorem stack_alloc_compile_no_install : forall dc (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (stack_alloc.compile dc ps).
+Proof.
+ intros dc ps H; unfold stack_alloc.compile; apply safety_append; [|apply stack_alloc_prog_comp_no_install; exact H].
+ unfold stack_alloc.stubs; cbn [EVERY no_install]; rewrite gc_code_no_install; reflexivity.
+Qed.
+Local Lemma stack_remove_prog_comp_no_install_MAP : forall jump off sp (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (MAP (stack_remove.prog_comp jump off sp) ps).
+Proof. intros; apply safety_map; [intros; apply stack_remove_comp_no_install; assumption|assumption]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_compile_no_install" *)
+Theorem stack_remove_compile_no_install : forall jump off ggc mh sp loc (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (stack_remove.compile jump off ggc mh sp loc ps).
+Proof.
+ intros jump off ggc mh sp loc ps H; unfold stack_remove.compile; apply safety_append; [|apply stack_remove_prog_comp_no_install_MAP; exact H].
+ unfold stack_remove.init_stubs; cbn [EVERY no_install stack_remove.halt_inst]; rewrite init_no_install; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_prog_comp_no_install" *)
+Theorem stack_names_prog_comp_no_install : forall f (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (MAP (stack_names.prog_comp f) ps).
+Proof. intros; apply safety_map; [intros; apply stack_names_comp_no_install; assumption|assumption]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_compile_no_install" *)
+Theorem stack_names_compile_no_install : forall f (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (stack_names.compile f ps).
+Proof. intros; apply stack_names_prog_comp_no_install; assumption. Qed.
+
+Local Definition no_share_line (ln : line a) := forall op re ad inst len, ln <> Asm (ShareMem op re ad) inst len.
+Local Definition no_install_line (ln : line a) := forall w bytes l, ln <> LabAsm labLang.Install w bytes l.
+Local Lemma safety_every (P : line a -> Prop) xs :
+ EVERY (fun ln => bool_decide (P ln)) xs <-> Forall P xs.
+Proof. change (EVERY (fun ln => bool_decide (P ln)) xs = true <-> Forall P xs); rewrite EVERY_Forall; split.
+ - intro H; eapply Forall_impl; [|exact H]; intros ln Hl; exact (proj1 (bool_decide_spec (P ln)) Hl).
+ - intro H; eapply Forall_impl; [|exact H]; intros ln Hl; exact (proj2 (bool_decide_spec (P ln)) Hl).
+Qed.
+Local Ltac safety_lines := cbn [FST andb]; rewrite ?append_Append, ?append_List; rewrite ?Forall_app;
+ repeat split; try assumption; repeat constructor; unfold no_share_line, no_install_line; intros; discriminate.
+Local Lemma flatten_no_shmemop_safe : forall p : prog a, forall t n m cs bs,
+ no_shmemop p -> Forall no_share_line (append (FST (flatten t p n m cs bs))).
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind; intros t n m cs bs H.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + cbn [no_shmemop] in H; apply Bool.andb_true_iff in H as [H1 H2].
+     pose proof (Hr p1 _ eq_refl false n m cs bs H1) as Hq1; cbn [flatten].
+     destruct (flatten false p1 n m cs bs) as [q1 [nr1 m1]]; cbn [FST] in Hq1.
+     destruct h as [[p2 [k1 k2]]|].
+     * pose proof (Hh p2 _ eq_refl false n m1 cs bs H2) as Hq2;
+       destruct (flatten false p2 n m1 cs bs) as [q2 [nr2 m2]]; cbn [FST] in Hq2;
+       destruct dest; unfold compile_jump; safety_lines.
+     * destruct dest; unfold compile_jump; safety_lines.
+   + cbn [flatten]; destruct dest; unfold compile_jump; safety_lines.
+ - cbn [no_shmemop] in H; apply Bool.andb_true_iff in H as [H1 H2];
+   pose proof (IH1 false n m cs bs H1) as Hq1; cbn [flatten].
+   destruct (flatten false p1 n m cs bs) as [q1 [nr1 m1]]; cbn [FST] in Hq1.
+   pose proof (IH2 false n m1 cs bs H2) as Hq2;
+   destruct (flatten false p2 n m1 cs bs) as [q2 [nr2 m2]]; cbn [FST] in Hq2;
+   destruct t; safety_lines.
+ - cbn [no_shmemop] in H; apply Bool.andb_true_iff in H as [H1 H2];
+   pose proof (IH1 false n m cs bs H1) as Hq1; cbn [flatten].
+   destruct (flatten false p1 n m cs bs) as [q1 [nr1 m1]]; cbn [FST] in Hq1.
+   pose proof (IH2 false n m1 cs bs H2) as Hq2;
+   destruct (flatten false p2 n m1 cs bs) as [q2 [nr2 m2]]; cbn [FST] in Hq2;
+   destruct (is_Skip p1), (is_Skip p2), nr1,nr2; safety_lines.
+ - pose proof (IH false n (m+2) (m::cs) ((m+1)::bs) H) as Hq;
+   cbn [flatten]; destruct (flatten false p n (m+2) (m::cs) ((m+1)::bs)) as [q [nr m1]];
+   cbn [FST] in Hq; safety_lines.
+ - destruct p; cbn in Hp; try contradiction; cbn [no_shmemop] in H; try discriminate;
+   cbn [flatten]; safety_lines.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "flatten_no_share_mem_inst" *)
+Theorem flatten_no_share_mem_inst : forall t (p : prog a) n m cs bs,
+ no_shmemop p -> EVERY (fun ln => bool_decide (forall op re ad inst len, ln <> Asm (ShareMem op re ad) inst len)) (append (FST (flatten t p n m cs bs))).
+Proof. intros; apply safety_every; apply flatten_no_shmemop_safe; assumption. Qed.
+Local Lemma flatten_no_install_safe : forall p : prog a, forall t n m cs bs,
+ no_install p -> Forall no_install_line (append (FST (flatten t p n m cs bs))).
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind; intros t n m cs bs H.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + cbn [no_install] in H; apply Bool.andb_true_iff in H as [H1 H2].
+     pose proof (Hr p1 _ eq_refl false n m cs bs H1) as Hq1; cbn [flatten].
+     destruct (flatten false p1 n m cs bs) as [q1 [nr1 m1]]; cbn [FST] in Hq1.
+     destruct h as [[p2 [k1 k2]]|].
+     * pose proof (Hh p2 _ eq_refl false n m1 cs bs H2) as Hq2;
+       destruct (flatten false p2 n m1 cs bs) as [q2 [nr2 m2]]; cbn [FST] in Hq2;
+       destruct dest; unfold compile_jump; safety_lines.
+     * destruct dest; unfold compile_jump; safety_lines.
+   + cbn [flatten]; destruct dest; unfold compile_jump; safety_lines.
+ - cbn [no_install] in H; apply Bool.andb_true_iff in H as [H1 H2];
+   pose proof (IH1 false n m cs bs H1) as Hq1; cbn [flatten].
+   destruct (flatten false p1 n m cs bs) as [q1 [nr1 m1]]; cbn [FST] in Hq1.
+   pose proof (IH2 false n m1 cs bs H2) as Hq2;
+   destruct (flatten false p2 n m1 cs bs) as [q2 [nr2 m2]]; cbn [FST] in Hq2;
+   destruct t; safety_lines.
+ - cbn [no_install] in H; apply Bool.andb_true_iff in H as [H1 H2];
+   pose proof (IH1 false n m cs bs H1) as Hq1; cbn [flatten].
+   destruct (flatten false p1 n m cs bs) as [q1 [nr1 m1]]; cbn [FST] in Hq1.
+   pose proof (IH2 false n m1 cs bs H2) as Hq2;
+   destruct (flatten false p2 n m1 cs bs) as [q2 [nr2 m2]]; cbn [FST] in Hq2;
+   destruct (is_Skip p1), (is_Skip p2), nr1,nr2; safety_lines.
+ - pose proof (IH false n (m+2) (m::cs) ((m+1)::bs) H) as Hq;
+   cbn [flatten]; destruct (flatten false p n (m+2) (m::cs) ((m+1)::bs)) as [q [nr m1]];
+   cbn [FST] in Hq; safety_lines.
+ - destruct p; cbn in Hp; try contradiction; cbn [no_install] in H; try discriminate;
+   cbn [flatten]; safety_lines.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "flatten_no_install" *)
+Theorem flatten_no_install : forall t (p : prog a) n m cs bs,
+ no_install p -> EVERY (fun ln => bool_decide (forall w bytes l, ln <> LabAsm labLang.Install w bytes l)) (append (FST (flatten t p n m cs bs))).
+Proof. intros; apply safety_every; apply flatten_no_install_safe; assumption. Qed.
+
+Local Lemma fetch_safe_cons (P : line a -> Prop) xs k ls :
+ Forall P xs -> (forall pos ln, asm_fetch_aux pos ls = SOME ln -> P ln) ->
+ forall pos ln, asm_fetch_aux pos (Section_ k xs :: ls) = SOME ln -> P ln.
+Proof.
+ intros Hp Hls; induction Hp as [|x xs Hx Hxs IH]; intros pos ln E.
+ - apply (Hls pos ln); exact E.
+ - cbn [asm_fetch_aux] in E; destruct (is_Label x); [apply (IH pos ln); exact E|].
+   destruct (pos =? 0); [injection E as <-; exact Hx|apply (IH (pos-1) ln); exact E].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "asm_fetch_aux_no_share_mem_inst_CONS" *)
+Theorem asm_fetch_aux_no_share_mem_inst_CONS : forall (xs : list (line a)) k ls,
+ EVERY (fun ln => bool_decide (forall op re ad inst len, ln <> Asm (ShareMem op re ad) inst len)) xs /\ labProps.no_share_mem_inst ls -> labProps.no_share_mem_inst (Section_ k xs :: ls).
+Proof.
+ intros xs k ls [Hp Hls] pos op re ad inst len E; apply safety_every in Hp.
+ assert (Ht : forall pos ln, asm_fetch_aux pos ls = SOME ln -> no_share_line ln).
+ { intros pos0 ln El op0 re0 ad0 inst0 len0 He; subst ln; exact (Hls pos0 op0 re0 ad0 inst0 len0 El). }
+ pose proof (fetch_safe_cons no_share_line xs k ls Hp Ht pos _ E) as Hbad.
+ exact (Hbad op re ad inst len eq_refl).
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "prog_to_section_no_share_mem_inst" *)
+Theorem prog_to_section_no_share_mem_inst : forall ps : list (N * prog a),
+ EVERY (fun '(n,p) => no_shmemop p) ps -> labProps.no_share_mem_inst (MAP prog_to_section ps).
+Proof.
+ induction ps as [|[n p] ps IH]; intros H; cbn [EVERY MAP] in H |- *.
+ - unfold labProps.no_share_mem_inst; intros; discriminate.
+ - apply Bool.andb_true_iff in H as [Hp Hps]; specialize (IH Hps).
+   unfold prog_to_section; destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [ls [nr m]] eqn:E.
+   apply asm_fetch_aux_no_share_mem_inst_CONS; split; [|exact IH].
+   apply safety_every; rewrite append_Append, append_List; apply Forall_app; split.
+   + pose proof (flatten_no_shmemop_safe p true n (stack_alloc.next_lab p 2) [] [] Hp) as Hf.
+     rewrite E in Hf; exact Hf.
+   + constructor; [unfold no_share_line; intros; discriminate|constructor].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "compile_no_share_mem_inst" *)
+Theorem compile_no_share_mem_inst : forall sc dc mh sp off (ps : list (N * prog a)) ps',
+ EVERY (fun '(n,p) => no_shmemop p) ps /\ stack_to_lab.compile sc dc mh sp off ps = ps' -> labProps.no_share_mem_inst ps'.
+Proof.
+ intros sc dc mh sp off ps ps' [H <-]; unfold stack_to_lab.compile; apply prog_to_section_no_share_mem_inst;
+ apply stack_names_compile_no_shmemop; apply stack_remove_compile_no_shmemop; apply stack_alloc_compile_no_shmemop; apply stack_rawcall_compile_no_shmemop; exact H.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "compile_no_stubs_no_share_mem_inst" *)
+Theorem compile_no_stubs_no_share_mem_inst : forall f jump off sp (ps : list (N * prog a)) ps',
+ EVERY (fun '(n,p) => no_shmemop p) ps /\ stack_to_lab.compile_no_stubs f jump off sp ps = ps' -> labProps.no_share_mem_inst ps'.
+Proof.
+ intros f jump off sp ps ps' [H <-]; unfold stack_to_lab.compile_no_stubs; apply prog_to_section_no_share_mem_inst;
+ apply stack_names_compile_no_shmemop; apply stack_remove_prog_comp_no_shmemop_MAP; apply stack_alloc_prog_comp_no_shmemop; exact H.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "asm_fetch_aux_no_install_CONS" *)
+Theorem asm_fetch_aux_no_install_CONS : forall (xs : list (line a)) k ls,
+ EVERY (fun ln => bool_decide (forall w bytes l, ln <> LabAsm labLang.Install w bytes l)) xs /\ labProps.no_install ls -> labProps.no_install (Section_ k xs :: ls).
+Proof.
+ intros xs k ls [Hp Hls] pos w bytes l E; apply safety_every in Hp.
+ assert (Ht : forall pos ln, asm_fetch_aux pos ls = SOME ln -> no_install_line ln).
+ { intros pos0 ln El w0 bytes0 l0 He; subst ln; exact (Hls pos0 w0 bytes0 l0 El). }
+ pose proof (fetch_safe_cons no_install_line xs k ls Hp Ht pos _ E) as Hbad.
+ exact (Hbad w bytes l eq_refl).
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "prog_to_section_no_install" *)
+Theorem prog_to_section_no_install : forall ps : list (N * prog a),
+ EVERY (fun '(n,p) => no_install p) ps -> labProps.no_install (MAP prog_to_section ps).
+Proof.
+ induction ps as [|[n p] ps IH]; intros H; cbn [EVERY MAP] in H |- *.
+ - unfold labProps.no_install; intros; discriminate.
+ - apply Bool.andb_true_iff in H as [Hp Hps]; specialize (IH Hps).
+   unfold prog_to_section; destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [ls [nr m]] eqn:E.
+   apply asm_fetch_aux_no_install_CONS; split; [|exact IH].
+   apply safety_every; rewrite append_Append, append_List; apply Forall_app; split.
+   + pose proof (flatten_no_install_safe p true n (stack_alloc.next_lab p 2) [] [] Hp) as Hf.
+     rewrite E in Hf; exact Hf.
+   + constructor; [unfold no_install_line; intros; discriminate|constructor].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_to_lab_compile_no_install" *)
+Theorem stack_to_lab_compile_no_install : forall sc dc mh sp off (ps : list (N * prog a)) ps',
+ EVERY (fun '(n,p) => no_install p) ps /\ stack_to_lab.compile sc dc mh sp off ps = ps' -> labProps.no_install ps'.
+Proof.
+ intros sc dc mh sp off ps ps' [H <-]; unfold stack_to_lab.compile; apply prog_to_section_no_install;
+ apply stack_names_compile_no_install; apply stack_remove_compile_no_install; apply stack_alloc_compile_no_install; apply stack_rawcall_compile_no_install; exact H.
+Qed.
+End Safety.
