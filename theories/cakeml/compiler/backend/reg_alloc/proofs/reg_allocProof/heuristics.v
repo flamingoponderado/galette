@@ -7,7 +7,11 @@
 
     HOL states some of these lemmas with a vacuous existential ([∃s' b.]
     where [b] does not occur, or [?ts fs.] where [fs] does not occur) or a
-    vacuous universal; the unused variables are omitted here. *)
+    vacuous universal; the unused variables are omitted here.
+
+    HOL's [st_ex_FIRST_consistency_ok_bg_ok] fixes the move priority to
+    [num] ([λ(p:num,x,y). ...]); the Rocq statement quantifies over an
+    arbitrary priority type [A], so it is strictly more general. *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.

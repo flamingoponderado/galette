@@ -12,6 +12,8 @@
     - HOL's [s with <|locals := l; clock := c|>] is
       [set_clock c (set_locals l s)]; HOL's [x ∈ domain t] is
       [x IN domain t].
+    - HOL quantifies the unused variable [l] in [get_vars_clock_upd_eq];
+      the Rocq statement drops it.
 
     Proof method: HOL's [recInduct evaluate_ind] is well-founded induction
     on [eval_lt] ([loopSem]); one step of [evaluate] is unfolded with

@@ -11,7 +11,14 @@
       only totality is needed);
     - [with_f s v] is HOL's record update [s with f := v] on [ra_state];
     - generic list lemmas ([EL]/[LUPDATE]/[GENLIST]/...) and monadic bind
-      lemmas used by the proofs. *)
+      lemmas used by the proofs.
+
+    Statement notes:
+    - HOL quantifies the unused variable [v] in [Msub_eqn]; the Rocq
+      statement drops it.
+    - HOL's theorems [coalesced_sub] and [move_related_sub] are
+      [coalesced_sub_thm] and [move_related_sub_thm] here, because the
+      names are taken by the accessor constants. *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.

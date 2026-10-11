@@ -7,7 +7,14 @@
     [evaluate_eqn] and [fix_clock_evaluate], and its [match]es are split by
     the guarded loops below.  The Galette-only helpers at the top of this
     file (nested induction on [exp], state-update commutations, the
-    case-splitting tactics) have no HOL original. *)
+    case-splitting tactics) have no HOL original.
+
+    Statement notes:
+    - HOL quantifies the unused variable [v'] in
+      [fdoms_eq_flookup_some_none]; the Rocq statement drops it.
+    - HOL's theorem [is_wf_shape_v_nil] (line 56) is [is_wf_shape_v_nil_thm]
+      here, because the name is taken by HOL's overload [is_wf_shape_v_nil]
+      (line 36), ported as an abbreviation. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.

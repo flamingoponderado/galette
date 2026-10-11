@@ -17,7 +17,11 @@
 
     The target record [riscv_target] (with [riscv_next], [riscv_ok],
     [riscv_proj]) is at the end.  Not ported: the generated rewrites
-    [riscv_config], [riscv_asm_ok] (theorems computed by [asmLib]). *)
+    [riscv_config], [riscv_asm_ok] (theorems computed by [asmLib]).
+
+    HOL's [riscv_proj] returns a right-nested tuple [(a, (b, (c, ...)))];
+    the Rocq tuple [(a, b, c, ...)] of type [word5 * word2 * ...] is
+    left-nested.  The seven components are the same and in the same order. *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.n_bit Require Import words.
