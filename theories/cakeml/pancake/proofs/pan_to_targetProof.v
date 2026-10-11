@@ -1,8 +1,7 @@
 (** * Correctness of the Pancake-to-target composition.
     Port of [cakeml/pancake/proofs/pan_to_targetProofScript.sml].
     All declarations preceding [pan_to_target_compile_semantics] are ported.
-    The final composition still needs the unported [IMP_init_state_ok] /
-    [IMP_init_store_ok] and [data_to_word_gcProof] dependencies.
+    The final [pan_to_target_compile_semantics] composition is in progress.
     HOL's [PERMUTES] is [BIJ f UNIV UNIV]; quantified predicates inside
     boolean [EVERY] are reflected using [bool_decide]. *)
 From Galette Require Import Base Classical.
@@ -1251,3 +1250,95 @@ Local Abbreviation divides := N.divide.
 Local Theorem aligned_n2w_IMP k n : aligned k (n2w n : word a) /\ n < dimword a -> divides (2 ** k) n.
 Proof. intros [Ha Hn]; apply aligned_w2n in Ha; rewrite w2n_n2w, (N.mod_small n (dimword a) Hn) in Ha; apply N.Div0.mod_divides in Ha as [q Hq]; exists q; nia. Qed.
 End ArithmeticFinal.
+
+From Galette.cakeml.semantics.proofs Require Import semanticsProps.
+
+(** Composition through the resource-limit predicate (Galette helper). *)
+Local Lemma compose_resource_precise (M : behaviour -> Prop) lab w precise_source precise_word :
+ implements' true M (fun b => b = lab) ->
+ extend_with_resource_limit' precise_word (fun b => b = w) lab ->
+ (is_true precise_source -> is_true precise_word) -> w <> Fail ->
+ M SUBSET extend_with_resource_limit' precise_source (fun b => b = w).
+Proof.
+ intros HM HL HB HF.
+ assert (HLF : lab <> Fail).
+ { intros ->; unfold extend_with_resource_limit' in HL; destruct precise_word;
+   unfold extend_with_resource_limit, pred_set.UNION, pred_set.IN in HL;
+   firstorder congruence. }
+ specialize (HM ltac:(unfold pred_set.IN; congruence)).
+ unfold implements', extend_with_resource_limit' in HM; cbn in HM.
+ unfold pred_set.SUBSET, pred_set.IN in *.
+ intros b HMb; specialize (HM b HMb); subst b.
+ destruct precise_source, precise_word; cbn in *; try solve [pose proof (HB eq_refl); discriminate]; try exact HL.
+ unfold extend_with_resource_limit, pred_set.UNION, pred_set.IN; left; left; exact HL.
+Qed.
+
+(** Proof infrastructure for the final HOL composition. *)
+Local Lemma lab_good_code_nil {a : N} {X : Type} (ac : asm_config a) (labs : spt (spt X)) : basic.good_code ac labs [].
+Proof.
+ unfold basic.good_code; cbn [EVERY ALL_DISTINCT MAP].
+ repeat match goal with |- _ /\ _ => split end; try reflexivity.
+ - unfold DISJOINT, pred_set.INTER, pred_set.EMPTY, set, pred_set.IN; cbn [In].
+   apply functional_extensionality; intros x; apply propositional_extensionality; tauto.
+ - unfold pred_set.SUBSET, pred_set.IN, backendProps.restrict_nonzero, labProps.get_labels, pred_set.BIGUNION, pred_set.IMAGE, set; cbn [MAP FLAT In].
+   intros [x y] H; firstorder.
+Qed.
+
+Local Lemma STAR_same_memory {A B} (p q : (A * B -> Prop) -> Prop) (m : A -> B) d1 d2 :
+ p (fun2set (m,d1)) -> q (fun2set (m,d2)) -> DISJOINT d1 d2 ->
+ STAR p q (fun2set (m,d1 UNION d2)).
+Proof.
+ intros HP HQ HD; unfold STAR; exists (fun2set (m,d1)), (fun2set (m,d2)).
+ split; [|auto]; unfold SPLIT; cbn beta iota zeta; split.
+ - apply functional_extensionality; intros [x v]; apply propositional_extensionality;
+   unfold pred_set.UNION, pred_set.IN; rewrite !fun2set_thm; unfold pred_set.UNION, pred_set.IN; tauto.
+ - apply (proj2 (DISJOINT_iff _ _)); pose proof (proj1 (DISJOINT_iff d1 d2) HD) as HDn; intros [x v].
+   rewrite !fun2set_thm; unfold pred_set.IN; specialize (HDn x); tauto.
+Qed.
+
+From Galette.cakeml.pancake.proofs Require pan_globalsProof.
+
+Section Interval.
+Context {a : N}.
+Local Open Scope word_scope.
+Local Lemma aligned_interval_addresses (lo hi : word a) :
+ good_dimindex a -> byte_aligned lo -> byte_aligned hi -> lo <=+ hi ->
+ (fun x => lo <=+ x /\ x <+ hi /\ byte_aligned x) =
+ stack_removeProof.addresses lo (w2n (hi-lo) DIV (dimindex a DIV 8)).
+Proof.
+ intros HG HA HB Hle.
+ pose proof (stack_removeProof.byte_aligned_mod lo HG HA) as EA.
+ pose proof (stack_removeProof.byte_aligned_mod hi HG HB) as EB.
+ apply WORD_LS in Hle.
+ set (d := dimindex a DIV 8) in *.
+ assert (Hd : d <> 0%N) by (unfold d; destruct HG as [E|E]; rewrite E; discriminate).
+ apply N.Div0.mod_divides in EA as [qa EA].
+ apply N.Div0.mod_divides in EB as [qb EB].
+ assert (Hcount : w2n (hi-lo) DIV d = (qb-qa)%N).
+ { rewrite <- (n2w_w2n hi) at 1; rewrite <- (n2w_w2n lo) at 1.
+   rewrite stack_removeProof.n2w_sub_N by exact Hle; rewrite stack_removeProof.w2n_n2w_lt by (pose proof (w2n_lt hi); lia).
+   rewrite EA, EB, <- N.mul_sub_distr_l, N.mul_comm, N.div_mul by exact Hd; reflexivity. }
+ rewrite Hcount, stack_removeProof.addresses_thm.
+ apply functional_extensionality; intros x; apply propositional_extensionality; split.
+ - intros (Hlox & Hxhi & Hax).
+   apply WORD_LS in Hlox; apply WORD_LO in Hxhi.
+   pose proof (stack_removeProof.byte_aligned_mod x HG Hax) as EX; fold d in EX.
+   apply N.Div0.mod_divides in EX as [qx EX].
+   exists (qx-qa)%N; split; [|nia].
+   rewrite <- (n2w_w2n x) at 1; rewrite <- (n2w_w2n lo) at 1.
+   rewrite (stack_removeProof.bw_d HG), word_mul_n2w, word_add_n2w; f_equal; rewrite EA, EX; nia.
+ - intros (i & HX & Hi); split.
+   + apply WORD_LS.
+     assert (Hval : w2n x = (w2n lo + i*d)%N).
+     { rewrite HX, (stack_removeProof.bw_d HG); rewrite <- (n2w_w2n lo) at 1; rewrite word_mul_n2w, word_add_n2w.
+       apply stack_removeProof.w2n_n2w_lt; rewrite EA; pose proof (w2n_lt hi); rewrite EB in H; nia. }
+     rewrite Hval; lia.
+   + split.
+     * apply WORD_LO.
+       rewrite HX, (stack_removeProof.bw_d HG); rewrite <- (n2w_w2n lo) at 1; rewrite word_mul_n2w, word_add_n2w.
+       rewrite stack_removeProof.w2n_n2w_lt by (pose proof (w2n_lt hi); rewrite EA, EB in *; nia).
+       rewrite EA, EB; nia.
+     * rewrite HX; apply byte_aligned_add; split; [exact HA|].
+       rewrite WORD_MULT_COMM; apply pan_globalsProof.byte_aligned_bytes_in_word_mul; exact HG.
+Qed.
+End Interval.
