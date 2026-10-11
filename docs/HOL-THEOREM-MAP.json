@@ -25060,6 +25060,106 @@
   "rocq_name": "ws_to_display"
  },
  {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "backend_config_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "backend_config_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "byte_aligned_MOD",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "byte_aligned_MOD"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "compile_lab_IMP_mmio_pcs_min_index",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "compile_lab_IMP_mmio_pcs_min_index"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "compile_lab_LENGTH",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "compile_lab_LENGTH"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "compile_to_word_conventions2",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "compile_to_word_conventions2"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "compile_word_to_stack_sfs_aux",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "compile_word_to_stack_sfs_aux"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "heap_regs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "heap_regs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "mc_init_ok_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "mc_init_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "read_limits_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "read_limits"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/backendProofScript.sml",
+  "hol_name": "word_list_exists_imp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/backendProof.v",
+  "rocq_name": "word_list_exists_imp"
+ },
+ {
   "hol_path": "cakeml/compiler/backend/proofs/lab_filterProofScript.sml",
   "hol_name": "adjust_pc_all_skips",
   "hol_line": null,
