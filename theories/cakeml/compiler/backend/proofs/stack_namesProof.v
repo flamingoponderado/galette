@@ -233,8 +233,8 @@ Context {a : N} {cfg_t ffi_t : Type}.
 Implicit Types s : state a cfg_t ffi_t.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_namesProofScript.sml" "prog_comp_eta" *)
-Local Theorem prog_comp_eta : forall f,
-  @prog_comp a f = fun '(x, y) => (x, stack_names.comp f y).
+Local Theorem prog_comp_eta : forall {K : Type} f,
+  @prog_comp a K f = fun '(x, y) => (x, stack_names.comp f y).
 Proof. reflexivity. Qed.
 
 Lemma lookup_rename_code f (cd : sptree.spt (prog a)) p :
@@ -245,7 +245,7 @@ Proof.
   rewrite ALOOKUP_MAP; cbn; rewrite sptree.ALOOKUP_toAList; reflexivity.
 Qed.
 
-Lemma find_code_rename_gen f dest (m : fmap N (word_loc a)) cd :
+Lemma find_code_rename_gen f dest (m : fmap N (word_loc a)) (cd : sptree.spt (prog a)) :
   BIJ (find_name f) UNIV UNIV ->
   find_code (dest_find_name f dest) (MAP_KEYS (find_name f) m)
     (sptree.fromAList (stack_names.compile f (sptree.toAList cd))) =
@@ -439,7 +439,7 @@ Lemma R_oracle s :
 Proof. reflexivity. Qed.
 Lemma R_compile_nil : stack_names.compile f ([] : list (N * prog a)) = [].
 Proof. reflexivity. Qed.
-Lemma R_compile_cons k (p : prog a) l :
+Lemma R_compile_cons (k : N) (p : prog a) l :
   stack_names.compile f ((k, p) :: l) = (k, stack_names.comp f p) :: stack_names.compile f l.
 Proof. reflexivity. Qed.
 Lemma R_shift_FST k i (o : N -> cfg_t * (list (N * prog a) * list (word a))) :

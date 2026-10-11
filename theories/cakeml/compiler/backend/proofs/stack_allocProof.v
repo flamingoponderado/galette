@@ -1054,11 +1054,11 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_allocProofScript.sml" "find_code_IMP_lookup" *)
-Local Theorem find_code_IMP_lookup : forall dest (regs0 : fmap N (word_loc a)) (s : sptree.spt (prog a)) x,
+Local Theorem find_code_IMP_lookup : forall {K P : Type} dest (regs0 : fmap K (word_loc a)) (s : sptree.spt P) x,
   find_code dest regs0 s = SOME x ->
-  exists k, lookup k s = SOME x /\ find_code dest regs0 = lookup k.
+  exists k, lookup k s = SOME x /\ find_code (P:=P) dest regs0 = lookup k.
 Proof.
-  intros [d|r] regs0 s x H; cbn [find_code] in *.
+  intros K P [d|r] regs0 s x H; cbn [find_code] in *.
   - exists d; split; [exact H|reflexivity].
   - destruct (FLOOKUP regs0 r) as [[w|l1 l2]|] eqn:EF; try discriminate.
     destruct (l2 =? 0) eqn:E; [|discriminate]. exists l1; split; [exact H|].
@@ -1066,10 +1066,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_allocProofScript.sml" "find_code_regs_SUBMAP" *)
-Theorem find_code_regs_SUBMAP : forall (r1 r2 : fmap N (word_loc a)) dest (c0 : sptree.spt (prog a)) x,
+Theorem find_code_regs_SUBMAP {K : Type} `{EK : EqDecision K} : forall {P : Type} (r1 r2 : fmap K (word_loc a)) dest (c0 : sptree.spt P) x,
   r1 ⊑ r2 /\ find_code dest r1 c0 = SOME x -> find_code dest r2 c0 = SOME x.
 Proof.
-  intros r1 r2 [d|r] c0 x [Hs H]; cbn [find_code] in *; [exact H|].
+  intros P r1 r2 [d|r] c0 x [Hs H]; cbn [find_code] in *; [exact H|].
   destruct (FLOOKUP r1 r) as [v|] eqn:E; [|discriminate].
   rewrite (FLOOKUP_SUBMAP r1 r2 r v (conj Hs E)); exact H.
 Qed.
@@ -1115,13 +1115,13 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_allocProofScript.sml" "SUBMAP_DOMSUB_both" *)
-Local Theorem SUBMAP_DOMSUB_both : forall (A B : fmap N (word_loc a)) c0, A ⊑ B -> A \\ c0 ⊑ B \\ c0.
+Local Theorem SUBMAP_DOMSUB_both {K V : Type} `{EK : EqDecision K} : forall (A B : fmap K V) c0, A ⊑ B -> A \\ c0 ⊑ B \\ c0.
 Proof.
   intros A B c0 H. apply (proj1 (SUBMAP_DOMSUB_gen A B c0)). eapply SUBMAP_TRANS; split; [apply SUBMAP_DOMSUB|exact H].
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_allocProofScript.sml" "SUBMAP_FUPDATE_both" *)
-Local Theorem SUBMAP_FUPDATE_both : forall (A B : fmap N (word_loc a)) n v, A ⊑ B -> A |+ (n, v) ⊑ B |+ (n, v).
+Local Theorem SUBMAP_FUPDATE_both {K V : Type} `{EK : EqDecision K} : forall (A B : fmap K V) n v, A ⊑ B -> A |+ (n, v) ⊑ B |+ (n, v).
 Proof. intros A B n v H; apply SUBMAP_mono_FUPDATE, SUBMAP_DOMSUB_both, H. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_allocProofScript.sml" "ALOOKUP_prog_comp" *)

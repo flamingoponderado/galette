@@ -313,7 +313,7 @@ Fixpoint comp (jump : bool) (off : word a * word a) (k : N) (p : sprog) : sprog 
   end.
 
 (*! HOL "cakeml/compiler/backend/stack_removeScript.sml" "prog_comp_def" *)
-Definition prog_comp (jump : bool) (off : word a * word a) (k : N) (np : N * sprog) : N * sprog :=
+Definition prog_comp {K : Type} (jump : bool) (off : word a * word a) (k : N) (np : K * sprog) : K * sprog :=
   let '(n, p) := np in (n, comp jump off k p).
 
 (** ** Init code *)

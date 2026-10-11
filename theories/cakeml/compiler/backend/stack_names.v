@@ -102,11 +102,11 @@ Fixpoint comp (f : spt N) (p : prog a) : prog a :=
   end.
 
 (*! HOL "cakeml/compiler/backend/stack_namesScript.sml" "prog_comp_def" *)
-Definition prog_comp (f : spt N) (np : N * prog a) : N * prog a :=
+Definition prog_comp {K : Type} (f : spt N) (np : K * prog a) : K * prog a :=
   let '(n, p) := np in (n, comp f p).
 
 (*! HOL "cakeml/compiler/backend/stack_namesScript.sml" "compile_def" *)
-Definition compile (f : spt N) (prog0 : list (N * prog a)) : list (N * prog a) :=
+Definition compile {K : Type} (f : spt N) (prog0 : list (K * prog a)) : list (K * prog a) :=
   MAP (prog_comp f) prog0.
 
 End StackNames.

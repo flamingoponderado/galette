@@ -949,8 +949,8 @@ Context {a : N} {c ffi_t : Type}.
 Local Open Scope word_scope.
 
 (*! HOL "cakeml/compiler/backend/semantics/stackSemScript.sml" "find_code_def" *)
-Definition find_code (dest : N + N) (regs0 : fmap N (word_loc a)) (code0 : sptree.spt (prog a))
-    : option (prog a) :=
+Definition find_code {K P : Type} (dest : N + K) (regs0 : fmap K (word_loc a)) (code0 : sptree.spt P)
+    : option P :=
   match dest with
   | inl p => sptree.lookup p code0
   | inr r =>

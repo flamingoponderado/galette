@@ -1174,10 +1174,11 @@ Fixpoint clock_neutral (p : prog a) : bool :=
   end.
 
 (*! HOL "cakeml/compiler/backend/semantics/stackPropsScript.sml" "find_code_IMP_get_labels" *)
-Theorem find_code_IMP_get_labels : forall d (r : fmap N (word_loc a)) code0 e,
+Theorem find_code_IMP_get_labels : forall {K : Type} {b : N} d
+    (r : fmap K (word_loc a)) (code0 : sptree.spt (prog b)) e,
   find_code d r code0 = SOME e -> get_labels e SUBSET loc_check code0.
 Proof.
-  intros d r code0 e H [l1 l2] Hl.
+  intros K b d r code0 e H [l1 l2] Hl.
   assert (Hn : exists n, sptree.lookup n code0 = SOME e).
   { destruct d as [n|n]; cbn in H; [eauto|].
     destruct (FLOOKUP r n) as [[w|n1 n2]|]; try discriminate.
