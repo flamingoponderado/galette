@@ -16,9 +16,10 @@
     [MAP_FST_compile_compile], the rebound [next_lab_non_zero],
     [extract_label_store_list_code], [stack_to_lab_compile_lab_pres] and
     [good_code], [full_make_init_semantics], the encoder line preconditions
-    and [stack_to_lab_compile_all_enc_ok].
+    and [stack_to_lab_compile_all_enc_ok], plus flattening, section and
+    handler label preservation through [stack_names_get_code_labels].
 
-    NOT YET PORTED: [full_make_init_has_fp_ops], the get_code_labels / handler_labels lemmas
+    NOT YET PORTED: [full_make_init_has_fp_ops], the remaining get_code_labels / handler_labels lemmas
     and the no_shmemop / no_install lemmas.
     [IMP_init_store_ok] and [IMP_init_state_ok] are skipped because their
     dependencies are not yet ported.
@@ -4965,6 +4966,227 @@ Proof.
  apply IN_IMAGE; exists k; split; [reflexivity|].
  apply IN_BIGUNION_IMAGE_set; exists (Label n k z); split; [exact Hl|].
  cbn [line_get_code_labels]; apply IN_SING; reflexivity.
+Qed.
+Local Lemma sec_code_mono n (ls1 ls2 : list (line a)) :
+ (forall y, In y ls1 -> In y ls2) ->
+ sec_get_code_labels (Section_ n ls1) SUBSET sec_get_code_labels (Section_ n ls2).
+Proof.
+ intros H q Hq; cbn [sec_get_code_labels] in *; rewrite IN_INSERT in *.
+ destruct Hq as [Hq|Hq]; [auto|right]. apply IN_IMAGE in Hq; destruct Hq as (k & -> & Hq).
+ apply IN_IMAGE; exists k; split; [reflexivity|].
+ apply IN_BIGUNION_IMAGE_set in Hq; destruct Hq as (y & Hy & Hq).
+ apply IN_BIGUNION_IMAGE_set; exists y; auto.
+Qed.
+Local Lemma section_code_labels n (p : prog a) :
+ sec_labels_ok (prog_to_section (n,p)) ->
+ sec_get_labels (prog_to_section (n,p)) SUBSET
+ sec_get_code_labels (prog_to_section (n,p)) UNION stackProps.get_code_labels p.
+Proof.
+ unfold prog_to_section. destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [ls [nr m]] eqn:F.
+ rewrite append_Append, append_List. cbn [sec_labels_ok].
+ rewrite stack_allocProof.EVERY_app. intros Hv. apply Bool.andb_true_iff in Hv as [Hv _].
+ pose proof (flatten_labels true p n (stack_alloc.next_lab p 2) [] [] ls nr m (conj F Hv)) as E.
+ unfold pred_set.SUBSET in *. intros q Hq; rewrite IN_UNION.
+ cbn [sec_get_labels] in Hq. apply IN_BIGUNION_IMAGE_set in Hq; destruct Hq as (y & Hy & Hq).
+ apply in_app_iff in Hy; destruct Hy as [Hy|Hy].
+ - assert (H0 : q IN BIGUNION (IMAGE line_get_labels (set (append ls)))).
+   { apply IN_BIGUNION_IMAGE_set; exists y; auto. }
+   specialize (E q H0). rewrite !IN_UNION in E; cbn [MAP APPEND LIST_TO_SET] in E.
+   destruct E as [[E|E]|E]; [contradiction|left|right; exact E].
+   eapply sec_code_mono; [intros y0 H; apply in_app_iff; left; exact H|exact E].
+ - cbn in Hy; destruct Hy as [<-|Hy]; [cbn [line_get_labels] in Hq; contradiction|contradiction].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "get_labels_MAP_prog_to_section_SUBSET_code_labels_lemma" *)
+Theorem get_labels_MAP_prog_to_section_SUBSET_code_labels_lemma : forall (p : list (N * prog a)),
+ EVERY sec_labels_ok (MAP prog_to_section p) ->
+ labProps.get_labels (MAP prog_to_section p) SUBSET
+ labProps.get_code_labels (MAP prog_to_section p) UNION
+ BIGUNION (IMAGE stackProps.get_code_labels (set (MAP SND p))).
+Proof.
+ induction p as [|[n p] ps IH]; cbn [MAP EVERY].
+ - intros _ q Hq; cbn [labProps.get_labels] in Hq.
+   apply IN_BIGUNION_IMAGE_set in Hq; destruct Hq as (y & Hy & _); contradiction.
+ - intros Hv; apply Bool.andb_true_iff in Hv as [Hv Hvs]. specialize (IH Hvs).
+   pose proof (section_code_labels n p Hv) as E.
+   rewrite get_labels_cons, get_code_labels_cons. cbn [MAP SND]. rewrite BIGUNION_IMAGE_cons.
+   unfold pred_set.SUBSET in *; intros q Hq; rewrite !IN_UNION in Hq |- *.
+   destruct Hq as [Hq|Hq]; [specialize (E q Hq); rewrite IN_UNION in E|specialize (IH q Hq); rewrite IN_UNION in IH]; cbv beta delta [pred_set.IN pred_set.UNION] in *; tauto.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "prog_to_section_preserves_MAP_FST" *)
+Local Theorem prog_to_section_preserves_MAP_FST : forall (p : list (N * prog a)),
+ IMAGE (fun n => (n,0)) (set (MAP FST p)) SUBSET labProps.get_code_labels (MAP prog_to_section p).
+Proof.
+ intros ps q Hq. apply IN_IMAGE_set in Hq; destruct Hq as (n & -> & Hn).
+ apply in_map_iff in Hn; destruct Hn as ([k p] & E & Hp); cbn [FST] in E; subst k.
+ unfold labProps.get_code_labels. apply IN_BIGUNION_IMAGE_set.
+ exists (prog_to_section (n,p)); split; [apply in_map; exact Hp|].
+ unfold prog_to_section. destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [ls [nr m]].
+ cbn [sec_get_code_labels]; apply IN_INSERT; left; reflexivity.
+Qed.
+Local Lemma declared_to_sec n (ls : list (line a)) q :
+ declared_labels n ls q -> q IN sec_get_code_labels (Section_ n ls).
+Proof.
+ intros (k & z & Hl & ->). cbn [sec_get_code_labels]; apply IN_INSERT; right.
+ apply IN_IMAGE; exists k; split; [reflexivity|].
+ apply IN_BIGUNION_IMAGE_set; exists (Label n k z); split; [exact Hl|].
+ cbn [line_get_code_labels]; apply IN_SING; reflexivity.
+Qed.
+Local Lemma seq_label (p : prog a) n m cs bs : is_Seq p = true ->
+ declared_labels n (append (FST (flatten true p n m cs bs))) (n,1).
+Proof.
+ destruct p; cbn [is_Seq]; try discriminate; intros _.
+ cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr m1]].
+ destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]].
+ label_norm; tauto.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "prog_to_section_labels" *)
+Theorem prog_to_section_labels : forall n (p : prog a) pp,
+ prog_to_section (n,p) = pp ->
+ sec_get_labels pp SUBSET sec_get_code_labels pp UNION complex_get_code_labels p.
+Proof.
+ intros n p pp <-. unfold prog_to_section.
+ destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [ls [nr m]] eqn:F.
+ rewrite append_Append, append_List. intros q Hq. rewrite IN_UNION.
+ cbn [sec_get_labels] in Hq. apply IN_BIGUNION_IMAGE_set in Hq; destruct Hq as (y & Hy & Hq).
+ apply in_app_iff in Hy; destruct Hy as [Hy|Hy].
+ - assert (H0 : emitted_labels (append ls) q) by (exists y; auto).
+   pose proof (complex_flatten_aux p true n (stack_alloc.next_lab p 2) [] [] q) as E.
+   rewrite F in E; cbn [FST] in E. specialize (E H0).
+   cbn [andb APPEND List.map] in E.
+   destruct E as [->|[E|[E|[E|E]]]]; [left; cbn [sec_get_code_labels]; apply IN_INSERT; auto| |contradiction| |auto].
+   + left. destruct (is_Seq p) eqn:S; cbn in E; subst q.
+     * apply declared_to_sec. apply declared_app; left.
+       pose proof (seq_label p n (stack_alloc.next_lab p 2) [] [] S) as Hs; rewrite F in Hs; exact Hs.
+     * cbn [sec_get_code_labels]; apply IN_INSERT; auto.
+   + left; apply declared_to_sec; apply declared_app; auto.
+ - cbn in Hy; destruct Hy as [<-|Hy]; [cbn [line_get_labels] in Hq; contradiction|contradiction].
+Qed.
+Local Ltac handler_norm := cbn [stack_get_handler_labels] in *; rewrite ?declared_Asm; label_norm; label_norm.
+Local Lemma skip_handler n (p : prog a) : is_Skip p = true -> stack_get_handler_labels n p = {}.
+Proof. destruct p; cbn [is_Skip]; intros H; try discriminate; reflexivity. Qed.
+Local Lemma handler_flatten_aux : forall p : prog a,
+ forall t n m cs bs q,
+ q IN stack_get_handler_labels n p ->
+ q = (n,0) \/ declared_labels n (append (FST (flatten t p n m cs bs))) q.
+Proof.
+ intros p. induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind;
+ intros t n m cs bs q.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + destruct h as [[p2 [k1 k2]]|].
+     * pose proof (Hr p1 _ eq_refl false n m cs bs q) as E1.
+       cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+       pose proof (Hh p2 _ eq_refl false n m1 cs bs q) as E2.
+       destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+       cbn [FST stack_get_handler_labels] in E1,E2 |- *. destruct (decide (k1 = n)) as [->|Hk]; destruct dest; handler_norm; tauto.
+     * pose proof (Hr p1 _ eq_refl false n m cs bs q) as E1.
+       cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+       cbn [FST is_Seq] in E1 |- *. destruct dest; handler_norm; tauto.
+   + destruct dest; cbn [flatten FST is_Seq]; handler_norm; tauto.
+ - pose proof (IH1 false n m cs bs q) as E1.
+   cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+   pose proof (IH2 false n m1 cs bs q) as E2.
+   destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+   cbn [FST] in E1,E2 |- *. destruct t; handler_norm; cbn [is_Seq] in *; tauto.
+ - pose proof (IH1 false n m cs bs q) as E1.
+   cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+   pose proof (IH2 false n m1 cs bs q) as E2.
+   destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+   cbn [FST] in E1,E2 |- *.
+   destruct (is_Skip p1) eqn:S1, (is_Skip p2) eqn:S2; cbn [andb stack_get_handler_labels] in *;
+   try rewrite (skip_handler n p1 S1) in *;
+   try rewrite (skip_handler n p2 S2) in *;
+   destruct nr1,nr2; handler_norm; tauto.
+ - pose proof (IH false n (m+2) (m::cs) ((m+1)::bs) q) as E.
+   cbn [flatten]. destruct (flatten false p n (m+2) (m::cs) ((m+1)::bs)) as [xs [nr m1]] eqn:F.
+   cbn [FST] in E |- *. handler_norm; tauto.
+ - destruct p; cbn in Hp; try contradiction; cbn [flatten FST]; handler_norm; tauto.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "flatten_preserves_handler_labels" *)
+Theorem flatten_preserves_handler_labels : forall t (m : prog a) n p cs bs l x y,
+ flatten t m n p cs bs = (l,(x,y)) ->
+ stack_get_handler_labels n m SUBSET sec_get_code_labels (Section_ n (append l)).
+Proof.
+ intros t m n p cs bs l x y Hf q Hq.
+ pose proof (handler_flatten_aux m t n p cs bs q Hq) as E.
+ rewrite Hf in E; cbn [FST] in E.
+ destruct E as [->|E]; [cbn [sec_get_code_labels]; apply IN_INSERT; auto|apply declared_to_sec; exact E].
+Qed.
+Local Lemma section_handler_labels n (p : prog a) :
+ stack_get_handler_labels n p SUBSET sec_get_code_labels (prog_to_section (n,p)).
+Proof.
+ unfold prog_to_section. destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [ls [nr m]] eqn:F.
+ rewrite append_Append, append_List. intros q Hq.
+ pose proof (flatten_preserves_handler_labels true p n (stack_alloc.next_lab p 2) [] [] ls nr m F q Hq) as H.
+ eapply sec_code_mono; [intros y Hy; apply in_app_iff; left; exact Hy|exact H].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "MAP_prog_to_section_preserves_handler_labels" *)
+Theorem MAP_prog_to_section_preserves_handler_labels : forall (p : list (N * prog a)),
+ BIGUNION (set (MAP (fun '(n,pp) => stack_get_handler_labels n pp) p)) SUBSET
+ labProps.get_code_labels (MAP prog_to_section p).
+Proof.
+ intros ps q Hq. apply IN_BIGUNION in Hq; destruct Hq as (s & Hq & Hs).
+ apply IN_set in Hs; apply in_map_iff in Hs; destruct Hs as ([n p] & <- & Hp).
+ unfold labProps.get_code_labels. apply IN_BIGUNION_IMAGE_set.
+ exists (prog_to_section (n,p)); split; [apply in_map; exact Hp|].
+ apply section_handler_labels; exact Hq.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "one_prog_section" *)
+Theorem one_prog_section : forall (p : list (N * prog a)),
+ IMAGE (fun n => (n,1)) (set (MAP FST p)) SUBSET labProps.get_code_labels (MAP prog_to_section p).
+Proof.
+ intros ps q Hq. apply IN_IMAGE_set in Hq; destruct Hq as (n & -> & Hn).
+ apply in_map_iff in Hn; destruct Hn as ([k p] & E & Hp); cbn [FST] in E; subst k.
+ unfold labProps.get_code_labels. apply IN_BIGUNION_IMAGE_set.
+ exists (prog_to_section (n,p)); split; [apply in_map; exact Hp|].
+ unfold prog_to_section. destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [ls [nr m]] eqn:F.
+ rewrite append_Append, append_List. apply declared_to_sec; apply declared_app.
+ destruct (is_Seq p) eqn:S.
+ - left. pose proof (seq_label p n (stack_alloc.next_lab p 2) [] [] S) as H; rewrite F in H; exact H.
+ - right. apply declared_one; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "get_labels_MAP_prog_to_section_SUBSET_code_labels" *)
+Theorem get_labels_MAP_prog_to_section_SUBSET_code_labels : forall (p : list (N * prog a)) elabs,
+ EVERY sec_labels_ok (MAP prog_to_section p) /\ stack_good_code_labels p elabs ->
+ labProps.get_labels (MAP prog_to_section p) SUBSET
+ labProps.get_code_labels (MAP prog_to_section p) UNION
+ IMAGE (fun n => (n,0)) elabs UNION IMAGE (fun n => (n,1)) elabs.
+Proof.
+ intros ps elabs [Hv Hg] q Hq.
+ pose proof (get_labels_MAP_prog_to_section_SUBSET_code_labels_lemma ps Hv q Hq) as E.
+ apply IN_UNION in E; destruct E as [E|E].
+ - cbv beta delta [pred_set.IN pred_set.UNION]; tauto.
+ - unfold stack_good_code_labels in Hg. specialize (Hg q E).
+   cbv beta delta [pred_set.IN pred_set.UNION] in Hg |- *.
+   pose proof (MAP_prog_to_section_preserves_handler_labels ps q) as Hh.
+   pose proof (prog_to_section_preserves_MAP_FST ps q) as H0.
+   pose proof (one_prog_section ps q) as H1.
+   cbv beta delta [pred_set.IN pred_set.UNION pred_set.SUBSET] in Hh,H0,H1.
+   tauto.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "get_code_labels_comp" 4090 *)
+Local Theorem get_code_labels_comp : forall f (p : prog a),
+ complex_get_code_labels (stack_names.comp f p) = complex_get_code_labels p.
+Proof.
+ intros f p. induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + specialize (Hr p1 _ eq_refl). destruct h as [[p2 [k1 k2]]|].
+     * specialize (Hh p2 _ eq_refl). destruct dest; cbn [stack_names.comp stack_names.dest_find_name complex_get_code_labels]; rewrite Hr,Hh; reflexivity.
+     * destruct dest; cbn [stack_names.comp stack_names.dest_find_name complex_get_code_labels]; rewrite Hr; reflexivity.
+   + destruct dest; cbn [stack_names.comp stack_names.dest_find_name complex_get_code_labels]; reflexivity.
+ - cbn [stack_names.comp complex_get_code_labels]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp complex_get_code_labels]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp complex_get_code_labels]; exact IH.
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_names.comp complex_get_code_labels]; try reflexivity.
+   destruct a0; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_get_code_labels" *)
+Theorem stack_names_get_code_labels : forall f (prog0 : list (N * prog a)),
+ LIST_REL (fun cp p => complex_get_code_labels cp = complex_get_code_labels p)
+ (MAP SND (stack_names.compile f prog0)) (MAP SND prog0).
+Proof.
+ intros f ps; unfold stack_names.compile; induction ps as [|[n p] ps IH]; cbn [MAP SND stack_names.prog_comp].
+ - constructor.
+ - constructor; [apply get_code_labels_comp|exact IH].
 Qed.
 End CodeLabels.
 
