@@ -4726,5 +4726,33 @@ Proof.
 Qed.
 End EncoderSyntax.
 
+Section CodeLabels.
+Context {a : N}.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "complex_get_code_labels_def" *)
+Fixpoint complex_get_code_labels (p : prog a) : N * N -> Prop :=
+  match p with
+  | Seq p1 p2 => complex_get_code_labels p1 UNION complex_get_code_labels p2
+  | If _ _ _ p1 p2 => complex_get_code_labels p1 UNION complex_get_code_labels p2
+  | Call ret dest handler =>
+      (match dest with inl x => (x,0) INSERT {} | _ => {} end) UNION
+      (match ret with
+       | None => {}
+       | Some (r, (_, (l1,l2))) =>
+           ((l1,l2) INSERT complex_get_code_labels r) UNION
+           (match handler with
+            | None => {}
+            | Some (r,(l1,l2)) => (l1,l2) INSERT complex_get_code_labels r
+            end)
+       end)
+  | Loop p => complex_get_code_labels p
+  | LocValue _ l1 l2 => (l1,l2) INSERT {}
+  | RawCall l => (l,1) INSERT {}
+  | JumpLower _ _ l => (l,0) INSERT {}
+  | _ => {}
+  end.
+
+End CodeLabels.
+
 
 
