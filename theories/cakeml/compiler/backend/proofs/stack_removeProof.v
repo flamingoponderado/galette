@@ -4533,7 +4533,7 @@ End InitLemmas1.
 Section InitLemmas2.
 Context {a : N} {c ffi_t : Type}.
 
-Lemma fun2set_EMPTY_eq (m : word a -> word_loc a) : fun2set (m, EMPTY) = EMPTY.
+Lemma fun2set_EMPTY_eq {B : Type} (m : word a -> B) : fun2set (m, EMPTY) = EMPTY.
 Proof. apply fun2set_EMPTY. reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "memory_addresses" *)
@@ -4566,7 +4566,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "word_list_exists_addresses" *)
-Theorem word_list_exists_addresses : forall (m1 : word a -> word_loc a) n (ad : word a),
+Theorem word_list_exists_addresses {B : Type} : forall (m1 : word a -> B) n (ad : word a),
   (dimindex a DIV 8) * n < dimword a /\ good_dimindex a ->
   word_list_exists ad n (fun2set (m1, addresses ad n)).
 Proof.
