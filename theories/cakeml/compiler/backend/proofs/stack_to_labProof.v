@@ -5518,6 +5518,69 @@ Proof.
  - intros n p; cbn [stack_remove.prog_comp SND]; apply stack_remove_get_code_labels_comp.
  - apply context_external0; exact Herr.
 Qed.
+Local Lemma alloc_labels n : forall p : prog a, forall m,
+ (stackProps.get_code_labels (FST (stack_alloc.comp n m p)) SUBSET
+  (stackLang.gc_stub_location,0) INSERT stackProps.get_code_labels p) /\
+ (forall i, stack_get_handler_labels i (FST (stack_alloc.comp n m p)) = stack_get_handler_labels i p).
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind; intros m.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + pose proof (Hr p1 _ eq_refl m) as [HC1 HH1].
+     cbn [stack_alloc.comp]. destruct (stack_alloc.comp n m p1) as [q1 m1] eqn:F1.
+     cbn [FST] in HC1,HH1 |- *. destruct h as [[p2 [k1 k2]]|].
+     * pose proof (Hh p2 _ eq_refl m1) as [HC2 HH2].
+       destruct (stack_alloc.comp n m1 p2) as [q2 m2] eqn:F2.
+       cbn [FST] in HC2,HH2 |- *. split.
+       -- intros q Hq; specialize (HC1 q); specialize (HC2 q); destruct dest;
+          cbn [stackProps.get_code_labels] in Hq |- *;
+          cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto.
+       -- intros i; cbn [stack_get_handler_labels]; rewrite HH1,HH2; reflexivity.
+     * split.
+       -- intros q Hq; specialize (HC1 q); destruct dest;
+          cbn [FST stackProps.get_code_labels] in Hq |- *;
+          cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto.
+       -- intros i; cbn [FST stack_get_handler_labels]; rewrite HH1; reflexivity.
+   + split; [intros q Hq; destruct dest; cbn [stack_alloc.comp FST stackProps.get_code_labels] in Hq |- *;
+     cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto|intros i; reflexivity].
+ - pose proof (IH1 m) as [HC1 HH1]. cbn [stack_alloc.comp].
+   destruct (stack_alloc.comp n m p1) as [q1 m1] eqn:F1.
+   pose proof (IH2 m1) as [HC2 HH2]. destruct (stack_alloc.comp n m1 p2) as [q2 m2] eqn:F2.
+   cbn [FST] in HC1,HH1,HC2,HH2 |- *. split.
+   + intros q Hq; specialize (HC1 q); specialize (HC2 q); cbn [stackProps.get_code_labels] in Hq |- *;
+     cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto.
+   + intros i; cbn [stack_get_handler_labels]; rewrite HH1,HH2; reflexivity.
+ - pose proof (IH1 m) as [HC1 HH1]. cbn [stack_alloc.comp].
+   destruct (stack_alloc.comp n m p1) as [q1 m1] eqn:F1.
+   pose proof (IH2 m1) as [HC2 HH2]. destruct (stack_alloc.comp n m1 p2) as [q2 m2] eqn:F2.
+   cbn [FST] in HC1,HH1,HC2,HH2 |- *. split.
+   + intros q Hq; specialize (HC1 q); specialize (HC2 q); cbn [stackProps.get_code_labels] in Hq |- *;
+     cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto.
+   + intros i; cbn [stack_get_handler_labels]; rewrite HH1,HH2; reflexivity.
+ - pose proof (IH m) as [HC HH]. cbn [stack_alloc.comp].
+   destruct (stack_alloc.comp n m p) as [q m1] eqn:F; cbn [FST] in HC,HH |- *.
+   split; [exact HC|exact HH].
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_alloc.comp FST];
+   try (split; [intros q Hq; apply IN_INSERT; right; exact Hq|reflexivity]).
+   all: try (split; [intros q Hq; cbn [stackProps.get_code_labels] in Hq |- *;
+    cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto|intros i; apply EXTENSION; intros q; cbn [stack_get_handler_labels]; cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto]).
+   destruct o; cbn [FST]; (split; [intros q Hq; cbn [stackProps.get_code_labels] in Hq |- *;
+    cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; tauto|intros i; apply EXTENSION; intros q; cbn [stack_get_handler_labels]; cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto]).
+Qed.
+(** HOL quantifies unused [pp] and [mm]; their polymorphic carriers are retained. *)
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_get_code_labels_comp" *)
+Local Theorem stack_alloc_get_code_labels_comp {pp_ty mm_ty : Type} :
+ forall n m (p : prog a) (pp : pp_ty) (mm : mm_ty),
+ get_code_labels (FST (stack_alloc.comp n m p)) SUBSET
+ (stackLang.gc_stub_location,0) INSERT get_code_labels p.
+Proof. intros; apply (proj1 (alloc_labels n p m)). Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_stack_get_handler_labels_comp" *)
+Local Theorem stack_alloc_stack_get_handler_labels_comp {pp_ty mm_ty : Type} :
+ forall i n m (p : prog a) (pp : pp_ty) (mm : mm_ty),
+ stack_get_handler_labels i (FST (stack_alloc.comp n m p)) = stack_get_handler_labels i p.
+Proof. intros; apply (proj2 (alloc_labels n p m)). Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_init_code_labels" *)
+Local Theorem stack_alloc_init_code_labels : forall dc : data_to_word.config, stackProps.get_code_labels (@stack_alloc.word_gc_code a dc) = {}.
+Proof. intros dc; unfold stack_alloc.word_gc_code. destruct (data_to_word.gc_kind dc) as [| |sizes]; try destruct sizes; cbn [stack_alloc.memcpy_code stack_alloc.clear_top_inst stack_alloc.word_gc_move_code stack_alloc.word_gc_move_list_code stack_alloc.word_gc_move_loop_code stack_alloc.word_gc_move_bitmap_code stack_alloc.word_gc_move_bitmaps_code stack_alloc.word_gc_move_roots_bitmaps_code stack_alloc.word_gen_gc_move_code stack_alloc.word_gen_gc_partial_move_code stack_alloc.word_gen_gc_move_bitmap_code stack_alloc.word_gen_gc_partial_move_bitmap_code stack_alloc.word_gen_gc_move_bitmaps_code stack_alloc.word_gen_gc_partial_move_bitmaps_code stack_alloc.word_gen_gc_move_roots_bitmaps_code stack_alloc.word_gen_gc_partial_move_roots_bitmaps_code stack_alloc.word_gen_gc_move_list_code stack_alloc.word_gen_gc_partial_move_list_code stack_alloc.word_gen_gc_move_data_code stack_alloc.word_gen_gc_partial_move_ref_list_code stack_alloc.word_gen_gc_partial_move_data_code stack_alloc.word_gen_gc_move_refs_code stack_alloc.word_gen_gc_move_loop_code stack_alloc.word_gc_partial_or_full stack_alloc.SetNewTrigger stack_alloc.word_gc_code stackProps.get_code_labels list_Seq APPEND]; apply EXTENSION; intros q; cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto. Qed.
 End CodeLabels.
 
 
