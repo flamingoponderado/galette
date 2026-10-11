@@ -11,10 +11,10 @@
     [prog_to_section_labels_ok], ...).
 
     Also ported: [make_init], [full_make_init] and
-    [full_make_init_buffer/_ffi/_compile].
+    [full_make_init_buffer/_ffi/_compile], [memory_assumption],
+    [halt_assum_lemma], [FLOOKUP_regs] and [state_rel_make_init].
 
-    NOT YET PORTED: [memory_assumption], [halt_assum_lemma],
-    [state_rel_make_init], [stack_to_lab_compile_lab_pres],
+    NOT YET PORTED: [stack_to_lab_compile_lab_pres],
     [good_code], [full_make_init_semantics], [stack_to_lab_compile_all_enc_ok],
     [full_make_init_has_fp_ops], the get_code_labels / handler_labels lemmas
     and the no_shmemop / no_install lemmas.
@@ -49,6 +49,7 @@ From Galette.HOL.src.combin Require Import combin.
 From Galette.HOL.src.n_bit Require Import words alignment byte.
 From Galette.HOL.src.n_bit.words Require Import lemmas.
 From Galette.HOL.src.pred_set.src Require Import pred_set.
+From Galette.HOL.examples.machine_code.hoare_triple Require Import set_sep.
 From Galette.HOL.src.finite_maps Require Import finite_map alist sptree.
 From Galette.HOL.src.coalgebras Require Import llist.
 From Galette.HOL.examples.pl_semantics.lprefix_lub Require Import lprefix_lub.
@@ -4012,6 +4013,107 @@ Proof.
   intros. unfold full_make_init, stack_allocProof.make_init; cbv zeta.
   cbn [FST stackSem.compile set_compile_oracle set_compile set_gc_fun set_use_stack set_use_alloc set_code].
   rewrite make_init_any_compile. reflexivity.
+Qed.
+
+Local Open Scope word_scope.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "memory_assumption_def" *)
+Definition memory_assumption (rnames : spt N) (bitmaps0 : list (word a)) (data_sp : N)
+    (t : labSem.state a c ffi_t) : Prop :=
+  exists ptr2 ptr3 ptr4 bitmap_ptr,
+    read_reg (stack_names.find_name rnames 2) t = Word ptr2 /\
+    read_reg (stack_names.find_name rnames 3) t = Word ptr3 /\
+    read_reg (stack_names.find_name rnames 4) t = Word ptr4 /\
+    labSem.mem t ptr2 = Word bitmap_ptr /\
+    labSem.mem t (ptr2 + bytes_in_word)%w =
+      Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps0))%w /\
+    labSem.mem t (ptr2 + n2w 2 * bytes_in_word)%w =
+      Word (bitmap_ptr + bytes_in_word * n2w data_sp + bytes_in_word * n2w (LENGTH bitmaps0))%w /\
+    labSem.mem t (ptr2 + n2w 3 * bytes_in_word)%w = Word (wordSem.position (labSem.code_buffer t)) /\
+    labSem.mem t (ptr2 + n2w 4 * bytes_in_word)%w =
+      Word (wordSem.position (labSem.code_buffer t) + n2w (wordSem.space_left (labSem.code_buffer t)))%w /\
+    wordSem.buffer_buffer (labSem.code_buffer t) = [] /\
+    ptr2 <=+ ptr4 /\ byte_aligned ptr2 /\ byte_aligned ptr4 /\ byte_aligned bitmap_ptr /\
+    n2w 1024 * bytes_in_word <=+ ptr4 - ptr2 /\
+    STAR (STAR (word_list bitmap_ptr (MAP Word bitmaps0))
+       (word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps0))%w data_sp))
+      (word_list_exists ptr2 (w2n (- n2w 1 * ptr2 + ptr4)%w DIV w2n (bytes_in_word : word a)))
+      (fun2set (labSem.mem t, labSem.mem_domain t)).
+
+Local Close Scope word_scope.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "halt_assum_lemma" *)
+Local Theorem halt_assum_lemma : forall f jump0 off gen max_heap k l (code0 : list (N * prog a)),
+  halt_assum ffi_t c (fromAList (stack_names.compile f
+    (stack_remove.compile jump0 off gen max_heap k l code0))).
+Proof.
+  intros f jump0 off gen max_heap k l code0 s (Hs & Hclk).
+  assert (Hl : lookup 1 (code s) =
+    SOME (Seq (Inst (Const (stack_names.find_name f 1) (n2w 0)))
+               (stackLang.Halt (stack_names.find_name f 1)))).
+  { apply (proj1 (subspt_lookup _ _) Hs).
+    rewrite lookup_fromAList. reflexivity. }
+  rewrite evaluate_eqn. cbn [evaluate_body find_code]. rewrite Hl.
+  assert (Ec : (clock s =? 0) = false) by (apply N.eqb_neq; exact Hclk).
+  match goal with |- context [bool_decide ?P] =>
+    replace (bool_decide P) with true by (symmetry; apply bool_decide_spec; reflexivity) end.
+  rewrite Ec; cbn [negb]. rewrite fix_clock_evaluate.
+  rewrite evaluate_eqn; cbn [evaluate_body]. rewrite fix_clock_evaluate.
+  rewrite evaluate_eqn; cbn [evaluate_body inst stackSem.assign stackSem.word_exp].
+  rewrite evaluate_eqn; cbn [evaluate_body].
+  unfold stackSem.get_var, stackSem.set_var. cbn [stackSem.set_regs stackSem.regs].
+  rewrite FLOOKUP_UPDATE. destruct (decide (stack_names.find_name f 1 = stack_names.find_name f 1)); [|contradiction].
+  cbn [bad_fun_return]. eexists. split; [reflexivity|]. split; reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "FLOOKUP_regs" *)
+Local Theorem FLOOKUP_regs {B : Type} : forall regs0 n v (f : B) (s : labSem.state a c ffi_t),
+  FLOOKUP (FEMPTY |++ MAP (fun r => (r, read_reg r s)) regs0) n = SOME v -> read_reg n s = v.
+Proof.
+  intros regs0. induction regs0 using List.rev_ind; intros n v f s H.
+  - discriminate H.
+  - rewrite map_app, FUPDATE_LIST_APPEND in H.
+    change (FLOOKUP ((FEMPTY |++ MAP (fun r => (r, read_reg r s)) regs0) |+ (x, read_reg x s)) n = SOME v) in H.
+    rewrite FLOOKUP_UPDATE in H. destruct (decide (x = n)) as [->|Hne].
+    + injection H as <-. reflexivity.
+    + exact (IHregs0 n v f s H).
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "state_rel_make_init" *)
+Theorem state_rel_make_init : forall code0 coracle regs0 save_regs (s : labSem.state a c ffi_t),
+  state_rel (make_init code0 coracle regs0 save_regs s) s <->
+  (forall n prog0, lookup n code0 = SOME prog0 ->
+    call_args prog0 (ptr_reg s) (len_reg s) (ptr2_reg s) (len2_reg s) (link_reg s) /\
+    exists pc0, code_installed pc0
+      (append (FST (flatten true prog0 n (stack_alloc.next_lab prog0 2) [] []))) (labSem.code s) /\
+      loc_to_pc n 0 (labSem.code s) = SOME pc0) /\
+  ~ failed s /\
+  labSem.compile_oracle s = (fun n => let '(cfg, (p, _)) := coracle n in (cfg, MAP prog_to_section p)) /\
+  (forall k, let '(cfg, (ps, _)) := coracle k in
+    EVERY (fun '(n, p) =>
+      call_args p (ptr_reg s) (len_reg s) (ptr2_reg s) (len2_reg s) (link_reg s) &&
+      EVERY (fun '(l1, l2) => (l1 =? n) && negb (l2 =? 0) && negb (l2 =? 1)) (extract_labels p) &&
+      ALL_DISTINCT (extract_labels p)) ps /\ ALL_DISTINCT (MAP FST ps)) /\
+  link_reg s <> len_reg s /\ link_reg s <> ptr_reg s /\
+  link_reg s <> len2_reg s /\ link_reg s <> ptr2_reg s /\
+  ~ (link_reg s IN save_regs) /\
+  domain code0 = set (MAP Section_num (labSem.code s)) /\
+  EVERY sec_labels_ok (labSem.code s) /\
+  (forall k i n, k IN save_regs -> io_regs s n i k = NONE) /\
+  (forall k n, k IN save_regs -> cc_regs s n k = NONE) /\
+  (forall x, x IN mem_domain s -> w2n x MOD (dimindex a DIV 8) = 0) /\
+  (forall x, x IN shared_mem_domain s -> w2n x MOD (dimindex a DIV 8) = 0) /\
+  good_dimindex a.
+Proof.
+  intros. unfold state_rel, make_init.
+  cbn [stackSem.regs stackSem.fp_regs stackSem.memory stackSem.mdomain stackSem.sh_mdomain
+    stackSem.be stackSem.ffi stackSem.clock stackSem.code stackSem.ffi_save_regs
+    stackSem.code_buffer stackSem.compile stackSem.compile_oracle stackSem.use_stack
+    stackSem.use_store stackSem.use_alloc].
+  assert (Hr : forall n v, FLOOKUP (FEMPTY |++ MAP (fun r => (r, read_reg r s)) regs0) n = SOME v ->
+      labSem.regs s n = v).
+  { intros n v H. exact (FLOOKUP_regs regs0 n v tt s H). }
+  assert (Hfp : forall n v, FLOOKUP (FEMPTY : fmap N word64) n = SOME v -> labSem.fp_regs s n = v).
+  { intros n v H. discriminate H. }
+  intuition; discriminate.
 Qed.
 
 End Initialization.
