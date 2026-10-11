@@ -17,7 +17,8 @@
     [extract_label_store_list_code], [stack_to_lab_compile_lab_pres] and
     [good_code], [full_make_init_semantics], the encoder line preconditions
     and [stack_to_lab_compile_all_enc_ok], plus flattening, section and
-    handler label preservation through [stack_names_get_code_labels].
+    handler label preservation through [stack_names_stack_good_code_labels],
+    and the earlier stack-removal label-inclusion lemma.
 
     NOT YET PORTED: [full_make_init_has_fp_ops], the remaining get_code_labels / handler_labels lemmas
     and the no_shmemop / no_install lemmas.
@@ -5266,6 +5267,88 @@ Proof.
      unfold stack_remove.stack_load, stack_remove.upshift.
      remove_label_norm; rewrite remove_upshift_labels.
      cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto.
+Qed.
+Local Lemma store_list_code_code_labels ad t (ls : list (word a + N)) :
+ stackProps.get_code_labels (stack_remove.store_list_code ad t ls) = {}.
+Proof.
+ induction ls as [|[w|r] ls IH]; cbn [stack_remove.store_list_code stackProps.get_code_labels stackLang.list_Seq];
+ rewrite ?IH; apply EXTENSION; intros q; cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto.
+Qed.
+Local Opaque stack_remove.store_list_code.
+Local Lemma init_code_code_labels ggc mh k :
+ stackProps.get_code_labels (@stack_remove.init_code a ggc mh k) = (1,0) INSERT {}.
+Proof.
+ unfold stack_remove.init_code; cbv zeta; remove_label_norm; unfold stack_remove.init_memory; remove_label_norm.
+ rewrite store_list_code_code_labels; apply EXTENSION; intros q;
+ cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY]; tauto.
+Qed.
+Local Opaque stack_remove.init_code.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "init_stubs_labels" *)
+Local Theorem init_stubs_labels : forall ggc mh k start,
+ EVERY (fun p => bool_decide (stackProps.get_code_labels p SUBSET set [(1,0);(start,0)]))
+ (MAP SND (@stack_remove.init_stubs a ggc mh k start)).
+Proof.
+ intros ggc mh k start; apply EVERY_Forall; unfold stack_remove.init_stubs; cbn [MAP SND].
+ rewrite Forall_forall; intros p Hp; cbn in Hp; destruct Hp as [<-|[<-|[<-|Hp]]]; [| | |contradiction].
+ all: apply bool_decide_spec; intros q Hq;
+ remove_label_norm; rewrite ?init_code_code_labels in Hq;
+ cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in Hq;
+ rewrite IN_set; cbn; intuition congruence.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_get_code_labels_comp" *)
+Local Theorem stack_names_get_code_labels_comp : forall f (p : prog a),
+ stackProps.get_code_labels (stack_names.comp f p) = stackProps.get_code_labels p.
+Proof.
+ intros f p. induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + specialize (Hr p1 _ eq_refl). destruct h as [[p2 [k1 k2]]|].
+     * specialize (Hh p2 _ eq_refl). destruct dest; cbn [stack_names.comp stack_names.dest_find_name stackProps.get_code_labels]; rewrite Hr,Hh; reflexivity.
+     * destruct dest; cbn [stack_names.comp stack_names.dest_find_name stackProps.get_code_labels]; rewrite Hr; reflexivity.
+   + destruct h as [[p2 [k1 k2]]|].
+     * specialize (Hh p2 _ eq_refl). destruct dest; cbn [stack_names.comp stack_names.dest_find_name stackProps.get_code_labels]; rewrite Hh; reflexivity.
+     * destruct dest; cbn [stack_names.comp stack_names.dest_find_name stackProps.get_code_labels]; reflexivity.
+ - cbn [stack_names.comp stackProps.get_code_labels]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp stackProps.get_code_labels]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp stackProps.get_code_labels]; exact IH.
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_names.comp stackProps.get_code_labels]; try reflexivity.
+   destruct a0; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_stack_get_handler_labels_comp" *)
+Local Theorem stack_names_stack_get_handler_labels_comp : forall f (p : prog a) n,
+ stack_get_handler_labels n (stack_names.comp f p) = stack_get_handler_labels n p.
+Proof.
+ intros f p. induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind; intros n.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + specialize (Hr p1 _ eq_refl n). destruct h as [[p2 [k1 k2]]|].
+     * specialize (Hh p2 _ eq_refl n). cbn [stack_names.comp stack_get_handler_labels]; rewrite Hr,Hh; reflexivity.
+     * cbn [stack_names.comp stack_get_handler_labels]; rewrite Hr; reflexivity.
+   + cbn [stack_names.comp stack_get_handler_labels]; reflexivity.
+ - cbn [stack_names.comp stack_get_handler_labels]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp stack_get_handler_labels]; rewrite IH1,IH2; reflexivity.
+ - cbn [stack_names.comp stack_get_handler_labels]; apply IH.
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_names.comp stack_get_handler_labels]; try reflexivity.
+   destruct a0; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "UNCURRY_PAIR_ETA" *)
+Local Theorem UNCURRY_PAIR_ETA {A B C} (f : A -> B -> C) :
+ UNCURRY f = fun '(p1,p2) => f p1 p2.
+Proof. apply functional_extensionality; intros []; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_stack_good_code_labels" *)
+Theorem stack_names_stack_good_code_labels : forall (prog0 : list (N * prog a)) f elabs,
+ stack_good_code_labels prog0 elabs -> stack_good_code_labels (stack_names.compile f prog0) elabs.
+Proof.
+ intros ps f elabs H. unfold stack_good_code_labels, stack_names.compile in *.
+ rewrite !LIST_TO_SET_MAP, !IMAGE_IMAGE in *.
+ cbn.
+ assert (Eg : (fun x : N * prog a => stackProps.get_code_labels (SND (stack_names.prog_comp f x))) =
+              (fun x => stackProps.get_code_labels (SND x))).
+ { apply functional_extensionality; intros [n p]; cbn [stack_names.prog_comp SND]; apply stack_names_get_code_labels_comp. }
+ assert (Eh : (fun x : N * prog a => let '(n,p) := stack_names.prog_comp f x in stack_get_handler_labels n p) =
+              (fun x => let '(n,p) := x in stack_get_handler_labels n p)).
+ { apply functional_extensionality; intros [n p]; cbn [stack_names.prog_comp]; apply stack_names_stack_get_handler_labels_comp. }
+ assert (En : forall k : N, (fun x : N * prog a => (FST (stack_names.prog_comp f x),k)) = (fun x => (FST x,k))).
+ { intros k; apply functional_extensionality; intros [n p]; reflexivity. }
+ rewrite Eg,Eh,En,En. exact H.
 Qed.
 End CodeLabels.
 

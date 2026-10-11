@@ -28591,6 +28591,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "UNCURRY_PAIR_ETA",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "UNCURRY_PAIR_ETA"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
   "hol_name": "asm_fetch_aux_SOME_append",
   "hol_line": null,
   "case": null,
@@ -29101,6 +29111,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "init_stubs_labels",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "init_stubs_labels"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
   "hol_name": "inst_correct",
   "hol_line": null,
   "case": null,
@@ -29398,6 +29418,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_names_get_code_labels"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "stack_names_get_code_labels_comp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "stack_names_get_code_labels_comp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "stack_names_stack_get_handler_labels_comp",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "stack_names_stack_get_handler_labels_comp"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "stack_names_stack_good_code_labels",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "stack_names_stack_good_code_labels"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
