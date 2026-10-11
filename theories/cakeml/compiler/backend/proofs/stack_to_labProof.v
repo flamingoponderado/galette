@@ -200,7 +200,8 @@ Definition dest_to_loc' {K} (regs : K -> word_loc a) (dest : N + K) : N :=
   end.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "find_code_lookup" *)
-Theorem find_code_lookup : forall dest regs (code : spt (prog a)) p,
+Theorem find_code_lookup {K P : Type} `{EK : EqDecision K} :
+  forall (dest : N + K) (regs : fmap K (word_loc a)) (code : spt P) p,
   find_code dest regs code = SOME p ->
   lookup (dest_to_loc regs dest) code = SOME p /\
   (forall r, dest = inr r -> r IN FDOM regs).
@@ -5208,11 +5209,11 @@ Proof.
    destruct a0; reflexivity.
 Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_get_code_labels" *)
-Theorem stack_names_get_code_labels : forall f (prog0 : list (N * prog a)),
+Theorem stack_names_get_code_labels : forall {K : Type} f (prog0 : list (K * prog a)),
  LIST_REL (fun cp p => complex_get_code_labels cp = complex_get_code_labels p)
  (MAP SND (stack_names.compile f prog0)) (MAP SND prog0).
 Proof.
- intros f ps; unfold stack_names.compile; induction ps as [|[n p] ps IH]; cbn [MAP SND stack_names.prog_comp].
+ intros K f ps; unfold stack_names.compile; induction ps as [|[n p] ps IH]; cbn [MAP SND stack_names.prog_comp].
  - constructor.
  - constructor; [apply get_code_labels_comp|exact IH].
 Qed.
@@ -6152,7 +6153,7 @@ Qed.
 Theorem stack_remove_comp_no_shmemop : forall jump off k (p : prog a), no_shmemop p -> no_shmemop (stack_remove.comp jump off k p).
 Proof. intros; rewrite remove_no_shmemop_eq; assumption. Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_prog_comp_no_shmemop" *)
-Theorem stack_remove_prog_comp_no_shmemop : forall jump off k n (p : prog a),
+Theorem stack_remove_prog_comp_no_shmemop : forall {K : Type} jump off k (n : K) (p : prog a),
  no_shmemop p -> no_shmemop (SND (stack_remove.prog_comp jump off k (n,p))).
 Proof. intros; apply stack_remove_comp_no_shmemop; assumption. Qed.
 Local Lemma remove_no_install_eq jump off k : forall p : prog a, no_install (stack_remove.comp jump off k p) = no_install p.
@@ -6173,11 +6174,11 @@ Qed.
 Theorem stack_remove_comp_no_install : forall jump off k (p : prog a), no_install p -> no_install (stack_remove.comp jump off k p).
 Proof. intros; rewrite remove_no_install_eq; assumption. Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_prog_comp_no_install" *)
-Theorem stack_remove_prog_comp_no_install : forall jump off k n (p : prog a),
+Theorem stack_remove_prog_comp_no_install : forall {K : Type} jump off k (n : K) (p : prog a),
  no_install p -> no_install (SND (stack_remove.prog_comp jump off k (n,p))).
 Proof. intros; apply stack_remove_comp_no_install; assumption. Qed.
 
-Local Lemma safety_map (P : prog a -> bool) (f : N * prog a -> N * prog a) ps :
+Local Lemma safety_map {K : Type} (P : prog a -> bool) (f : K * prog a -> K * prog a) ps :
  (forall n p, P p -> P (SND (f (n,p)))) ->
  EVERY (fun '(n,p) => P p) ps -> EVERY (fun '(n,p) => P p) (MAP f ps).
 Proof.
@@ -6214,7 +6215,7 @@ Proof.
  unfold stack_alloc.stubs; cbn [EVERY no_shmemop]; rewrite gc_code_no_shmemop; reflexivity.
 Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_prog_comp_no_shmemop_MAP" *)
-Theorem stack_remove_prog_comp_no_shmemop_MAP : forall jump off sp (ps : list (N * prog a)),
+Theorem stack_remove_prog_comp_no_shmemop_MAP : forall {K : Type} jump off sp (ps : list (K * prog a)),
  EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (MAP (stack_remove.prog_comp jump off sp) ps).
 Proof. intros; apply safety_map; [intros; apply stack_remove_comp_no_shmemop; assumption|assumption]. Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_compile_no_shmemop" *)
@@ -6225,11 +6226,11 @@ Proof.
  unfold stack_remove.init_stubs; cbn [EVERY no_shmemop stack_remove.halt_inst]; rewrite init_no_shmemop; reflexivity.
 Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_prog_comp_no_shmemop" *)
-Theorem stack_names_prog_comp_no_shmemop : forall f (ps : list (N * prog a)),
+Theorem stack_names_prog_comp_no_shmemop : forall {K : Type} f (ps : list (K * prog a)),
  EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (MAP (stack_names.prog_comp f) ps).
 Proof. intros; apply safety_map; [intros; apply stack_names_comp_no_shmemop; assumption|assumption]. Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_compile_no_shmemop" *)
-Theorem stack_names_compile_no_shmemop : forall f (ps : list (N * prog a)),
+Theorem stack_names_compile_no_shmemop : forall {K : Type} f (ps : list (K * prog a)),
  EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (stack_names.compile f ps).
 Proof. intros; apply stack_names_prog_comp_no_shmemop; assumption. Qed.
 Local Lemma gc_code_no_install dc : no_install (@stack_alloc.word_gc_code a dc).
@@ -6268,11 +6269,11 @@ Proof.
  unfold stack_remove.init_stubs; cbn [EVERY no_install stack_remove.halt_inst]; rewrite init_no_install; reflexivity.
 Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_prog_comp_no_install" *)
-Theorem stack_names_prog_comp_no_install : forall f (ps : list (N * prog a)),
+Theorem stack_names_prog_comp_no_install : forall {K : Type} f (ps : list (K * prog a)),
  EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (MAP (stack_names.prog_comp f) ps).
 Proof. intros; apply safety_map; [intros; apply stack_names_comp_no_install; assumption|assumption]. Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_compile_no_install" *)
-Theorem stack_names_compile_no_install : forall f (ps : list (N * prog a)),
+Theorem stack_names_compile_no_install : forall {K : Type} f (ps : list (K * prog a)),
  EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (stack_names.compile f ps).
 Proof. intros; apply stack_names_prog_comp_no_install; assumption. Qed.
 

@@ -164,7 +164,7 @@ Section Defs.
 Context {a : N} {c ffi_t : Type}.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "memory_def" *)
-Definition memory (m : word a -> word_loc a) (dm : word a -> Prop) : (word a * word_loc a -> Prop) -> Prop :=
+Definition memory {K V : Type} (m : K -> V) (dm : K -> Prop) : (K * V -> Prop) -> Prop :=
   fun s => s = fun2set (m, dm).
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "word_list_rev_def" *)
@@ -342,10 +342,10 @@ Context {a : N} {c ffi_t : Type}.
 Implicit Types s t : state a c ffi_t.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "memory_fun2set_IMP_read" *)
-Local Theorem memory_fun2set_IMP_read : forall (m m1 : word a -> word_loc a) d d1 p ad,
+Local Theorem memory_fun2set_IMP_read : forall {K V : Type} (m m1 : K -> V) d d1 p ad,
   STAR (memory m d) p (fun2set (m1, d1)) /\ ad IN d -> ad IN d1 /\ m1 ad = m ad.
 Proof.
-  intros m m1 d d1 p ad [H Hd]. apply STAR_alt in H as (u & Hu & Hm & _).
+  intros K V m m1 d d1 p ad [H Hd]. apply STAR_alt in H as (u & Hu & Hm & _).
   unfold memory in Hm; subst u.
   assert (Hin : fun2set (m, d) (ad, m ad)) by (apply fun2set_thm; split; [reflexivity|exact Hd]).
   apply Hu in Hin. apply fun2set_thm in Hin as [E Hd1]. split; [exact Hd1|exact E].
@@ -632,12 +632,12 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "prog_comp_eta" *)
-Theorem prog_comp_eta : @stack_remove.prog_comp a = fun jump off k '(n, p) => (n, stack_remove.comp jump off k p).
+Theorem prog_comp_eta : forall {K : Type}, @stack_remove.prog_comp a K = fun jump off k '(n, p) => (n, stack_remove.comp jump off k p).
 Proof. reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "FST_prog_comp" *)
-Theorem FST_prog_comp : forall jump off k (pp : N * prog a), FST (stack_remove.prog_comp jump off k pp) = FST pp.
-Proof. intros jump off k [n p]; reflexivity. Qed.
+Theorem FST_prog_comp : forall {K : Type} jump off k (pp : K * prog a), FST (stack_remove.prog_comp jump off k pp) = FST pp.
+Proof. intros K jump off k [n p]; reflexivity. Qed.
 
 End Syntax.
 
@@ -968,7 +968,7 @@ Qed.
 
 (** Galette-only: the memory assertion is preserved by any update that
     agrees with the new abstract memory on its domain and leaves the rest. *)
-Lemma memory_frame (sm m sm' m' : word a -> word_loc a) sd dm p :
+Lemma memory_frame {K V : Type} (sm m sm' m' : K -> V) sd dm p :
   STAR (memory sm sd) p (fun2set (m, dm)) ->
   (forall b, b IN sd -> m' b = sm' b) -> (forall b, ~ b IN sd -> m' b = m b) ->
   STAR (memory sm' sd) p (fun2set (m', dm)).
@@ -991,7 +991,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "memory_write" *)
-Theorem memory_write : forall (x : word a) sd dm sm p m y,
+Theorem memory_write {K V : Type} `{EK : EqDecision K} : forall (x : K) sd dm (sm : K -> V) p m y,
   x IN sd /\ x IN dm /\ STAR (memory sm sd) p (fun2set (m, dm)) ->
   STAR (memory ((x =+ y) sm) sd) p (fun2set ((x =+ y) m, dm)).
 Proof.
@@ -1938,7 +1938,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "mem_load_lemma2" *)
-Local Theorem mem_load_lemma2 : forall name (s : state a cfg ffi_t) (c : word a) (t1 : state a cfg ffi_t),
+Local Theorem mem_load_lemma2 : forall {source_cfg source_ffi : Type} name (s : state a source_cfg source_ffi) (c : word a) (t1 : state a cfg ffi_t),
   MEM name stack_remove.store_list /\
   STAR (STAR (STAR (STAR (memory (stackSem.memory s) (mdomain s))
         (word_list (the_SOME_Word (FLOOKUP (store s) BitmapBase) << word_shift a)
@@ -1951,7 +1951,7 @@ Local Theorem mem_load_lemma2 : forall name (s : state a cfg ffi_t) (c : word a)
       (fun2set (stackSem.memory t1, mdomain t1)) ->
   c + stack_remove.store_offset name IN mdomain t1.
 Proof.
-  intros name s c t1 (Hm & Hs). rewrite sr_mem_S in Hs. unfold word_store in Hs.
+  intros source_cfg source_ffi name s c t1 (Hm & Hs). rewrite sr_mem_S in Hs. unfold word_store in Hs.
   destruct (store_pos_MEM name Hm) as (i & Ep & Hi & Hel).
   rewrite (store_offset_pos name i Ep).
   assert (Hi' : (i < LENGTH (MAP (fun name => match FLOOKUP (store s) name with NONE => Word (n2w 0) | SOME x => x end)
@@ -1999,10 +1999,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "memory_fun2set_SUBSET" *)
-Theorem memory_fun2set_SUBSET : forall (m1 : word a -> word_loc a) d1 rest m2 d2,
+Theorem memory_fun2set_SUBSET : forall {K V : Type} (m1 : K -> V) d1 rest m2 d2,
   STAR (memory m1 d1) rest (fun2set (m2, d2)) -> d1 SUBSET d2.
 Proof.
-  intros m1 d1 rest m2 d2 H b Hb.
+  intros K V m1 d1 rest m2 d2 H b Hb.
   exact (proj1 (memory_fun2set_IMP_read _ _ _ _ _ _ (conj H Hb))).
 Qed.
 
@@ -4199,11 +4199,11 @@ Definition mem_val (regs0 : fmap N (word_loc a)) (x : word a + N) : word_loc a :
   match x with inl w => Word w | inr n => FAPPLY regs0 n end.
 
 (** HOL [read_mem] recurses on [SUC n]; [read_mem_def] gives HOL's equations. *)
-Definition read_mem (ad : word a) (m : word a -> word_loc a) (n : N) : list (word_loc a) :=
+Definition read_mem {V : Type} (ad : word a) (m : word a -> V) (n : N) : list V :=
   num_rec (fun _ => []) (fun _ r ad => m ad :: r (ad + bytes_in_word)) n ad.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "read_mem_def" *)
-Theorem read_mem_def : forall (ad : word a) m n,
+Theorem read_mem_def : forall {V : Type} (ad : word a) (m : word a -> V) n,
   read_mem ad m 0 = [] /\ read_mem ad m (SUC n) = m ad :: read_mem (ad + bytes_in_word) m n.
 Proof. intros; split; [reflexivity|]. unfold read_mem; rewrite num_rec_SUC; reflexivity. Qed.
 
@@ -4419,9 +4419,9 @@ Section InitLemmas1.
 Context {a : N} {c ffi_t : Type}.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "LENGTH_read_mem" *)
-Theorem LENGTH_read_mem : forall n (ad : word a) m, LENGTH (read_mem ad m n) = n.
+Theorem LENGTH_read_mem : forall {V : Type} n (ad : word a) (m : word a -> V), LENGTH (read_mem ad m n) = n.
 Proof.
-  intros n; induction n as [|n IH] using N.peano_ind; intros ad m; [reflexivity|].
+  intros V n; induction n as [|n IH] using N.peano_ind; intros ad m; [reflexivity|].
   rewrite (proj2 (read_mem_def ad m n)), LENGTH_cons_N, IH. reflexivity.
 Qed.
 
@@ -4498,10 +4498,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "word_list_IMP_read_mem" *)
-Local Theorem word_list_IMP_read_mem : forall (m : word a -> word_loc a) dm xs (ad : word a) p,
+Local Theorem word_list_IMP_read_mem : forall {V : Type} (m : word a -> V) dm xs (ad : word a) p,
   STAR p (word_list ad xs) (fun2set (m, dm)) -> read_mem ad m (LENGTH xs) = xs.
 Proof.
-  intros m dm xs; induction xs as [|x xs IH]; intros ad p H; [reflexivity|].
+  intros V m dm xs; induction xs as [|x xs IH]; intros ad p H; [reflexivity|].
   rewrite LENGTH_cons_N, (proj2 (read_mem_def ad m (LENGTH xs))).
   cbn [word_list] in H. rewrite STAR_swap_l in H. destruct (sep_read _ _ _ _ _ H) as [E _].
   rewrite E. f_equal. apply (IH _ (STAR (one (ad, x)) p)). rewrite <- STAR_ASSOC. exact H.
@@ -4536,12 +4536,12 @@ Context {a : N} {c ffi_t : Type}.
 Lemma fun2set_EMPTY_eq {B : Type} (m : word a -> B) : fun2set (m, EMPTY) = EMPTY.
 Proof. apply fun2set_EMPTY. reflexivity. Qed.
 
-(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "memory_addresses" *)
-Local Theorem memory_addresses : forall n (ad : word a) (m : word a -> word_loc a),
+(** Galette-only generic memory-payload helper. *)
+Lemma memory_addresses_generic : forall {V : Type} n (ad : word a) (m : word a -> V),
   n * (dimindex a DIV 8) < dimword a /\ good_dimindex a ->
   memory m (addresses ad n) = word_list ad (read_mem ad m n).
 Proof.
-  intros n; induction n as [|n IH] using N.peano_ind; intros ad m [Hb Hg].
+  intros V n; induction n as [|n IH] using N.peano_ind; intros ad m [Hb Hg].
   - rewrite (proj1 (addresses_def ad 0)), (proj1 (read_mem_def ad m 0)). cbn [word_list].
     unfold memory. rewrite fun2set_EMPTY_eq. reflexivity.
   - rewrite (proj2 (addresses_def ad n)), (proj2 (read_mem_def ad m n)). cbn [word_list].
@@ -4564,6 +4564,12 @@ Proof.
         -- assert (Hx : (b, z) IN fun2set (m, addresses (ad + bytes_in_word)%w n)) by (apply IN_fun2set; split; assumption).
            rewrite <- Hd in Hx. apply IN_DELETE in Hx as [Hx _]. exact Hx.
 Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "memory_addresses" *)
+Local Theorem memory_addresses : forall n (ad : word a) (m : word a -> word_loc a),
+  n * (dimindex a DIV 8) < dimword a /\ good_dimindex a ->
+  memory m (addresses ad n) = word_list ad (read_mem ad m n).
+Proof. intros; apply memory_addresses_generic; assumption. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "word_list_exists_addresses" *)
 Theorem word_list_exists_addresses {B : Type} : forall (m1 : word a -> B) n (ad : word a),
@@ -4727,14 +4733,14 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_removeProofScript.sml" "word_list_in_memory" *)
-Theorem word_list_in_memory : forall (xs : list (word_loc a)) (ad : word a) r1 r2 m dm,
+Theorem word_list_in_memory : forall {V : Type} (xs : list V) (ad : word a) r1 r2 m dm,
   STAR (STAR r1 (word_list ad xs)) r2 (fun2set (m, dm)) /\ good_dimindex a /\
   w2n ad + LENGTH xs * w2n (bytes_in_word : word a) < dimword a ->
   memory m (addresses ad (LENGTH xs)) = word_list ad xs.
 Proof.
-  intros xs ad r1 r2 m dm (H & Hg & Hb).
+  intros V xs ad r1 r2 m dm (H & Hg & Hb).
   destruct (good_dimindex_d Hg) as [Hd _].
-  rewrite memory_addresses by (split; [rewrite Hd in Hb; nia|exact Hg]).
+  rewrite memory_addresses_generic by (split; [rewrite Hd in Hb; nia|exact Hg]).
   f_equal. apply (word_list_IMP_read_mem m dm xs ad (STAR r1 r2)).
   revert H. replace (STAR (STAR r1 (word_list ad xs)) r2) with (STAR (STAR r1 r2) (word_list ad xs)); [auto|]. star_ac.
 Qed.
@@ -5674,7 +5680,7 @@ Qed.
 Lemma FAPPLY_SOME {V} `{Inhabited V} (R : fmap N V) i v : FLOOKUP R i = SOME v -> FAPPLY R i = v.
 Proof. intros Hs. unfold FAPPLY. rewrite Hs. reflexivity. Qed.
 
-Lemma FLOOKUP_FUPDATE_LIST_MAP_notin {K V} `{EqDecision K} (g : K -> V) (l : list K) :
+Lemma FLOOKUP_FUPDATE_LIST_MAP_notin {K V} `{EK : EqDecision K} (g : K -> V) (l : list K) :
   forall f0 x, ~ In x l -> FLOOKUP (f0 |++ MAP (fun n => (n, g n)) l) x = FLOOKUP f0 x.
 Proof.
   induction l as [|y l IH]; intros f0 x Hn; [reflexivity|].
@@ -5684,7 +5690,7 @@ Proof.
   destruct (decide (y = x)) as [->|]; [exfalso; apply Hn; left; reflexivity|reflexivity].
 Qed.
 
-Lemma FLOOKUP_FUPDATE_LIST_MAP {K V} `{EqDecision K} (g : K -> V) (l : list K) :
+Lemma FLOOKUP_FUPDATE_LIST_MAP {K V} `{EK : EqDecision K} (g : K -> V) (l : list K) :
   forall f0 x, In x l -> FLOOKUP (f0 |++ MAP (fun n => (n, g n)) l) x = SOME (g x).
 Proof.
   induction l as [|y l IH]; intros f0 x Hn; [destruct Hn|].
