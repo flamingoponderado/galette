@@ -29724,8 +29724,8 @@
   "hol_name": "semantics_compile_lemma",
   "hol_line": null,
   "case": null,
-  "status": "pending_review",
-  "note": "",
+  "status": "reviewed_exact",
+  "note": "sol: Compared the HOL derived theorem with semantics_compile_lemma prime and implements_intro_gen: CONJ_ASSOC normalization groups precisely the same premises, MATCH_MP removes the non-Fail conjunct and yields implements prime T with the same singleton semantics and generic machine/FFI carriers.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/lab_to_targetProof/semantics_compile.v",
   "rocq_name": "semantics_compile_lemma"
  },
@@ -31884,8 +31884,8 @@
   "hol_name": "state_rel_thm",
   "hol_line": null,
   "case": null,
-  "status": "pending_review",
-  "note": "",
+  "status": "reviewed_exact",
+  "note": "sol: Expanded HOL state_rel_def using the complete stackSem state record: existential code c is eliminated as code t, domains and compiled-code lookup condition are unchanged, and all 22 remaining fields occur in their original order with equalities t.field = s.field. Width, compiler and FFI carriers agree.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_rawcallProof.v",
   "rocq_name": "state_rel_thm"
  },
@@ -38734,8 +38734,8 @@
   "hol_name": "ssa_cc_trans_correct",
   "hol_line": null,
   "case": null,
-  "status": "pending_review",
-  "note": "",
+  "status": "reviewed_exact",
+  "note": "sol: Compared all six premises, permutation existential, Error conditional, transformed evaluation, and NONE/Break/Continue/other result branches. HOL Loop clause of ssa_cc_trans forces lt name and exit payloads to the unit-valued maps from wordLang Loop; generic lt_ok specializes accordingly. word_state_eq_rel forces source/target compiler and FFI carriers to agree, matching the Rocq section.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/ssa_call.v",
   "rocq_name": "ssa_cc_trans_correct"
  },
