@@ -77641,6 +77641,16 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "pan_to_target_compile_semantics",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "pan_to_target_compile_semantics"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "pancake_good_code_def",
   "hol_line": null,
   "case": null,

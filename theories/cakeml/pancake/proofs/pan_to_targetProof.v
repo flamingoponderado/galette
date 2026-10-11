@@ -1,7 +1,6 @@
 (** * Correctness of the Pancake-to-target composition.
     Port of [cakeml/pancake/proofs/pan_to_targetProofScript.sml].
-    All declarations preceding [pan_to_target_compile_semantics] are ported.
-    The final [pan_to_target_compile_semantics] composition is in progress.
+    All declarations, including [pan_to_target_compile_semantics], are ported.
     HOL's [PERMUTES] is [BIJ f UNIV UNIV]; quantified predicates inside
     boolean [EVERY] are reflected using [bool_decide]. *)
 From Galette Require Import Base Classical.
@@ -1423,3 +1422,579 @@ Proof.
  rewrite N.div_mul by exact Hd; lia.
 Qed.
 End HeapSize.
+
+Local Lemma resource_not_fail b w precise :
+ b IN extend_with_resource_limit' precise (w INSERT EMPTY) -> w<>Fail -> b<>Fail.
+Proof.
+ intros HH HNF ->; unfold extend_with_resource_limit' in HH; destruct precise;
+ unfold extend_with_resource_limit,pred_set.UNION,pred_set.INSERT,pred_set.EMPTY,pred_set.IN in HH;
+ firstorder congruence.
+Qed.
+
+Section Frames.
+Context {a : N} {c ffi_t : Type}.
+Local Lemma initial_stack_frames (ac : asm_config a) progs bm wc fs p (s : stackSem.state a c ffi_t) co k :
+ word_to_stack.compile ac false progs=(bm,(wc,(fs,p))) ->
+ k=reg_count ac-(5+LENGTH (avoid_regs ac)) ->
+ wordSem.state_stack_size (comp_semantics.make_init ac k s (fromAList progs) co)=word_to_stack.stack_frame_size wc.
+Proof.
+ intros HC HK; subst k.
+ unfold word_to_stack.compile in HC; cbv zeta in HC.
+ destruct (word_to_stack.compile_word_to_stack ac false (reg_count ac-(5+LENGTH (avoid_regs ac))) progs (List [n2w 4],1))
+   as [ps [sz bms]] eqn:HE.
+ injection HC as Hbm Hwc Hfs Hp; subst wc.
+ unfold comp_semantics.make_init; cbn [wordSem.state_stack_size word_to_stack.stack_frame_size].
+ set (f := fun '(arg_count,prg) => FST (SND (word_to_stack.compile_prog ac false prg arg_count (reg_count ac-(5+LENGTH (avoid_regs ac))) (Nil,0)))).
+ change (mapi (fun _ v => f v) (fromAList progs) = fromAList (MAP (fun '((i,_),n) => (i,n)) (ZIP (ps,sz)))).
+ assert (HM : mapi (fun _ v => f v) (fromAList progs)=sptree.map f (fromAList progs)).
+ { apply spt_eq_thm; [split; [apply wf_mapi|rewrite wf_map; apply wf_fromAList]|].
+   intros n; rewrite lookup_mapi,lookup_map; reflexivity. }
+ rewrite HM,map_fromAList.
+ replace (MAP (fun '(key,v) => (key,f v)) progs) with
+   (MAP (fun kv => (FST kv,f (SND kv))) progs).
+ 2: { f_equal; apply functional_extensionality; intros [key v]; reflexivity. }
+ unfold f; eapply backendProof.compile_word_to_stack_sfs_aux; split; [exact HE|reflexivity].
+Qed.
+End Frames.
+
+From Galette Require Import Base Classical.
+From Galette.HOL.src.num.theories Require Import arithmetic.
+From Galette.HOL.src.list.src Require Import list.
+From Galette.HOL.src.list.src.list Require Import list_to_set.
+From Galette.HOL.src.coretypes Require Import pair option.
+From Galette.HOL.src.n_bit.words Require Import lemmas.
+From Galette.HOL.src.n_bit Require Import words alignment byte.
+From Galette.HOL.examples.machine_code.hoare_triple Require Import set_sep.
+From Galette.HOL.src.pred_set.src Require Import pred_set.
+From Galette.HOL.src.finite_maps Require Import finite_map sptree alist.
+From Galette.HOL.src.string Require Import string.
+From Galette.cakeml.misc Require Import misc.
+From Galette.cakeml.basis.pure Require Import mlstring.
+From Galette.cakeml.semantics.ffi Require Import ffi.
+From Galette.cakeml.semantics.proofs Require semanticsProps.
+From Galette.cakeml.compiler.encoders.asm Require Import asm asmProps.
+From Galette.cakeml.compiler.backend Require word_to_word word_to_stack stack_names.
+From Galette.cakeml.compiler.backend.semantics Require labSem.
+From Galette.cakeml.pancake Require pan_to_word.
+From Galette.cakeml.compiler.backend Require backend backend_common data_to_word stack_remove stack_to_lab lab_to_target.
+From Galette.cakeml.compiler.backend.semantics Require Import targetSem.
+From Galette.cakeml.compiler.backend.proofs Require backendProof lab_to_targetProof word_depthProof.
+From Galette.cakeml.pancake Require Import panLang.
+From Galette.cakeml.pancake Require pan_globals.
+From Galette.cakeml.pancake.semantics Require panSem.
+From Galette.cakeml.pancake.proofs Require pan_to_wordProof crep_to_loopProof.
+Open Scope N_scope.
+#[local] Instance final_shape_eq_dec : EqDecision shape := fun x y => classical_dec (x = y).
+Section FinalComposition.
+Context {a : N} {B C ffi_t : Type}.
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "pan_to_target_compile_semantics" *)
+Theorem pan_to_target_compile_semantics (c : backend.config) (mc : machine_config a B C)
+    (pan_code : list (decl a)) bytes bitmaps c' stack_max (s : panSem.state a ffi_t)
+    ms globals_size heap_len adj_ptr2 adj_ptr4 ffi0 cbspace data_sp start :
+  compile_prog_max c mc pan_code = (SOME (bytes,(bitmaps,c')),stack_max) /\
+  pancake_good_code pan_code /\
+  pan_to_wordProof.distinct_params (functions pan_code) /\
+  ALL_DISTINCT (MAP FST (functions pan_code)) /\
+  panSem.code s = FEMPTY /\ panSem.locals s = FEMPTY /\ panSem.globals s = FEMPTY /\
+  size_of_eids pan_code < dimword a /\ panSem.eshapes s = FEMPTY /\
+  backendProof.backend_config_ok (asmProps.config (target mc)) c /\ init_defs.mc_conf_ok mc /\
+  backendProof.mc_init_ok (asmProps.config (target mc)) c mc /\ ISA (asmProps.config (target mc)) <> Ag32 /\
+  word_lo (n2w 0) (get_reg (target mc) ms (len_reg mc)) /\
+  globals_size = (let dec_shs := pan_globals.dec_shapes pan_code in
+    let struct_ctxt := panSem.decs_stcnames [] pan_code in
+    SUM (MAP (size_of_sh_with_ctxt (THE struct_ctxt)) dec_shs)) /\
+  word_lo (get_reg (target mc) ms (len_reg mc)) (get_reg (target mc) ms (ptr2_reg mc)) /\
+  get_reg (target mc) ms (len_reg mc) = panSem.base_addr s /\
+  pan_to_wordProof.globals_allocatable s pan_code /\
+  heap_len = w2n (get_reg (target mc) ms (ptr2_reg mc) + word_2comp (n2w 1) * panSem.base_addr s)%w DIV (dimindex a DIV 8) /\
+  panSem.top_addr s = (panSem.base_addr s + bytes_in_word * n2w heap_len - n2w (globals_size * dimindex a DIV 8))%w /\
+  globals_size <= heap_len /\
+  panSem.memaddrs s = stack_removeProof.addresses (get_reg (target mc) ms (len_reg mc)) (heap_len - globals_size) /\
+  aligned (backend_common.word_shift a + 1) (get_reg (target mc) ms (ptr2_reg mc) + word_2comp (n2w 1) * get_reg (target mc) ms (len_reg mc))%w /\
+  adj_ptr2 = (get_reg (target mc) ms (len_reg mc) + bytes_in_word * n2w stack_remove.max_stack_alloc)%w /\
+  adj_ptr4 = (get_reg (target mc) ms (len2_reg mc) - bytes_in_word * n2w stack_remove.max_stack_alloc)%w /\
+  word_ls adj_ptr2 (get_reg (target mc) ms (ptr2_reg mc)) /\
+  word_ls (get_reg (target mc) ms (ptr2_reg mc)) adj_ptr4 /\
+  w2n (get_reg (target mc) ms (ptr2_reg mc) + word_2comp (n2w 1) * get_reg (target mc) ms (len_reg mc))%w <=
+    w2n (bytes_in_word : word a) * (2 * data_to_word.max_heap_limit a (backend.data_conf c) - 1) /\
+  w2n (bytes_in_word : word a) * (2 * data_to_word.max_heap_limit a (backend.data_conf c) - 1) < dimword a /\
+  panSem.ffi s = ffi0 /\ big_endian (asmProps.config (target mc)) = panSem.be s /\
+  OPTION_ALL (fun xs => EVERY (fun x => bool_decide (exists str, x = ffi.ExtCall str)) xs) (lab_to_target.ffi_names (backend.lab_conf c)) /\
+  pan_installed bytes cbspace bitmaps data_sp (lab_to_target.ffi_names (backend.lab_conf c'))
+    (backendProof.heap_regs (stack_to_lab.reg_names (backend.stack_conf c))) mc
+    (lab_to_target.shmem_extra (backend.lab_conf c')) ms
+    (fun x => crep_to_loopProof.wlab_wloc (panSem.memory s x)) (panSem.memaddrs s) (panSem.sh_memaddrs s) /\
+  start = strlit "main" /\ panSem.semantics_decls s start pan_code <> Fail ->
+  machine_sem mc ffi0 ms SUBSET semanticsProps.extend_with_resource_limit'
+    (bool_decide (option_lt stack_max (SOME (FST (backendProof.read_limits (asmProps.config (target mc)) c mc ms)))))
+    (fun b => b = panSem.semantics_decls s start pan_code).
+Proof.
+ intros (Hcomp & Hgood & Hparams & Hdistinct & Hcode & Hlocals & Hglobals & Heids & Heshapes & Hbackend & Hmc & Hinit & Hisa & Hbasepos & Hglobals_size & Hbase_lt_ptr2 & Hbase & Halloc & Hheap_len & Htop & Hglobals_le & Hmemaddrs & Haligned & Hadj2 & Hadj4 & Hadj2_le & Hadj4_le & Hheap_bound & Hheap_lt & Hffi & Hbe & Hffis & Hinstalled & Hstart & Hsem).
+ set (ac := asmProps.config (target mc)) in *.
+ set (wprog0 := pan_to_word.compile_prog (ISA ac) pan_code).
+ destruct (word_to_word.compile (backend.word_to_word_conf c) ac wprog0) as [col wprog] eqn:HW.
+ destruct (word_to_stack.compile ac false wprog) as [bm [wc [fs p]]] eqn:HS.
+ unfold compile_prog_max in Hcomp; fold ac wprog0 in Hcomp; rewrite HW, HS in Hcomp.
+ cbn beta iota zeta in Hcomp.
+ pose proof (f_equal fst Hcomp) as HC; cbn [fst] in HC.
+ pose proof (f_equal snd Hcomp) as Hmax; cbn [snd] in Hmax.
+ unfold backend.from_stack, backend.from_lab in HC.
+ set (max_heap := 2 * data_to_word.max_heap_limit a (backend.data_conf c) - 1) in *.
+ set (sp := reg_count ac - (LENGTH (avoid_regs ac) + 3)) in *.
+ set (lprog := stack_to_lab.compile (backend.stack_conf c) (backend.data_conf c) max_heap sp (addr_offset ac) p) in *.
+ destruct (lab_to_target.compile ac (backend.lab_conf c) lprog) as [[tbytes ltconf]|] eqn:HL;
+   cbn [backend.attach_bitmaps] in HC; [|discriminate].
+ injection HC as Hbytes Hbm Hc; subst tbytes bm c'.
+
+ assert (HNI : labProps.no_install lprog).
+ { unfold lprog; eapply from_pan_to_lab_no_install; repeat match goal with |- _ /\ _ => split end; eassumption || reflexivity. }
+ assert (HLabs : stack_to_labProof.labels_ok lprog).
+ { eapply pan_to_lab_labels_ok; repeat match goal with |- _ /\ _ => split end; eassumption || reflexivity. }
+ assert (HEnc : labProps.all_enc_ok_pre ac lprog).
+ { unfold lprog, max_heap, sp; eapply pan_to_lab_all_enc_ok_pre;
+   repeat match goal with |- _ /\ _ => split end; eassumption. }
+ assert (HGood : basic.good_code ac (LN : spt (spt N)) lprog).
+ { eapply pan_to_lab_good_code_lemma; repeat match goal with |- _ /\ _ => split end; eassumption || reflexivity. }
+
+ pose proof Hbackend as HBC; unfold backendProof.backend_config_ok in HBC.
+ destruct HBC as (Hsrc & Happ & Hnext & Hreg & Hpos & Hlabels & Hdc & HBC).
+ pose proof (proj1 Hmc) as Hdim.
+ cbn [backend.set_symbols backend.set_lab_conf backend.lab_conf] in Hinstalled.
+ unfold pan_installed, backendProof.heap_regs in Hinstalled; cbn beta iota zeta in Hinstalled.
+ destruct Hinstalled as (ast & mem0 & bitmap_ptr & bitmap_dm & shared_dm & Hp_mem & Hgis & Hshared & Ha2 & Ha4 & Hab & Hle24 & Hroom & Hdisjoint & Hbm0 & Hbm1 & Hbm2 & Hcb3 & Hcb4 & Hbitmap & Hffi_names & Hmeta).
+ destruct (backendProof.compile_lab_IMP_mmio_pcs_min_index ac (backend.lab_conf c)
+   (lab_filter.filter_skip lprog) bytes ltconf (conj HL Hffis)) as (ffis & Hffi_eq & i & Hindex).
+ rewrite Hffi_names in Hffi_eq; injection Hffi_eq as <-.
+ destruct (Hmeta i Hindex) as (Hmap & Hmmio & Hbound).
+ assert (HLpos : lab_to_target.pos ltconf = LENGTH bytes).
+ { pose proof (backendProof.compile_lab_LENGTH ac (backend.lab_conf c) (lab_filter.filter_skip lprog) bytes ltconf HL) as HH.
+   rewrite Hpos, N.add_0_r in HH; exact HH. }
+ set (lorac := fun _ : N => (ltconf, (([] : list (N * stackLang.prog a)), ([] : list (word a))))).
+ set (sorac := fun _ : N => (ltconf, ([] : list (labLang.sec a)))).
+
+ assert (HOracle : init_defs.compiler_oracle_ok sorac (lab_to_target.labels ltconf) (LENGTH bytes) ac (targetSem.ffi_names mc)).
+ { unfold init_defs.compiler_oracle_ok, sorac; cbn beta iota zeta; split.
+   - intros n; split; [apply lab_good_code_nil|].
+     unfold labProps.no_share_mem_inst; intros; cbn [labSem.asm_fetch_aux]; discriminate.
+   - repeat match goal with |- _ /\ _ => split end; assumption || reflexivity. }
+ set (heap_stack_dm := fun w => word_ls (asmSem.regs ast (stack_names.find_name (stack_to_lab.reg_names (backend.stack_conf c)) 2)) w /\
+   word_lo w (asmSem.regs ast (stack_names.find_name (stack_to_lab.reg_names (backend.stack_conf c)) 4))) in *.
+ set (labst := init_defs.make_init mc ffi0 ast mem0
+   ((heap_stack_dm UNION bitmap_dm) INTER (fun w => byte_aligned w))
+   (shared_dm INTER (fun w => byte_aligned w)) ms lprog (lab_to_target.compile ac)
+   (get_pc (target mc) ms + n2w (LENGTH bytes))%w cbspace sorac).
+ assert (HMachine : semanticsProps.implements' true (machine_sem mc ffi0 ms) (fun b => b = labSem.semantics labst)).
+ { pose proof (semantics_compile.semantics_compile mc lprog sorac (backend.lab_conf c) ltconf ac bytes ms cbspace ast mem0
+     (heap_stack_dm UNION bitmap_dm) shared_dm i ffi0) as HH.
+   assert (HHpre : init_defs.mc_conf_ok mc /\
+     (labProps.no_share_mem_inst lprog -> init_defs.compiler_oracle_ok sorac (lab_to_target.labels ltconf) (LENGTH bytes) ac (targetSem.ffi_names mc)) /\
+     basic.good_code ac (lab_to_target.labels (backend.lab_conf c)) lprog /\
+     ac = asmProps.config (target mc) /\
+     lab_to_target.labels (backend.lab_conf c) = LN /\ lab_to_target.pos (backend.lab_conf c) = 0 /\
+     lab_to_target.compile ac (backend.lab_conf c) lprog = SOME (bytes,ltconf) /\
+     lab_to_target.ffi_names ltconf = SOME (targetSem.ffi_names mc) /\
+     good_init_state mc ms bytes cbspace ast mem0 (heap_stack_dm UNION bitmap_dm) shared_dm /\
+     mmio_pcs_min_index (targetSem.ffi_names mc) = SOME i /\
+     MAP (fun rec => w2n (get_pc (target mc) ms) + lab_to_target.entry_pc rec) (lab_to_target.shmem_extra ltconf) = DROP i (MAP w2n (ffi_entry_pcs mc)) /\
+     mmio_info mc = ZIP (GENLIST (fun index => index + i) (LENGTH (lab_to_target.shmem_extra ltconf)),
+       MAP (fun rec => (lab_to_target.nbytes rec,(Addr (lab_to_target.addr_reg rec) (n2w (lab_to_target.addr_off rec)),
+        (lab_to_target.reg rec,(n2w (lab_to_target.exit_pc rec) + get_pc (target mc) ms)%w)))) (lab_to_target.shmem_extra ltconf)) /\
+     basic.no_install_or_no_share_mem lprog (targetSem.ffi_names mc) /\
+     cbspace + LENGTH bytes + lab_to_target.ffi_offset * (i+3) < dimword a /\
+     (forall ffis, lab_to_target.ffi_names (backend.lab_conf c) = SOME ffis -> EVERY (fun x => bool_decide (exists str, x = ffi.ExtCall str)) ffis)).
+   { repeat match goal with |- _ /\ _ => split end; try assumption; try reflexivity.
+     - intros; exact HOracle.
+     - rewrite Hlabels; exact HGood.
+     - unfold basic.no_install_or_no_share_mem; auto.
+     - intros ffis E; rewrite E in Hffis; exact Hffis. }
+   specialize (HH HHpre); unfold pred_set.INSERT, pred_set.EMPTY, pred_set.IN in HH.
+   unfold semanticsProps.implements' in *; intros Hfail b Hb.
+   specialize (HH ltac:(unfold labst, pred_set.IN in Hfail; unfold pred_set.IN; tauto) b Hb).
+   change (b = labSem.semantics labst \/ False) in HH; destruct HH as [HH|HH]; [exact HH|contradiction]. }
+
+ set (w2 := asmSem.regs ast (stack_names.find_name (stack_to_lab.reg_names (backend.stack_conf c)) 2)) in *.
+ set (w3 := asmSem.regs ast (stack_names.find_name (stack_to_lab.reg_names (backend.stack_conf c)) 3)) in *.
+ set (w4 := asmSem.regs ast (stack_names.find_name (stack_to_lab.reg_names (backend.stack_conf c)) 4)) in *.
+ assert (HHeapDomain : heap_stack_dm INTER (fun w => byte_aligned w) =
+   stack_removeProof.addresses w2 (w2n (w4-w2)%w DIV (dimindex a DIV 8))).
+ { rewrite <- (aligned_interval_addresses w2 w4 Hdim Ha2 Ha4 Hle24).
+   unfold heap_stack_dm; apply functional_extensionality; intros x; apply propositional_extensionality;
+   unfold pred_set.INTER, pred_set.IN; tauto. }
+ assert (HHeapMemory : word_list_exists w2 (w2n (w4-w2)%w DIV (dimindex a DIV 8))
+   (fun2set (mem0,heap_stack_dm INTER (fun w => byte_aligned w)))).
+ { rewrite HHeapDomain; apply backendProof.word_list_exists_imp; split; [reflexivity|]; split; [|exact Hdim].
+   assert (Hd : dimindex a DIV 8 <> 0) by (destruct Hdim as [E|E]; rewrite E; discriminate).
+   pose proof (N.div_mod (w2n (w4-w2)%w) (dimindex a DIV 8) Hd).
+   pose proof (w2n_lt (w4-w2)%w); nia. }
+ assert (HFullMemory : STAR
+   (STAR (word_list bitmap_ptr (MAP wordLang.Word bitmaps))
+     (word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))%w data_sp))
+   (word_list_exists w2 (w2n (w4-w2)%w DIV (dimindex a DIV 8)))
+   (fun2set (mem0,(heap_stack_dm UNION bitmap_dm) INTER (fun w => byte_aligned w)))).
+ { replace ((heap_stack_dm UNION bitmap_dm) INTER (fun w => byte_aligned w))
+     with (((fun w => byte_aligned w) INTER bitmap_dm) UNION (heap_stack_dm INTER (fun w => byte_aligned w))).
+   2: { apply functional_extensionality; intros x; apply propositional_extensionality; unfold pred_set.INTER, pred_set.UNION, pred_set.IN; tauto. }
+   apply STAR_same_memory; [exact Hbitmap|exact HHeapMemory|].
+   apply (proj2 (DISJOINT_iff _ _)); pose proof (proj1 (DISJOINT_iff heap_stack_dm bitmap_dm) Hdisjoint) as HD.
+   intros x; unfold pred_set.INTER, pred_set.IN; specialize (HD x); tauto. }
+ assert (HMemory : stack_to_labProof.memory_assumption (stack_to_lab.reg_names (backend.stack_conf c)) bitmaps data_sp labst).
+ { unfold stack_to_labProof.memory_assumption; exists w2,w3,w4,bitmap_ptr.
+   unfold labst, init_defs.make_init; cbn beta iota zeta.
+   cbn [labSem.read_reg labSem.mem labSem.mem_domain labSem.code_buffer wordSem.position wordSem.space_left wordSem.buffer_buffer].
+   repeat match goal with |- _ /\ _ => split end; try assumption; try reflexivity.
+- rewrite Hcb4; f_equal; stack_removeProof.wring.
+   - assert (Hbw : w2n (bytes_in_word : word a) = dimindex a DIV 8).
+     { unfold bytes_in_word; rewrite w2n_n2w; destruct Hdim as [E|E]; rewrite E, dimword_pow, E; reflexivity. }
+     assert (Hsub : (- n2w 1 * w2 + w4)%w = (w4-w2)%w) by stack_removeProof.wring.
+     rewrite Hbw,Hsub; exact HFullMemory. }
+
+ pose proof Hinit as HI; unfold backendProof.mc_init_ok in HI.
+ destruct HI as (Hsave & HR4 & HR3 & HR2 & HR1 & HR0 & Hdata_be & Hneq2 & Hneq1 & Hneq4 & Hneq3 & Hlinksave & Hac).
+ assert (HStackGood : stack_to_labProof.good_code sp p).
+ { unfold sp; eapply word_to_stack_good_code_lemma;
+   repeat match goal with |- _ /\ _ => split end; eassumption. }
+ destruct HBC as (Hlong & Hdiv & Htern & Hfp & Hmh & Hperf & Hoffset & Hhw & Hbyte & Himm8 & Himm4 & Himm1 & HimmSub & Hffis2 & Hbij & Hnames & Hfixed & Hrest).
+ destruct (stack_to_labProof.full_make_init (backend.stack_conf c) (backend.data_conf c)
+   max_heap sp (addr_offset ac) bitmaps p labst (set (callee_saved_regs mc)) data_sp lorac)
+   as [sst opt] eqn:HFullInit.
+ pose proof (stack_to_labProof.full_make_init_semantics (backend.stack_conf c) (backend.data_conf c)
+   max_heap sp (addr_offset ac) bitmaps p labst (set (callee_saved_regs mc)) data_sp lorac sst opt) as HStack.
+assert (HStackPre : opt <> NONE /\
+   (stackSem.semantics bvl_to_bvi.InitGlobals_location sst <> Fail ->
+    labSem.semantics labst = stackSem.semantics bvl_to_bvi.InitGlobals_location sst)).
+ { apply HStack; repeat match goal with |- _ /\ _ => split end;
+   try assumption; try reflexivity.
+ - unfold labst,init_defs.make_init; cbn [labSem.failed]; discriminate.
+ - change (~ (match link_reg ac with NONE => 0 | SOME n => n end) IN set (callee_saved_regs mc)).
+   rewrite <- MEM_set; exact Hlinksave.
+ - intros k i0 n HK; unfold labst,init_defs.make_init; cbn [labSem.io_regs];
+   apply targetProps.target_io_regs_callee_saved; apply MEM_set; exact HK.
+ - intros k n HK; unfold labst,init_defs.make_init; cbn [labSem.cc_regs];
+   apply targetProps.target_cc_regs_callee_saved; apply MEM_set; exact HK.
+ - intros x HX; apply backendProof.byte_aligned_MOD; [exact Hdim|].
+   change (x IN ((heap_stack_dm UNION bitmap_dm) INTER (fun w => byte_aligned w))) in HX.
+   exact (proj2 HX).
+ - intros x HX; apply backendProof.byte_aligned_MOD; [exact Hdim|].
+   change (x IN (shared_dm INTER (fun w => byte_aligned w))) in HX; exact (proj2 HX).
+ - intros n; unfold lorac,stack_to_labProof.good_code; cbn; repeat split; reflexivity.
+ - unfold sp; lia.
+ - apply EVERY_Forall; apply EVERY_Forall in Hsave; rewrite Forall_forall in *.
+   intros r Hr; apply bool_decide_spec; apply MEM_set.
+   replace (r+sp-2) with (r+reg_count ac-(LENGTH (avoid_regs ac)+5)).
+   + exact (Hsave r Hr).
+   + unfold sp; cbn in Hr; destruct Hr as [<-|[<-|[<-|H]]]; try contradiction; lia.
+ }
+
+ destruct HStackPre as [HOpt HStackSem].
+ destruct opt as [xxx|]; [|contradiction].
+ set (k := reg_count ac-(LENGTH (avoid_regs ac)+5)).
+ set (worac := fun _ : N => ((LENGTH bitmaps,ltconf),([] : list (N*(N*wordLang.prog a))))).
+ pose proof (compile_props.compile_word_to_stack_bitmaps ac wprog bitmaps wc (fs,p) HS) as [HBm HBmLen].
+ destruct bitmaps as [|b btl]; [contradiction|]; subst b.
+ assert (HInitState : comp_semantics.init_state_ok ac k sst worac).
+ { eapply stack_to_labProof.IMP_init_state_ok; repeat match goal with |- _ /\ _ => split end;
+   try eassumption; try reflexivity.
+   - unfold k; lia.
+   - intros n; unfold worac; cbn; repeat split; reflexivity.
+ }
+ set (g := stack_to_lab.is_gen_gc (data_to_word.gc_kind (backend.data_conf c))).
+ set (jp := stack_to_lab.jump (backend.stack_conf c)).
+ set (f := stack_to_lab.reg_names (backend.stack_conf c)).
+ set (off := addr_offset ac).
+ set (cd1 := stack_alloc.compile (backend.data_conf c) (stack_rawcall.compile p)).
+ set (cd2 := stack_remove.compile jp off g max_heap sp bvl_to_bvi.InitGlobals_location cd1).
+ set (cd3 := fromAList (stack_names.compile f cd2)).
+ set (co1 := (combin.I ## (MAP (@stack_alloc.prog_comp a) ## combin.I)) ∘ lorac).
+ set (co2 := (combin.I ## (MAP (stack_remove.prog_comp jp off sp) ## combin.I)) ∘ co1).
+ set (co3 := (combin.I ## (stack_names.compile f ## combin.I)) ∘ co2).
+ set (s3 := stack_to_labProof.make_init cd3 co3 (MAP (stack_names.find_name f) [2;3;4]) (set (callee_saved_regs mc)) labst).
+ set (s2 := stack_namesProof.make_init f (fromAList cd2) co2 s3).
+ change ((stack_allocProof.make_init (backend.data_conf c) (fromAList p) lorac
+   (stack_removeProof.make_init_any g max_heap (n2w 4::btl) data_sp co1 jp off sp (fromAList cd1) s2),
+   stack_removeProof.make_init_opt g max_heap (n2w 4::btl) data_sp co1 jp off sp (fromAList cd1) s2) = (sst,SOME xxx)) in HFullInit.
+ pose proof (f_equal fst HFullInit) as HInitFst; cbn [fst] in HInitFst.
+ pose proof (f_equal snd HFullInit) as HInitOpt; cbn [snd] in HInitOpt.
+ assert (HStackCode : stackSem.code sst = fromAList p).
+ { rewrite <- HInitFst; unfold stack_allocProof.make_init.
+   cbn [stackSem.set_compile_oracle stackSem.set_compile stackSem.set_gc_fun stackSem.set_use_stack stackSem.set_use_alloc stackSem.set_code stackSem.code]; reflexivity. }
+ assert (HStackBitmaps : stackSem.bitmaps sst = n2w 4 :: btl).
+ { rewrite <- HInitFst.
+   change (stackSem.bitmaps (stack_removeProof.make_init_any g max_heap (n2w 4::btl) data_sp co1 jp off sp (fromAList cd1) s2) = n2w 4::btl).
+   rewrite stack_removeProof.make_init_any_bitmaps, HInitOpt; reflexivity. }
+
+ assert (HNS : EVERY (fun '(_,(_,prg)) => bool_decide (wordConvs.no_share_inst prg \/ ISA ac <> Ag32)) wprog0).
+ { apply EVERY_Forall; apply Forall_forall; intros [n [m prg]] H; apply bool_decide_spec; auto. }
+ destruct (backendProof.compile_to_word_conventions2 _ _ _ _ _ (conj HW HNS)) as [HNames [HLabels HConvs]].
+ assert (HWordConvs : EVERY (fun '(n,(m,prg)) => wordConvs.flat_exp_conventions prg &&
+   wordConvs.post_alloc_conventions (reg_count ac-(5+LENGTH (avoid_regs ac))) prg) wprog).
+ { apply EVERY_Forall; apply EVERY_Forall in HConvs; eapply Forall_impl; [|exact HConvs].
+   intros [n [m prg]] HCv; apply bool_decide_spec in HCv; apply andb_true_iff; tauto. }
+ assert (HLabMin : forall n prg, In (n,prg) wprog -> 60 <= n).
+ { pose proof (pan_to_wordProof.pan_to_word_compile_prog_lab_min (ISA ac) pan_code wprog0 eq_refl) as HMin.
+   apply EVERY_Forall in HMin; intros n prg HIn.
+   assert (HInN : In n (MAP FST wprog0)).
+   { rewrite <- HNames; apply in_map_iff; exists (n,prg); auto. }
+   apply in_map_iff in HInN as [[nn pp] [EN HIn0]]; cbn in EN; subst nn.
+   rewrite Forall_forall in HMin; specialize (HMin _ HIn0); apply N.leb_le; exact HMin. }
+ assert (HStub1 : ALOOKUP wprog wordLang.raise_stub_location = NONE).
+ { apply ALOOKUP_NONE; intros HM; unfold is_true in HM; rewrite MEM_In in HM.
+   apply in_map_iff in HM as [[n prg] [EN HIn]]; cbn in EN; subst n.
+   pose proof (HLabMin _ prg HIn); unfold wordLang.raise_stub_location in H; cbn in H; lia. }
+ assert (HStub2 : ALOOKUP wprog wordLang.store_consts_stub_location = NONE).
+ { apply ALOOKUP_NONE; intros HM; unfold is_true in HM; rewrite MEM_In in HM.
+   apply in_map_iff in HM as [[n prg] [EN HIn]]; cbn in EN; subst n.
+   pose proof (HLabMin _ prg HIn); unfold wordLang.store_consts_stub_location in H; cbn in H; lia. }
+ set (wst := comp_semantics.make_init ac k sst (fromAList wprog) worac).
+ assert (HWordStack : wordSem.semantics wst bvl_to_bvi.InitGlobals_location <> Fail ->
+   stackSem.semantics bvl_to_bvi.InitGlobals_location sst IN
+   semanticsProps.extend_with_resource_limit' (bool_decide (wordSem.word_lang_safe_for_space wst bvl_to_bvi.InitGlobals_location))
+   (wordSem.semantics wst bvl_to_bvi.InitGlobals_location INSERT EMPTY)).
+ { intros HNF; eapply comp_semantics.compile_semantics;
+   repeat match goal with |- _ /\ _ => split end; try eassumption.
+   - rewrite HS; exact HStackCode.
+   - unfold k; f_equal; lia.
+   - rewrite HS; cbn [fst FST]; rewrite HStackBitmaps; apply isPREFIX_REFL. }
+
+ assert (HSaveShift : EVERY (fun r => bool_decide (stack_names.find_name f (r+sp-2) IN set (callee_saved_regs mc))) [2;3;4]).
+ { apply EVERY_Forall; apply EVERY_Forall in Hsave; rewrite Forall_forall in *.
+   intros r Hr; apply bool_decide_spec; apply MEM_set.
+   replace (r+sp-2) with (r+reg_count ac-(LENGTH (avoid_regs ac)+5)).
+   - exact (Hsave r Hr).
+   - unfold sp; cbn in Hr; destruct Hr as [<-|[<-|[<-|H]]]; try contradiction; lia. }
+ assert (HD : stack_removeProof.discharge_these jp off g max_heap sp bvl_to_bvi.InitGlobals_location co1 cd1 s2).
+ { unfold s2,s3; eapply stack_to_labProof.initialization_discharge;
+   try eassumption; try (unfold sp; lia).
+   intros n; unfold lorac,stack_to_labProof.good_code; cbn; repeat split; reflexivity. }
+ assert (HP : stack_removeProof.propagate_these s2 (n2w 4::btl) data_sp).
+ { unfold s2,s3; apply stack_to_labProof.memory_assumption_propagates; assumption. }
+ pose proof (init_code_pre_from_initialization jp off g max_heap sp bvl_to_bvi.InitGlobals_location co1 cd1 s2 (n2w 4::btl) data_sp HD HP) as HInitPre.
+ pose proof HD as HDcopy.
+ destruct HDcopy as (HEv & HOrc & HCo & HCd & Hsp8 & HOne & HSaved & HNoStack & HNoStore & HNoAlloc & HMaxHeap).
+ assert (HCodeRel : stack_removeProof.code_rel jp off sp (fromAList cd1) (stackSem.code s2)).
+ { eapply stack_removeProof.IMP_code_rel; split; eassumption. }
+ assert (HErr : lookup stack_remove.stack_err_lab (stackSem.code s2) = SOME (stack_remove.halt_inst (n2w 2))).
+ { rewrite HCd,lookup_fromAList; reflexivity. }
+ pose proof (stack_removeProof.init_code_thm g max_heap sp (n2w 4::btl) data_sp s2 jp off (fromAList cd1) co1
+   (conj HInitPre (conj HCodeRel (conj HCo (conj HOrc (conj HErr HMaxHeap)))))) as HInitFacts.
+ destruct (stackSem.evaluate (stack_remove.init_code g max_heap sp,s2)) as [[res|] sss] eqn:HEval; [contradiction|].
+ destruct HInitFacts as (HRegs & HStateRel & HInitFFI & HInitProp & HMdConst & HShConst & HMemConst).
+ assert (Hxxx : xxx = stack_removeProof.init_reduce g jp off sp (fromAList cd1) (n2w 4::btl) data_sp co1 sss).
+ { unfold stack_removeProof.make_init_opt in HInitOpt; rewrite HEval in HInitOpt.
+   destruct (classical_dec _) as [HT|HT]; [injection HInitOpt; auto|discriminate]. }
+ assert (HSst : sst = stack_allocProof.make_init (backend.data_conf c) (fromAList p) lorac xxx).
+ { rewrite <- HInitFst; unfold stack_removeProof.make_init_any; rewrite HInitOpt; reflexivity. }
+
+ assert (HRead2 : FLOOKUP (stackSem.regs s2) 2 = SOME (wordLang.Word w2)).
+ { change (FLOOKUP (stackSem.regs s2) 2 = SOME (labSem.read_reg (stack_names.find_name f 2) labst)).
+   exact (stack_to_labProof.initial_renamed_regs f (fromAList cd2) co2 cd3 co3 (set (callee_saved_regs mc)) labst 2 Hbij (or_introl eq_refl)). }
+ assert (HRead3 : FLOOKUP (stackSem.regs s2) 3 = SOME (wordLang.Word w3)).
+ { change (FLOOKUP (stackSem.regs s2) 3 = SOME (labSem.read_reg (stack_names.find_name f 3) labst)).
+   exact (stack_to_labProof.initial_renamed_regs f (fromAList cd2) co2 cd3 co3 (set (callee_saved_regs mc)) labst 3 Hbij (or_intror (or_introl eq_refl))). }
+ assert (HRead4 : FLOOKUP (stackSem.regs s2) 4 = SOME (wordLang.Word w4)).
+ { change (FLOOKUP (stackSem.regs s2) 4 = SOME (labSem.read_reg (stack_names.find_name f 4) labst)).
+   exact (stack_to_labProof.initial_renamed_regs f (fromAList cd2) co2 cd3 co3 (set (callee_saved_regs mc)) labst 4 Hbij (or_intror (or_intror (or_introl eq_refl)))). }
+ destruct HRegs as (iw2 & iw3 & iw4 & IR2 & IA2 & IO2 & IR4 & IA4 & IL24 & IO4 & IO3 & IR3).
+ rewrite HRead2 in IR2; injection IR2 as <-.
+ rewrite HRead3 in IR3; injection IR3 as <-.
+ rewrite HRead4 in IR4; injection IR4 as <-.
+ pose proof (proj1 (asmProps.sym_target_state_rel _ _ _) (proj1 Hgis)) as HTR.
+ destruct HTR as (_ & _ & _ & HTRegs & _).
+ pose proof Hmc as HMCC; unfold init_defs.mc_conf_ok in HMCC.
+ destruct HMCC as (_ & _ & HMptr & HMlen & HMptr2 & HMlen2 & HMrest).
+ assert (EW2 : w2 = get_reg (target mc) ms (len_reg mc)).
+ { unfold w2; rewrite HR2; apply HTRegs; unfold reg_ok in HMlen; apply andb_true_iff in HMlen as [HN HA]; apply N.ltb_lt in HN; apply negb_true_iff in HA; split; [exact HN|unfold is_true; rewrite HA; discriminate]. }
+ assert (EW3 : w3 = get_reg (target mc) ms (ptr2_reg mc)).
+ { unfold w3; rewrite HR3; apply HTRegs; unfold reg_ok in HMptr2; apply andb_true_iff in HMptr2 as [HN HA]; apply N.ltb_lt in HN; apply negb_true_iff in HA; split; [exact HN|unfold is_true; rewrite HA; discriminate]. }
+ assert (EW4 : w4 = get_reg (target mc) ms (len2_reg mc)).
+ { unfold w4; rewrite HR4; apply HTRegs; unfold reg_ok in HMlen2; apply andb_true_iff in HMlen2 as [HN HA]; apply N.ltb_lt in HN; apply negb_true_iff in HA; split; [exact HN|unfold is_true; rewrite HA; discriminate]. }
+
+ assert (HL2 : word_ls (w2+n2w stack_remove.max_stack_alloc*bytes_in_word)%w w3).
+ { rewrite EW2,EW3,WORD_MULT_COMM,<-Hadj2; exact Hadj2_le. }
+ assert (HL4 : word_ls w3 (w4-n2w stack_remove.max_stack_alloc*bytes_in_word)%w).
+ { rewrite EW3,EW4,WORD_MULT_COMM,<-Hadj4; exact Hadj4_le. }
+ assert (HDiff : (w3-w2)%w = (w3+ -n2w 1*w2)%w) by stack_removeProof.wring.
+ assert (HHBound : w2n (w3-w2)%w <= max_heap*w2n (bytes_in_word : word a)).
+ { rewrite HDiff,EW2,EW3; nia. }
+ assert (HHAlign : aligned (backend_common.word_shift a+1) (w3-w2)%w).
+ { rewrite HDiff,EW2,EW3; exact Haligned. }
+ destruct (init_arith_precise w2 w3 w4 max_heap Hdim Ha2 Ha4 Hle24 Hroom Hmh HL2 HL4 HHBound Hheap_lt HHAlign)
+   as (hl & rest & HGeo3 & HGeo4 & HRest & HHl & HHlMax & HReadLimits).
+ assert (HHBoundRev : w2n (-n2w 1*w2+w3)%w <= max_heap*w2n (bytes_in_word : word a)).
+ { replace (-n2w 1*w2+w3)%w with (w3-w2)%w by stack_removeProof.wring; exact HHBound. }
+ specialize (IO3 (conj HL2 (conj HL4 (conj HHBoundRev Hheap_lt)))).
+ rewrite data_to_word_gcProof.lsr_lsl in IO3 by (rewrite <- HDiff; exact HHAlign).
+ assert (HBasePtr : (w3+ -n2w 1*w2+w2+bytes_in_word*n2w (LENGTH stack_remove.store_list))%w =
+   (w3+bytes_in_word*n2w 48)%w).
+ { change (LENGTH stack_remove.store_list) with 48; stack_removeProof.wring. }
+ rewrite HBasePtr in IO3.
+ assert (HHeapNat : heap_len=2*hl).
+ { rewrite Hheap_len,<-EW3,<-Hbase,<-EW2,<-HDiff.
+   assert (EV3 : w2n w3=w2n w2+2*hl*(dimindex a DIV 8)).
+   { rewrite HGeo3,stack_removeProof.w2n_n2w_lt; [reflexivity|pose proof (w2n_lt w4); nia]. }
+   rewrite word_sub_w2n by (apply WORD_LS; rewrite EV3; lia).
+   rewrite EV3; replace (w2n w2+2*hl*(dimindex a DIV 8)-w2n w2) with (2*hl*(dimindex a DIV 8)) by lia.
+   rewrite N.div_mul by (destruct Hdim as [E|E]; rewrite E; discriminate); reflexivity. }
+
+ assert (HReadPointers : stack_removeProof.read_pointers s2=(w2,(w3,w4))).
+ { unfold stack_removeProof.read_pointers; rewrite HRead2,HRead3,HRead4; reflexivity. }
+ assert (HMachineLimits : backendProof.read_limits ac c mc ms=(rest,hl)).
+ { unfold backendProof.read_limits; fold max_heap; rewrite HR2,HR3,HR4,<-EW2,<-EW3,<-EW4; exact HReadLimits. }
+ rewrite HReadPointers,HReadLimits,<-Hxxx in HInitProp.
+ pose proof HInitProp as HInitPropCopy; unfold stack_removeProof.init_prop in HInitPropCopy.
+ destruct HInitPropCopy as (curr & other & bp & len & HCur & HNext & HTrigger & HEnd & HOther & HBmp & HLen & HProgStart & HAllocSize & HGlobals0 & HGlobReal & HHandler0 & HGenStart & HCB & HCBE & HDB & HDBE & HLimits & HCBNil & HDBNil & HUseStack & HUseStore & HReg0 & HBitmapLen & HStackLen & HOtherEq & HCurAlign & HLast & HStackSpace & HStackDim & HLenMax & HHeapStar).
+ assert (HCurr : FLOOKUP (stackSem.store xxx) stackLang.CurrHeap = SOME (wordLang.Word w2)).
+ { pose proof HStateRel as HH; rewrite <-Hxxx in HH; unfold stack_removeProof.state_rel in HH.
+   destruct HH as (_ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & HH & _).
+   rewrite <-HH; exact IO2. }
+ assert (HHeapLength : FLOOKUP (stackSem.store xxx) stackLang.HeapLength = SOME (wordLang.Word (n2w hl*bytes_in_word)%w)).
+ { exact (proj1 HLimits). }
+ assert (HStackLimit : LENGTH (stackSem.stack sst)=rest).
+ { rewrite HSst.
+   change (LENGTH (stackSem.stack xxx)=rest).
+   symmetry; exact (proj2 (proj2 HLimits)). }
+ assert (HHeapDomainX : stackSem.mdomain xxx=stack_removeProof.addresses w2 (2*hl)).
+ { rewrite Hxxx; unfold stack_removeProof.init_reduce; cbv zeta.
+   cbn [stackSem.mdomain].
+   rewrite (stack_removeProof.FAPPLY_SOME _ _ _ IO2),(stack_removeProof.FAPPLY_SOME _ _ _ IO3).
+   cbn [wordSem.theWord].
+   change (LENGTH stack_remove.store_list) with 48.
+   rewrite (initialized_heap_size w2 w3 w4 hl rest Hdim HGeo3 HGeo4); reflexivity. }
+
+ assert (HGlobalsScale : globals_size*dimindex a DIV 8=globals_size*(dimindex a DIV 8)).
+ { apply good_dimindex_div_mul; exact Hdim. }
+ assert (HTop : panSem.top_addr s=(w2+bytes_in_word*n2w (heap_len-globals_size))%w).
+ { rewrite Htop,<-Hbase,<-EW2,HGlobalsScale.
+   unfold bytes_in_word; rewrite word_mul_n2w.
+   rewrite <-word_mul_n2w; rewrite <-stack_removeProof.n2w_sub_N by exact Hglobals_le.
+   stack_removeProof.wring. }
+ assert (HMdomain : wordSem.mdomain wst=panSem.memaddrs s UNION pan_globalsProof.addresses (panSem.top_addr s) globals_size).
+ { unfold wst; change (stackSem.mdomain sst=panSem.memaddrs s UNION pan_globalsProof.addresses (panSem.top_addr s) globals_size).
+   rewrite HSst; change (stackSem.mdomain xxx=panSem.memaddrs s UNION pan_globalsProof.addresses (panSem.top_addr s) globals_size).
+   rewrite HHeapDomainX,<-HHeapNat,Hmemaddrs,<-EW2,HTop.
+   replace heap_len with ((heap_len-globals_size)+globals_size) at 1 by lia.
+   apply pan_globalsProof.addresses_split. }
+ rewrite <-Hxxx in HMemConst.
+ assert (HMemoryConst : forall ad, ad IN stackSem.mdomain xxx -> stackSem.memory xxx ad=mem0 ad).
+ { intros ad Had; pose proof (proj1 (fun2set_eq _ _ _) HMemConst) as HH.
+   rewrite Hxxx; change (stackSem.memory sss ad=mem0 ad).
+   transitivity (stackSem.memory s2 ad); [symmetry; apply HH; exact Had|reflexivity]. }
+ assert (HXAligned : forall ad, ad IN stackSem.mdomain xxx -> byte_aligned ad).
+ { intros ad Had; rewrite HHeapDomainX,stack_removeProof.addresses_thm in Had.
+   destruct Had as (idx & -> & Hi); apply byte_aligned_add; split; [exact Ha2|].
+   rewrite WORD_MULT_COMM; apply pan_globalsProof.byte_aligned_bytes_in_word_mul; exact Hdim. }
+ assert (HNoLabels : pan_to_wordProof.no_labels (stackSem.memory xxx) (stackSem.mdomain xxx)).
+ { unfold pan_to_wordProof.no_labels; intros ad Had; rewrite HMemoryConst by exact Had.
+   pose proof Hgis as HGis; unfold targetSem.good_init_state in HGis.
+   destruct HGis as (_ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & _ & HMemWords & _).
+   destruct (HMemWords ad) as [w [_ HWd]]; exists w.
+   rewrite (proj1 (byte_align_aligned ad) (HXAligned ad Had)) in HWd; exact HWd. }
+
+ assert (HFullFst : sst=FST (stack_to_labProof.full_make_init (backend.stack_conf c) (backend.data_conf c) max_heap sp off (n2w 4::btl) p labst (set (callee_saved_regs mc)) data_sp lorac)).
+ { symmetry; exact HInitFst. }
+ assert (HWordBe : wordSem.be wst=panSem.be s).
+ { unfold wst; change (stackSem.be sst=panSem.be s).
+   rewrite HFullFst.
+   pose proof (full_make_init_be (backend.stack_conf c) (backend.data_conf c) max_heap sp off (n2w 4::btl) p labst (set (callee_saved_regs mc)) data_sp lorac) as HH.
+   apply Bool.eq_true_iff_eq; rewrite HH; change (is_true (big_endian ac) <-> is_true (panSem.be s)); rewrite Hbe; tauto.  }
+ assert (HWordFFI : wordSem.ffi wst=panSem.ffi s).
+ { unfold wst; change (stackSem.ffi sst=panSem.ffi s).
+   rewrite HFullFst,stack_to_labProof.full_make_init_ffi; symmetry; exact Hffi. }
+ assert (HWordShared : wordSem.sh_mdomain wst=panSem.sh_memaddrs s).
+ { unfold wst; change (stackSem.sh_mdomain sst=panSem.sh_memaddrs s).
+   rewrite HSst; change (stackSem.sh_mdomain xxx=panSem.sh_memaddrs s).
+   rewrite Hxxx; change (stackSem.sh_mdomain sss=panSem.sh_memaddrs s).
+   rewrite <-HShConst; change (shared_dm INTER (fun w => byte_aligned w)=panSem.sh_memaddrs s).
+   symmetry; exact Hshared. }
+ assert (HWordNoLabels : pan_to_wordProof.no_labels (wordSem.memory wst) (wordSem.mdomain wst)).
+ { unfold wst; change (pan_to_wordProof.no_labels (stackSem.memory sst) (stackSem.mdomain sst)).
+   rewrite HSst; exact HNoLabels. }
+ assert (HWordMemory : forall ad, ad IN panSem.memaddrs s -> wordSem.memory wst ad=crep_to_loopProof.wlab_wloc (panSem.memory s ad)).
+ { intros ad Had; unfold wst; change (stackSem.memory sst ad=crep_to_loopProof.wlab_wloc (panSem.memory s ad)).
+   rewrite HSst; change (stackSem.memory xxx ad=crep_to_loopProof.wlab_wloc (panSem.memory s ad)).
+   rewrite HMemoryConst; [apply Hp_mem; exact Had|].
+   rewrite HHeapDomainX,<-HHeapNat.
+   rewrite Hmemaddrs,<-EW2 in Had.
+   replace heap_len with ((heap_len-globals_size)+globals_size) at 1 by (clear - Hglobals_le; lia).
+   rewrite pan_globalsProof.addresses_split; left; exact Had. }
+ set (wst0 := wordSem.set_code (fromAList wprog0) wst).
+ assert (HPan : wordSem.semantics wst0 crep_to_loop.first_name=panSem.semantics_decls s start pan_code).
+ { eapply pan_to_wordProof.state_rel_imp_semantics with (heap_len := (n2w hl*bytes_in_word)%w) (c := ISA ac).
+   repeat match goal with |- _ /\ _ => split end; try eassumption.
+ - change (ALOOKUP (fmap_to_alist (stackSem.store sst \\ stackLang.Handler)) stackLang.CurrHeap = SOME (wordLang.Word (panSem.base_addr s))).
+   rewrite HSst; change (ALOOKUP (fmap_to_alist (stackSem.store xxx \\ stackLang.Handler)) stackLang.CurrHeap = SOME (wordLang.Word (panSem.base_addr s))).
+   rewrite ALOOKUP_fmap_to_alist,DOMSUB_FLOOKUP_NEQ by discriminate.
+   rewrite HCurr,EW2,Hbase; reflexivity.
+ - change (ALOOKUP (fmap_to_alist (stackSem.store sst \\ stackLang.Handler)) stackLang.HeapLength = SOME (wordLang.Word (n2w hl*bytes_in_word)%w)).
+   rewrite HSst; change (ALOOKUP (fmap_to_alist (stackSem.store xxx \\ stackLang.Handler)) stackLang.HeapLength = SOME (wordLang.Word (n2w hl*bytes_in_word)%w)).
+   rewrite ALOOKUP_fmap_to_alist,DOMSUB_FLOOKUP_NEQ by discriminate; exact HHeapLength.
+ - rewrite Htop,HGlobalsScale,HHeapNat; unfold bytes_in_word; rewrite !word_mul_n2w.
+   stack_removeProof.wring.
+ - rewrite HTop; apply byte_aligned_add; split; [exact Ha2|].
+   apply pan_globalsProof.byte_aligned_bytes_in_word_mul; exact Hdim.
+ - reflexivity.
+ - change (lookup 0 (insert 0 (@wordLang.Loc a 1 0) LN)=SOME (@wordLang.Loc a 1 0)).
+   rewrite lookup_insert; destruct (decide (0=0)) as [HH|HH]; [reflexivity|contradiction].
+ }
+
+ pose proof (pan_to_wordProof.first_compile_prog_all_distinct (ISA ac) pan_code Hdistinct) as HDistinctWord.
+ pose proof (pan_to_wordProof.pan_to_word_compile_prog_no_install_code (ISA ac) pan_code wprog0 eq_refl) as HNI0.
+ pose proof (pan_to_wordProof.pan_to_word_compile_prog_no_alloc_code (ISA ac) pan_code wprog0 eq_refl) as HNA0.
+ pose proof (pan_to_wordProof.pan_to_word_compile_prog_no_mt_code (ISA ac) pan_code wprog0 eq_refl) as HMT0.
+ destruct (word_to_word_compile_no_install_no_alloc _ _ _ _ _ (conj HW (conj HDistinctWord (conj HMT0 HNI0)))) as [HNIWord HNAWordImp].
+ pose proof (HNAWordImp HNA0) as HNAWord.
+ assert (HGC : word_simpProof.gc_fun_const_ok (wordSem.gc_fun wst0)).
+ { unfold wst0,wst; change (word_simpProof.gc_fun_const_ok (stackSem.gc_fun sst)).
+   rewrite HSst; apply data_to_word_gcProof.gc_fun_const_ok_word_gc_fun. }
+ assert (HWordEq : wordSem.semantics wst0 crep_to_loop.first_name=wordSem.semantics wst crep_to_loop.first_name).
+ { eapply word_to_wordProof.word_to_word_compile_semantics;
+   repeat match goal with |- _ /\ _ => split end; try eassumption; try reflexivity.
+   rewrite HPan; exact Hsem. }
+ assert (HWordPan : wordSem.semantics wst bvl_to_bvi.InitGlobals_location=panSem.semantics_decls s start pan_code).
+ { rewrite InitGlobals_location_eq_first_name,<-HWordEq; exact HPan. }
+ assert (HWordNF : wordSem.semantics wst bvl_to_bvi.InitGlobals_location<>Fail) by (rewrite HWordPan; exact Hsem).
+ specialize (HWordStack HWordNF).
+
+ assert (HFrames : wordSem.state_stack_size wst=word_to_stack.stack_frame_size wc).
+ { unfold wst; apply initial_stack_frames with (bm := n2w 4::btl) (fs := fs) (p := p); [exact HS|unfold k; f_equal; lia]. }
+ assert (HNoError : forall ck res t, wordSem.evaluate (wordLang.Call NONE (SOME bvl_to_bvi.InitGlobals_location) [0] NONE,wordSem.set_clock ck wst)=(res,t) -> res<>SOME wordSem.Error).
+ { intros ck res t HE ->; apply HWordNF.
+   unfold wordSem.semantics; cbn beta iota zeta.
+   destruct (classical_dec _) as [HB|HB]; [reflexivity|].
+   exfalso; apply HB; exists ck; rewrite HE; reflexivity. }
+ assert (HSafe : option_lt stack_max (SOME rest) -> wordSem.word_lang_safe_for_space wst bvl_to_bvi.InitGlobals_location).
+ { intros HPrec; unfold wordSem.word_lang_safe_for_space; cbn beta iota zeta; intros ck res t HE.
+   pose proof (word_depthProof.max_depth_Call_NONE bvl_to_bvi.InitGlobals_location [0] (wordSem.set_clock ck wst) res t (fromAList wprog)
+     (conj HE (conj (HNoError ck res t HE) (sptree.subspt_refl (fromAList wprog))))) as HM.
+   assert (HConst : wordSem.state_stack_size t=wordSem.state_stack_size wst /\ wordSem.stack_limit t=wordSem.stack_limit wst).
+   { apply (evaluate_stack_size_limit_const_panLang (wordLang.Call NONE (SOME bvl_to_bvi.InitGlobals_location) [0] NONE) (wordSem.set_clock ck wst) res t);
+     repeat match goal with |- _ /\ _ => split end; [exact HE| |exact HNIWord| |exact HNAWord].
+     all: unfold wordConvs.no_install,wordConvs.no_alloc; cbn [wordConvs.not_created_subprogs]; repeat split; try exact Logic.I; intros H; discriminate. }
+   change (is_true (backendProps.option_le (wordSem.stack_max t)
+     (OPTION_MAP2 MAX (SOME 1) (OPTION_MAP2 N.add (SOME 1)
+       (word_depth.max_depth (wordSem.state_stack_size wst) (word_depth.full_call_graph bvl_to_bvi.InitGlobals_location (fromAList wprog))))))) in HM.
+   rewrite HFrames,Hmax in HM.
+   apply option_lt_SOME in HPrec as (m & EM & HMlt); rewrite EM in HM.
+   change (is_true (backendProps.option_le (wordSem.stack_max t) (SOME (MAX 1 (1+m))))) in HM.
+   assert (EMax1 : MAX 1 (1+m)=1+m).
+   { unfold MAX; destruct (1<?1+m) eqn:EL; [reflexivity|apply N.ltb_ge in EL; lia]. }
+   rewrite EMax1 in HM.
+   destruct (wordSem.stack_max t) as [mx|] eqn:ET; [|discriminate].
+   exists mx; split; [reflexivity|].
+   rewrite (proj2 HConst); change (mx<=LENGTH (stackSem.stack sst)); rewrite HStackLimit.
+   change ((mx <=? (1+m)) = true) in HM; apply N.leb_le in HM; lia. }
+ assert (HStackNF : stackSem.semantics bvl_to_bvi.InitGlobals_location sst<>Fail).
+ { eapply resource_not_fail; [exact HWordStack|exact HWordNF]. }
+ specialize (HStackSem HStackNF).
+ assert (HMachineWord : semanticsProps.extend_with_resource_limit' (bool_decide (wordSem.word_lang_safe_for_space wst bvl_to_bvi.InitGlobals_location))
+   (fun b => b=wordSem.semantics wst bvl_to_bvi.InitGlobals_location) (labSem.semantics labst)).
+ { rewrite HStackSem; unfold pred_set.INSERT,pred_set.EMPTY,pred_set.IN in HWordStack.
+   replace (fun b => b=wordSem.semantics wst bvl_to_bvi.InitGlobals_location) with
+     (fun b => b=wordSem.semantics wst bvl_to_bvi.InitGlobals_location \/ False) by
+     (apply functional_extensionality; intros b; apply propositional_extensionality; split; [intros [HB|HB]; [exact HB|contradiction]|intros HB; left; exact HB]).
+   exact HWordStack. }
+ rewrite <-HWordPan.
+ eapply compose_resource_precise; [exact HMachine|exact HMachineWord| |exact HWordNF].
+ intros HPrec; apply bool_decide_spec; apply HSafe.
+ apply bool_decide_spec in HPrec; rewrite HMachineLimits in HPrec; exact HPrec.
+Qed.
+End FinalComposition.
