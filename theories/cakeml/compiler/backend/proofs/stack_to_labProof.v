@@ -4870,6 +4870,102 @@ Proof.
  apply IN_BIGUNION_IMAGE_set. exists (Label n k z); split; [exact Hl|].
  cbn [line_get_code_labels]; apply IN_SING; reflexivity.
 Qed.
+Local Definition valid_labels n (ls : list (line a)) :=
+ forall n1 k z, In (Label n1 k z) ls -> n1 = n.
+Local Lemma valid_app n xs ys : valid_labels n (xs ++ ys) <-> valid_labels n xs /\ valid_labels n ys.
+Proof. unfold valid_labels; setoid_rewrite in_app_iff; firstorder. Qed.
+Local Lemma valid_label n n1 k z ls :
+ valid_labels n (Label n1 k z :: ls) <-> n1 = n /\ valid_labels n ls.
+Proof. unfold valid_labels; cbn; split.
+ - intros H; split; [apply (H n1 k z); auto|intros n2 k2 z2 H2; apply (H n2 k2 z2); auto].
+ - intros [E H] n2 k2 z2 [H2|H2]; [injection H2 as <- <- <-; exact E|eauto].
+Qed.
+Local Lemma valid_LabAsm n op w bytes len ls :
+ valid_labels n (LabAsm op w bytes len :: ls) <-> valid_labels n ls.
+Proof. unfold valid_labels; cbn; split; intros H n1 k z Hl; apply (H n1 k z); auto; destruct Hl; [discriminate|assumption]. Qed.
+Local Lemma valid_Asm n op bytes len ls :
+ valid_labels n (Asm op bytes len :: ls) <-> valid_labels n ls.
+Proof. unfold valid_labels; cbn; split; intros H n1 k z Hl; apply (H n1 k z); auto; destruct Hl; [discriminate|assumption]. Qed.
+Local Lemma declared_Asm n op bytes len ls x :
+ declared_labels n (Asm op bytes len :: ls) x <-> declared_labels n ls x.
+Proof. unfold declared_labels; cbn; split; intros (k & z & H & E); exists k,z; split; auto; destruct H as [H|H]; [discriminate|exact H]. Qed.
+Local Lemma valid_nil n : valid_labels n [] <-> True.
+Proof. unfold valid_labels; cbn; tauto. Qed.
+Local Ltac valid_norm :=
+ cbn [FST fst snd] in *; rewrite ?append_Append, ?append_List in *;
+ rewrite ?valid_app, ?valid_LabAsm, ?valid_Asm, ?valid_label, ?valid_nil in *;
+ rewrite ?declared_Asm;
+ cbn [stackProps.get_code_labels] in *.
+Local Lemma flatten_labels_aux : forall p : prog a,
+ forall t n m cs bs x,
+ valid_labels n (append (FST (flatten t p n m cs bs))) ->
+ emitted_labels (append (FST (flatten t p n m cs bs))) x ->
+ x = (n,0) \/
+ In x (List.map (fun k => (n,k)) (cs ++ bs)) \/
+ declared_labels n (append (FST (flatten t p n m cs bs))) x \/
+ x IN stackProps.get_code_labels p.
+Proof.
+ intros p. induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind;
+ intros t n m cs bs x.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + destruct h as [[p2 [k1 k2]]|].
+     * pose proof (Hr p1 _ eq_refl false n m cs bs x) as E1.
+       cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+       pose proof (Hh p2 _ eq_refl false n m1 cs bs x) as E2.
+       destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+       cbn [FST is_Seq] in E1,E2 |- *. destruct dest; valid_norm; label_norm; valid_norm; label_norm; intros HV HE; decompose [and] HV; subst; valid_norm; label_norm; tauto.
+     * pose proof (Hr p1 _ eq_refl false n m cs bs x) as E1.
+       cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+       cbn [FST is_Seq] in E1 |- *. destruct dest; valid_norm; label_norm; valid_norm; label_norm; intros HV HE; decompose [and] HV; subst; valid_norm; label_norm; tauto.
+   + destruct dest; cbn [flatten FST is_Seq]; valid_norm; label_norm; intros HV HE; decompose [and] HV; subst; valid_norm; label_norm; tauto.
+ - pose proof (IH1 false n m cs bs x) as E1.
+   cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+   pose proof (IH2 false n m1 cs bs x) as E2.
+   destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+   cbn [FST] in E1,E2 |- *. destruct t; valid_norm; label_norm; cbn [is_Seq] in *; intros HV HE; decompose [and] HV; subst; valid_norm; label_norm; tauto.
+ - pose proof (IH1 false n m cs bs x) as E1.
+   cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+   pose proof (IH2 false n m1 cs bs x) as E2.
+   destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+   cbn [FST] in E1,E2 |- *.
+   destruct (is_Skip p1 && is_Skip p2); [valid_norm; label_norm; tauto|].
+   destruct (is_Skip p1); [valid_norm; label_norm; valid_norm; label_norm; tauto|].
+   destruct (is_Skip p2); [valid_norm; label_norm; valid_norm; label_norm; tauto|].
+   destruct nr1; [valid_norm; label_norm; valid_norm; label_norm; tauto|].
+   destruct nr2; valid_norm; label_norm; valid_norm; label_norm; intros HV HE; decompose [and] HV; subst; valid_norm; label_norm; tauto.
+ - pose proof (IH false n (m+2) (m::cs) ((m+1)::bs) x) as E.
+   cbn [flatten]. destruct (flatten false p n (m+2) (m::cs) ((m+1)::bs)) as [xs [nr m1]] eqn:F.
+   cbn [FST] in E |- *. valid_norm; label_norm; label_norm.
+   cbn [APPEND List.app List.map] in E. rewrite map_app in E; cbn in E; rewrite in_app_iff in E.
+   rewrite map_app, in_app_iff. cbn in E. intuition congruence.
+ - destruct p; cbn in Hp; try contradiction; cbn [flatten FST is_Seq]; valid_norm; label_norm; try (intros HV HE; decompose [and] HV; subst; valid_norm; label_norm; tauto).
+   all: try (pose proof (find_lab_in n0 bs) as E; intros HV H; destruct H as [[->|H]|H]; [|contradiction|contradiction];
+      destruct E as [E|E]; [left; congruence|right; left; apply in_map; apply in_app_iff; auto]).
+   all: try (pose proof (find_lab_in n0 cs) as E; intros HV H; destruct H as [[->|H]|H]; [|contradiction|contradiction];
+      destruct E as [E|E]; [left; congruence|right; left; apply in_map; apply in_app_iff; auto]).
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "flatten_labels" *)
+Local Theorem flatten_labels : forall t (m : prog a) n p cs bs l x y,
+ flatten t m n p cs bs = (l,(x,y)) /\ EVERY (sec_label_ok n) (append l) ->
+ BIGUNION (IMAGE line_get_labels (set (append l))) SUBSET
+ set (MAP (fun l => (n,l)) (cs ++ bs)) UNION
+ sec_get_code_labels (Section_ n (append l)) UNION stackProps.get_code_labels m.
+Proof.
+ intros t m n p cs bs l x y [Hf Hv].
+ assert (Hvalid : valid_labels n (append l)).
+ { apply EVERY_Forall in Hv; rewrite Forall_forall in Hv.
+   intros n1 k z Hl. specialize (Hv _ Hl). cbn [sec_label_ok] in Hv.
+   apply Bool.andb_true_iff in Hv as [He _]; apply N.eqb_eq in He; exact He. }
+ unfold pred_set.SUBSET; intros q Hq. apply IN_BIGUNION_IMAGE_set in Hq.
+ pose proof (flatten_labels_aux m t n p cs bs q) as E.
+ rewrite Hf in E; cbn [FST] in E. specialize (E Hvalid Hq).
+ rewrite !IN_UNION, IN_set. cbn [sec_get_code_labels]. rewrite IN_INSERT.
+ destruct E as [->|[E|[E|E]]]; try tauto.
+ left; right; right. destruct E as (k & z & Hl & ->).
+ apply IN_IMAGE; exists k; split; [reflexivity|].
+ apply IN_BIGUNION_IMAGE_set; exists (Label n k z); split; [exact Hl|].
+ cbn [line_get_code_labels]; apply IN_SING; reflexivity.
+Qed.
 End CodeLabels.
 
 
