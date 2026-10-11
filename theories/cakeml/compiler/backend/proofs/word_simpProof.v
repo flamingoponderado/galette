@@ -27,11 +27,6 @@
       [gc_fun], [memory], [memory'], [mdomain], [store], [store'] of
       [gc_fun_sf_gc_consts] are [sk], [sk'], [gf], [m], [m'], [md], [st],
       [st'].
-    - [const_fp_move_cs] is typed at [num_map (word a)] in [word_simp.v]
-      (HOL's is polymorphic in the map's value type), so
-      [lookup_const_fp_move_cs], [lookup_const_fp_move_cs_NONE],
-      [lookup_const_fp_move_cs_SOME] and [lookup_const_fp_move_cs_SOME_part]
-      are stated for maps of words only.
     - Kept polymorphic as in HOL: the key type of
       [ALOOKUP_LIST_REL_sf_gc_consts(_NONE)] (and the unused [v] of the
       latter), the map of [lookup_FOLDR_delete], the unused [rest] of
@@ -525,7 +520,7 @@ Context {a : N}.
 Implicit Types cs : num_map (word a).
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "lookup_const_fp_move_cs_NONE" *)
-Theorem lookup_const_fp_move_cs_NONE : forall (moves : list (N * N)) v cs cs',
+Theorem lookup_const_fp_move_cs_NONE : forall {B : Type} (moves : list (N * N)) v (cs cs' : num_map B),
   ALOOKUP moves v = NONE /\ lookup v cs = lookup v cs' ->
   lookup v (const_fp_move_cs moves cs cs') = lookup v cs'.
 Proof.
@@ -543,7 +538,7 @@ Lemma not_MEM_In {A} `{EqDecision A} (x : A) l : ~ MEM x l <-> ~ In x l.
 Proof. unfold is_true; rewrite MEM_In; tauto. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "lookup_const_fp_move_cs_SOME_part" *)
-Theorem lookup_const_fp_move_cs_SOME_part : forall (moves : list (N * N)) q cs cs' x,
+Theorem lookup_const_fp_move_cs_SOME_part : forall {B : Type} (moves : list (N * N)) q (cs cs' : num_map B) x,
   ~ MEM q (MAP FST moves) /\ lookup q cs' = x ->
   lookup q (const_fp_move_cs moves cs cs') = x.
 Proof.
@@ -557,7 +552,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "lookup_const_fp_move_cs_SOME" *)
-Theorem lookup_const_fp_move_cs_SOME : forall (moves : list (N * N)) v w cs cs',
+Theorem lookup_const_fp_move_cs_SOME : forall {B : Type} (moves : list (N * N)) v w (cs cs' : num_map B),
   ALOOKUP moves v = SOME w /\ ALL_DISTINCT (MAP FST moves) /\ lookup v cs = lookup v cs' ->
   lookup v (const_fp_move_cs moves cs cs') = lookup w cs.
 Proof.
@@ -576,7 +571,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "lookup_const_fp_move_cs" *)
-Theorem lookup_const_fp_move_cs : forall v (moves : list (N * N)) cs,
+Theorem lookup_const_fp_move_cs : forall {B : Type} v (moves : list (N * N)) (cs : num_map B),
   ALL_DISTINCT (MAP FST moves) ->
   lookup v (const_fp_move_cs moves cs cs) = match ALOOKUP moves v with
                                             | SOME w => lookup w cs

@@ -128,7 +128,7 @@ Fixpoint const_fp_exp (e : exp a) (cs : num_map (word a)) : exp a :=
   end.
 
 (*! HOL "cakeml/compiler/backend/word_simpScript.sml" "const_fp_move_cs_def" *)
-Fixpoint const_fp_move_cs (l : list (N * N)) (ocs ncs : num_map (word a)) : num_map (word a) :=
+Fixpoint const_fp_move_cs {B : Type} (l : list (N * N)) (ocs ncs : num_map B) : num_map B :=
   match l with
   | [] => ncs
   | m :: ms =>

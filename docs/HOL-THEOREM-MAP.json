@@ -43334,8 +43334,8 @@
   "hol_name": "lookup_const_fp_move_cs",
   "hol_line": null,
   "case": null,
-  "status": "documented_mismatch",
-  "note": "reviewer: compared with HOL: binders v moves cs, ALL_DISTINCT (MAP FST moves) ==> same case on ALOOKUP moves v; cs is a num_map of words because word_simp.v types const_fp_move_cs at num_map (word a) where HOL's is polymorphic (documented in the header)",
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with word_simpProofScript.sml; const_fp_move_cs and these lemmas are polymorphic in the map value type B as in HOL; num -> N",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_simpProof.v",
   "rocq_name": "lookup_const_fp_move_cs"
  },
@@ -43344,8 +43344,8 @@
   "hol_name": "lookup_const_fp_move_cs_NONE",
   "hol_line": null,
   "case": null,
-  "status": "documented_mismatch",
-  "note": "reviewer: compared with HOL: binders moves v cs cs', same hypotheses and conclusion; maps of words only because of word_simp.v's monomorphic const_fp_move_cs (documented in the header)",
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with word_simpProofScript.sml; const_fp_move_cs and these lemmas are polymorphic in the map value type B as in HOL; num -> N",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_simpProof.v",
   "rocq_name": "lookup_const_fp_move_cs_NONE"
  },
@@ -43354,8 +43354,8 @@
   "hol_name": "lookup_const_fp_move_cs_SOME",
   "hol_line": null,
   "case": null,
-  "status": "documented_mismatch",
-  "note": "reviewer: compared with HOL: binders moves v w cs cs', same three hypotheses and conclusion; maps of words only because of word_simp.v's monomorphic const_fp_move_cs (documented in the header)",
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with word_simpProofScript.sml; const_fp_move_cs and these lemmas are polymorphic in the map value type B as in HOL; num -> N",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_simpProof.v",
   "rocq_name": "lookup_const_fp_move_cs_SOME"
  },
@@ -43364,8 +43364,8 @@
   "hol_name": "lookup_const_fp_move_cs_SOME_part",
   "hol_line": null,
   "case": null,
-  "status": "documented_mismatch",
-  "note": "reviewer: compared with HOL: binders moves q cs cs' x, same hypotheses and conclusion; maps of words only because of word_simp.v's monomorphic const_fp_move_cs (documented in the header)",
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with word_simpProofScript.sml; const_fp_move_cs and these lemmas are polymorphic in the map value type B as in HOL; num -> N",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_simpProof.v",
   "rocq_name": "lookup_const_fp_move_cs_SOME_part"
  },
