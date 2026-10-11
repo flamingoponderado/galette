@@ -30065,7 +30065,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL finite-map key and value carriers are generic; this statement specializes them to N and word_loc a. Premises and conclusion otherwise correspond. Keep pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_allocProof.v",
   "rocq_name": "SUBMAP_DOMSUB_both"
  },
@@ -30075,7 +30075,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL finite-map key and value carriers are generic; this statement specializes them to N and word_loc a. Premises and conclusion otherwise correspond. Keep pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_allocProof.v",
   "rocq_name": "SUBMAP_FUPDATE_both"
  },
@@ -30305,7 +30305,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL find_code and this theorem allow generic code-map payloads, whereas the imported stackSem.find_code and Rocq statement specialize to stackLang programs. Keep pending for the upstream semantics carrier restriction.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_allocProof.v",
   "rocq_name": "find_code_IMP_lookup"
  },
@@ -30315,7 +30315,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL find_code and this theorem allow generic code-map payloads, whereas the imported stackSem.find_code and Rocq statement specialize to stackLang programs. Keep pending for the upstream semantics carrier restriction.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_allocProof.v",
   "rocq_name": "find_code_regs_SUBMAP"
  },
@@ -31905,7 +31905,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL function-label carrier is generic; the Rocq statement inherits the N restriction of stack_remove.prog_comp. Keep pending until the compiler definition carrier is generalized outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "FST_prog_comp"
  },
@@ -31945,7 +31945,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits a generic memory payload and corresponding list elements; this Rocq declaration specializes them to word_loc a. Keep pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "LENGTH_read_mem"
  },
@@ -32605,7 +32605,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Unlike HOL mem_load_lemma1 with explicit shared state annotation, this HOL theorem permits independent compiler and FFI carriers for the source and target states. The Rocq section ties them. Keep pending for carrier separation.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "mem_load_lemma2"
  },
@@ -32635,7 +32635,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL memory-map address and payload carriers are generic. The Rocq proof definition and dependent lemmas specialize addresses to word a and payloads to word_loc a. Keep pending for generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "memory"
  },
@@ -32645,7 +32645,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL memory-map address and payload carriers are generic. The Rocq proof definition and dependent lemmas specialize addresses to word a and payloads to word_loc a. Keep pending for generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "memory_fun2set_IMP_read"
  },
@@ -32655,7 +32655,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL memory-map address and payload carriers are generic. The Rocq proof definition and dependent lemmas specialize addresses to word a and payloads to word_loc a. Keep pending for generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "memory_fun2set_SUBSET"
  },
@@ -32665,7 +32665,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL memory-map address and payload carriers are generic. The Rocq proof definition and dependent lemmas specialize addresses to word a and payloads to word_loc a. Keep pending for generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "memory_write"
  },
@@ -32685,7 +32685,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL function-label carrier is generic; the Rocq statement inherits the N restriction of stack_remove.prog_comp. Keep pending until the compiler definition carrier is generalized outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "prog_comp_eta"
  },
@@ -32725,7 +32725,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits a generic memory payload and corresponding list elements; this Rocq declaration specializes them to word_loc a. Keep pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "read_mem_def"
  },
@@ -33085,7 +33085,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits a generic memory payload and corresponding list elements; this Rocq declaration specializes them to word_loc a. Keep pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "word_list_IMP_read_mem"
  },
@@ -33135,7 +33135,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits a generic memory payload and corresponding list elements; this Rocq declaration specializes them to word_loc a. Keep pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_removeProof.v",
   "rocq_name": "word_list_in_memory"
  },
@@ -34565,7 +34565,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Compared HOL and Rocq; function/code-label carrier is generic in HOL and restricted to N through the imported stack_names or stack_remove compiler definitions. Keep pending until the upstream carrier restriction is resolved; compiler files are outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_names_compile_no_install"
  },
@@ -34575,7 +34575,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Compared HOL and Rocq; function/code-label carrier is generic in HOL and restricted to N through the imported stack_names or stack_remove compiler definitions. Keep pending until the upstream carrier restriction is resolved; compiler files are outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_names_compile_no_shmemop"
  },
@@ -34585,7 +34585,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Compared HOL and Rocq; function/code-label carrier is generic in HOL and restricted to N through the imported stack_names or stack_remove compiler definitions. Keep pending until the upstream carrier restriction is resolved; compiler files are outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_names_get_code_labels"
  },
@@ -34605,7 +34605,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Compared HOL and Rocq; function/code-label carrier is generic in HOL and restricted to N through the imported stack_names or stack_remove compiler definitions. Keep pending until the upstream carrier restriction is resolved; compiler files are outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_names_prog_comp_no_install"
  },
@@ -34615,7 +34615,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Compared HOL and Rocq; function/code-label carrier is generic in HOL and restricted to N through the imported stack_names or stack_remove compiler definitions. Keep pending until the upstream carrier restriction is resolved; compiler files are outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_names_prog_comp_no_shmemop"
  },
@@ -34795,7 +34795,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Compared HOL and Rocq; function/code-label carrier is generic in HOL and restricted to N through the imported stack_names or stack_remove compiler definitions. Keep pending until the upstream carrier restriction is resolved; compiler files are outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_remove_prog_comp_no_install"
  },
@@ -34805,7 +34805,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Compared HOL and Rocq; function/code-label carrier is generic in HOL and restricted to N through the imported stack_names or stack_remove compiler definitions. Keep pending until the upstream carrier restriction is resolved; compiler files are outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_remove_prog_comp_no_shmemop"
  },
@@ -34815,7 +34815,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: Compared HOL and Rocq; function/code-label carrier is generic in HOL and restricted to N through the imported stack_names or stack_remove compiler definitions. Keep pending until the upstream carrier restriction is resolved; compiler files are outside this review ownership.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
   "rocq_name": "stack_remove_prog_comp_no_shmemop_MAP"
  },
@@ -37135,7 +37135,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic key, image/range, or association-list payload carriers that this Rocq declaration specializes to N or word_loc a. Logical premises and conclusions were compared; retain pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "ALOOKUP_key_remap_2"
  },
@@ -37145,7 +37145,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic key, image/range, or association-list payload carriers that this Rocq declaration specializes to N or word_loc a. Logical premises and conclusions were compared; retain pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "ALOOKUP_key_remap_INJ"
  },
@@ -37185,7 +37185,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic key, image/range, or association-list payload carriers that this Rocq declaration specializes to N or word_loc a. Logical premises and conclusions were compared; retain pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "INJ_ALL_DISTINCT_MAP"
  },
@@ -37215,7 +37215,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic key, image/range, or association-list payload carriers that this Rocq declaration specializes to N or word_loc a. Logical premises and conclusions were compared; retain pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "INJ_UNION"
  },
@@ -37225,7 +37225,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic key, image/range, or association-list payload carriers that this Rocq declaration specializes to N or word_loc a. Logical premises and conclusions were compared; retain pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "INJ_less_thm"
  },
@@ -37415,7 +37415,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic key, image/range, or association-list payload carriers that this Rocq declaration specializes to N or word_loc a. Logical premises and conclusions were compared; retain pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "colouring_ok"
  },
@@ -37465,7 +37465,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL names-map payload is generic while cut_env name sets are unit-valued; the Rocq statement restricts the names map itself to unit. Keep pending for this carrier restriction.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "cut_names_lemma"
  },
@@ -38165,7 +38165,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic key, image/range, or association-list payload carriers that this Rocq declaration specializes to N or word_loc a. Logical premises and conclusions were compared; retain pending for carrier generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "key_map_implies"
  },
@@ -38665,7 +38665,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL source and target states may have independent compiler and FFI carrier types, since only locals/value behavior is related. The Rocq section ties these state carriers. Keep pending for carrier separation.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "push_env_s_val_eq"
  },
@@ -39025,7 +39025,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic names-map payload and function result carriers; the Rocq statement specializes these to unit and N. Equality tests need the corresponding generic EqDecision representation. Keep pending for generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/ssa_loop.v",
   "rocq_name": "ssa_reconcile_distinct_lemma"
  },
@@ -39065,7 +39065,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL permits generic names-map payload and function result carriers; the Rocq statement specializes these to unit and N. Equality tests need the corresponding generic EqDecision representation. Keep pending for generalization.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/ssa_loop.v",
   "rocq_name": "ssa_reconcile_moves_eq"
  },
@@ -39185,7 +39185,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL source and target states may have independent compiler and FFI carrier types, since only locals/value behavior is related. The Rocq section ties these state carriers. Keep pending for carrier separation.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "strong_locals_rel_get_var"
  },
@@ -39195,7 +39195,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL source and target states may have independent compiler and FFI carrier types, since only locals/value behavior is related. The Rocq section ties these state carriers. Keep pending for carrier separation.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "strong_locals_rel_get_var_imm"
  },
@@ -39205,7 +39205,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL source and target states may have independent compiler and FFI carrier types, since only locals/value behavior is related. The Rocq section ties these state carriers. Keep pending for carrier separation.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "strong_locals_rel_get_vars"
  },
@@ -39235,7 +39235,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL source and target states may have independent compiler and FFI carrier types, since only locals/value behavior is related. The Rocq section ties these state carriers. Keep pending for carrier separation.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "strong_locals_rel_set_var_dom"
  },
@@ -39245,7 +39245,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL source and target states may have independent compiler and FFI carrier types, since only locals/value behavior is related. The Rocq section ties these state carriers. Keep pending for carrier separation.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "strong_locals_rel_set_vars_dom"
  },
@@ -39505,7 +39505,7 @@
   "hol_line": null,
   "case": null,
   "status": "pending_review",
-  "note": "",
+  "note": "sol: HOL only relates locals and permits independent compiler/FFI carriers for the two states. The Rocq section ties those state types. Keep pending for carrier separation.",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_copyProof.v",
   "rocq_name": "CPstate_models_same"
  },
