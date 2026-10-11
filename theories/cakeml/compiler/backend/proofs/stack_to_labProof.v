@@ -200,7 +200,8 @@ Definition dest_to_loc' {K} (regs : K -> word_loc a) (dest : N + K) : N :=
   end.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "find_code_lookup" *)
-Theorem find_code_lookup : forall dest regs (code : spt (prog a)) p,
+Theorem find_code_lookup {K P : Type} `{EK : EqDecision K} :
+  forall (dest : N + K) (regs : fmap K (word_loc a)) (code : spt P) p,
   find_code dest regs code = SOME p ->
   lookup (dest_to_loc regs dest) code = SOME p /\
   (forall r, dest = inr r -> r IN FDOM regs).
@@ -6218,7 +6219,7 @@ Theorem stack_remove_prog_comp_no_shmemop_MAP : forall {K : Type} jump off sp (p
  EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (MAP (stack_remove.prog_comp jump off sp) ps).
 Proof. intros; apply safety_map; [intros; apply stack_remove_comp_no_shmemop; assumption|assumption]. Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_compile_no_shmemop" *)
-Theorem stack_remove_compile_no_shmemop : forall jump off ggc mh sp loc (ps : list (K * prog a)),
+Theorem stack_remove_compile_no_shmemop : forall jump off ggc mh sp loc (ps : list (N * prog a)),
  EVERY (fun '(n,p) => no_shmemop p) ps -> EVERY (fun '(n,p) => no_shmemop p) (stack_remove.compile jump off ggc mh sp loc ps).
 Proof.
  intros jump off ggc mh sp loc ps H; unfold stack_remove.compile; apply safety_append; [|apply stack_remove_prog_comp_no_shmemop_MAP; exact H].
@@ -6243,15 +6244,15 @@ Proof. unfold stack_remove.init_code; cbv zeta; cbn [no_install list_Seq];
  unfold stack_remove.init_memory; cbn [no_install list_Seq]; rewrite stores_no_install; reflexivity. Qed.
 Local Opaque stack_remove.init_code.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_compile_no_install" *)
-Theorem stack_rawcall_compile_no_install : forall ps : list (K * prog a),
+Theorem stack_rawcall_compile_no_install : forall ps : list (N * prog a),
  EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (stack_rawcall.compile ps).
 Proof. intros; unfold stack_rawcall.compile; apply safety_map; [intros; apply stack_rawcall_comp_top_no_install; assumption|assumption]. Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_prog_comp_no_install" *)
-Theorem stack_alloc_prog_comp_no_install : forall ps : list (K * prog a),
+Theorem stack_alloc_prog_comp_no_install : forall ps : list (N * prog a),
  EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (MAP stack_alloc.prog_comp ps).
 Proof. intros; apply safety_map; [intros; apply stack_alloc_comp_no_install; assumption|assumption]. Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_compile_no_install" *)
-Theorem stack_alloc_compile_no_install : forall dc (ps : list (K * prog a)),
+Theorem stack_alloc_compile_no_install : forall dc (ps : list (N * prog a)),
  EVERY (fun '(n,p) => no_install p) ps -> EVERY (fun '(n,p) => no_install p) (stack_alloc.compile dc ps).
 Proof.
  intros dc ps H; unfold stack_alloc.compile; apply safety_append; [|apply stack_alloc_prog_comp_no_install; exact H].
