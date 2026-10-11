@@ -578,7 +578,7 @@ Theorem lookup_const_fp_move_cs : forall {B : Type} v (moves : list (N * N)) (cs
                                             | NONE => lookup v cs
                                             end.
 Proof.
-  intros v moves cs Hd. destruct (ALOOKUP moves v) as [w|] eqn:E.
+  intros B v moves cs Hd. destruct (ALOOKUP moves v) as [w|] eqn:E.
   - apply lookup_const_fp_move_cs_SOME; auto.
   - apply lookup_const_fp_move_cs_NONE; auto.
 Qed.
