@@ -7369,7 +7369,6 @@ Proof.
 Qed.
 
 
-(*! HOL "cakeml/compiler/backend/proofs/stack_allocProofScript.sml" "gc_thm" 1884 *)
 Lemma add_neg1 (x y : word a) : (x + - n2w 1 * y)%w = (x - y)%w.
 Proof. word_ring. Qed.
 
@@ -7399,6 +7398,7 @@ Ltac gc_destr :=
                 | match goal with |- context [if ?b then _ else _] => destruct b end ]);
   cbn beta iota; cbn [HD TL]; try reflexivity.
 
+(*! HOL "cakeml/compiler/backend/proofs/stack_allocProofScript.sml" "gc_thm" 1884 *)
 Local Theorem gc_thm_Gen : forall (s : state) conf gen_sizes,
   gc_fun s = word_gc_fun conf /\ gc_kind conf = Generational gen_sizes ->
   gc s =

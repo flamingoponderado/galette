@@ -730,10 +730,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_copyProofScript.sml" "lookup_alist_insert_same" *)
-Theorem lookup_alist_insert_same : forall (s : N) tt (values : list (word_loc a)) locals,
+Theorem lookup_alist_insert_same : forall {V} (s : N) tt (values : list V) locals,
   s NOTIN set tt -> lookup s (alist_insert tt values locals) = lookup s locals.
 Proof.
-  intros s tt; induction tt as [|t tt IH]; intros values locals H; [reflexivity|].
+  intros V s tt; induction tt as [|t tt IH]; intros values locals H; [reflexivity|].
   destruct values as [|v values]; [reflexivity|]. cbn [alist_insert]. rewrite lookup_insert.
   rewrite IN_set in H. destruct (decide (s = t)) as [->|]; [exfalso; apply H; left; reflexivity|].
   apply IH. rewrite IN_set. intros Hi; apply H; right; exact Hi.
@@ -847,10 +847,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_copyProofScript.sml" "EVERY_NOT_MEM_D" *)
-Theorem EVERY_NOT_MEM_D : forall (tt ss : list N),
+Theorem EVERY_NOT_MEM_D : forall {X} `{EqDecision X} (tt ss : list X),
   EVERY (fun t => negb (MEM t ss)) tt -> set tt INTER set ss = {}.
 Proof.
-  intros tt ss H. apply functional_extensionality; intros x; apply propositional_extensionality.
+  intros X EX tt ss H. apply functional_extensionality; intros x; apply propositional_extensionality.
   split; [|intros []]. intros Hxy. apply IN_INTER' in Hxy as [Hx Hy]. apply IN_set in Hx. apply IN_set in Hy.
   unfold is_true in H. rewrite EVERY_Forall, Forall_forall in H. specialize (H x Hx).
   apply Bool.negb_true_iff in H. apply (MEM_In x ss) in Hy. congruence.

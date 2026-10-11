@@ -622,13 +622,13 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/lab_to_targetProofScript.sml" "bytes_in_mem_asm_write_bytearray_lemma" *)
-Theorem bytes_in_mem_asm_write_bytearray_lemma : forall (k d : word a -> Prop)
-    (m1 m2 : word a -> word8) xs p,
+Theorem bytes_in_mem_asm_write_bytearray_lemma : forall {X : Type} (k d : word a -> Prop)
+    (m1 m2 : word a -> X) xs p,
   (forall a0, a0 NOTIN k -> m1 a0 = m2 a0) ->
   bytes_in_mem p xs m1 d k ->
   bytes_in_mem p xs m2 d k.
 Proof.
-  intros k d m1 m2 xs; induction xs as [|x xs IH]; intros p Hm H; cbn in *; [exact Logic.I|].
+  intros X k d m1 m2 xs; induction xs as [|x xs IH]; intros p Hm H; cbn in *; [exact Logic.I|].
   destruct H as (H1 & H2 & H3 & H4). split; [exact H1|]. split; [exact H2|].
   split; [rewrite <- (Hm _ H2); exact H3|]. exact (IH _ Hm H4).
 Qed.

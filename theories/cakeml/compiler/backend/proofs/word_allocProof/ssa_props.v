@@ -62,6 +62,8 @@ Ltac dec_eq := repeat match goal with
 Section SSA1.
 Context {a : N} {c ffi_t : Type}.
 Local Abbreviation state := (state a c ffi_t).
+Context {source_c source_ffi_t : Type}.
+Local Abbreviation source_state := (wordSem.state a source_c source_ffi_t).
 
 Lemma sl_sl l l' (s : state) : set_locals l (set_locals l' s) = set_locals l s.
 Proof. destruct s; reflexivity. Qed.
@@ -141,7 +143,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_locals_rel_get_var" *)
-Theorem ssa_locals_rel_get_var : forall na ssa (st cst : state) n x,
+Theorem ssa_locals_rel_get_var : forall na ssa (st : source_state) (cst : state) n x,
   ssa_locals_rel na ssa (locals st) (locals cst) /\ get_var n st = SOME x ->
   get_var (option_lookup ssa n) cst = SOME x.
 Proof.
@@ -151,7 +153,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_locals_rel_get_vars" *)
-Theorem ssa_locals_rel_get_vars : forall ls y na ssa (st cst : state),
+Theorem ssa_locals_rel_get_vars : forall ls y na ssa (st : source_state) (cst : state),
   ssa_locals_rel na ssa (locals st) (locals cst) /\ get_vars ls st = SOME y ->
   get_vars (MAP (option_lookup ssa) ls) cst = SOME y.
 Proof.
@@ -187,8 +189,8 @@ Proof.
   intros Ha; specialize (H3 Ha); lia.
 Qed.
 
-(*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_eq_rel_swap" *)
-Theorem ssa_eq_rel_swap : forall {A} na ssaL ssaR (st cst : num_map A),
+(** Galette-only: the map-level form used by the SSA proof. *)
+Lemma ssa_eq_rel_swap_maps : forall {A} na ssaL ssaR (st cst : num_map A),
   ssa_locals_rel na ssaR st cst /\ domain ssaL = domain ssaR /\
   (forall x, lookup x ssaL = lookup x ssaR) ->
   ssa_locals_rel na ssaL st cst.
@@ -197,6 +199,14 @@ Proof.
   - intros x y Hx. rewrite Hl in Hx. eapply H1; exact Hx.
   - intros x y Hx. rewrite Hd, Hl. apply H2, Hx.
 Qed.
+
+(** HOL keeps the states as arguments and projects their locals. *)
+(*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_eq_rel_swap" *)
+Theorem ssa_eq_rel_swap : forall na ssaL ssaR (st : source_state) (cst : state),
+  ssa_locals_rel na ssaR (locals st) (locals cst) /\ domain ssaL = domain ssaR /\
+  (forall x, lookup x ssaL = lookup x ssaR) ->
+  ssa_locals_rel na ssaL (locals st) (locals cst).
+Proof. intros; eapply ssa_eq_rel_swap_maps; eassumption. Qed.
 
 (** Swapping the two sides (Galette-only). *)
 Definition swap_prio (p : option (unit + unit)) : option (unit + unit) :=
@@ -363,7 +373,7 @@ Proof.
 Qed.
 
 (** The step of [merge_moves_correctL] (Galette-only). *)
-Lemma merge_moves_step (stL cstL rc : state) pri mL na n' ssaL sL h x :
+Lemma merge_moves_step (stL : source_state) (cstL rc : state) pri mL na n' ssaL sL h x :
   ssa_locals_rel na ssaL (locals stL) (locals cstL) -> ssa_map_ok na ssaL -> ssa_map_ok n' sL ->
   na <= n' -> is_true (EVERY (fun x => bool_decide (x < n' /\ x >= na)) (MAP FST mL)) ->
   evaluate (Move pri mL, cstL) = (NONE, rc) ->
@@ -399,7 +409,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "merge_moves_correctL" *)
-Theorem merge_moves_correctL : forall ls na ssaL ssaR (stL cstL : state) pri,
+Theorem merge_moves_correctL : forall ls na ssaL ssaR (stL : source_state) (cstL : state) pri,
   is_alloc_var na /\ ALL_DISTINCT ls /\ ssa_map_ok na ssaL ->
   let '(moveL, (moveR, (na', (ssaL', ssaR')))) := merge_moves ls ssaL ssaR na in
   (ssa_locals_rel na ssaL (locals stL) (locals cstL) ->
@@ -436,7 +446,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "merge_moves_correctR" *)
-Theorem merge_moves_correctR : forall ls na ssaL ssaR (stR cstR : state) pri,
+Theorem merge_moves_correctR : forall ls na ssaL ssaR (stR : source_state) (cstR : state) pri,
   is_alloc_var na /\ ALL_DISTINCT ls /\ ssa_map_ok na ssaR ->
   let '(moveL, (moveR, (na', (ssaL', ssaR')))) := merge_moves ls ssaL ssaR na in
   (ssa_locals_rel na ssaR (locals stR) (locals cstR) ->
@@ -569,7 +579,7 @@ Proof.
       destruct (Hin h Hz) as [H1 H2]; apply lookup_NONE_domain in EL || apply lookup_NONE_domain in ER; tauto.
 Qed.
 
-Lemma fm_finish (stL cstL rc : state) na n' ssaL sL h ls v :
+Lemma fm_finish (stL : source_state) (cstL rc : state) na n' ssaL sL h ls v :
   na <= n' -> ssa_map_ok n' sL ->
   (forall x, ~ MEM x ls -> lookup x sL = lookup x ssaL) ->
   (forall x y, x < na /\ lookup x (locals cstL) = Some y -> lookup x (locals rc) = Some y) ->
@@ -590,7 +600,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "fake_moves_correctL" *)
-Theorem fake_moves_correctL : forall prio ls na ssaL ssaR (stL cstL : state),
+Theorem fake_moves_correctL : forall prio ls na ssaL ssaR (stL : source_state) (cstL : state),
   is_alloc_var na /\ ALL_DISTINCT ls /\ ssa_map_ok na ssaL ->
   let '(moveL, (moveR, (na', (ssaL', ssaR')))) := fake_moves prio ls ssaL ssaR na in
   (ssa_locals_rel na ssaL (locals stL) (locals cstL) ->
@@ -627,7 +637,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "fake_moves_correctR" *)
-Theorem fake_moves_correctR : forall prio ls na ssaL ssaR (stR cstR : state),
+Theorem fake_moves_correctR : forall prio ls na ssaL ssaR (stR : source_state) (cstR : state),
   is_alloc_var na /\ ALL_DISTINCT ls /\ ssa_map_ok na ssaR ->
   let '(moveL, (moveR, (na', (ssaL', ssaR')))) := fake_moves prio ls ssaL ssaR na in
   (ssa_locals_rel na ssaR (locals stR) (locals cstR) ->
@@ -661,6 +671,14 @@ Proof.
   rewrite <- H. reflexivity.
 Qed.
 
+End SSA1.
+
+Section SSA2.
+Context {a : N} {c ffi_t : Type}.
+Local Abbreviation state := (wordSem.state a c ffi_t).
+Context {source_c source_ffi_t : Type}.
+Local Abbreviation source_state := (wordSem.state a source_c source_ffi_t).
+
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "fix_inconsistencies_correctL" *)
 Theorem fix_inconsistencies_correctL : forall prio na ssaL ssaR,
   is_alloc_var na /\ ssa_map_ok na ssaL ->
@@ -676,10 +694,10 @@ Proof.
   set (vu := MAP FST (toAList (union ssaL ssaR))).
   assert (Hd : ALL_DISTINCT vu) by apply ALL_DISTINCT_MAP_FST_toAList.
   pose proof (merge_moves_frame vu na ssaL ssaR Ha) as Fr.
-  pose proof (fun stL cstL => merge_moves_correctL vu na ssaL ssaR stL cstL (priority prio true) (conj Ha (conj Hd Hok))) as M.
+  pose proof (fun (stL cstL : state) => merge_moves_correctL vu na ssaL ssaR stL cstL (priority prio true) (conj Ha (conj Hd Hok))) as M.
   destruct (merge_moves vu ssaL ssaR na) as [mL [mR [n' [sL sR]]]].
   destruct Fr as (Ha' & _ & HokL & _). specialize (HokL Hok).
-  pose proof (fun stL cstL => fake_moves_correctL prio vu n' sL sR stL cstL (conj Ha' (conj Hd HokL))) as Fk.
+  pose proof (fun (stL cstL : state) => fake_moves_correctL prio vu n' sL sR stL cstL (conj Ha' (conj Hd HokL))) as Fk.
   destruct (fake_moves prio vu sL sR n') as [fL [fR [n'' [sL' sR']]]].
   intros stL cstL Hr. specialize (M stL cstL Hr).
   destruct (evaluate (Move (priority prio true) mL, cstL)) as [r1 c1] eqn:E1.
@@ -709,13 +727,13 @@ Proof.
   pose proof (merge_moves_frame vu na ssaL ssaR Ha) as Fr.
   pose proof (merge_moves_frame2 vu na ssaL ssaR) as Fr2.
   pose proof (merge_moves_frame3 vu na ssaL ssaR) as Fr3.
-  pose proof (fun stR cstR => merge_moves_correctR vu na ssaL ssaR stR cstR (priority prio false) (conj Ha (conj Hd Hok))) as M.
+  pose proof (fun (stR cstR : state) => merge_moves_correctR vu na ssaL ssaR stR cstR (priority prio false) (conj Ha (conj Hd Hok))) as M.
   destruct (merge_moves vu ssaL ssaR na) as [mL [mR [n' [sL sR]]]].
   destruct Fr as (Ha' & _ & _ & HokR). specialize (HokR Hok).
   destruct Fr2 as (D2L & D2R & E2).
-  pose proof (fun stR cstR => fake_moves_correctR prio vu n' sL sR stR cstR (conj Ha' (conj Hd HokR))) as Fk.
-  pose proof (fake_moves_frame2 prio vu n' sL sR) as G2.
-  pose proof (fake_moves_frame3 prio vu n' sL sR) as G3.
+  pose proof (fun (stR cstR : state) => fake_moves_correctR prio vu n' sL sR stR cstR (conj Ha' (conj Hd HokR))) as Fk.
+  pose proof (fake_moves_frame2 (a:=a) prio vu n' sL sR) as G2.
+  pose proof (fake_moves_frame3 (a:=a) prio vu n' sL sR) as G3.
   destruct (fake_moves prio vu sL sR n') as [fL [fR [n'' [sL' sR']]]].
   destruct G2 as (G2L & G2R & G2E).
   intros stR cstR Hr. specialize (M stR cstR Hr).
@@ -731,7 +749,7 @@ Proof.
   assert (DR : forall x, domain sR' x <-> domain ssaL x \/ domain ssaR x).
   { intros x. rewrite G2R, D2L, D2R. unfold pred_set.UNION, pred_set.INTER, pred_set.IN.
     change (LIST_TO_SET vu x) with (x IN set vu). rewrite IN_set, <- MEM_iff', Hvu. tauto. }
-  apply (ssa_eq_rel_swap _ _ sR'). split; [exact Hr2|split].
+  apply (ssa_eq_rel_swap_maps _ _ sR'). split; [exact Hr2|split].
   - apply set_ext; intros x; rewrite DL, DR; reflexivity.
   - intros x. destruct (decide (domain ssaL x \/ domain ssaR x)) as [Hx|Hx].
     + assert (Hm : is_true (MEM x vu)) by (apply Hvu, Hx).
@@ -939,13 +957,13 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_locals_rel_ignore_set_var" *)
-Theorem ssa_locals_rel_ignore_set_var : forall na ssa (st cst : state) v w0,
+Theorem ssa_locals_rel_ignore_set_var : forall na ssa (st : source_state) (cst : state) v w0,
   ssa_map_ok na ssa /\ ssa_locals_rel na ssa (locals st) (locals cst) /\ is_phy_var v ->
   ssa_locals_rel na ssa (locals st) (locals (set_var v w0 cst)).
 Proof. intros. unfold set_var; rewrite locals_set_locals. apply ssa_locals_rel_ignore_insert; assumption. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_locals_rel_ignore_list_insert" *)
-Theorem ssa_locals_rel_ignore_list_insert : forall na ssa (st cst : state) ls x,
+Theorem ssa_locals_rel_ignore_list_insert : forall na ssa (st : source_state) (cst : state) ls x,
   ssa_map_ok na ssa /\ ssa_locals_rel na ssa (locals st) (locals cst) /\
   EVERY is_phy_var ls /\ LENGTH ls = LENGTH x ->
   ssa_locals_rel na ssa (locals st) (alist_insert ls x (locals cst)).
@@ -1202,7 +1220,7 @@ Proof.
   pose proof (merge_moves_frame vu na ssaL ssaR Ha) as Fr.
   destruct (merge_moves vu ssaL ssaR na) as [mL [mR [n' [sL sR]]]].
   destruct Fr as (Ha' & Hle & HL' & HR'). specialize (HL' HL).
-  pose proof (fake_moves_frame prio vu n' sL sR Ha') as Fk.
+  pose proof (fake_moves_frame (a:=a) prio vu n' sL sR Ha') as Fk.
   destruct (fake_moves prio vu sL sR n') as [fL [fR [n'' [sL' sR']]]].
   destruct Fk as (Ha'' & Hle' & HL'' & _). injection E as <- <- <- <-.
   split; [lia|split; [exact Ha''|apply HL'', HL']].
@@ -1370,4 +1388,4 @@ Proof.
   (* ShareInst *)
   - destruct (bool_decide _); destr_lets E; injection E as <- <- <-; split; [lia|exact HI|lia|apply Inv_step, HI].
 Qed.
-End SSA1.
+End SSA2.

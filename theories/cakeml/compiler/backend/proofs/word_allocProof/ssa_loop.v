@@ -287,7 +287,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_reconcile_filtered_all_distinct" *)
-Theorem ssa_reconcile_filtered_all_distinct : forall (cur_ssa tgt_ssa : num_map N) (ns : num_set),
+Theorem ssa_reconcile_filtered_all_distinct : forall {B} (cur_ssa tgt_ssa : num_map N) (ns : num_map B),
   ALL_DISTINCT (FILTER (fun v => match lookup v cur_ssa with
                                  | None => false
                                  | Some cv => negb (option_lookup tgt_ssa v =? cv) end)
@@ -295,7 +295,7 @@ Theorem ssa_reconcile_filtered_all_distinct : forall (cur_ssa tgt_ssa : num_map 
 Proof. intros. apply ALL_DISTINCT_iff', NoDup_filter', NoDup_toAList_keys. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_reconcile_filtered_in_dom" *)
-Theorem ssa_reconcile_filtered_in_dom : forall (cur_ssa tgt_ssa : num_map N) (ns : num_set) v,
+Theorem ssa_reconcile_filtered_in_dom : forall {B} (cur_ssa tgt_ssa : num_map N) (ns : num_map B) v,
   MEM v (FILTER (fun v => match lookup v cur_ssa with
                           | None => false
                           | Some cv => negb (option_lookup tgt_ssa v =? cv) end)
@@ -303,7 +303,7 @@ Theorem ssa_reconcile_filtered_in_dom : forall (cur_ssa tgt_ssa : num_map N) (ns
   v IN domain ns /\
   exists cv, lookup v cur_ssa = SOME cv /\ option_lookup tgt_ssa v <> cv /\ THE (lookup v cur_ssa) = cv.
 Proof.
-  intros cur_ssa tgt_ssa ns v Hm. rewrite MEM_iff' in Hm. apply filter_In in Hm as [Hm Hp].
+  intros B cur_ssa tgt_ssa ns v Hm. rewrite MEM_iff' in Hm. apply filter_In in Hm as [Hm Hp].
   split; [apply In_toAList_keys, Hm|].
   destruct (lookup v cur_ssa) as [cv|]; [|discriminate]. exists cv.
   apply Bool.negb_true_iff, N.eqb_neq in Hp. auto.
@@ -340,11 +340,11 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "alookup_zip_map_some" *)
-Theorem alookup_zip_map_some : forall {B} `{EqDecision B, Inhabited B} (ls : list N) (vs : list B) i (f : N -> N),
+Theorem alookup_zip_map_some : forall {A B C} `{EqDecision B, EqDecision C, Inhabited A, Inhabited B, Inhabited C} (ls : list A) (vs : list B) i (f : A -> C),
   ALL_DISTINCT (MAP f ls) /\ i < LENGTH ls /\ LENGTH vs = LENGTH ls ->
   ALOOKUP (ZIP (MAP f ls, vs)) (f (EL i ls)) = SOME (EL i vs).
 Proof.
-  intros B EB IB ls vs i f (Hd & Hi & Hl). apply ALOOKUP_ALL_DISTINCT_MEM. split.
+  intros A B C EB EC IA IB IC ls vs i f (Hd & Hi & Hl). apply ALOOKUP_ALL_DISTINCT_MEM. split.
   - rewrite MAP_FST_ZIP' by (rewrite LENGTH_MAP'; lia). exact Hd.
   - rewrite MEM_iff', ZIP_combine'. rewrite <- (EL_map' f ls i Hi).
     rewrite !EL_nth by (rewrite ?LENGTH_MAP'; lia). rewrite <- combine_nth.
@@ -353,12 +353,12 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "alookup_zip_map_option_lookup_none" *)
-Theorem alookup_zip_map_option_lookup_none : forall {B} `{EqDecision B} (ls : list N) (vs : list B) n (ns : num_set) (f : N -> N),
+Theorem alookup_zip_map_option_lookup_none : forall {A B C} `{EqDecision A, EqDecision B} (ls : list N) (vs : list B) n (ns : num_map C) (f : N -> A),
   INJ f (domain ns) UNIV /\ n IN domain ns /\ ~ MEM n ls /\
   (forall v, MEM v ls -> v IN domain ns) /\ LENGTH vs = LENGTH ls ->
   ALOOKUP (ZIP (MAP f ls, vs)) (f n) = NONE.
 Proof.
-  intros B EB ls vs n ns f ([_ Hi] & Hn & Hm & Hv & Hl). apply ALOOKUP_NONE.
+  intros A B C EA EB ls vs n ns f ([_ Hi] & Hn & Hm & Hv & Hl). apply ALOOKUP_NONE.
   rewrite MAP_FST_ZIP' by (rewrite LENGTH_MAP'; lia). rewrite MEM_iff'. intros Hin.
   apply in_map_iff in Hin as [w [Ew Hw]]. apply Hm. rewrite MEM_iff'.
   replace n with w; [exact Hw|]. apply Hi; [split; [apply Hv, MEM_iff', Hw|exact Hn]|exact Ew].
@@ -423,12 +423,12 @@ Proof.
         destruct Hinj as [_ Hi]. apply Hi; [split; [apply (proj1 (Hfv w Hw))|exact Hn]|exact Ew].
 Qed.
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "lt_ok_def" *)
-Definition lt_ok (lt : list (num_map N * (num_set * num_set))) : Prop :=
+Definition lt_ok {A B} (lt : list (num_map N * (num_map A * num_map B))) : Prop :=
   EVERY (fun '(tgt_ssa, (names, exit_names)) =>
     bool_decide (INJ (option_lookup tgt_ssa) (domain names) UNIV /\
                  INJ (option_lookup tgt_ssa) (domain exit_names) UNIV)) lt.
 
-Lemma lt_ok_oEL lt n tgt names exit_names :
+Lemma lt_ok_oEL {A B} (lt : list (num_map N * (num_map A * num_map B))) n tgt names exit_names :
   lt_ok lt -> oEL n lt = Some (tgt, (names, exit_names)) ->
   INJ (option_lookup tgt) (domain names) UNIV /\ INJ (option_lookup tgt) (domain exit_names) UNIV.
 Proof.
@@ -439,7 +439,7 @@ Proof.
   - eapply IH; eassumption.
 Qed.
 
-Lemma lt_ok_cons t nm ex lt :
+Lemma lt_ok_cons {A B} t (nm : num_map A) (ex : num_map B) lt :
   lt_ok lt -> INJ (option_lookup t) (domain nm) UNIV -> INJ (option_lookup t) (domain ex) UNIV ->
   lt_ok ((t, (nm, ex)) :: lt).
 Proof.
@@ -605,16 +605,16 @@ Theorem evaluate_seq_collapse : forall (P Q : prog a) (s t : state),
 Proof. intros P Q s t; apply eval_Seq_none. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "cut_env_fromAList_LN" *)
-Theorem cut_env_fromAList_LN : forall (a0 : num_set) (g : N * unit -> N * unit) (v : num_map (word_loc a)),
+Theorem cut_env_fromAList_LN : forall {A} (a0 : num_set) (g : N * unit -> N * unit) (v : num_map A),
   cut_env (a0, fromAList (MAP g (toAList (LN : num_set)))) v = cut_env (a0, LN) v.
 Proof. reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "ssa_cut_inter_lemma" *)
-Theorem ssa_cut_inter_lemma : forall (ssa' : num_map N) (x1 x2 : num_set) xx,
+Theorem ssa_cut_inter_lemma : forall {A B} (ssa' : num_map A) (x1 x2 : num_map B) xx,
   domain ssa' INTER domain (union x1 x2) = domain x1 UNION domain x2 ->
   xx IN domain (union x1 x2) -> xx IN domain ssa'.
 Proof.
-  intros ssa' x1 x2 xx E Hx. pose proof (f_equal (fun P => P xx) E) as E'. cbv beta in E'.
+  intros A B ssa' x1 x2 xx E Hx. pose proof (f_equal (fun P => P xx) E) as E'. cbv beta in E'.
   rewrite domain_union in Hx, E'. unfold pred_set.INTER, pred_set.UNION, pred_set.IN in *.
   assert (H : domain x1 xx \/ domain x2 xx) by exact Hx. rewrite <- E' in H. apply H.
 Qed.
@@ -639,7 +639,8 @@ Definition ssa_post (lt : list (num_map N * (num_set * num_set))) (na' : N) (ssa
   | SOME _ => locals rst = locals rcst
   end.
 
-Definition ssa_hyp (prog : prog a) (st cst : state) ssa na lt : Prop :=
+Definition ssa_hyp (prog : prog a) (st cst : state) ssa na
+    (lt : list (num_map N * (num_set * num_set))) : Prop :=
   word_state_eq_rel st cst /\ ssa_locals_rel na ssa (locals st) (locals cst) /\
   is_alloc_var na /\ every_var (fun x => x <? na) prog /\ ssa_map_ok na ssa /\ lt_ok lt.
 

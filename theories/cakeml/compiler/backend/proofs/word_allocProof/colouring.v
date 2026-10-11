@@ -139,10 +139,10 @@ Proof. intros B f s s'; apply INJ_less. Qed.
 Definition hide {A} (x : A) : A := x.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "INJ_IMP_IMAGE_DIFF" *)
-Theorem INJ_IMP_IMAGE_DIFF : forall {B} (f : N -> B) s t,
+Theorem INJ_IMP_IMAGE_DIFF : forall {A B} (f : A -> B) s t,
   INJ f (s UNION t) UNIV -> IMAGE f (s DIFF t) = IMAGE f s DIFF IMAGE f t.
 Proof.
-  intros B f s t [_ H]; apply set_ext; intros y; unfold pred_set.IMAGE, pred_set.DIFF, pred_set.IN; split.
+  intros A B f s t [_ H]; apply set_ext; intros y; unfold pred_set.IMAGE, pred_set.DIFF, pred_set.IN; split.
   - intros [x [-> [Hs Ht]]]; split; [exists x; auto|].
     intros [x' [E Ht']]; apply Ht. replace x with x'; [exact Ht'|].
     apply H; [split; [right|left]; assumption|symmetry; exact E].
@@ -151,10 +151,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "INJ_IMP_IMAGE_DIFF_single" *)
-Theorem INJ_IMP_IMAGE_DIFF_single : forall {B} (f : N -> B) s n,
+Theorem INJ_IMP_IMAGE_DIFF_single : forall {A B} (f : A -> B) s n,
   INJ f (s UNION (n INSERT {})) UNIV -> IMAGE f s DIFF (f n INSERT {}) = IMAGE f (s DIFF (n INSERT {})).
 Proof.
-  intros B f s n H. rewrite (INJ_IMP_IMAGE_DIFF f s _ H). f_equal.
+  intros A B f s n H. rewrite (INJ_IMP_IMAGE_DIFF f s _ H). f_equal.
   apply set_ext; intros y; unfold pred_set.IMAGE, pred_set.INSERT, pred_set.EMPTY, pred_set.IN; split.
   - intros [->|[]]; exists n; auto.
   - intros [x [-> [->|[]]]]; left; reflexivity.
