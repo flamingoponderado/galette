@@ -77621,6 +77621,16 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "word_semantics_memory_update",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "word_semantics_memory_update"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "word_to_stack_compile_FST",
   "hol_line": null,
   "case": null,

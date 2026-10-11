@@ -1146,3 +1146,50 @@ Proof.
 Qed.
 
 End MemorySwap.
+
+Section MemorySemantics.
+Import wordSem wordConvs.
+Context {a : N} {c ffi_t : Type}.
+Local Abbreviation state := (wordSem.state a c ffi_t).
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "word_semantics_memory_update" *)
+Theorem word_semantics_memory_update (s : state) m start :
+ fun2set (memory s,mdomain s) = fun2set (m,mdomain s) /\
+ code.no_alloc_code (code s) /\ code.no_install_code (code s) ->
+ wordSem.semantics (set_memory m s) start <> Fail ->
+ wordSem.semantics s start = wordSem.semantics (set_memory m s) start.
+Proof.
+ intros (HM & HNA & HNI) Hsafe.
+ set (p := @wordLang.Call a NONE (SOME start) [0] NONE).
+ assert (Hpi : no_install p) by (unfold p, no_install; cbn [not_created_subprogs]; repeat split; try exact Logic.I; intros H; discriminate).
+ assert (Hpa : no_alloc p) by (unfold p, no_alloc; cbn [not_created_subprogs]; repeat split; try exact Logic.I; intros H; discriminate).
+ assert (HS : forall k, exists m1, evaluate (p,set_clock k (set_memory m s)) = (FST (evaluate (p,set_clock k s)),set_memory m1 (SND (evaluate (p,set_clock k s))))).
+ { intros k; destruct (evaluate (p,set_clock k s)) as [r t] eqn:He.
+ destruct (memory_swap_strengthened (p,set_clock k s) r t He m HM HNI HNA Hpi Hpa) as [m1 [He1 Hm1]].
+ exists m1; rewrite mc_clock; exact He1. }
+ assert (HO : forall k, FST (evaluate (p,set_clock k s)) = FST (evaluate (p,set_clock k (set_memory m s))) /\
+   ffi (SND (evaluate (p,set_clock k s))) = ffi (SND (evaluate (p,set_clock k (set_memory m s))))).
+ { intros k; destruct (HS k) as [m1 He]; rewrite He; split; reflexivity. }
+ unfold wordSem.semantics; fold p.
+ cbn [FST SND] in HO.
+ lazymatch goal with |- (if classical_dec ?P then _ else _) = (if classical_dec ?Q then _ else _) =>
+ assert (HP : P = Q) by (apply propositional_extensionality; split; intros [k H]; exists k; [rewrite <- (proj1 (HO k))|rewrite (proj1 (HO k))]; exact H); rewrite HP
+ end.
+ destruct (classical_dec _) as [Hbad|Hgood]; [reflexivity|].
+ lazymatch goal with |- (match some ?P with _ => _ end) = (match some ?Q with _ => _ end) =>
+ assert (Hterm : P = Q) by
+ (apply functional_extensionality; intros out; apply propositional_extensionality; split;
+ intros [k [t [r [outcome [He [Hr Hout]]]]]];
+ [ destruct (HS k) as [m1 Hswap]; rewrite He in Hswap; cbn [FST SND] in Hswap;
+ exists k, (set_memory m1 t), r, outcome; split; [exact Hswap|]; split; [exact Hr|exact Hout]
+ | destruct (evaluate (p,set_clock k s)) as [r0 t0] eqn:He0;
+ destruct (HS k) as [m1 Hswap]; rewrite He0 in Hswap; cbn [FST SND] in Hswap;
+ rewrite Hswap in He; injection He as <- <-;
+ exists k,t0,r0,outcome; repeat split; assumption ]); rewrite Hterm
+ end.
+ destruct (some _) as [b|]; [reflexivity|].
+ assert (HIO : (fun k => llist.fromList (io_events (ffi (snd (evaluate (p,set_clock k s)))))) =
+ (fun k => llist.fromList (io_events (ffi (snd (evaluate (p,set_clock k (set_memory m s)))))))) by
+ (apply functional_extensionality; intros k; rewrite (proj2 (HO k)); reflexivity).
+ rewrite HIO; reflexivity.
+Qed.
+End MemorySemantics.
