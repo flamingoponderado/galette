@@ -67,12 +67,12 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | backend/proofs stack_names, stack_rawcall | done |
 | backend/proofs stack_remove | done (`compile_semantics`, `make_init_semantics`, asm_name) |
 | backend/proofs stack_alloc | done (`compile_semantics`, `make_init_semantics`, GC code theorems) |
-| backend/proofs stack_to_lab | partial (up to `flatten_semantics`; HOL line 3027 onward todo) |
+| backend/proofs stack_to_lab | done (`full_make_init_semantics`, label/no_install chains; IMP_init_store_ok/IMP_init_state_ok need unported data_to_word proofs) |
 | backend/proofs word_to_stack | done (`comp_correct`, `compile_semantics`; PERM/SORTS lemmas untagged) |
 | backend/proofs lab_filter | done |
 | backend/proofs lab_to_target | todo |
 | encoders/riscv/proofs/riscv_targetProof | done (`riscv_encoder_correct`; lem11/lem12 are ML-generated, see header) |
-| backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | todo |
+| backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | done (10 backendProof declarations used by pan_to_target; wordConvsProof complete) |
 | pancake/proofs/pan_to_targetProof | todo |
 
 Axiom audit: the theorems checked so far depend only on the axioms declared

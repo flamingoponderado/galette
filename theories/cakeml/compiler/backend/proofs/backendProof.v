@@ -3,8 +3,7 @@
     The CakeML source/clos/bvl/data composition theorems are not ported.
     HOL's [PERMUTES] abbreviates [BIJ f s s]; quantified predicates under
     [EVERY] and [OPTION_ALL] are reflected using [bool_decide].
-    [OPTION_ALL] is a local notation for its two HOL defining clauses;
-    this does not add a declaration to the shared option theory. *)
+    [OPTION_ALL] is [option.OPTION_ALL]. *)
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
 From Galette.HOL.src.list.src Require Import list.
@@ -22,7 +21,6 @@ From Galette.cakeml.compiler.backend.semantics Require Import targetSem.
 From Galette.cakeml.compiler.backend.semantics Require stackProps wordConvs.
 From Galette.cakeml.compiler.backend.proofs Require stack_removeProof word_to_wordProof.
 Open Scope N_scope.
-Local Notation "'OPTION_ALL' P opt" := (match opt with NONE => true | SOME x => P x end) (at level 10, P at next level, opt at next level).
 Section Backend.
 Context {a : N}.
 (*! HOL "cakeml/compiler/backend/proofs/backendProofScript.sml" "byte_aligned_MOD" *)

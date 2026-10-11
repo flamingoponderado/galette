@@ -6471,6 +6471,16 @@
  },
  {
   "hol_path": "HOL/src/coretypes/optionScript.sml",
+  "hol_name": "OPTION_ALL_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/HOL/src/coretypes/option.v",
+  "rocq_name": "OPTION_ALL"
+ },
+ {
+  "hol_path": "HOL/src/coretypes/optionScript.sml",
   "hol_name": "OPTION_BIND_def",
   "hol_line": null,
   "case": null,
