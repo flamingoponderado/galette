@@ -764,7 +764,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/semantics/wordSemScript.sml" "cut_names_def" *)
-Definition cut_names {A} (name_set : num_set) (env : num_map A) : option (num_map A) :=
+Definition cut_names {A B} (name_set : num_map B) (env : num_map A) : option (num_map A) :=
   if classical_dec (domain name_set SUBSET domain env) then SOME (inter env name_set) else NONE.
 
 (*! HOL "cakeml/compiler/backend/semantics/wordSemScript.sml" "cut_envs_def" *)

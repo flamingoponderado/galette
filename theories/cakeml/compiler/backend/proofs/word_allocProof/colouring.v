@@ -13,12 +13,6 @@
     - HOL's [let (res,rst) = evaluate ... in if res = SOME Error then T
       else ...] is a [let '(res, rst)] pattern with
       [if bool_decide (res = SOME Error) then True else ...].
-    - [cut_names_lemma] is the instance of HOL's statement with the names
-      map [names] at payload type [unit] ([num_set]): HOL's [cut_names]
-      takes a name set of any payload type ['b spt], but the Rocq
-      [wordSem.cut_names] (a semantics definition, not edited here) fixes
-      its first argument to [num_set].  The locals payload [A] is generic
-      as in HOL.
     - HOL's [sorting$PERM] is not ported: [list_rearrange_perm] is stated
       with Rocq's [Permutation] and is untagged (as [PERM_list_rearrange]
       in [wordProps.consts]).
@@ -401,7 +395,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_allocProofScript.sml" "cut_names_lemma" *)
-Theorem cut_names_lemma : forall {A} (names : num_set) (sloc tloc x : num_map A) f,
+Theorem cut_names_lemma : forall {A B} (names : num_map B) (sloc tloc x : num_map A) f,
   INJ f (domain names) UNIV /\
   cut_names names sloc = SOME x /\
   strong_locals_rel f (domain names) sloc tloc ->
@@ -412,7 +406,7 @@ Theorem cut_names_lemma : forall {A} (names : num_set) (sloc tloc x : num_map A)
     INJ f (domain x) UNIV /\
     domain x = domain names.
 Proof.
-  intros A names sloc tloc x f (Hi & Hc & Hs). unfold cut_names in *.
+  intros A B names sloc tloc x f (Hi & Hc & Hs). unfold cut_names in *.
   destruct (classical_dec (domain names SUBSET domain sloc)) as [Hsub|]; [|discriminate].
   injection Hc as <-.
   assert (Hdx : domain (inter sloc names) = domain names).

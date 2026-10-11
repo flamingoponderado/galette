@@ -37464,8 +37464,8 @@
   "hol_name": "cut_names_lemma",
   "hol_line": null,
   "case": null,
-  "status": "documented_mismatch",
-  "note": "reviewer: Instance at names : num_set (payload unit): HOL's cut_names takes a name set of any payload 'b spt, but Rocq wordSem.cut_names (semantics definition, not edited) fixes the first argument to num_set. Locals payload A is generic; otherwise premises and conclusion as in HOL. Header note added in colouring.v.",
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with word_allocProofScript.sml; cut_names now polymorphic in the name-set payload B as in HOL; locals payload A generic",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_allocProof/colouring.v",
   "rocq_name": "cut_names_lemma"
  },
@@ -60485,7 +60485,7 @@
   "hol_line": null,
   "case": null,
   "status": "reviewed_exact",
-  "note": "reviewer: SUBSET via classical_dec",
+  "note": "reviewer: compared with wordSemScript.sml; name_set : num_map B (HOL 'b spt), env : num_map A; SUBSET reflected via classical_dec",
   "rocq_path": "theories/cakeml/compiler/backend/semantics/wordSem.v",
   "rocq_name": "cut_names"
  },
