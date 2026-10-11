@@ -10,12 +10,16 @@
     ([stack_to_lab_lab_pres], [stack_to_lab_lab_pres_T],
     [prog_to_section_labels_ok], ...).
 
-    NOT YET PORTED (everything from HOL line 3027 on): [make_init],
-    [full_make_init], [full_make_init_buffer/_ffi/_compile],
-    [memory_assumption], [state_rel_make_init], [stack_to_lab_compile_lab_pres],
+    Also ported: [make_init], [full_make_init] and
+    [full_make_init_buffer/_ffi/_compile].
+
+    NOT YET PORTED: [memory_assumption], [halt_assum_lemma],
+    [state_rel_make_init], [stack_to_lab_compile_lab_pres],
     [good_code], [full_make_init_semantics], [stack_to_lab_compile_all_enc_ok],
-    [IMP_init_store_ok], [IMP_init_state_ok], the get_code_labels /
-    handler_labels lemmas and the no_shmemop / no_install lemmas.
+    [full_make_init_has_fp_ops], the get_code_labels / handler_labels lemmas
+    and the no_shmemop / no_install lemmas.
+    [IMP_init_store_ok] and [IMP_init_state_ok] are skipped because their
+    dependencies are not yet ported.
 
     Mismatches with HOL:
     - [code_installed]: Prop-valued Fixpoint; the non-[Label] case of the
@@ -3911,3 +3915,103 @@ Proof.
 Qed.
 
 End FlattenSemantics.
+
+Section Initialization.
+Context {a : N} {c ffi_t : Type}.
+Local Opaque stackSem.evaluate.
+
+#[local] Instance init_store_inhabited : Inhabited (fmap store_name (word_loc a)) := FEMPTY.
+#[local] Instance init_data_buffer_inhabited : Inhabited (buffer a a) :=
+  wordSem.mk_buffer (n2w 0) [] 0.
+
+(** Fields omitted from HOL's record literal have value [ARB]. *)
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "make_init_def" *)
+Definition make_init (code0 : spt (prog a))
+    (coracle : N -> c * (list (N * prog a) * list (word a)))
+    (regs0 : list N) (save_regs : N -> Prop) (s : labSem.state a c ffi_t)
+    : stackSem.state a c ffi_t :=
+  stackSem.mk_state
+    (FEMPTY |++ MAP (fun r => (r, read_reg r s)) regs0) FEMPTY
+    ARB ARB ARB (labSem.mem s) (labSem.mem_domain s) (labSem.shared_mem_domain s)
+    ARB (fun c0 p => labSem.compile s c0 (MAP prog_to_section p)) coracle
+    (labSem.code_buffer s) ARB ARB false false false (labSem.clock s) code0
+    (labSem.ffi s) save_regs (labSem.be s).
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "full_make_init_def" *)
+Definition full_make_init (stack_conf : stack_to_lab.config) (data_conf : data_to_word.config)
+    (max_heap sp : N) (offset : word a * word a) (bitmaps0 : list (word a))
+    (code0 : list (N * prog a)) (s4 : labSem.state a c ffi_t) (save_regs : N -> Prop)
+    (data_sp : N) (coracle : N -> c * (list (N * prog a) * list (word a)))
+    : stackSem.state a c ffi_t * option (stackSem.state a c ffi_t) :=
+  let ggc := is_gen_gc (data_to_word.gc_kind data_conf) in
+  let jump0 := stack_to_lab.jump stack_conf in
+  let code1 : list (N * prog a) := stack_alloc.compile data_conf (stack_rawcall.compile code0) in
+  let code2 : list (N * prog a) := stack_remove.compile jump0 offset ggc max_heap sp bvl_to_bvi.InitGlobals_location code1 in
+  let code3 : spt (prog a) := fromAList (stack_names.compile (reg_names stack_conf) code2) in
+  let coracle1 : N -> c * (list (N * prog a) * list (word a)) := (I ## (MAP stack_alloc.prog_comp ## I)) ∘ coracle in
+  let coracle2 : N -> c * (list (N * prog a) * list (word a)) := (I ## (MAP (stack_remove.prog_comp jump0 offset sp) ## I)) ∘ coracle1 in
+  let coracle3 : N -> c * (list (N * prog a) * list (word a)) := (I ## (stack_names.compile (reg_names stack_conf) ## I)) ∘ coracle2 in
+  let s3 : stackSem.state a c ffi_t := make_init code3 coracle3 (MAP (stack_names.find_name (reg_names stack_conf)) [2;3;4]) save_regs s4 in
+  let s2 : stackSem.state a c ffi_t := stack_namesProof.make_init (reg_names stack_conf) (fromAList code2) coracle2 s3 in
+  let s1 : stackSem.state a c ffi_t := stack_removeProof.make_init_any ggc max_heap bitmaps0 data_sp coracle1 jump0 offset sp (fromAList code1) s2 in
+  (stack_allocProof.make_init data_conf (fromAList code0) coracle s1,
+   stack_removeProof.make_init_opt ggc max_heap bitmaps0 data_sp coracle1 jump0 offset sp (fromAList code1) s2).
+
+(** Projection helpers keep case analysis independent of the concrete compiler pipeline. *)
+Local Lemma make_init_any_buffers ggc mh bm dsp co jump0 off sp cd
+    (s : stackSem.state a c ffi_t) :
+  wordSem.buffer_buffer (code_buffer (stack_removeProof.make_init_any ggc mh bm dsp co jump0 off sp cd s)) = [] /\
+  wordSem.buffer_buffer (data_buffer (stack_removeProof.make_init_any ggc mh bm dsp co jump0 off sp cd s)) = [].
+Proof.
+  unfold stack_removeProof.make_init_any, stack_removeProof.make_init_opt.
+  destruct (evaluate _) as [[r|] t] eqn:E; [split; reflexivity|].
+  destruct (classical_dec _) as [H|H]; [|split; reflexivity].
+  unfold stack_removeProof.init_prop in H. destruct H as (? & ? & ? & ? & H).
+  intuition.
+Qed.
+
+Local Lemma make_init_any_compile ggc mh bm dsp co jump0 off sp cd
+    (s : stackSem.state a c ffi_t) :
+  stackSem.compile (stack_removeProof.make_init_any ggc mh bm dsp co jump0 off sp cd s) =
+    (fun c0 p => stackSem.compile s c0 (MAP (stack_remove.prog_comp jump0 off sp) p)).
+Proof.
+  unfold stack_removeProof.make_init_any, stack_removeProof.make_init_opt.
+  destruct (evaluate _) as [[r|] t] eqn:E; [reflexivity|].
+  destruct (classical_dec _); [|reflexivity].
+  unfold stack_removeProof.init_reduce; cbv zeta; cbn [stackSem.compile].
+  pose proof (evaluate_consts _ _ _ _ E) as H.
+  destruct H as (_ & _ & _ & _ & _ & _ & _ & H). rewrite H. reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "full_make_init_buffer" *)
+Theorem full_make_init_buffer : forall sc dc mh sp off bm cd s sr dsp co,
+  wordSem.buffer_buffer (code_buffer (FST (full_make_init sc dc mh sp off bm cd s sr dsp co))) = [] /\
+  wordSem.buffer_buffer (data_buffer (FST (full_make_init sc dc mh sp off bm cd s sr dsp co))) = [].
+Proof.
+  intros. unfold full_make_init, stack_allocProof.make_init; cbv zeta.
+  cbn [FST code_buffer data_buffer set_compile_oracle set_compile set_gc_fun set_use_stack set_use_alloc set_code].
+  apply make_init_any_buffers.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "full_make_init_ffi" *)
+Theorem full_make_init_ffi : forall sc dc mh sp off bm cd s sr dsp co,
+  ffi (FST (full_make_init sc dc mh sp off bm cd s sr dsp co)) = labSem.ffi s.
+Proof.
+  intros. unfold full_make_init, stack_allocProof.make_init; cbv zeta.
+  cbn [FST ffi set_compile_oracle set_compile set_gc_fun set_use_stack set_use_alloc set_code].
+  rewrite stack_removeProof.make_init_any_ffi. reflexivity.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "full_make_init_compile" *)
+Theorem full_make_init_compile : forall sc dc mh sp off bm cd s sr dsp co,
+  stackSem.compile (FST (full_make_init sc dc mh sp off bm cd s sr dsp co)) =
+  (fun c0 => (fun p => labSem.compile s c0
+    (MAP prog_to_section (MAP (stack_names.prog_comp (reg_names sc))
+      (MAP (stack_remove.prog_comp (stack_to_lab.jump sc) off sp) p)))) ∘ MAP stack_alloc.prog_comp).
+Proof.
+  intros. unfold full_make_init, stack_allocProof.make_init; cbv zeta.
+  cbn [FST stackSem.compile set_compile_oracle set_compile set_gc_fun set_use_stack set_use_alloc set_code].
+  rewrite make_init_any_compile. reflexivity.
+Qed.
+
+End Initialization.
