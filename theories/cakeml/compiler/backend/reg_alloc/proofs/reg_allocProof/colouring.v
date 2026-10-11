@@ -6,7 +6,10 @@
 
     HOL wraps some conclusions in [markerTheory.Abbrev] (the identity, a
     proof-engineering marker); it is omitted here.  HOL [if P then A else B]
-    on a proposition [P] is [if decide P then A else B]. *)
+    on a proposition [P] is [if decide P then A else B].
+
+    HOL's [remove_colours_succeeds] binds [s] twice ([∀adj ks s s.]), so the
+    outer [s] is vacuous; the Rocq statement binds it once. *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.

@@ -32,7 +32,15 @@
       [eval_map_var_cexp_present_ctxt], [evaluate_nested_decs_load_globals],
       [locals_rel_extend_new_var], [MAP_SOME_MEM_lemma]: not needed by the
       proofs here.
-    ([size_of_eids_eq] is commented out in the HOL script.) *)
+    ([size_of_eids_eq] is commented out in the HOL script.)
+
+    Statement notes:
+    - HOL quantifies the unused variable [w] in
+      [eval_distinct_lists_not_affect] and [ws] in
+      [opt_mmap_eval_distinct_lists_not_affect']; the Rocq statements drop
+      them.
+    - HOL has two theorems named [locals_rel_wf_shape] (lines 2345 and
+      3008); the second is [locals_rel_wf_shape'] here. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.

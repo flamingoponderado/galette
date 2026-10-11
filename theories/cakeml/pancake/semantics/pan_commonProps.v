@@ -7,6 +7,11 @@
     Carrier notes: HOL's [MEM] is the boolean [MEM]; list indices are [N]
     ([EL], [TAKE], [DROP], [LENGTH]); [set] is [LIST_TO_SET].
 
+    Specialised types: in [all_distinct_flookup_all_distinct] and
+    [no_overlap_flookup_distinct] HOL is polymorphic in the element type of
+    the lists in the finite map's range; the Rocq statements fix it to [N]
+    ([fmap K (C * list N)]), an instance of the HOL statement.
+
     Not yet ported (not needed by [panProps]/[pan_simpProof]/[pan_to_crepProof]):
     [genlist_distinct_max'], [update_eq_zip_map_flookup],
     [map_flookup_fupdate_zip_not_mem], [fm_multi_update],
