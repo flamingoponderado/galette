@@ -9,7 +9,15 @@
     [wordSem$result]) and the ML binding [stack_evaluate_add_clock_NONE]
     are not declarations of theorems and are not ported; wordSem's result
     constructors are written [wordSem.X].  [evaluate_wLive] drops HOL's
-    unused existential [bs5]. *)
+    unused existential [bs5].
+    - Kept polymorphic as in HOL: [abs_frame_eq] (on [('a # 'b # 'c list)]
+      and [('a # 'b # 'd list)]), [LIST_REL_abs_frame_eq_handler_val],
+      the unused [bs'] of [enc_stack_lemma], [inter_eq_empty_2] (any
+      [spt]), and the word states of [s_key_eq_push_env_locals_size] and
+      [word_gc_empty_frame] (any compiler-configuration and ffi types).
+    - [map_bitmap_success]: HOL's existential [z] is unused and has an
+      unconstrained type; here [z : list A] (a Rocq existential over an
+      arbitrary, possibly empty, type would not be provable). *)
 
 From Galette Require Import Base Classical.
 From Stdlib Require Import Permutation Sorting.Sorted.
@@ -164,8 +172,8 @@ Lemma bd_true' (P : Prop) {d : Decision P} : P -> bool_decide P = true.
 Proof. intros H. apply bool_decide_spec. exact H. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "enc_stack_lemma" *)
-Theorem enc_stack_lemma : forall k len (bs : list (word a)) (wstack : list (stack_frame a)) sstack lens astack
-    (bs' : list (word a)),
+Theorem enc_stack_lemma : forall {B : Type} k len (bs : list (word a)) (wstack : list (stack_frame a)) sstack lens astack
+    (bs' : B),
   good_dimindex a /\
   LENGTH bs + 1 < dimword a /\
   abs_stack bs wstack sstack lens = SOME astack /\
@@ -174,7 +182,7 @@ Theorem enc_stack_lemma : forall k len (bs : list (word a)) (wstack : list (stac
   stack_rel_aux k len wstack astack ->
   stackSem.enc_stack bs sstack = SOME (wordSem.enc_stack wstack).
 Proof.
-  intros k len bs wstack. induction wstack as [|[n l0 l h] xs IH];
+  intros B k len bs wstack. induction wstack as [|[n l0 l h] xs IH];
     intros sstack lens astack bs' (Hg & Hl & Ha & H1 & H4 & Hr).
   - apply abs_stack_nil_inv in Ha as (-> & -> & ->). rewrite stack_enc_stack_cons.
     rewrite bd_true' by reflexivity. rewrite bd_true' by reflexivity. reflexivity.
@@ -207,7 +215,7 @@ Theorem IMP_enc_stack : forall {c ffi_t} ac k (s1 : wordSem.state a (N * c) ffi_
 Proof.
   intros c ffi_t ac k s1 t1 lens H. sr_destr H. destruct Hsr as (_ & astack & Ha & _ & Hr).
   rewrite N.add_0_r in Ha. rewrite (DROP_skipn 0) in Ha. cbn [N.to_nat skipn] in Ha.
-  eapply (enc_stack_lemma k _ _ _ _ _ _ []). repeat split; try eassumption. lia.
+  eapply (enc_stack_lemma (B := list (word a)) k _ _ _ _ _ _ []). repeat split; try eassumption. lia.
 Qed.
 
 End EncStack.
@@ -343,14 +351,15 @@ Theorem abs_stack_empty : forall (bs : list (word a)) ls stack lens,
 Proof. intros bs ls stack lens H. apply abs_stack_nil_inv in H as (? & ? & _). auto. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "abs_frame_eq_def" *)
-Definition abs_frame_eq (p q : option (word_loc a * word_loc a) * (list bool * list (word_loc a))) : Prop :=
+Definition abs_frame_eq {X Y Z W : Type} (p : X * (Y * list Z)) (q : X * (Y * list W)) : Prop :=
   FST p = FST q /\ FST (SND p) = FST (SND q) /\ LENGTH (SND (SND p)) = LENGTH (SND (SND q)).
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "LIST_REL_abs_frame_eq_handler_val" *)
-Theorem LIST_REL_abs_frame_eq_handler_val : forall xs ys,
+Theorem LIST_REL_abs_frame_eq_handler_val : forall {X Y Z W : Type}
+    (xs : list (option X * (Y * list Z))) (ys : list (option X * (Y * list W))),
   LIST_REL abs_frame_eq xs ys -> handler_val xs = handler_val ys.
 Proof.
-  intros xs ys H. induction H as [|[p1 [b1 f1]] [p2 [b2 f2]] l1 l2 Hr H IH]; [reflexivity|].
+  intros X Y Z W xs ys H. induction H as [|[p1 [b1 f1]] [p2 [b2 f2]] l1 l2 Hr H IH]; [reflexivity|].
   destruct Hr as (E1 & E2 & E3). cbn in E1, E2, E3. subst p2 b2.
   destruct p1; cbn [handler_val]; rewrite E3, IH; reflexivity.
 Qed.
@@ -802,11 +811,11 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "s_key_eq_push_env_locals_size" *)
-Theorem s_key_eq_push_env_locals_size : forall env opt1 (s : wordSem.state a (N * c) ffi_t) n l0 l opt2 stack',
+Theorem s_key_eq_push_env_locals_size : forall {C F : Type} env opt1 (s : wordSem.state a C F) n l0 l opt2 stack',
   s_key_eq (wordSem.stack (wordSem.push_env env opt1 s)) (StackFrame n l0 l opt2 :: stack') ->
   n = wordSem.locals_size s /\ wordSem.stack_size (wordSem.stack s) = wordSem.stack_size stack'.
 Proof.
-  intros env opt1 s n l0 l opt2 stack' H. unfold wordSem.push_env in H.
+  intros C F env opt1 s n l0 l opt2 stack' H. unfold wordSem.push_env in H.
   destruct opt1 as [[w [h [l1 l2]]]|]; cbv zeta in H;
     destruct (wordSem.env_to_list _ _) as [ll perm]; ws_fields; destruct H as [H1 H2];
     split; try (apply s_key_eq_stack_size; exact H1);
@@ -985,13 +994,13 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "word_gc_empty_frame" *)
-Theorem word_gc_empty_frame : forall (s x y : wordSem.state a (N * c) ffi_t) n,
+Theorem word_gc_empty_frame : forall {C F : Type} (s x y : wordSem.state a C F) n,
   wordSem.gc (wordSem.set_stack (StackFrame n [] [] NONE :: wordSem.stack s) s) = SOME x /\
   wordSem.pop_env x = SOME y ->
   wordSem.locals y = LN /\
   wordSem.gc s = SOME (wordSem.set_locals_size (wordSem.locals_size s) (wordSem.set_locals (wordSem.locals s) y)).
 Proof.
-  intros s x y n [Hg Hp]. unfold wordSem.gc in *. cbv zeta in *. ws_fields.
+  intros C F s x y n [Hg Hp]. unfold wordSem.gc in *. cbv zeta in *. ws_fields.
   cbn [wordSem.enc_stack MAP List.map app] in Hg.
   destruct (wordSem.gc_fun s _) as [[wl [m st]]|]; [|discriminate].
   cbn [wordSem.dec_stack] in Hg. replace (LENGTH wl <? LENGTH (@nil (N * word_loc a))) with false in Hg
@@ -1003,9 +1012,9 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "inter_eq_empty_2" *)
-Theorem inter_eq_empty_2 : forall {B} (s : spt B) (t : num_set), domain t = {} -> inter s t = LN.
+Theorem inter_eq_empty_2 : forall {B C} (s : spt B) (t : spt C), domain t = {} -> inter s t = LN.
 Proof.
-  intros B s t H. apply inter_eq_LN. apply functional_extensionality. intros z.
+  intros B C s t H. apply inter_eq_LN. apply functional_extensionality. intros z.
   apply propositional_extensionality. rewrite H. unfold EMPTY. tauto.
 Qed.
 

@@ -19,7 +19,27 @@
     - [get_above_handler_def]: HOL's [EL] beyond the end of a list and the
       missing [NONE] case of its [case] are unspecified ([ARB]); Galette's
       [EL] needs an [Inhabited] instance for stack frames (a local
-      instance).
+      instance), so out-of-range [EL] is a fixed frame rather than HOL's
+      unspecified value.
+    - Renamed bound variables (clashes with the state variable [s] and
+      the state field [gc_fun]): [s], [s'] of
+      [enc_stack_dec_stack_is_gc_word_const] are [st], [sk']; [s], [s'],
+      [gc_fun], [memory], [memory'], [mdomain], [store], [store'] of
+      [gc_fun_sf_gc_consts] are [sk], [sk'], [gf], [m], [m'], [md], [st],
+      [st'].
+    - [const_fp_move_cs] is typed at [num_map (word a)] in [word_simp.v]
+      (HOL's is polymorphic in the map's value type), so
+      [lookup_const_fp_move_cs], [lookup_const_fp_move_cs_NONE],
+      [lookup_const_fp_move_cs_SOME] and [lookup_const_fp_move_cs_SOME_part]
+      are stated for maps of words only.
+    - Kept polymorphic as in HOL: the key type of
+      [ALOOKUP_LIST_REL_sf_gc_consts(_NONE)] (and the unused [v] of the
+      latter), the map of [lookup_FOLDR_delete], the unused [rest] of
+      [evaluate_drop_consts_1], and the independent state types of
+      [LIST_REL_call_Result] ([s'] arbitrary; [s''], [s'''] with their own
+      configuration/ffi types), [LIST_REL_push_env] ([s'] of any width and
+      [R] between the two frame types), [sf_gc_consts_get_above_handler]
+      and [get_above_handler_call_env_push_env_dec_clock] ([s'']).
     - Not ported (they mention HOL's [sorting$PERM], which Galette does not
       port; see [wordProps.code]): [ALL_DISTINCT_PERM_FST],
       [ALOOKUP_ALL_DISTINCT_FST_PERM], [ALOOKUP_ALL_DISTINCT_FST_PERM_SOME]
@@ -725,23 +745,23 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "ALOOKUP_LIST_REL_sf_gc_consts" *)
-Theorem ALOOKUP_LIST_REL_sf_gc_consts : forall (l1 l2 : list (N * word_loc a)) k v,
+Theorem ALOOKUP_LIST_REL_sf_gc_consts : forall {K} `{EqDecision K} (l1 l2 : list (K * word_loc a)) k v,
   LIST_REL (fun '(ak, av) '(bk, bv) => ak = bk /\ (is_gc_word_const av -> bv = av)) l1 l2 /\
   is_gc_word_const v /\ ALOOKUP l1 k = SOME v ->
   ALOOKUP l2 k = SOME v.
 Proof.
-  intros l1 l2 k v [H [Hv Hl]]. induction H as [|[ak av] [bk bv] l1 l2 [-> Hb] H IH]; [exact Hl|].
+  intros K EK l1 l2 k v [H [Hv Hl]]. induction H as [|[ak av] [bk bv] l1 l2 [-> Hb] H IH]; [exact Hl|].
   cbn [ALOOKUP] in Hl |- *. destruct (decide (bk = k)) as [->|]; [|apply IH, Hl].
   injection Hl as ->. rewrite Hb by exact Hv. reflexivity.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "ALOOKUP_LIST_REL_sf_gc_consts_NONE" *)
-Theorem ALOOKUP_LIST_REL_sf_gc_consts_NONE : forall (l1 l2 : list (N * word_loc a)) k (v : word_loc a),
+Theorem ALOOKUP_LIST_REL_sf_gc_consts_NONE : forall {K V} `{EqDecision K} (l1 l2 : list (K * word_loc a)) k (v : V),
   LIST_REL (fun '(ak, av) '(bk, bv) => ak = bk /\ (is_gc_word_const av -> bv = av)) l1 l2 /\
   ALOOKUP l1 k = NONE ->
   ALOOKUP l2 k = NONE.
 Proof.
-  intros l1 l2 k v [H Hl]. induction H as [|[ak av] [bk bv] l1 l2 [-> Hb] H IH]; [exact Hl|].
+  intros K V EK l1 l2 k v [H Hl]. induction H as [|[ak av] [bk bv] l1 l2 [-> Hb] H IH]; [exact Hl|].
   cbn [ALOOKUP] in Hl |- *. destruct (decide (bk = k)); [discriminate|apply IH, Hl].
 Qed.
 
@@ -857,12 +877,12 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "sf_gc_consts_get_above_handler" *)
-Theorem sf_gc_consts_get_above_handler : forall s s',
+Theorem sf_gc_consts_get_above_handler : forall {C2 F2 : Type} s (s' : state a C2 F2),
   LIST_REL sf_gc_consts (stack s) (stack s') /\ handler s' = handler s /\
   handler s < LENGTH (stack s) ->
   get_above_handler s' = get_above_handler s.
 Proof.
-  intros s s' [H [Hh Hl]]. unfold get_above_handler. rewrite Hh.
+  intros C2 F2 s s' [H [Hh Hl]]. unfold get_above_handler. rewrite Hh.
   pose proof (LIST_REL_length _ _ _ H) as HL. rewrite !LENGTH_length in *. rewrite <- HL.
   rewrite !EL_nth by (rewrite LENGTH_length; lia; rewrite HL; lia).
   pose proof (LIST_REL_nth _ _ _ (N.to_nat (N.of_nat (length (stack s)) - (handler s + 1)))
@@ -872,12 +892,13 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "LIST_REL_call_Result" *)
-Theorem LIST_REL_call_Result : forall s (s' : state a c ffi_t) s'' s''' env (h : option (N * (prog a * (N * N)))),
+Theorem LIST_REL_call_Result : forall {X C2 F2 : Type} s (s' : X) (s'' s''' : state a C2 F2) env
+    (h : option (N * (prog a * (N * N)))),
   LIST_REL sf_gc_consts (stack (push_env env h s)) (stack s'') /\
   pop_env s'' = SOME s''' /\ handler s'' = handler (push_env env h s) ->
   LIST_REL sf_gc_consts (stack s) (stack s''') /\ handler s''' = handler s.
 Proof.
-  intros s s' s'' s''' env h [H [Hp Hh]].
+  intros X C2 F2 s s' s'' s''' env h [H [Hp Hh]].
   unfold pop_env in Hp.
   destruct h as [[hv [hp [l1 l2]]]|]; unfold push_env in H, Hh;
     destruct (env_to_list _ _) as [l perm];
@@ -894,12 +915,12 @@ Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "get_above_handler_call_env_push_env_dec_clock" *)
 Theorem get_above_handler_call_env_push_env_dec_clock :
-  forall s s' (s'' : state a c ffi_t) args lsz env x0 x1 x2 x3,
+  forall {b : N} {C2 F2 : Type} s s' (s'' : state b C2 F2) args lsz env x0 x1 x2 x3,
   s' = call_env args lsz (push_env env (SOME (x0, (x1, (x2, x3)))) (dec_clock s)) /\
   handler s'' = get_above_handler s' ->
   handler s'' = handler s.
 Proof.
-  intros s s' s'' args lsz env x0 x1 x2 x3 [-> Hh]. rewrite Hh. unfold get_above_handler.
+  intros b C2 F2 s s' s'' args lsz env x0 x1 x2 x3 [-> Hh]. rewrite Hh. unfold get_above_handler.
   unfold push_env. destruct (env_to_list _ _) as [l perm]. cbn.
   replace (N.succ (LENGTH (stack s)) - (LENGTH (stack s) + 1)) with 0 by lia. reflexivity.
 Qed.
@@ -924,10 +945,11 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "LIST_REL_push_env" *)
-Theorem LIST_REL_push_env : forall (R : stack_frame a -> stack_frame a -> Prop) s (s' : state a c ffi_t) env h,
+Theorem LIST_REL_push_env : forall {b : N} {C2 F2 : Type} (R : stack_frame a -> stack_frame b -> Prop) s
+    (s' : state b C2 F2) env h,
   LIST_REL R (stack (push_env env h s)) (stack s') -> LIST_REL R (stack s) (TL (stack s')).
 Proof.
-  intros R s s' env h H. destruct h as [[? [? [? ?]]]|]; unfold push_env in H;
+  intros b C2 F2 R s s' env h H. destruct h as [[? [? [? ?]]]|]; unfold push_env in H;
     destruct (env_to_list _ _); cbn in H; inversion H; subst; cbn; assumption.
 Qed.
 
@@ -1401,11 +1423,11 @@ Qed.
 
 (** HOL's free variable [cs] is quantified first; its unused [rest] is kept. *)
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "evaluate_drop_consts_1" *)
-Theorem evaluate_drop_consts_1 : forall (cs : num_map (word a)) vs (rest : prog a) s,
+Theorem evaluate_drop_consts_1 : forall {R : Type} (cs : num_map (word a)) vs (rest : R) s,
   (forall v w, lookup v cs = SOME w -> get_var v s = SOME (Word w)) ->
   evaluate (drop_consts cs vs, s) = (NONE, s).
 Proof.
-  intros cs vs rest s Hcs. induction vs as [|n ns IH]; cbn [drop_consts]; [apply evaluate_Skip_eq|].
+  intros R cs vs rest s Hcs. induction vs as [|n ns IH]; cbn [drop_consts]; [apply evaluate_Skip_eq|].
   destruct (lookup n cs) as [w|] eqn:E; [|exact IH].
   rewrite evaluate_SmartSeq, evaluate_Seq_eq, IH, bd_true by reflexivity.
   rewrite (evaluate_eqn (Assign _ _) s); cbn [evaluate_body word_exp]. f_equal.
@@ -1423,7 +1445,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_simpProofScript.sml" "lookup_FOLDR_delete" *)
-Theorem lookup_FOLDR_delete : forall (l : list N) (m : num_map (word a)) v w,
+Theorem lookup_FOLDR_delete : forall {B : Type} (l : list N) (m : num_map B) v w,
   lookup v (FOLDR delete m l) = SOME w -> lookup v m = SOME w /\ ~ MEM v l.
 Proof.
   induction l as [|x l IH]; intros m v w H; cbn [FOLDR List.fold_right] in H.

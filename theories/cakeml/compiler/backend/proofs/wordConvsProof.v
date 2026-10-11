@@ -4,9 +4,21 @@
     of HOL's declarations are ported.
 
     Notes:
-    - HOL's [word_get_code_labels] and [word_good_handlers] are wordConvs'
-      [get_code_labels] and [good_handlers]; code-label sets are [N -> Prop]
-      and HOL set equalities are proved with [set_ext].
+    - HOL's [word_get_code_labels], [word_good_handlers] and
+      [word_good_code_labels] are wordConvs' [get_code_labels],
+      [good_handlers] and [good_code_labels]; code-label sets are
+      [N -> Prop] and HOL set equalities are proved with [set_ext].
+    - HOL's unused, unconstrained binders are dropped: [s] of
+      [labels_rel_hoist2], [try_if_hoist2_no_inst],
+      [word_get_code_labels_try_if_hoist2] and
+      [word_good_handlers_try_if_hoist2], and [conf] of
+      [flat_exp_conventions_fake_moves].  The unused [k] of
+      [remove_dead_conventions] and [remove_dead_prog_conventions] keeps
+      HOL's unconstrained type.
+    - [remove_dead_prog_conventions] (HOL: [remove_dead_conventions]
+      specialised to [LN], [[]], [[]] and folded with [remove_dead_prog_def])
+      keeps the [let comp := ...] of [remove_dead_conventions], which HOL's
+      [LET_THM] simplification unfolds; the two are definitionally equal.
     - HOL's free variables are quantified explicitly (the predicate [P] of
       [not_created_subprogs] and [every_inst] first).  HOL tuples nest to
       the right ([(a,b,c)] is [(a, (b, c))]); HOL [num] is [N]; HOL's [0w] is
@@ -1592,7 +1604,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/wordConvsProofScript.sml" "remove_dead_conventions" *)
-Theorem remove_dead_conventions : forall P (p : prog a) live nlive lt c (k : N),
+Theorem remove_dead_conventions : forall {K : Type} P (p : prog a) live nlive lt c (k : K),
   let comp := FST (remove_dead p live nlive lt) in
   (flat_exp_conventions p -> flat_exp_conventions comp) /\
   (full_inst_ok_less c p -> full_inst_ok_less c comp) /\
@@ -1601,7 +1613,7 @@ Theorem remove_dead_conventions : forall P (p : prog a) live nlive lt c (k : N),
   (wf_cutsets p -> wf_cutsets comp) /\
   (extract_labels p = extract_labels comp).
 Proof.
-  intros P p live nlive lt c k comp; subst comp; unfold pre_alloc_conventions;
+  intros K P p live nlive lt c k comp; subst comp; unfold pre_alloc_conventions;
     repeat split; intros.
   - apply remove_dead_flat; auto.
   - apply remove_dead_full_inst_ok_less; auto.
@@ -1612,7 +1624,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/wordConvsProofScript.sml" "remove_dead_prog_conventions" *)
-Theorem remove_dead_prog_conventions : forall P (p : prog a) c (k : N),
+Theorem remove_dead_prog_conventions : forall {K : Type} P (p : prog a) c (k : K),
   let comp := remove_dead_prog p in
   (flat_exp_conventions p -> flat_exp_conventions comp) /\
   (full_inst_ok_less c p -> full_inst_ok_less c comp) /\
@@ -1620,7 +1632,7 @@ Theorem remove_dead_prog_conventions : forall P (p : prog a) c (k : N),
   (every_inst P p -> every_inst P comp) /\
   (wf_cutsets p -> wf_cutsets comp) /\
   (extract_labels p = extract_labels comp).
-Proof. intros P p c k; exact (remove_dead_conventions P p LN [] [] c k). Qed.
+Proof. intros K P p c k; exact (remove_dead_conventions P p LN [] [] c k). Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/wordConvsProofScript.sml" "word_get_code_labels_remove_dead" *)
 Theorem word_get_code_labels_remove_dead : forall (ps : prog a) live nlive lt,

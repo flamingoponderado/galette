@@ -8,7 +8,9 @@
     ([copy_ret_aux]).
 
     Notes: as in [state_rel.v].  HOL's [w ' i] (a [bool] in Galette) and
-    HOL boolean equations [b = (P)] are written with [=?]/[is_true]. *)
+    HOL boolean equations [b = (P)] are written with [=?]/[is_true].
+    [word_exp_Op_Add_0] and [evaluate_ShareInst_Var_eq_Op_Add] hold for word
+    states of any compiler-configuration and ffi types, as in HOL. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -357,28 +359,28 @@ Section ShareInst.
 Context {a : N} {c ffi_t : Type}.
 Implicit Types (s : wordSem.state a (N * c) ffi_t) (t : stackSem.state a c ffi_t).
 
-Lemma wev_shareinst op v (exp : wordLang.exp a) s :
+Lemma wev_shareinst {C F : Type} op v (exp : wordLang.exp a) (s : wordSem.state a C F) :
   wordSem.evaluate (wordLang.ShareInst op v exp, s) =
   match wordSem.word_exp s exp with SOME (Word ad) => wordSem.share_inst op v ad s | _ => (SOME wordSem.Error, s) end.
 Proof. rewrite wordSem.evaluate_eqn. reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "word_exp_Op_Add_0" *)
-Theorem word_exp_Op_Add_0 : forall s exp x,
+Theorem word_exp_Op_Add_0 : forall {C F : Type} (s : wordSem.state a C F) exp x,
   wordSem.word_exp s exp = SOME (Word x) <->
   wordSem.word_exp s (wordLang.Op asm.Add [exp; wordLang.Const (n2w 0)]) = SOME (Word x).
 Proof.
-  intros s exp x. cbn [wordSem.word_exp List.map wordSem.the_words]. split.
+  intros C F s exp x. cbn [wordSem.word_exp List.map wordSem.the_words]. split.
   - intros ->. cbn. f_equal. f_equal. word_ring.
   - destruct (wordSem.word_exp s exp) as [[y|]|]; cbn; try discriminate.
     intros E. injection E as <-. f_equal. f_equal. word_ring.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "evaluate_ShareInst_Var_eq_Op_Add" *)
-Theorem evaluate_ShareInst_Var_eq_Op_Add : forall op v ad s,
+Theorem evaluate_ShareInst_Var_eq_Op_Add : forall {C F : Type} op v ad (s : wordSem.state a C F),
   wordSem.evaluate (wordLang.ShareInst op v (wordLang.Var ad), s) =
   wordSem.evaluate (wordLang.ShareInst op v (wordLang.Op asm.Add [wordLang.Var ad; wordLang.Const (n2w 0)]), s).
 Proof.
-  intros op v ad s. rewrite !wev_shareinst. cbn [wordSem.word_exp List.map wordSem.the_words].
+  intros C F op v ad s. rewrite !wev_shareinst. cbn [wordSem.word_exp List.map wordSem.the_words].
   destruct (wordSem.get_var ad s) as [[y|]|]; cbn; [|reflexivity|reflexivity].
   replace (y + (n2w 0 + n2w 0))%w with y by word_ring. reflexivity.
 Qed.

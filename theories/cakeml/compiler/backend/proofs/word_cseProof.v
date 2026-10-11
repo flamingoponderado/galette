@@ -23,7 +23,11 @@
       Galette-only [with_*] updates; [ODD]/[EVEN] are HOL's.
     - Proofs of the instruction facts go through the Galette-only values
       [arith_val] and [load_val] (what a storable arith instruction or a load
-      writes); the Galette-only lemmas and tactics have no HOL original. *)
+      writes); the Galette-only lemmas and tactics have no HOL original.
+    - Kept polymorphic as in HOL: the pair types of [MEM_FST_reduc], the
+      first components of [MAP_FST_lemma], [MAP_SND_lemma] and
+      [lookup_set_vars_not_in] (whose unused [data] binder is kept), and the
+      value type and unused [n2] of [insert_eq]. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -495,10 +499,10 @@ Theorem data_inv_locals : forall s, set_locals (locals s) s = s.
 Proof. intros []; reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_cseProofScript.sml" "insert_eq" *)
-Theorem insert_eq : forall (n1 n2 : N) (v1 v2 : word_loc a) l,
+Theorem insert_eq : forall {V W : Type} (n1 : N) (n2 : W) (v1 v2 : V) l,
   insert n1 v1 l = insert n1 v2 l <-> v1 = v2.
 Proof.
-  intros n1 n2 v1 v2 l; split; [|intros ->; reflexivity].
+  intros V W n1 n2 v1 v2 l; split; [|intros ->; reflexivity].
   intros H; apply (f_equal (lookup n1)) in H; rewrite !lookup_insert in H.
   destruct (decide (n1 = n1)); [injection H; auto|congruence].
 Qed.
@@ -1950,16 +1954,16 @@ Qed.
 (** *** Moves *)
 
 (*! HOL "cakeml/compiler/backend/proofs/word_cseProofScript.sml" "MAP_FST_lemma" *)
-Theorem MAP_FST_lemma : forall data (moves : list (N * N)),
+Theorem MAP_FST_lemma : forall {A : Type} data (moves : list (A * N)),
   MAP FST (MAP (fun '(a0, b) => (a0, canonicalRegs data b)) moves) = MAP FST moves.
-Proof. intros data moves; induction moves as [|[x y] l IH]; cbn; [reflexivity|]; cbn in IH; rewrite IH; reflexivity. Qed.
+Proof. intros A data moves; induction moves as [|[x y] l IH]; cbn; [reflexivity|]; cbn in IH; rewrite IH; reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_cseProofScript.sml" "MAP_SND_lemma" *)
-Theorem MAP_SND_lemma : forall data s (moves : list (N * N)) x,
+Theorem MAP_SND_lemma : forall {A : Type} data s (moves : list (A * N)) x,
   get_vars (MAP SND moves) s = Some x /\ data_inv data s ->
   get_vars (MAP SND (MAP (fun '(a0, b) => (a0, canonicalRegs data b)) moves)) s = Some x.
 Proof.
-  intros data s moves; induction moves as [|[y z] l IH]; intros x [Hg H]; cbn in *; [exact Hg|].
+  intros A data s moves; induction moves as [|[y z] l IH]; intros x [Hg H]; cbn in *; [exact Hg|].
   rewrite canonicalRegs_correct by exact H.
   destruct (get_var z s); [|discriminate Hg]. destruct (get_vars _ s) eqn:E; [|discriminate Hg].
   cbn in IH; rewrite (IH _ (conj eq_refl H)); exact Hg.
@@ -2000,10 +2004,10 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_cseProofScript.sml" "MEM_FST_reduc" *)
-Theorem MEM_FST_reduc : forall (moves : list (N * N)) r p_2,
+Theorem MEM_FST_reduc : forall {A B : Type} `{EqDecision A} `{EqDecision B} (moves : list (A * B)) r p_2,
   MEM (r, p_2) moves -> MEM r (MAP FST moves).
 Proof.
-  intros moves r p_2; unfold is_true; rewrite !MEM_In; intros H.
+  intros A B EA EB moves r p_2; unfold is_true; rewrite !MEM_In; intros H.
   apply in_map_iff; exists (r, p_2); auto.
 Qed.
 
@@ -2044,11 +2048,11 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_cseProofScript.sml" "lookup_set_vars_not_in" *)
-Theorem lookup_set_vars_not_in : forall (moves : list (N * N)) v (c0 : word a) x s,
+Theorem lookup_set_vars_not_in : forall {B : Type} (moves : list (N * B)) v (data : knowledge) (c0 : word a) x s,
   ~ MEM v (MAP FST moves) -> lookup v (locals s) = Some (Word c0) ->
   lookup v (locals (set_vars (MAP FST moves) x s)) = Some (Word c0).
 Proof.
-  intros moves v c0 x s H1 H2. pose proof (get_set_vars_not_in (MAP FST moves) x v s H1) as T.
+  intros B moves v data c0 x s H1 H2. pose proof (get_set_vars_not_in (MAP FST moves) x v s H1) as T.
   unfold get_var in T; rewrite T; exact H2.
 Qed.
 

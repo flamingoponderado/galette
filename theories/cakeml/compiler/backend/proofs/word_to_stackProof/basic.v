@@ -18,7 +18,8 @@
     - [word_shift_or_1], [word_or_eq_0] and [shift_shift_lemma] are word
       facts proved through [w2n]/bit reasoning instead of HOL's
       [bitstring] route.
-    - [list_rearrange_I] is stated pointwise ([list_rearrange I l = l]).
+    - [list_rearrange_I] is HOL's function equation; it needs the
+      [Inhabited] instance that [wordSem.list_rearrange] takes.
     - HOL's ML bindings [the_eqn], [get_labels_def],
       [extract_labels_def], [nn], [s], [t] are not theorems and are not
       ported. *)

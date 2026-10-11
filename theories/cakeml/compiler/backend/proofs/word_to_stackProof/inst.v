@@ -9,7 +9,9 @@
 
     Notes: as in [state_rel.v].  The commented-out HOL theorems in this
     range are not ported.  HOL's antiquoted [^s]/[^t] are the word and
-    stack states. *)
+    stack states.  [word_exp_Op_SOME_Word], [get_vars_fromList2_eq] and
+    [get_vars_fromList2_eq_cons] hold for word states of any
+    compiler-configuration and ffi types, as in HOL. *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -230,10 +232,10 @@ Theorem state_rel_with_memory : forall ac k f f' s t lens extra m,
 Proof. intros ac k f f' s t lens extra m H. sr_destr H. sr_split; ws_fields; stk_fields; try assumption; reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "word_exp_Op_SOME_Word" *)
-Theorem word_exp_Op_SOME_Word : forall s op wexps x,
+Theorem word_exp_Op_SOME_Word : forall {C F : Type} (s : wordSem.state a C F) op wexps x,
   wordSem.word_exp s (wordLang.Op op wexps) = SOME x -> exists w, x = Word w.
 Proof.
-  intros s op wexps x H. cbn [wordSem.word_exp] in H.
+  intros C F s op wexps x H. cbn [wordSem.word_exp] in H.
   destruct (wordSem.the_words _); [|discriminate]. destruct (wordLang.word_op op _); [|discriminate].
   injection H as <-. eauto.
 Qed.
@@ -1048,12 +1050,12 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "get_vars_fromList2_eq" *)
-Theorem get_vars_fromList2_eq : forall {A} (args : list A) s x n y,
+Theorem get_vars_fromList2_eq : forall {A C F} (args : list A) (s : wordSem.state a C F) x n y,
   wordSem.get_vars (GENLIST (fun x => 2 * x) (LENGTH args)) s = SOME x /\
   lookup n (fromList2 x) = SOME y ->
   lookup n (wordSem.locals s) = SOME y.
 Proof.
-  intros A args s x n y [Hg Hl]. rewrite lookup_fromList2' in Hl.
+  intros A C F args s x n y [Hg Hl]. rewrite lookup_fromList2' in Hl.
   destruct (decide _) as [(He & Hn)|]; [|discriminate].
   pose proof (dec_clock.get_vars_length_lemma _ _ _ Hg) as HL. rewrite LENGTH_GENLIST_N in HL.
   destruct (get_vars_EL s _ _ (n / 2) Hg) as (v & H1 & H2).
@@ -1063,12 +1065,12 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_to_stackProofScript.sml" "get_vars_fromList2_eq_cons" *)
-Theorem get_vars_fromList2_eq_cons : forall {A} (args : list A) s x n y x3 x4,
+Theorem get_vars_fromList2_eq_cons : forall {A C F} (args : list A) (s : wordSem.state a C F) x n y x3 x4,
   wordSem.get_vars (GENLIST (fun x => 2 * (x + 1)) (LENGTH args)) s = SOME x /\
   lookup n (fromList2 (Loc x3 x4 :: x)) = SOME y /\ n <> 0 ->
   lookup n (wordSem.locals s) = SOME y.
 Proof.
-  intros A args s x n y x3 x4 (Hg & Hl & Hn0). rewrite lookup_fromList2' in Hl.
+  intros A C F args s x n y x3 x4 (Hg & Hl & Hn0). rewrite lookup_fromList2' in Hl.
   destruct (decide _) as [(He & Hn)|]; [|discriminate].
   pose proof (dec_clock.get_vars_length_lemma _ _ _ Hg) as HL. rewrite LENGTH_GENLIST_N in HL.
   pose proof (even_div2 n He) as En. rewrite LENGTH_cons' in Hn.
