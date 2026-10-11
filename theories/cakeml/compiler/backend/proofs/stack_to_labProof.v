@@ -17,10 +17,11 @@
     [extract_label_store_list_code], [stack_to_lab_compile_lab_pres] and
     [good_code], [full_make_init_semantics], the encoder line preconditions
     and [stack_to_lab_compile_all_enc_ok], plus flattening, section and
-    handler label preservation through [stack_names_stack_good_code_labels],
+    handler label preservation through [stack_to_lab_stack_good_handler_labels_incr],
+    [full_make_init_has_fp_ops],
     and the earlier stack-removal label-inclusion lemma.
 
-    NOT YET PORTED: [full_make_init_has_fp_ops], the remaining get_code_labels / handler_labels lemmas
+    NOT YET PORTED:
     and the no_shmemop / no_install lemmas.
     [IMP_init_store_ok] and [IMP_init_state_ok] are skipped because their
     dependencies are not yet ported.
@@ -73,7 +74,7 @@ From Galette.cakeml.compiler.backend Require wordLang stack_alloc stack_remove s
 From Galette.cakeml.compiler.backend.semantics Require wordSem targetSem backendProps.
 From Galette.cakeml.compiler.backend.semantics Require Import stackSem stackProps.
 From Galette.cakeml.compiler.backend.proofs Require stack_allocProof stack_removeProof
-  stack_namesProof stack_rawcallProof.
+  stack_namesProof stack_rawcallProof word_gcFunctions.
 From Galette.cakeml.compiler.backend.proofs Require lab_filterProof.
 Import wordLang (word_loc, Word, Loc).
 Import wordSem (buffer, buffer_flush, buffer_write, mem_load_byte_aux,
@@ -4602,6 +4603,36 @@ Proof.
      cbn [MAP stack_names.prog_comp APPEND]. rewrite prog_to_section_eq at 1. rewrite ltp_cons. reflexivity.
    + rewrite Hnames, Hsem; exact HNF.
 Qed.
+Local Lemma alloc_init_has_fp_ops : forall dc b1 b2 (cd : spt (prog a)) co (s : stackSem.state a c ffi_t),
+ stack_allocProof.make_init {| data_to_word.tag_bits := data_to_word.tag_bits dc;
+             data_to_word.len_bits := data_to_word.len_bits dc;
+             data_to_word.pad_bits := data_to_word.pad_bits dc;
+             data_to_word.len_size := data_to_word.len_size dc;
+             data_to_word.has_div := data_to_word.has_div dc;
+             data_to_word.has_longdiv := data_to_word.has_longdiv dc;
+             data_to_word.has_fp_ops := b1;
+             data_to_word.has_fp_tern := b2;
+             data_to_word.be := data_to_word.be dc;
+             data_to_word.call_empty_ffi := data_to_word.call_empty_ffi dc;
+             data_to_word.gc_kind := data_to_word.gc_kind dc |} cd co s = stack_allocProof.make_init dc cd co s.
+Proof. intros; unfold stack_allocProof.make_init; rewrite word_gcFunctions.word_gc_fun_has_fp_ops; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "full_make_init_has_fp_ops" *)
+Theorem full_make_init_has_fp_ops : forall sc dc b1 b2 mh sp off bm (cd : list (N * prog a)) (s : labSem.state a c ffi_t) save dsp co,
+ full_make_init sc {| data_to_word.tag_bits := data_to_word.tag_bits dc;
+             data_to_word.len_bits := data_to_word.len_bits dc;
+             data_to_word.pad_bits := data_to_word.pad_bits dc;
+             data_to_word.len_size := data_to_word.len_size dc;
+             data_to_word.has_div := data_to_word.has_div dc;
+             data_to_word.has_longdiv := data_to_word.has_longdiv dc;
+             data_to_word.has_fp_ops := b1;
+             data_to_word.has_fp_tern := b2;
+             data_to_word.be := data_to_word.be dc;
+             data_to_word.call_empty_ffi := data_to_word.call_empty_ffi dc;
+             data_to_word.gc_kind := data_to_word.gc_kind dc |} mh sp off bm cd s save dsp co =
+ full_make_init sc dc mh sp off bm cd s save dsp co.
+Proof. intros sc dc b1 b2 mh sp off bm cd s save dsp co.
+ unfold full_make_init. rewrite stack_allocProof.compile_has_fp_ops.
+ cbn [data_to_word.gc_kind]. rewrite alloc_init_has_fp_ops. reflexivity. Qed.
 End Initialization.
 
 Section EncoderSyntax.
@@ -5581,6 +5612,343 @@ Proof. intros; apply (proj2 (alloc_labels n p m)). Qed.
 (*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_init_code_labels" *)
 Local Theorem stack_alloc_init_code_labels : forall dc : data_to_word.config, stackProps.get_code_labels (@stack_alloc.word_gc_code a dc) = {}.
 Proof. intros dc; unfold stack_alloc.word_gc_code. destruct (data_to_word.gc_kind dc) as [| |sizes]; try destruct sizes; cbn [stack_alloc.memcpy_code stack_alloc.clear_top_inst stack_alloc.word_gc_move_code stack_alloc.word_gc_move_list_code stack_alloc.word_gc_move_loop_code stack_alloc.word_gc_move_bitmap_code stack_alloc.word_gc_move_bitmaps_code stack_alloc.word_gc_move_roots_bitmaps_code stack_alloc.word_gen_gc_move_code stack_alloc.word_gen_gc_partial_move_code stack_alloc.word_gen_gc_move_bitmap_code stack_alloc.word_gen_gc_partial_move_bitmap_code stack_alloc.word_gen_gc_move_bitmaps_code stack_alloc.word_gen_gc_partial_move_bitmaps_code stack_alloc.word_gen_gc_move_roots_bitmaps_code stack_alloc.word_gen_gc_partial_move_roots_bitmaps_code stack_alloc.word_gen_gc_move_list_code stack_alloc.word_gen_gc_partial_move_list_code stack_alloc.word_gen_gc_move_data_code stack_alloc.word_gen_gc_partial_move_ref_list_code stack_alloc.word_gen_gc_partial_move_data_code stack_alloc.word_gen_gc_move_refs_code stack_alloc.word_gen_gc_move_loop_code stack_alloc.word_gc_partial_or_full stack_alloc.SetNewTrigger stack_alloc.word_gc_code stackProps.get_code_labels list_Seq APPEND]; apply EXTENSION; intros q; cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_stack_good_code_labels" *)
+Theorem stack_alloc_stack_good_code_labels : forall (ps : list (N * prog a)) dc elabs,
+ stack_good_code_labels ps elabs -> stack_good_code_labels (stack_alloc.compile dc ps) elabs.
+Proof.
+ intros ps dc elabs Hg; unfold stack_alloc.compile; apply good_code_labels_pointwise.
+ assert (Ht : forall n p q, In (n,p) (MAP stack_alloc.prog_comp ps) -> q IN get_code_labels p ->
+ code_label_context (stack_alloc.stubs dc ++ MAP stack_alloc.prog_comp ps) elabs q).
+ { eapply transformed_code_labels; [exact Hg| | | | |].
+ - intros n p Hin; apply in_app_iff; right; apply in_map; exact Hin.
+ - intros n p; reflexivity.
+ - intros n p; cbn [stack_alloc.prog_comp SND]; apply (proj2 (alloc_labels n p (stack_alloc.next_lab p 2))).
+ - intros n p; cbn [stack_alloc.prog_comp SND]; apply (proj1 (alloc_labels n p (stack_alloc.next_lab p 2))).
+ - eapply context_entry0; apply in_app_iff; left; unfold stack_alloc.stubs; cbn; left; reflexivity. }
+ intros n p q Hin Hq; apply in_app_iff in Hin; destruct Hin as [Hin|Hin]; [|eapply Ht; eauto].
+ unfold stack_alloc.stubs in Hin; cbn in Hin; destruct Hin as [E|Hin]; [injection E as <- <-|contradiction].
+ cbn [get_code_labels] in Hq; rewrite stack_alloc_init_code_labels in Hq.
+ cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY] in Hq; tauto.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_stack_good_code_labels_incr" *)
+Theorem stack_alloc_stack_good_code_labels_incr : forall (ps : list (N * prog a)) elabs,
+ stackLang.gc_stub_location IN elabs /\ stack_good_code_labels ps elabs ->
+ stack_good_code_labels (MAP stack_alloc.prog_comp ps) elabs.
+Proof.
+ intros ps elabs [Herr Hg]; apply good_code_labels_pointwise.
+ eapply transformed_code_labels; [exact Hg| | | | |].
+ - intros n p Hin; apply in_map; exact Hin.
+ - intros n p; reflexivity.
+ - intros n p; cbn [stack_alloc.prog_comp SND]; apply (proj2 (alloc_labels n p (stack_alloc.next_lab p 2))).
+ - intros n p; cbn [stack_alloc.prog_comp SND]; apply (proj1 (alloc_labels n p (stack_alloc.next_lab p 2))).
+ - apply context_external0; exact Herr.
+Qed.
+Local Definition raw_label_rel (i : spt N) (p : prog a) n l :=
+ exists k, (n,k) IN get_code_labels p /\ (l <> k -> l = 1 /\ k = 0 /\ n IN domain i).
+Local Lemma raw_comp_labels i : forall p : prog a, forall n l,
+ (n,l) IN get_code_labels (stack_rawcall.comp i p) -> raw_label_rel i p n l.
+Proof.
+ intros p; induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind; intros n l H.
+ - destruct ret as [[p1 [lr [l1 l2]]]|]; [destruct h as [[p2 [k1 k2]]|]|];
+   try pose proof (Hr p1 _ eq_refl n l) as IHr;
+   try pose proof (Hh p2 _ eq_refl n l) as IHh; clear Hr Hh; destruct dest;
+   cbn [stack_rawcall.comp get_code_labels] in H |- *; unfold raw_label_rel;
+   cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in H |- *.
+   all: try (exists l; split; [exact H|tauto]).
+   all: firstorder.
+ - cbn [stack_rawcall.comp] in H; unfold stack_rawcall.comp_seq in H.
+   destruct (stack_rawcall.dest_case p1 p2) as [[k d]|] eqn:Ed.
+   + apply stack_rawcallProof.dest_case_SOME in Ed; destruct Ed as [-> ->].
+     destruct (lookup d i) as [j|] eqn:E; [destruct (j =? k); [|destruct (j <? k)]|];
+     cbn [get_code_labels stack_rawcall.comp] in H; unfold raw_label_rel;
+     cbn [get_code_labels]; cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in H |- *.
+     all: try (exists l; split; [exact H|tauto]).
+     all: exists 0; split; [firstorder congruence|]; intros; repeat split; try firstorder congruence.
+     all: assert (n = d) by (intuition congruence); subst n; apply domain_lookup; exists j; exact E.
+   + cbn [get_code_labels] in H; apply IN_UNION in H; destruct H as [H|H].
+     * destruct (IH1 _ _ H) as [k [Hk Hrest]]; exists k; split; [apply IN_UNION; left; exact Hk|exact Hrest].
+     * destruct (IH2 _ _ H) as [k [Hk Hrest]]; exists k; split; [apply IN_UNION; right; exact Hk|exact Hrest].
+ - cbn [stack_rawcall.comp get_code_labels] in H; apply IN_UNION in H; destruct H as [H|H].
+   + destruct (IH1 _ _ H) as [k [Hk Hrest]]; exists k; split; [apply IN_UNION; left; exact Hk|exact Hrest].
+   + destruct (IH2 _ _ H) as [k [Hk Hrest]]; exists k; split; [apply IN_UNION; right; exact Hk|exact Hrest].
+ - cbn [stack_rawcall.comp get_code_labels] in H; exact (IH _ _ H).
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_rawcall.comp] in H; (exists l; split; [exact H|tauto]).
+Qed.
+
+Local Lemma raw_top_labels i : forall p : prog a, forall n l,
+ (n,l) IN get_code_labels (stack_rawcall.comp_top i p) -> raw_label_rel i p n l.
+Proof.
+ intros p n l H; unfold stack_rawcall.comp_top in H; destruct p; try (apply raw_comp_labels; exact H).
+ cbn [get_code_labels] in H; apply IN_UNION in H; destruct H as [H|H].
+ - destruct (raw_comp_labels i p1 n l H) as [k [Hk Hr]]; exists k; split; [apply IN_UNION; left; exact Hk|exact Hr].
+ - destruct (raw_comp_labels i p2 n l H) as [k [Hk Hr]]; exists k; split; [apply IN_UNION; right; exact Hk|exact Hr].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "IN_get_code_labels_comp_top_lemma" *)
+Theorem IN_get_code_labels_comp_top_lemma : forall i (q : prog a) p_1 p_2,
+ ((p_1,p_2) IN get_code_labels (stack_rawcall.comp i q) ->
+ exists k, (p_1,k) IN get_code_labels q /\ (p_2 <> k -> p_2 = 1 /\ k = 0 /\ p_1 IN domain i)) /\
+ ((p_1,p_2) IN get_code_labels (stack_rawcall.comp_top i q) ->
+ exists k, (p_1,k) IN get_code_labels q /\ (p_2 <> k -> p_2 = 1 /\ k = 0 /\ p_1 IN domain i)).
+Proof. intros; split; [apply raw_comp_labels|apply raw_top_labels]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "IN_domain_collect_info" *)
+Theorem IN_domain_collect_info : forall (ps : list (N * prog a)) f p_1,
+ p_1 IN domain (stack_rawcall.collect_info ps f) -> MEM p_1 (MAP FST ps) \/ p_1 IN domain f.
+Proof.
+ induction ps as [|[n p] ps IH]; intros f q H; cbn [stack_rawcall.collect_info] in H; [right; exact H|].
+ destruct (stack_rawcall.seq_stack_alloc p) as [k|] eqn:E.
+ - apply IH in H; destruct H as [H|H].
+   + left; apply MEM_In; cbn [MAP FST]; right; apply MEM_In; exact H.
+   + rewrite domain_insert in H; cbv beta delta [pred_set.IN] in H; destruct H as [H|H]; [left; apply MEM_In; cbn [MAP FST]; left; congruence|right; exact H].
+ - apply IH in H; destruct H as [H|H]; [left; apply MEM_In; cbn [MAP FST]; right; apply MEM_In; exact H|right; exact H].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "IN_get_code_labels_comp_top" *)
+Theorem IN_get_code_labels_comp_top : forall (ps : list (N * prog a)) (q : prog a) p_1 p_2,
+ (p_1,p_2) IN get_code_labels (stack_rawcall.comp_top (stack_rawcall.collect_info ps LN) q) ->
+ exists k, (p_1,k) IN get_code_labels q /\ (p_2 <> k -> p_2 = 1 /\ k = 0 /\ MEM p_1 (MAP FST ps)).
+Proof.
+ intros ps q n l H; destruct (raw_top_labels _ _ _ _ H) as [k [Hk Hr]].
+ exists k; split; [exact Hk|]. intros Hne; specialize (Hr Hne); destruct Hr as [Hl [Hk0 Hd]].
+ apply IN_domain_collect_info in Hd; destruct Hd as [Hd|Hd]; [repeat split; assumption|].
+ unfold pred_set.IN, domain in Hd; contradiction.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_stack_good_code_labels" *)
+Theorem stack_rawcall_stack_good_code_labels : forall (ps : list (N * prog a)) elabs,
+ stack_good_code_labels ps elabs -> stack_good_code_labels (stack_rawcall.compile ps) elabs.
+Proof.
+ intros ps elabs Hg; unfold stack_rawcall.compile.
+ set (i := stack_rawcall.collect_info ps LN).
+ set (f := fun np : N * prog a => let '(n,p) := np in (n,stack_rawcall.comp_top i p)).
+ apply good_code_labels_pointwise; intros n p q Hin Hq.
+ apply in_map_iff in Hin; destruct Hin as ([n0 p0] & E & Hin); unfold f in E; injection E as <- <-.
+ destruct q as [n1 l]; unfold i in Hq.
+ destruct (IN_get_code_labels_comp_top ps p0 n1 l Hq) as [k [Hk Hr]].
+ destruct (N.eq_dec l k) as [->|Hne].
+ - eapply context_transport with (ps := ps) (f := f).
+   + intros n p H; apply in_map; exact H.
+   + intros; reflexivity.
+   + intros; cbn [f SND]; apply (proj2 (stack_rawcallProof.stack_get_handler_labels_comp i p n)).
+   + exact (proj1 (good_code_labels_pointwise ps elabs) Hg n0 p0 (n1,k) Hin Hk).
+ - specialize (Hr Hne); destruct Hr as [-> [_ Hmem]].
+   apply MEM_In, in_map_iff in Hmem; destruct Hmem as ([n2 p2] & E & Hp); cbn [FST] in E; subst n2.
+   eapply context_entry1; apply in_map_iff; exists (n1,p2); split; [reflexivity|exact Hp].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_to_lab_stack_good_code_labels" *)
+Theorem stack_to_lab_stack_good_code_labels : forall sc dc mh sp off (ps : list (N * prog a)) ps' elabs,
+ stack_to_lab.compile sc dc mh sp off ps = ps' /\
+ MEM bvl_to_bvi.InitGlobals_location (MAP FST ps) /\ stack_good_code_labels ps elabs /\
+ EVERY sec_labels_ok ps' -> labProps.get_labels ps' SUBSET
+ labProps.get_code_labels ps' UNION IMAGE (fun n => (n,0)) elabs UNION IMAGE (fun n => (n,1)) elabs.
+Proof.
+ intros sc dc mh sp off ps ps' elabs [<- [Hi [Hg Hv]]]; unfold stack_to_lab.compile in *.
+ apply get_labels_MAP_prog_to_section_SUBSET_code_labels; split; [exact Hv|].
+ apply stack_names_stack_good_code_labels; apply stack_remove_stack_good_code_labels; split.
+ - apply MEM_In in Hi; unfold stack_alloc.compile, stack_rawcall.compile; cbv zeta; rewrite map_app, !map_map.
+   apply MEM_In; apply in_app_iff; right.
+   apply in_map_iff in Hi; destruct Hi as ([n p] & E & Hin); cbn [FST] in E; subst n.
+   apply in_map_iff; exists (bvl_to_bvi.InitGlobals_location,p); split; [reflexivity|exact Hin].
+ - apply stack_alloc_stack_good_code_labels; apply stack_rawcall_stack_good_code_labels; exact Hg.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_to_lab_stack_good_code_labels_incr" *)
+Theorem stack_to_lab_stack_good_code_labels_incr : forall f jump off sp (ps : list (N * prog a)) ps' elabs,
+ stack_remove.stack_err_lab IN elabs /\ stackLang.gc_stub_location IN elabs /\
+ stack_to_lab.compile_no_stubs f jump off sp ps = ps' /\ stack_good_code_labels ps elabs /\
+ EVERY sec_labels_ok ps' -> labProps.get_labels ps' SUBSET
+ labProps.get_code_labels ps' UNION IMAGE (fun n => (n,0)) elabs UNION IMAGE (fun n => (n,1)) elabs.
+Proof.
+ intros f jump off sp ps ps' elabs [He [Hgc [<- [Hg Hv]]]]; unfold stack_to_lab.compile_no_stubs in *.
+ apply get_labels_MAP_prog_to_section_SUBSET_code_labels; split; [exact Hv|].
+ apply stack_names_stack_good_code_labels; apply stack_remove_stack_good_code_labels_incr; split; [exact He|].
+ apply stack_alloc_stack_good_code_labels_incr; auto.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "nonzero_get_labels_MAP_prog_to_section_SUBSET_code_labels" *)
+Theorem nonzero_get_labels_MAP_prog_to_section_SUBSET_code_labels : forall ps : list (N * prog a),
+ EVERY sec_labels_ok (MAP prog_to_section ps) /\ stack_good_handler_labels ps ->
+ backendProps.restrict_nonzero (labProps.get_labels (MAP prog_to_section ps)) SUBSET labProps.get_code_labels (MAP prog_to_section ps).
+Proof.
+ intros ps [Hv Hg] q [Hq Hnz].
+ pose proof (get_labels_MAP_prog_to_section_SUBSET_code_labels_lemma ps Hv q Hq) as E.
+ apply IN_UNION in E; destruct E as [E|E]; [exact E|].
+ specialize (Hg q (conj E Hnz)). apply IN_UNION in Hg; destruct Hg as [Hg|Hg].
+ - exact (MAP_prog_to_section_preserves_handler_labels ps q Hg).
+ - exact (one_prog_section ps q Hg).
+Qed.
+Local Definition handler_context (ps : list (N * prog a)) :=
+ BIGUNION (set (MAP (fun '(n,p) => stack_get_handler_labels n p) ps)) UNION
+ IMAGE (fun n => (n,1)) (set (MAP FST ps)).
+Local Lemma good_handler_pointwise ps : stack_good_handler_labels ps <->
+ forall n p q, In (n,p) ps -> q IN get_code_labels p -> SND q <> 0 -> q IN handler_context ps.
+Proof.
+ unfold stack_good_handler_labels, handler_context, backendProps.restrict_nonzero, pred_set.SUBSET; split.
+ - intros H n p q Hp Hq Hnz; apply H; split; [|exact Hnz].
+   apply IN_BIGUNION; exists (get_code_labels p); split; [exact Hq|].
+   apply IN_IMAGE; exists p; split; [reflexivity|apply IN_set, in_map_iff; exists (n,p); split; [reflexivity|exact Hp]].
+ - intros H q [Hq Hnz]; apply IN_BIGUNION in Hq; destruct Hq as (v & Hq & Hv).
+   apply IN_IMAGE in Hv; destruct Hv as (p & He & Hp); subst v.
+   apply IN_set, in_map_iff in Hp; destruct Hp as ([n p0] & E & Hp); cbn [SND] in E; subst p0.
+   exact (H n p q Hp Hq Hnz).
+Qed.
+Local Lemma handler_context_map ps (f : N * prog a -> N * prog a) :
+ (forall n p, FST (f (n,p)) = n) ->
+ (forall n p, stack_get_handler_labels n (SND (f (n,p))) = stack_get_handler_labels n p) ->
+ handler_context (MAP f ps) = handler_context ps.
+Proof.
+ intros Hn Hh; unfold handler_context; rewrite !map_map.
+ assert (E1 : MAP (fun np => let '(n,p) := f np in stack_get_handler_labels n p) ps =
+ MAP (fun '(n,p) => stack_get_handler_labels n p) ps).
+ { apply map_ext; intros [n p]; pose proof (Hn n p) as En; pose proof (Hh n p) as Eh;
+   destruct (f (n,p)) as [n1 p1]; cbn [FST SND] in En,Eh; subst n1; exact Eh. }
+ assert (E2 : MAP (fun np => FST (f np)) ps = MAP FST ps).
+ { apply map_ext; intros [n p]; apply Hn. }
+ rewrite E1,E2; reflexivity.
+Qed.
+Local Lemma handler_context_mono ps qs :
+ (forall np, In np ps -> In np qs) -> handler_context ps SUBSET handler_context qs.
+Proof.
+ intros Hi q Hq; apply IN_UNION in Hq; destruct Hq as [Hq|Hq]; apply IN_UNION; [left|right].
+ - apply IN_BIGUNION in Hq; destruct Hq as (s & Hq & Hs).
+   apply IN_BIGUNION; exists s; split; [exact Hq|].
+   apply IN_set, in_map_iff in Hs; destruct Hs as (np & <- & Hp).
+   apply IN_set, in_map_iff; exists np; split; [reflexivity|apply Hi; exact Hp].
+ - apply IN_IMAGE in Hq; destruct Hq as (n & -> & Hn).
+   apply IN_IMAGE; exists n; split; [reflexivity|].
+   apply IN_set, in_map_iff in Hn; destruct Hn as (np & <- & Hp).
+   apply IN_set, in_map_iff; exists np; split; [reflexivity|apply Hi; exact Hp].
+Qed.
+Local Lemma good_handler_transform ps (f : N * prog a -> N * prog a) :
+ stack_good_handler_labels ps ->
+ (forall n p, FST (f (n,p)) = n) ->
+ (forall n p, stack_get_handler_labels n (SND (f (n,p))) = stack_get_handler_labels n p) ->
+ (forall n p q, q IN get_code_labels (SND (f (n,p))) -> SND q <> 0 -> q IN get_code_labels p) ->
+ stack_good_handler_labels (MAP f ps).
+Proof.
+ intros Hg Hn Hh Hc; apply good_handler_pointwise; intros n p q Hp Hq Hnz.
+ apply in_map_iff in Hp; destruct Hp as ([n0 p0] & E & Hp).
+ pose proof (Hc n0 p0 q) as Hc0; rewrite E in Hc0; cbn [SND] in Hc0.
+ rewrite (handler_context_map ps f Hn Hh).
+ exact (proj1 (good_handler_pointwise ps) Hg n0 p0 q Hp (Hc0 Hq Hnz) Hnz).
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_names_stack_good_handler_labels" *)
+Theorem stack_names_stack_good_handler_labels : forall (ps : list (N * prog a)) f,
+ stack_good_handler_labels ps -> stack_good_handler_labels (stack_names.compile f ps).
+Proof.
+ intros ps f Hg; unfold stack_names.compile; apply good_handler_transform; [exact Hg| | |].
+ - intros; reflexivity.
+ - intros; cbn [stack_names.prog_comp SND]; apply stack_names_stack_get_handler_labels_comp.
+ - intros n p q Hq Hnz; cbn [stack_names.prog_comp SND] in Hq; rewrite stack_names_get_code_labels_comp in Hq; exact Hq.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "restrict_nonzero_union" *)
+Theorem restrict_nonzero_union : forall A B : N * N -> Prop,
+ backendProps.restrict_nonzero (A UNION B) = backendProps.restrict_nonzero A UNION backendProps.restrict_nonzero B.
+Proof. intros; apply EXTENSION; intros q; unfold backendProps.restrict_nonzero;
+ cbv beta delta [pred_set.IN pred_set.UNION]; tauto. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "restrict_nonzero_IN" *)
+Theorem restrict_nonzero_IN : forall x (s : N * N -> Prop),
+ x IN backendProps.restrict_nonzero s <-> x IN s /\ SND x <> 0.
+Proof. reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_good_handler_labels_append" *)
+Theorem stack_good_handler_labels_append : forall xs ys : list (N * prog a),
+ stack_good_handler_labels xs /\ stack_good_handler_labels ys -> stack_good_handler_labels (xs ++ ys).
+Proof.
+ intros xs ys [Hx Hy]; apply good_handler_pointwise; intros n p q Hp Hq Hnz.
+ apply in_app_iff in Hp; destruct Hp as [Hp|Hp].
+ - apply handler_context_mono with (ps := xs); [intros np H; apply in_app_iff; left; exact H|].
+   exact (proj1 (good_handler_pointwise xs) Hx n p q Hp Hq Hnz).
+ - apply handler_context_mono with (ps := ys); [intros np H; apply in_app_iff; right; exact H|].
+   exact (proj1 (good_handler_pointwise ys) Hy n p q Hp Hq Hnz).
+Qed.
+Local Lemma drop_zero_insert err (src out : N * N -> Prop) q :
+ out SUBSET (err,0) INSERT src -> q IN out -> SND q <> 0 -> q IN src.
+Proof. intros H Hq Hnz; specialize (H q Hq); apply IN_INSERT in H;
+ destruct H as [->|H]; [cbn [SND] in Hnz; contradiction|exact H]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_stack_good_handler_labels_incr" *)
+Theorem stack_remove_stack_good_handler_labels_incr : forall (ps : list (N * prog a)) jump off sp,
+ stack_good_handler_labels ps -> stack_good_handler_labels (MAP (stack_remove.prog_comp jump off sp) ps).
+Proof.
+ intros ps jump off sp Hg; apply good_handler_transform; [exact Hg| | |].
+ - intros; reflexivity.
+ - intros; cbn [stack_remove.prog_comp SND]; apply stack_remove_stack_get_handler_labels_comp.
+ - intros n p q Hq Hnz; cbn [stack_remove.prog_comp SND] in Hq;
+   eapply drop_zero_insert; [apply stack_remove_get_code_labels_comp|exact Hq|exact Hnz].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_remove_stack_good_handler_labels" *)
+Theorem stack_remove_stack_good_handler_labels : forall (ps : list (N * prog a)) jump off ggc mh sp loc,
+ stack_good_handler_labels ps -> stack_good_handler_labels (stack_remove.compile jump off ggc mh sp loc ps).
+Proof.
+ intros ps jump off ggc mh sp loc Hg; unfold stack_remove.compile.
+ apply stack_good_handler_labels_append; split; [|apply stack_remove_stack_good_handler_labels_incr; exact Hg].
+ apply good_handler_pointwise; intros n p q Hp Hq Hnz.
+ pose proof (init_stubs_labels ggc mh sp loc) as Hv; apply EVERY_Forall in Hv; rewrite Forall_forall in Hv.
+ assert (Hi : In p (MAP SND (stack_remove.init_stubs ggc mh sp loc))).
+ { apply in_map_iff; exists (n,p); split; [reflexivity|exact Hp]. }
+ specialize (Hv _ Hi); apply bool_decide_spec in Hv; specialize (Hv q Hq).
+ apply IN_set in Hv; cbn in Hv; destruct Hv as [<-|[<-|Hv]]; cbn [SND] in Hnz; contradiction.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_stack_good_handler_labels_incr" *)
+Theorem stack_alloc_stack_good_handler_labels_incr : forall ps : list (N * prog a),
+ stack_good_handler_labels ps -> stack_good_handler_labels (MAP stack_alloc.prog_comp ps).
+Proof.
+ intros ps Hg; apply good_handler_transform; [exact Hg| | |].
+ - intros; reflexivity.
+ - intros n p; cbn [stack_alloc.prog_comp SND]; apply (proj2 (alloc_labels n p (stack_alloc.next_lab p 2))).
+ - intros n p q Hq Hnz; cbn [stack_alloc.prog_comp SND] in Hq;
+   eapply drop_zero_insert; [apply (proj1 (alloc_labels n p (stack_alloc.next_lab p 2)))|exact Hq|exact Hnz].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_alloc_stack_good_handler_labels" *)
+Theorem stack_alloc_stack_good_handler_labels : forall (ps : list (N * prog a)) dc,
+ stack_good_handler_labels ps -> stack_good_handler_labels (stack_alloc.compile dc ps).
+Proof.
+ intros ps dc Hg; unfold stack_alloc.compile; apply stack_good_handler_labels_append; split;
+ [|apply stack_alloc_stack_good_handler_labels_incr; exact Hg].
+ apply good_handler_pointwise; intros n p q Hp Hq Hnz.
+ unfold stack_alloc.stubs in Hp; cbn in Hp; destruct Hp as [E|Hp]; [injection E as <- <-|contradiction].
+ cbn [get_code_labels] in Hq; rewrite stack_alloc_init_code_labels in Hq;
+ cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY] in Hq; tauto.
+Qed.
+Local Lemma handler_context_entry1 ps n p : In (n,p) ps -> (n,1) IN handler_context ps.
+Proof.
+ intros Hp; apply IN_UNION; right; apply IN_IMAGE; exists n; split; [reflexivity|].
+ apply IN_set, in_map_iff; exists (n,p); split; [reflexivity|exact Hp].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_rawcall_stack_good_handler_labels" *)
+Theorem stack_rawcall_stack_good_handler_labels : forall ps : list (N * prog a),
+ stack_good_handler_labels ps -> stack_good_handler_labels (stack_rawcall.compile ps).
+Proof.
+ intros ps Hg; unfold stack_rawcall.compile.
+ set (i := stack_rawcall.collect_info ps LN).
+ set (f := fun np : N * prog a => let '(n,p) := np in (n,stack_rawcall.comp_top i p)).
+ apply good_handler_pointwise; intros n p q Hin Hq Hnz.
+ apply in_map_iff in Hin; destruct Hin as ([n0 p0] & E & Hin); unfold f in E; injection E as <- <-.
+ destruct q as [n1 l]; unfold i in Hq.
+ destruct (IN_get_code_labels_comp_top ps p0 n1 l Hq) as [k [Hk Hr]].
+ destruct (N.eq_dec l k) as [->|Hne].
+ - rewrite (handler_context_map ps f).
+   + exact (proj1 (good_handler_pointwise ps) Hg n0 p0 (n1,k) Hin Hk Hnz).
+   + intros; reflexivity.
+   + intros; cbn [f SND]; apply (proj2 (stack_rawcallProof.stack_get_handler_labels_comp i p n)).
+ - specialize (Hr Hne); destruct Hr as [-> [_ Hmem]].
+   apply MEM_In, in_map_iff in Hmem; destruct Hmem as ([n2 p2] & E & Hp); cbn [FST] in E; subst n2.
+   eapply handler_context_entry1; apply in_map_iff; exists (n1,p2); split; [reflexivity|exact Hp].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_to_lab_stack_good_handler_labels" *)
+Theorem stack_to_lab_stack_good_handler_labels : forall sc dc mh sp off (ps : list (N * prog a)) ps',
+ stack_to_lab.compile sc dc mh sp off ps = ps' /\ stack_good_handler_labels ps /\ EVERY sec_labels_ok ps' ->
+ backendProps.restrict_nonzero (labProps.get_labels ps') SUBSET labProps.get_code_labels ps'.
+Proof.
+ intros sc dc mh sp off ps ps' [<- [Hg Hv]]; unfold stack_to_lab.compile in *.
+ apply nonzero_get_labels_MAP_prog_to_section_SUBSET_code_labels; split; [exact Hv|].
+ apply stack_names_stack_good_handler_labels; apply stack_remove_stack_good_handler_labels;
+ apply stack_alloc_stack_good_handler_labels; apply stack_rawcall_stack_good_handler_labels; exact Hg.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_to_lab_stack_good_handler_labels_incr" *)
+Theorem stack_to_lab_stack_good_handler_labels_incr : forall f jump off sp (ps : list (N * prog a)) ps',
+ stack_to_lab.compile_no_stubs f jump off sp ps = ps' /\ stack_good_handler_labels ps /\ EVERY sec_labels_ok ps' ->
+ backendProps.restrict_nonzero (labProps.get_labels ps') SUBSET labProps.get_code_labels ps'.
+Proof.
+ intros f jump off sp ps ps' [<- [Hg Hv]]; unfold stack_to_lab.compile_no_stubs in *.
+ apply nonzero_get_labels_MAP_prog_to_section_SUBSET_code_labels; split; [exact Hv|].
+ apply stack_names_stack_good_handler_labels; apply stack_remove_stack_good_handler_labels_incr;
+ apply stack_alloc_stack_good_handler_labels_incr; exact Hg.
+Qed.
 End CodeLabels.
 
 
