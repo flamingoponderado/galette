@@ -70,7 +70,7 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | backend/proofs stack_to_lab | done (`full_make_init_semantics`, label/no_install chains; IMP_init_store_ok/IMP_init_state_ok need unported data_to_word proofs) |
 | backend/proofs word_to_stack | done (`comp_correct`, `compile_semantics`; PERM/SORTS lemmas untagged) |
 | backend/proofs lab_filter | done |
-| backend/proofs lab_to_target | todo |
+| backend/proofs lab_to_target | done (`compile_correct`, `semantics_compile`, `semantics_make_init`) |
 | encoders/riscv/proofs/riscv_targetProof | done (`riscv_encoder_correct`; lem11/lem12 are ML-generated, see header) |
 | backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | done (10 backendProof declarations used by pan_to_target; wordConvsProof complete) |
 | pancake/proofs/pan_to_targetProof | todo |
