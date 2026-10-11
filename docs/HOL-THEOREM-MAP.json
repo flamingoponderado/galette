@@ -72561,6 +72561,56 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "const_writes_const_memory",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "const_writes_const_memory"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "cut_state_with_mem_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "cut_state_with_mem_const"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "evaluate_stack_size_limit_const_panLang",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "evaluate_stack_size_limit_const_panLang"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "from_pan_to_lab_no_install",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "from_pan_to_lab_no_install"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "full_make_init_be",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "full_make_init_be"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "fun2set_update_eq",
   "hol_line": null,
   "case": null,
@@ -72601,6 +72651,16 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "good_dimindex_0w_8w",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "good_dimindex_0w_8w"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "good_dimindex_div_mul",
   "hol_line": null,
   "case": null,
@@ -72608,6 +72668,46 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
   "rocq_name": "good_dimindex_div_mul"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "inst_const_memory",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "inst_const_memory"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "inst_stack_limit_const_panLang",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "inst_stack_limit_const_panLang"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "inst_stack_max_const_panLang",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "inst_stack_max_const_panLang"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "inst_stack_size_const_panLang",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "inst_stack_size_const_panLang"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
@@ -72671,6 +72771,26 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "mem_upd_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "mem_upd_lemma"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "no_alloc_word_evaluate",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "no_alloc_word_evaluate"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "option_lt_SOME",
   "hol_line": null,
   "case": null,
@@ -72691,6 +72811,56 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "panLang_wordSem_neq_NotEnoughSpace",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "panLang_wordSem_neq_NotEnoughSpace"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "pan_installed_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "pan_installed"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "pan_to_lab_labels_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "pan_to_lab_labels_ok"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "pan_to_stack_compile_lab_pres",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "pan_to_stack_compile_lab_pres"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "pan_to_stack_first_ALL_DISTINCT",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "pan_to_stack_first_ALL_DISTINCT"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "pancake_good_code_def",
   "hol_line": null,
   "case": null,
@@ -72698,6 +72868,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
   "rocq_name": "pancake_good_code"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "push_env_mem_const",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "push_env_mem_const"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "push_env_mem_upd",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "push_env_mem_upd"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
@@ -72731,6 +72921,26 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "share_inst_const_memory",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "share_inst_const_memory"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "share_inst_modifies",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "share_inst_modifies"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "unset_var_const_memory",
   "hol_line": null,
   "case": null,
@@ -72751,6 +72961,16 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "word_list_exists_addresses",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "word_list_exists_addresses"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "word_to_stack_compile_FST",
   "hol_line": null,
   "case": null,
@@ -72758,6 +72978,36 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
   "rocq_name": "word_to_stack_compile_FST"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "word_to_stack_good_code_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "word_to_stack_good_code_lemma"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "word_to_word_compile_no_install_no_alloc",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "word_to_word_compile_no_install_no_alloc"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "write_bytearray_const_memory",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "write_bytearray_const_memory"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_wordProofScript.sml",
