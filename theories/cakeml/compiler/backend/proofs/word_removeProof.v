@@ -330,9 +330,9 @@ Theorem push_env_case_handler : forall {a c ffi_t} x (h : option (N * (prog a * 
 Proof. intros a c ffi_t x [[v [p [l1 l2]]]|] f; reflexivity. Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_removeProofScript.sml" "pair_map_I" *)
-Theorem pair_map_I : forall {A B C} (f : B -> C),
+Theorem pair_map_I : forall {A B C D} (f : B -> C),
   (fun '(k, v) => (k, f v)) = (I ## f : A * B -> A * C) /\
-  (fun '(k, v) => (f k, v)) = (f ## I : B * A -> C * A).
+  (fun '(k, v) => (f k, v)) = (f ## I : B * D -> C * D).
 Proof. intros; split; apply functional_extensionality; intros [x y]; reflexivity. Qed.
 
 (** ** Correctness *)

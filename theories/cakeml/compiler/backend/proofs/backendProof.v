@@ -77,7 +77,7 @@ Definition mc_init_ok {B C : Type} (asm_conf : asm_config a) (c : backend.config
 (*! HOL "cakeml/compiler/backend/proofs/backendProofScript.sml" "heap_regs_def" *)
 Definition heap_regs reg_names := (stack_names.find_name reg_names 2, stack_names.find_name reg_names 4).
 (*! HOL "cakeml/compiler/backend/proofs/backendProofScript.sml" "word_list_exists_imp" *)
-Theorem word_list_exists_imp : forall (ad : word a) n dm (m1 : word a -> wordLang.word_loc a),
+Theorem word_list_exists_imp {B : Type} : forall (ad : word a) n dm (m1 : word a -> B),
  dm = stack_removeProof.addresses ad n /\ dimindex a DIV 8 * n < dimword a /\ good_dimindex a ->
  word_list_exists ad n (fun2set (m1,dm)).
 Proof. intros ad n dm m1 [-> H]; apply stack_removeProof.word_list_exists_addresses; exact H. Qed.

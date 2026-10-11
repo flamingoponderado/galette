@@ -179,7 +179,7 @@ Proof.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/word_depthProofScript.sml" "LENGTH_LESS_size" *)
-Theorem LENGTH_LESS_size : forall name ns (funs : num_map (N * prog a)) y,
+Theorem LENGTH_LESS_size {B : Type} : forall name ns (funs : num_map B) y,
   ~ MEM name ns /\ set ns SUBSET domain funs /\ ALL_DISTINCT ns /\ lookup name funs = SOME y ->
   LENGTH ns < size funs.
 Proof.
