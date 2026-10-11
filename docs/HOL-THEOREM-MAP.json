@@ -36231,6 +36231,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "glob_real_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "glob_real_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "is_ref_header_def",
   "hol_line": null,
   "case": null,
@@ -36271,6 +36281,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "shift_length_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "shift_length_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "update_addr_def",
   "hol_line": null,
   "case": null,
@@ -36288,6 +36308,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_full_gc"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_full_gc_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_full_gc_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36311,6 +36341,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gc_fun_assum_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gc_fun_assum_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gc_fun_def",
   "hol_line": null,
   "case": null,
@@ -36318,6 +36358,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gc_fun"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gc_fun_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gc_fun_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36331,6 +36381,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gc_move_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gc_move_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gc_move_list_def",
   "hol_line": null,
   "case": null,
@@ -36338,6 +36398,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gc_move_list_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gc_move_list_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gc_move_list_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36351,6 +36421,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gc_move_loop_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gc_move_loop_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gc_move_roots_def",
   "hol_line": null,
   "case": null,
@@ -36358,6 +36438,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gc_move_roots_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gc_move_roots_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gc_move_roots_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36381,6 +36471,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gen_gc_move_data_def",
   "hol_line": null,
   "case": null,
@@ -36388,6 +36488,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gen_gc_move_data_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_move_data_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_move_data_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36401,6 +36511,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_move_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_move_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gen_gc_move_list_def",
   "hol_line": null,
   "case": null,
@@ -36408,6 +36528,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gen_gc_move_list_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_move_list_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_move_list_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36421,6 +36551,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_move_loop_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_move_loop_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gen_gc_move_refs_def",
   "hol_line": null,
   "case": null,
@@ -36431,6 +36571,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_move_refs_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_move_refs_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gen_gc_move_roots_def",
   "hol_line": null,
   "case": null,
@@ -36438,6 +36588,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gen_gc_move_roots_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_move_roots_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_move_roots_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36461,6 +36621,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_partial_full_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_partial_full_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gen_gc_partial_move_data_def",
   "hol_line": null,
   "case": null,
@@ -36468,6 +36638,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gen_gc_partial_move_data_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_partial_move_data_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_partial_move_data_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36481,6 +36661,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_partial_move_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_partial_move_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gen_gc_partial_move_list_def",
   "hol_line": null,
   "case": null,
@@ -36488,6 +36678,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gen_gc_partial_move_list_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_partial_move_list_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_partial_move_list_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
@@ -36501,6 +36701,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_partial_move_ref_list_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_partial_move_ref_list_has_fp_ops"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
   "hol_name": "word_gen_gc_partial_move_roots_def",
   "hol_line": null,
   "case": null,
@@ -36508,6 +36718,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
   "rocq_name": "word_gen_gc_partial_move_roots_def"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml",
+  "hol_name": "word_gen_gc_partial_move_roots_has_fp_ops",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/word_gcFunctions.v",
+  "rocq_name": "word_gen_gc_partial_move_roots_has_fp_ops"
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/word_instProofScript.sml",

@@ -3,7 +3,7 @@
     Port of the definitions of
     [cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml] (the shallow
     embedding of the GC that [stack_alloc]'s GC code implements) and of
-    [word_gc_fun_LENGTH].
+    [word_gc_fun_LENGTH] and the floating-point flag invariance chain.
 
     Notes:
     - HOL tuples nest to the right, so HOL's [(a,b,c)] is [(a, (b, c))].
@@ -16,7 +16,7 @@
     - Not ported: [refs_to_addresses] (on [gc_shared]'s heap elements, not
       ported), the [*_IMP_EVERY2] lemmas (on [word_simpProof]'s
       [is_gc_word_const], not ported; [word_gc_fun_LENGTH] is proved
-      directly) and the [*_has_fp_ops] simp lemmas. *)
+      directly). *)
 
 From Galette Require Import Base Classical.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -956,3 +956,121 @@ Proof.
 Qed.
 
 End GC.
+
+(** Floating-point flags do not affect the garbage collector. The local
+    fuel lemmas transport the invariant through the computational recursions. *)
+Section FP.
+Context {a : N}.
+Local Notation "'fpconf' conf b1 b2" := ({| data_to_word.tag_bits := data_to_word.tag_bits conf; data_to_word.len_bits := data_to_word.len_bits conf; data_to_word.pad_bits := data_to_word.pad_bits conf; data_to_word.len_size := data_to_word.len_size conf; data_to_word.has_div := data_to_word.has_div conf; data_to_word.has_longdiv := data_to_word.has_longdiv conf; data_to_word.has_fp_ops := b1; data_to_word.has_fp_tern := b2; data_to_word.be := data_to_word.be conf; data_to_word.call_empty_ffi := data_to_word.call_empty_ffi conf; data_to_word.gc_kind := data_to_word.gc_kind conf |}) (at level 10, conf at next level, b1 at next level, b2 at next level).
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "shift_length_has_fp_ops" *)
+Theorem shift_length_has_fp_ops : forall conf b1 b2, shift_length (fpconf conf b1 b2) = shift_length conf.
+Proof. reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gc_fun_assum_has_fp_ops" *)
+Theorem word_gc_fun_assum_has_fp_ops : forall conf b1 b2 s, @word_gc_fun_assum a (fpconf conf b1 b2) s = word_gc_fun_assum conf s.
+Proof. reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gc_move_has_fp_ops" *)
+Theorem word_gc_move_has_fp_ops : forall conf b1 b2 x, @word_gc_move a (fpconf conf b1 b2) x = word_gc_move conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; match goal with w : word_loc _ |- _ => destruct w end; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_move_has_fp_ops" *)
+Theorem word_gen_gc_move_has_fp_ops : forall conf b1 b2 x, @word_gen_gc_move a (fpconf conf b1 b2) x = word_gen_gc_move conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; match goal with w : word_loc _ |- _ => destruct w end; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_partial_move_has_fp_ops" *)
+Theorem word_gen_gc_partial_move_has_fp_ops : forall conf b1 b2 x, @word_gen_gc_partial_move a (fpconf conf b1 b2) x = word_gen_gc_partial_move conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; match goal with w : word_loc _ |- _ => destruct w end; reflexivity. Qed.
+
+Local Lemma word_gc_move_list_f_fp : forall fuel conf b1 b2, @word_gc_move_list_f a fuel (fpconf conf b1 b2) = word_gc_move_list_f fuel conf.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gc_move_list_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gc_move_list_has_fp_ops" *)
+Theorem word_gc_move_list_has_fp_ops : forall conf b1 b2 x, @word_gc_move_list a (fpconf conf b1 b2) x = word_gc_move_list conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gc_move_list; rewrite word_gc_move_list_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_move_list_f_fp : forall fuel conf b1 b2, @word_gen_gc_move_list_f a fuel (fpconf conf b1 b2) = word_gen_gc_move_list_f fuel conf.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_move_list_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_move_list_has_fp_ops" *)
+Theorem word_gen_gc_move_list_has_fp_ops : forall conf b1 b2 x, @word_gen_gc_move_list a (fpconf conf b1 b2) x = word_gen_gc_move_list conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_move_list; rewrite word_gen_gc_move_list_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_partial_move_list_f_fp : forall fuel conf b1 b2, @word_gen_gc_partial_move_list_f a fuel (fpconf conf b1 b2) = word_gen_gc_partial_move_list_f fuel conf.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_partial_move_list_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_partial_move_list_has_fp_ops" *)
+Theorem word_gen_gc_partial_move_list_has_fp_ops : forall conf b1 b2 x, @word_gen_gc_partial_move_list a (fpconf conf b1 b2) x = word_gen_gc_partial_move_list conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_partial_move_list; rewrite word_gen_gc_partial_move_list_f_fp; reflexivity. Qed.
+Local Lemma word_gc_move_roots_f_fp : forall conf b1 b2 ws, @word_gc_move_roots_f a (fpconf conf b1 b2) ws = word_gc_move_roots_f conf ws.
+Proof. intros conf b1 b2 ws; induction ws as [|w ws IH]; repeat (apply functional_extensionality; intro); cbn [word_gc_move_roots_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gc_move_roots_has_fp_ops" *)
+Theorem word_gc_move_roots_has_fp_ops : forall conf b1 b2 x, @word_gc_move_roots a (fpconf conf b1 b2) x = word_gc_move_roots conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gc_move_roots; rewrite word_gc_move_roots_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_move_roots_f_fp : forall conf b1 b2 ws, @word_gen_gc_move_roots_f a (fpconf conf b1 b2) ws = word_gen_gc_move_roots_f conf ws.
+Proof. intros conf b1 b2 ws; induction ws as [|w ws IH]; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_move_roots_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?word_gc_move_roots_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_move_roots_has_fp_ops" *)
+Theorem word_gen_gc_move_roots_has_fp_ops : forall conf b1 b2 x, @word_gen_gc_move_roots a (fpconf conf b1 b2) x = word_gen_gc_move_roots conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_move_roots; rewrite word_gen_gc_move_roots_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_partial_move_roots_f_fp : forall conf b1 b2 ws, @word_gen_gc_partial_move_roots_f a (fpconf conf b1 b2) ws = word_gen_gc_partial_move_roots_f conf ws.
+Proof. intros conf b1 b2 ws; induction ws as [|w ws IH]; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_partial_move_roots_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?word_gc_move_roots_has_fp_ops, ?word_gen_gc_move_roots_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_partial_move_roots_has_fp_ops" *)
+Theorem word_gen_gc_partial_move_roots_has_fp_ops : forall conf b1 b2 x, @word_gen_gc_partial_move_roots a (fpconf conf b1 b2) x = word_gen_gc_partial_move_roots conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_partial_move_roots; rewrite word_gen_gc_partial_move_roots_f_fp; reflexivity. Qed.
+Local Lemma word_gc_move_loop_f_fp : forall fuel conf b1 b2, @word_gc_move_loop_f a fuel (fpconf conf b1 b2) = word_gc_move_loop_f fuel conf.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gc_move_loop_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?word_gc_move_roots_has_fp_ops, ?word_gen_gc_move_roots_has_fp_ops, ?word_gen_gc_partial_move_roots_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gc_move_loop_has_fp_ops" *)
+Theorem word_gc_move_loop_has_fp_ops : forall n conf b1 b2 x, @word_gc_move_loop a n (fpconf conf b1 b2) x = word_gc_move_loop n conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gc_move_loop; rewrite word_gc_move_loop_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_partial_move_data_f_fp : forall fuel conf b1 b2, @word_gen_gc_partial_move_data_f a (fpconf conf b1 b2) fuel = word_gen_gc_partial_move_data_f conf fuel.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_partial_move_data_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?word_gc_move_roots_has_fp_ops, ?word_gen_gc_move_roots_has_fp_ops, ?word_gen_gc_partial_move_roots_has_fp_ops, ?word_gc_move_loop_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_partial_move_data_has_fp_ops" *)
+Theorem word_gen_gc_partial_move_data_has_fp_ops : forall n conf b1 b2 x, @word_gen_gc_partial_move_data a (fpconf conf b1 b2) n x = word_gen_gc_partial_move_data conf n x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_partial_move_data; rewrite word_gen_gc_partial_move_data_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_move_data_f_fp : forall fuel conf b1 b2, @word_gen_gc_move_data_f a (fpconf conf b1 b2) fuel = word_gen_gc_move_data_f conf fuel.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_move_data_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?word_gc_move_roots_has_fp_ops, ?word_gen_gc_move_roots_has_fp_ops, ?word_gen_gc_partial_move_roots_has_fp_ops, ?word_gc_move_loop_has_fp_ops, ?word_gen_gc_partial_move_data_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_move_data_has_fp_ops" *)
+Theorem word_gen_gc_move_data_has_fp_ops : forall n conf b1 b2 x, @word_gen_gc_move_data a (fpconf conf b1 b2) n x = word_gen_gc_move_data conf n x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_move_data; rewrite word_gen_gc_move_data_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_move_refs_f_fp : forall fuel conf b1 b2, @word_gen_gc_move_refs_f a (fpconf conf b1 b2) fuel = word_gen_gc_move_refs_f conf fuel.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_move_refs_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?word_gc_move_roots_has_fp_ops, ?word_gen_gc_move_roots_has_fp_ops, ?word_gen_gc_partial_move_roots_has_fp_ops, ?word_gc_move_loop_has_fp_ops, ?word_gen_gc_partial_move_data_has_fp_ops, ?word_gen_gc_move_data_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_move_refs_has_fp_ops" *)
+Theorem word_gen_gc_move_refs_has_fp_ops : forall n conf b1 b2 x, @word_gen_gc_move_refs a (fpconf conf b1 b2) n x = word_gen_gc_move_refs conf n x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_move_refs; rewrite word_gen_gc_move_refs_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_partial_move_ref_list_f_fp : forall fuel conf b1 b2, @word_gen_gc_partial_move_ref_list_f a fuel (fpconf conf b1 b2) = word_gen_gc_partial_move_ref_list_f fuel conf.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_partial_move_ref_list_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?word_gc_move_roots_has_fp_ops, ?word_gen_gc_move_roots_has_fp_ops, ?word_gen_gc_partial_move_roots_has_fp_ops, ?word_gc_move_loop_has_fp_ops, ?word_gen_gc_partial_move_data_has_fp_ops, ?word_gen_gc_move_data_has_fp_ops, ?word_gen_gc_move_refs_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_partial_move_ref_list_has_fp_ops" *)
+Theorem word_gen_gc_partial_move_ref_list_has_fp_ops : forall n conf b1 b2 x, @word_gen_gc_partial_move_ref_list a n (fpconf conf b1 b2) x = word_gen_gc_partial_move_ref_list n conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_partial_move_ref_list; rewrite word_gen_gc_partial_move_ref_list_f_fp; reflexivity. Qed.
+Local Lemma word_gen_gc_move_loop_f_fp : forall fuel conf b1 b2, @word_gen_gc_move_loop_f a (fpconf conf b1 b2) fuel = word_gen_gc_move_loop_f conf fuel.
+Proof. induction fuel as [|fuel IH]; intros conf b1 b2; repeat (apply functional_extensionality; intro); cbn [word_gen_gc_move_loop_f]; rewrite ?word_gc_move_has_fp_ops, ?word_gen_gc_move_has_fp_ops, ?word_gen_gc_partial_move_has_fp_ops, ?word_gc_move_list_has_fp_ops, ?word_gen_gc_move_list_has_fp_ops, ?word_gen_gc_partial_move_list_has_fp_ops, ?word_gc_move_roots_has_fp_ops, ?word_gen_gc_move_roots_has_fp_ops, ?word_gen_gc_partial_move_roots_has_fp_ops, ?word_gc_move_loop_has_fp_ops, ?word_gen_gc_partial_move_data_has_fp_ops, ?word_gen_gc_move_data_has_fp_ops, ?word_gen_gc_move_refs_has_fp_ops, ?word_gen_gc_partial_move_ref_list_has_fp_ops, ?IH; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_move_loop_has_fp_ops" *)
+Theorem word_gen_gc_move_loop_has_fp_ops : forall n conf b1 b2 x, @word_gen_gc_move_loop a (fpconf conf b1 b2) n x = word_gen_gc_move_loop conf n x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_move_loop; rewrite word_gen_gc_move_loop_f_fp; reflexivity. Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_full_gc_has_fp_ops" *)
+Theorem word_full_gc_has_fp_ops : forall conf b1 b2 x, @word_full_gc a (fpconf conf b1 b2) x = word_full_gc conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end;
+ unfold word_full_gc; cbn beta iota zeta; rewrite word_gc_move_roots_has_fp_ops;
+ match goal with |- context [word_gc_move_roots conf ?x] => destruct (word_gc_move_roots conf x) as [? [? [? [? ?]]]] end;
+ rewrite word_gc_move_loop_has_fp_ops; reflexivity. Qed.
+Local Lemma partial_fp : forall conf b1 b2 x, @word_gen_gc_partial a (fpconf conf b1 b2) x = word_gen_gc_partial conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end;
+ unfold word_gen_gc_partial; cbn beta iota zeta; rewrite word_gen_gc_partial_move_roots_has_fp_ops;
+ match goal with |- context [word_gen_gc_partial_move_roots conf ?x] => destruct (word_gen_gc_partial_move_roots conf x) as [? [? [? [? ?]]]] end;
+ rewrite word_gen_gc_partial_move_ref_list_has_fp_ops;
+ match goal with |- context [word_gen_gc_partial_move_ref_list ?n conf ?x] => destruct (word_gen_gc_partial_move_ref_list n conf x) as [? [? [? ?]]] end;
+ rewrite word_gen_gc_partial_move_data_has_fp_ops; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_partial_full_has_fp_ops" *)
+Theorem word_gen_gc_partial_full_has_fp_ops : forall conf b1 b2 x, @word_gen_gc_partial_full a (fpconf conf b1 b2) x = word_gen_gc_partial_full conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc_partial_full; cbn beta iota zeta; rewrite partial_fp; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gen_gc_has_fp_ops" *)
+Theorem word_gen_gc_has_fp_ops : forall conf b1 b2 x, @word_gen_gc a (fpconf conf b1 b2) x = word_gen_gc conf x.
+Proof. intros conf b1 b2 x; repeat match type of x with (_ * _)%type => destruct x as [? x] end; unfold word_gen_gc; cbn beta iota zeta; rewrite word_gen_gc_move_roots_has_fp_ops;
+ match goal with |- context [word_gen_gc_move_roots conf ?x] => destruct (word_gen_gc_move_roots conf x) as [? [? [? [? [? [? ?]]]]]] end;
+ rewrite word_gen_gc_move_loop_has_fp_ops; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "glob_real_has_fp_ops" *)
+Theorem glob_real_has_fp_ops : forall conf b1 b2 x y, @glob_real a (fpconf conf b1 b2) x y = glob_real conf x y.
+Proof. intros; destruct y; reflexivity. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/word_gcFunctionsScript.sml" "word_gc_fun_has_fp_ops" *)
+Theorem word_gc_fun_has_fp_ops : forall conf b1 b2, @word_gc_fun a (fpconf conf b1 b2) = word_gc_fun conf.
+Proof. intros conf b1 b2; apply functional_extensionality; intros x;
+ repeat match type of x with (_ * _)%type => destruct x as [? x] end;
+ unfold word_gc_fun; cbn [data_to_word.gc_kind];
+ repeat first [progress (rewrite ?word_gc_fun_assum_has_fp_ops,
+   ?word_full_gc_has_fp_ops, ?word_gen_gc_partial_full_has_fp_ops,
+   ?word_gen_gc_has_fp_ops, ?glob_real_has_fp_ops; cbn beta iota zeta)
+ | match goal with |- context [match ?e with pair _ _ => _ end] => destruct e as [? ?] end];
+ reflexivity. Qed.
+End FP.
