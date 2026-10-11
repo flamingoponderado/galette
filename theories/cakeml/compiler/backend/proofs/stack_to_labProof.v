@@ -15,9 +15,9 @@
     [halt_assum_lemma], [FLOOKUP_regs], [state_rel_make_init],
     [MAP_FST_compile_compile], the rebound [next_lab_non_zero],
     [extract_label_store_list_code], [stack_to_lab_compile_lab_pres] and
-    [good_code].
+    [good_code] and [full_make_init_semantics].
 
-    NOT YET PORTED: [full_make_init_semantics], [stack_to_lab_compile_all_enc_ok],
+    NOT YET PORTED: [stack_to_lab_compile_all_enc_ok],
     [full_make_init_has_fp_ops], the get_code_labels / handler_labels lemmas
     and the no_shmemop / no_install lemmas.
     [IMP_init_store_ok] and [IMP_init_state_ok] are skipped because their
@@ -4230,4 +4230,374 @@ Definition good_code (sp : N) (code0 : list (N * prog a)) : Prop :=
     EVERY (fun '(l1, l2) => (l1 =? n) && negb (l2 =? 0) && negb (l2 =? 1)) (extract_labels p) &&
     ALL_DISTINCT (extract_labels p)) code0.
 
+(** Local helpers for the composition of the initialisation correctness proofs. *)
+Local Lemma initial_regs_lookup (s : labSem.state a c ffi_t) (rs : list N) n :
+ In n rs -> FLOOKUP (FEMPTY |++ MAP (fun r => (r, read_reg r s)) rs) n = SOME (read_reg n s).
+Proof.
+ induction rs using List.rev_ind; intros Hin; [contradiction|].
+ rewrite map_app, FUPDATE_LIST_APPEND.
+ change (FLOOKUP ((FEMPTY |++ MAP (fun r => (r, read_reg r s)) rs) |+ (x, read_reg x s)) n = SOME (read_reg n s)).
+ rewrite FLOOKUP_UPDATE. destruct (decide (x = n)) as [->|Hne]; [reflexivity|].
+ apply IHrs. apply in_app_or in Hin. destruct Hin as [H|[H|[]]]; [exact H|congruence].
+Qed.
+Local Lemma initial_renamed_regs f cd co cd3 co3 save (s : labSem.state a c ffi_t) r :
+ BIJ (stack_names.find_name f) UNIV UNIV -> In r [2;3;4] ->
+ FLOOKUP (regs (stack_namesProof.make_init f cd co
+   (make_init cd3 co3 (MAP (stack_names.find_name f) [2;3;4]) save s))) r =
+ SOME (read_reg (stack_names.find_name f r) s).
+Proof.
+ intros HB Hin.
+ unfold stack_namesProof.make_init. cbn [stackSem.set_ffi_save_regs stackSem.set_compile_oracle
+  stackSem.set_compile stackSem.set_regs stackSem.set_code stackSem.regs make_init].
+ rewrite <- (LINV_DEF (stack_names.find_name f) UNIV UNIV (proj1 HB) r Logic.I) at 1.
+ rewrite FLOOKUP_MAP_KEYS_MAPPED by exact (proj1 (BIJ_LINV_BIJ _ _ _ HB)).
+ apply initial_regs_lookup. apply in_map, Hin.
+Qed.
+
+Local Lemma memory_assumption_propagates f cd co cd3 co3 save (s : labSem.state a c ffi_t) bm dsp :
+ BIJ (stack_names.find_name f) UNIV UNIV -> good_dimindex a -> memory_assumption f bm dsp s ->
+ stack_removeProof.propagate_these (stack_namesProof.make_init f cd co
+   (make_init cd3 co3 (MAP (stack_names.find_name f) [2;3;4]) save s)) bm dsp.
+Proof.
+ intros HB Hg (p2 & p3 & p4 & bp & R2 & R3 & R4 & M0 & M1 & M2 & M3 & M4 & Hcb & Hle & Ha2 & Ha4 & Hab & Hlen & Hmem).
+ unfold stack_removeProof.propagate_these. split; [exact Hg|]. exists p2,p3,p4,bp.
+ split; [rewrite initial_renamed_regs by (assumption || simpl; tauto); rewrite R2; reflexivity|].
+ split; [rewrite initial_renamed_regs by (assumption || simpl; tauto); rewrite R3; reflexivity|].
+ split; [rewrite initial_renamed_regs by (assumption || simpl; tauto); rewrite R4; reflexivity|].
+ cbn [stack_namesProof.make_init make_init stackSem.set_ffi_save_regs stackSem.set_compile_oracle
+  stackSem.set_compile stackSem.set_regs stackSem.set_code stackSem.memory stackSem.mdomain stackSem.code_buffer].
+ do 2 (split; [assumption|]). split.
+ - rewrite M2. f_equal. rewrite <- !WORD_ADD_ASSOC. f_equal. apply WORD_ADD_COMM.
+ - repeat split; assumption.
+Qed.
+
+Local Lemma inverse_saved_regs f save sp :
+ BIJ (stack_names.find_name f) UNIV UNIV -> 2 <= sp ->
+ EVERY (fun r => bool_decide (stack_names.find_name f (r + sp - 2) IN save)) [2;3;4] ->
+ (sp INSERT ((sp + 1) INSERT ((sp + 2) INSERT EMPTY))) SUBSET
+    IMAGE (LINV (stack_names.find_name f) UNIV) save.
+Proof.
+ intros HB Hsp Hsave. unfold pred_set.SUBSET. intros x Hx.
+ change (x = sp \/ x = sp + 1 \/ x = sp + 2 \/ False) in Hx.
+ apply EVERY_Forall in Hsave. inversion Hsave as [|r rs H2 Hrest]; subst.
+ inversion Hrest as [|r rs H3 Hrest2]; subst. inversion Hrest2 as [|r rs H4 Hnil]; subst.
+ apply bool_decide_spec in H2. apply bool_decide_spec in H3. apply bool_decide_spec in H4.
+ exists (stack_names.find_name f x). split.
+ - symmetry. exact (LINV_DEF (stack_names.find_name f) UNIV UNIV (proj1 HB) x Logic.I).
+ - destruct Hx as [->|[->|[->|[]]]].
+   + replace (2 + sp - 2) with sp in H2 by lia; exact H2.
+   + replace (3 + sp - 2) with (sp+1) in H3 by lia; exact H3.
+   + replace (4 + sp - 2) with (sp+2) in H4 by lia; exact H4.
+Qed.
+
+Local Lemma good_code_names sp (ps : list (N * prog a)) : good_code sp ps ->
+ EVERY (fun n => (stack_num_stubs <=? n)) (MAP FST ps).
+Proof.
+ intros (_ & H & _). apply EVERY_Forall. apply Forall_map. apply EVERY_Forall in H.
+ eapply Forall_impl; [|exact H]. intros [n p] Hnp. apply Bool.andb_true_iff in Hnp; exact (proj1 Hnp).
+Qed.
+Local Lemma reg_names_combine (ps : list (N * prog a)) sp :
+ EVERY (fun p => reg_bound p sp) (MAP SND ps) ->
+ EVERY (fun n => (stack_num_stubs <=? n + 1)) (MAP FST ps) ->
+ EVERY (fun '(n,p) => reg_bound p sp && (stack_num_stubs <=? n + 1)) ps.
+Proof.
+ intros HR HN. apply EVERY_Forall in HR. apply EVERY_Forall in HN.
+ rewrite Forall_map, Forall_forall in HR,HN. apply EVERY_Forall. rewrite Forall_forall.
+ intros [n p] Hp. apply Bool.andb_true_iff. split; [exact (HR (n,p) Hp)|exact (HN (n,p) Hp)].
+Qed.
+Local Lemma alloc_comp_reg_bound (dc : data_to_word.config) sp (ps : list (N * prog a)) :
+ 10 <= sp -> EVERY (fun p => reg_bound p sp) (MAP SND ps) ->
+ EVERY (fun p => reg_bound p sp) (MAP SND (MAP stack_alloc.prog_comp ps)).
+Proof.
+ intros Hsp H. pose proof (stack_allocProof.stack_alloc_reg_bound sp ps dc (conj Hsp H)) as Hreg.
+ unfold stack_alloc.compile in Hreg. rewrite map_app in Hreg. apply EVERY_Forall in Hreg. apply Forall_app in Hreg.
+ apply EVERY_Forall. exact (proj2 Hreg).
+Qed.
+Local Lemma map_fst_alloc (ps : list (N * prog a)) : MAP FST (MAP stack_alloc.prog_comp ps) = MAP FST ps.
+Proof. rewrite map_map. apply map_ext. intros [n p]; reflexivity. Qed.
+Local Lemma alloc_code_names dc (ps : list (N * prog a)) :
+ MAP FST (stack_alloc.compile dc (stack_rawcall.compile ps)) = gc_stub_location :: MAP FST ps.
+Proof.
+ unfold stack_alloc.compile, stack_alloc.stubs. rewrite map_app, map_fst_alloc,
+ stack_rawcallProof.MAP_FST_compile. reflexivity.
+Qed.
+Local Lemma good_code_alloc_pre dc sp (ps : list (N * prog a)) :
+ 10 <= sp -> good_code sp ps ->
+ EVERY (fun '(n,p) => reg_bound p sp && (stack_num_stubs <=? n+1))
+  (stack_alloc.compile dc (stack_rawcall.compile ps)).
+Proof.
+ intros Hsp H. apply reg_names_combine.
+ - apply stack_allocProof.stack_alloc_reg_bound. split; [exact Hsp|].
+   rewrite stack_rawcallProof.stack_rawcall_reg_bound. exact (proj1 (proj2 (proj2 (proj2 H)))).
+ - rewrite alloc_code_names. cbn [EVERY].
+   change ((stack_num_stubs <=? gc_stub_location + 1) && EVERY (fun n => stack_num_stubs <=? n+1) (MAP FST ps) = true).
+   apply Bool.andb_true_iff; split; [reflexivity|].
+   pose proof (good_code_names _ _ H) as Hn. apply EVERY_Forall in Hn.
+   apply EVERY_Forall. eapply Forall_impl; [|exact Hn]. intros n Hle. apply N.leb_le in Hle; apply N.leb_le; lia.
+Qed.
+
+Local Lemma good_code_alloc_map_pre (dc : data_to_word.config) sp (ps : list (N * prog a)) :
+ 10 <= sp -> good_code sp ps ->
+ EVERY (fun '(n,p) => reg_bound p sp && (stack_num_stubs <=? n+1)) (MAP stack_alloc.prog_comp ps).
+Proof.
+ intros Hsp H. apply reg_names_combine.
+ - apply (alloc_comp_reg_bound dc); [exact Hsp|exact (proj1 (proj2 (proj2 (proj2 H))))].
+ - rewrite map_fst_alloc. pose proof (good_code_names _ _ H) as Hn. apply EVERY_Forall in Hn.
+   apply EVERY_Forall. eapply Forall_impl; [|exact Hn]. intros n Hle. apply N.leb_le in Hle; apply N.leb_le; lia.
+Qed.
+
+Local Lemma initialization_discharge f dc jump0 off gen mh sp start (ps : list (N * prog a))
+    co cd3 co3 save (t : labSem.state a c ffi_t) :
+ good_code sp ps -> (forall n, good_code sp (FST (SND (co n)))) ->
+ 10 <= sp -> stack_remove.max_stack_alloc <= mh -> BIJ (stack_names.find_name f) UNIV UNIV ->
+ EVERY (fun r => bool_decide (stack_names.find_name f (r+sp-2) IN save)) [2;3;4] ->
+ let co1 := (I ## (MAP stack_alloc.prog_comp ## I)) ∘ co in
+ let co2 := (I ## (MAP (stack_remove.prog_comp jump0 off sp) ## I)) ∘ co1 in
+ let cd1 := stack_alloc.compile dc (stack_rawcall.compile ps) in
+ let cd2 := stack_remove.compile jump0 off gen mh sp start cd1 in
+ stack_removeProof.discharge_these jump0 off gen mh sp start co1 cd1
+  (stack_namesProof.make_init f (fromAList cd2) co2
+    (make_init cd3 co3 (MAP (stack_names.find_name f) [2;3;4]) save t)).
+Proof.
+ intros Hcode Hor Hsp Hmh HB Hsave. cbv zeta. unfold stack_removeProof.discharge_these.
+ split; [apply good_code_alloc_pre; assumption|]. split.
+ - intros n i p Hmem. destruct (co n) as [cfg [pr bm]] eqn:E.
+   specialize (Hor n). rewrite E in Hor. cbn [FST SND] in Hor.
+   cbn [PAIR_MAP I FST SND fst snd] in Hmem.
+   pose proof (good_code_alloc_map_pre dc sp pr Hsp Hor) as H.
+   apply EVERY_Forall in H. rewrite Forall_forall in H. unfold is_true in Hmem. rewrite MEM_In in Hmem.
+   specialize (H (i,p) Hmem). apply Bool.andb_true_iff in H. split; [exact (proj1 H)|].
+   apply N.leb_le; exact (proj2 H).
+ - cbn [stack_namesProof.make_init make_init stackSem.set_ffi_save_regs stackSem.set_compile_oracle
+    stackSem.set_compile stackSem.set_regs stackSem.set_code stackSem.code stackSem.compile_oracle
+    stackSem.ffi_save_regs stackSem.use_stack stackSem.use_store stackSem.use_alloc].
+   split; [reflexivity|]. split; [reflexivity|]. split; [lia|]. split.
+   + apply domain_lookup. eexists. rewrite lookup_fromAList. reflexivity.
+   + split; [apply inverse_saved_regs; [exact HB|lia|exact Hsave]|].
+     split; [discriminate|]. split; [discriminate|]. split; [discriminate|exact Hmh].
+Qed.
+
+
+Local Lemma initialized_alloc_bound gen mh bm dsp co jp off sp cd (s si : stackSem.state a c ffi_t) :
+ stack_removeProof.make_init_opt gen mh bm dsp co jp off sp cd s = SOME si ->
+ LENGTH (bitmaps si) + LENGTH (wordSem.buffer_buffer (data_buffer si)) + wordSem.space_left (data_buffer si) < dimword a - 1.
+Proof.
+ unfold stack_removeProof.make_init_opt.
+ destruct (evaluate _) as [[r|] st] eqn:E; [discriminate|].
+ destruct (classical_dec _) as [Hprop|Hprop]; [|discriminate].
+ intros Hsi. injection Hsi as <-.
+ unfold stack_removeProof.init_prop in Hprop. destruct Hprop as (curr & other & bp & len & Hprop).
+ cbn [stack_removeProof.init_reduce bitmaps data_buffer wordSem.buffer_buffer wordSem.space_left] in *.
+ assert (Hlen : LENGTH bm + dsp + 1 < dimword a) by tauto.
+ change (LENGTH bm + 0 + dsp < dimword a - 1). lia.
+Qed.
+
+
+Local Lemma good_code_entry sp (ps : list (N * prog a)) : good_code sp ps -> forall n p, In (n,p) ps ->
+ n <> gc_stub_location /\ alloc_arg p.
+Proof.
+ intros (_ & H & _) n p Hin. apply EVERY_Forall in H. rewrite Forall_forall in H.
+ specialize (H (n,p) Hin). apply Bool.andb_true_iff in H as [Hn Hp]. split; [|exact Hp].
+ apply N.leb_le in Hn. change (5 <= n) in Hn. change (n <> 4). lia.
+Qed.
+Local Lemma good_code_rawcall_entry sp (ps : list (N * prog a)) : good_code sp ps ->
+ forall k p, ALOOKUP (stack_rawcall.compile ps) k = SOME p -> k <> gc_stub_location /\ alloc_arg p.
+Proof.
+ intros Hgood k p Hlook. apply ALOOKUP_MEM in Hlook. unfold is_true in Hlook; rewrite MEM_In in Hlook.
+ unfold stack_rawcall.compile in Hlook; cbv zeta in Hlook.
+ apply in_map_iff in Hlook. destruct Hlook as ([n q] & Eq & Hin).
+ injection Eq as En Ep. subst n p.
+ rewrite (proj2 (stack_rawcallProof.call_arg_comp _ _)). exact (good_code_entry _ _ Hgood k q Hin).
+Qed.
+
+
+Local Lemma good_code_label_pres sc dc mh sp off (ps : list (N * prog a)) :
+ good_code sp ps -> labels_ok (stack_to_lab.compile sc dc mh sp off ps).
+Proof.
+ intros H. apply stack_to_lab_compile_lab_pres. split.
+ - pose proof (good_code_names _ _ H) as Hn. apply EVERY_Forall in Hn.
+   apply EVERY_Forall. eapply Forall_impl; [|exact Hn]. intros n Hle.
+   apply N.leb_le in Hle. change (5 <= n) in Hle.
+   unfold is_true. rewrite !Bool.andb_true_iff, !Bool.negb_true_iff, !N.eqb_neq.
+   unfold gc_stub_location, stack_num_stubs. cbn. lia.
+ - split; [exact (proj2 (proj2 (proj2 (proj2 H))))|exact (proj1 H)].
+Qed.
+Local Lemma labels_no_stubs f jp off sp (ps : list (N * prog a)) :
+ EVERY initial_prog_labels ps ->
+ EVERY initial_prog_labels
+   (stack_names.compile f (MAP (stack_remove.prog_comp jp off sp) (MAP stack_alloc.prog_comp ps))).
+Proof.
+ intros H. unfold stack_names.compile. eapply (every_initial_map _ initial_prog_labels _).
+ - intros [n p] Hp. unfold initial_prog_labels, stack_names.prog_comp in *.
+   rewrite <- stack_namesProof.stack_names_lab_pres; exact Hp.
+ - eapply (every_initial_map _ initial_prog_labels _).
+   + intros [n p] Hp. unfold initial_prog_labels, stack_remove.prog_comp in *.
+     rewrite <- stack_removeProof.stack_remove_lab_pres; exact Hp.
+   + eapply (every_initial_map _ initial_prog_labels _); [|exact H].
+     intros np Hp. apply initial_prog_labels_alloc, Hp.
+Qed.
+Local Lemma call_args_no_stubs f jp off sp (ps : list (N * prog a)) :
+ EVERY (fun p => call_args p 1 2 3 4 0) (MAP SND ps) ->
+ EVERY (fun p => call_args p (stack_names.find_name f 1) (stack_names.find_name f 2)
+   (stack_names.find_name f 3) (stack_names.find_name f 4) (stack_names.find_name f 0))
+ (MAP SND (stack_names.compile f (MAP (stack_remove.prog_comp jp off sp) (MAP stack_alloc.prog_comp ps)))).
+Proof.
+ intros H. apply EVERY_Forall in H. rewrite Forall_map in H.
+ unfold stack_names.compile. rewrite !map_map. apply EVERY_Forall. apply Forall_map.
+ eapply Forall_impl; [|exact H]. intros [n p] Hp. cbn [SND stack_alloc.prog_comp stack_remove.prog_comp stack_names.prog_comp].
+ apply stack_namesProof.call_args_comp. apply stack_removeProof.call_args_comp.
+ apply stack_allocProof.comp_call_args. exact Hp.
+Qed.
+Local Lemma map_fst_remove jp off sp (ps : list (N * prog a)) :
+ MAP FST (MAP (stack_remove.prog_comp jp off sp) ps) = MAP FST ps.
+Proof. rewrite map_map. apply map_ext. intros [n p]; reflexivity. Qed.
+
+
+Local Lemma oracle_labels_call_args f jp off sp (ps : list (N * prog a)) : good_code sp ps ->
+ let qs := stack_names.compile f (MAP (stack_remove.prog_comp jp off sp) (MAP stack_alloc.prog_comp ps)) in
+ EVERY (fun '(n,p) =>
+   call_args p (stack_names.find_name f 1) (stack_names.find_name f 2) (stack_names.find_name f 3)
+     (stack_names.find_name f 4) (stack_names.find_name f 0) &&
+   EVERY (fun '(l1,l2) => (l1 =? n) && negb (l2 =? 0) && negb (l2 =? 1)) (extract_labels p) &&
+   ALL_DISTINCT (extract_labels p)) qs /\ ALL_DISTINCT (MAP FST qs).
+Proof.
+ intros Hgood; cbv zeta. split.
+ - pose proof (call_args_no_stubs f jp off sp ps (proj1 (proj2 (proj2 Hgood)))) as Hca.
+   pose proof (labels_no_stubs f jp off sp ps (proj2 (proj2 (proj2 (proj2 Hgood))))) as HL.
+   apply EVERY_Forall in Hca. rewrite Forall_map, Forall_forall in Hca.
+   apply EVERY_Forall in HL. rewrite Forall_forall in HL.
+   apply EVERY_Forall. rewrite Forall_forall. intros [n p] Hin.
+   specialize (Hca (n,p) Hin). specialize (HL (n,p) Hin).
+   unfold initial_prog_labels in HL. apply Bool.andb_true_iff in HL as [HL HD].
+   apply Bool.andb_true_iff. split; [apply Bool.andb_true_iff; split; assumption|exact HD].
+ - rewrite map_fst_names, map_fst_remove, map_fst_alloc. exact (proj1 Hgood).
+Qed.
+
+(** HOL rebinds this theorem after removing its proof-only [Abbrev] marker. *)
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "full_make_init_semantics" 3617 *)
+Theorem full_make_init_semantics : forall sc dc mh sp off (bm : list (word a)) cd
+ (t : labSem.state a c ffi_t) save dsp co s opt,
+ full_make_init sc dc mh sp off bm cd t save dsp co = (s,opt) /\
+ good_dimindex a /\
+ labSem.code t = stack_to_lab.compile sc dc mh sp off cd /\
+ labSem.compile_oracle t = (fun n => let '(cfg,(ps,_)) := co n in
+   (cfg, compile_no_stubs (reg_names sc) (stack_to_lab.jump sc) off sp ps)) /\
+ ~ failed t /\ memory_assumption (reg_names sc) bm dsp t /\
+ stack_remove.max_stack_alloc <= mh /\ ~ (link_reg t IN save) /\ pc t = 0 /\
+ (forall k i n, k IN save -> io_regs t n i k = NONE) /\
+ (forall k n, k IN save -> cc_regs t n k = NONE) /\
+ (forall x, x IN mem_domain t -> w2n x MOD (dimindex a DIV 8) = 0) /\
+ (forall x, x IN shared_mem_domain t -> w2n x MOD (dimindex a DIV 8) = 0) /\
+ good_code sp cd /\ (forall n, good_code sp (FST (SND (co n)))) /\ 10 <= sp /\
+ EVERY (fun r => bool_decide (stack_names.find_name (reg_names sc) (r+sp-2) IN save)) [2;3;4] /\
+ stack_names.find_name (reg_names sc) 4 = len2_reg t /\
+ stack_names.find_name (reg_names sc) 3 = ptr2_reg t /\
+ stack_names.find_name (reg_names sc) 2 = len_reg t /\
+ stack_names.find_name (reg_names sc) 1 = ptr_reg t /\
+ stack_names.find_name (reg_names sc) 0 = link_reg t /\
+ BIJ (stack_names.find_name (reg_names sc)) UNIV UNIV ->
+ opt <> NONE /\ (semantics bvl_to_bvi.InitGlobals_location s <> Fail ->
+    labSem.semantics t = semantics bvl_to_bvi.InitGlobals_location s).
+Proof.
+ intros sc dc mh sp off bm cd t save dsp co s opt
+  (E & Hg & Hcode & Hor & Hfail & Hmem & Hmh & Hlink & Hpc & Hio & Hcc & Hmd & Hsmd & Hgood & Horgood & Hsp & Hsave & R4 & R3 & R2 & R1 & R0 & HB).
+ set (ggc := is_gen_gc (data_to_word.gc_kind dc)).
+ set (jp := stack_to_lab.jump sc).
+ set (f := reg_names sc).
+ set (cd1 := stack_alloc.compile dc (stack_rawcall.compile cd)).
+ set (cd2 := stack_remove.compile jp off ggc mh sp bvl_to_bvi.InitGlobals_location cd1).
+ set (cd3 := fromAList (stack_names.compile f cd2)).
+ set (co1 := (I ## (MAP (@stack_alloc.prog_comp a) ## I)) ∘ co).
+ set (co2 := (I ## (MAP (stack_remove.prog_comp jp off sp) ## I)) ∘ co1).
+ set (co3 := (I ## (stack_names.compile f ## I)) ∘ co2).
+ set (s3 := make_init cd3 co3 (MAP (stack_names.find_name f) [2;3;4]) save t).
+ set (s2 := stack_namesProof.make_init f (fromAList cd2) co2 s3).
+ set (s1 := stack_removeProof.make_init_any ggc mh bm dsp co1 jp off sp (fromAList cd1) s2).
+ change ((stack_allocProof.make_init dc (fromAList cd) co s1,
+   stack_removeProof.make_init_opt ggc mh bm dsp co1 jp off sp (fromAList cd1) s2) = (s,opt)) in E.
+ injection E as Es Eopt. subst s opt.
+ assert (HD : stack_removeProof.discharge_these jp off ggc mh sp bvl_to_bvi.InitGlobals_location co1 cd1 s2).
+ { apply initialization_discharge; assumption. }
+ assert (HP : stack_removeProof.propagate_these s2 bm dsp).
+ { apply memory_assumption_propagates; assumption. }
+ destruct (stack_removeProof.make_init_semantics jp off ggc mh sp bvl_to_bvi.InitGlobals_location co1 cd1 s2 bm dsp (conj HD HP)) as (si & Hsi & Hsem).
+ assert (Es1 : s1 = si).
+ { unfold s1, stack_removeProof.make_init_any. rewrite Hsi. reflexivity. }
+ split; [change (stack_removeProof.make_init_opt ggc mh bm dsp co1 jp off sp (fromAList cd1) s2 <> NONE); rewrite Hsi; discriminate|].
+ rewrite Es1. intros HF.
+ assert (Hraw : semantics bvl_to_bvi.InitGlobals_location
+   (stack_allocProof.make_init dc (fromAList (stack_rawcall.compile cd)) co si) =
+   semantics bvl_to_bvi.InitGlobals_location (stack_allocProof.make_init dc (fromAList cd) co si)).
+ { apply (stack_rawcallProof.compile_semantics cd
+     (stack_allocProof.make_init dc (fromAList cd) co si) bvl_to_bvi.InitGlobals_location).
+   split; [exact (proj1 Hgood)|]. split; [reflexivity|]. split; [reflexivity|exact HF]. }
+ assert (HA : semantics bvl_to_bvi.InitGlobals_location si =
+   semantics bvl_to_bvi.InitGlobals_location (stack_allocProof.make_init dc
+     (fromAList (stack_rawcall.compile cd)) co si)).
+ { apply stack_allocProof.make_init_semantics.
+   split; [apply good_code_rawcall_entry with sp; exact Hgood|]. split.
+   - intros n k p Hmp. apply (good_code_entry sp (FST (SND (co n))) (Horgood n)).
+     unfold is_true in Hmp; rewrite MEM_In in Hmp; exact Hmp.
+   - split; [rewrite <- Es1; apply stack_removeProof.make_init_any_use_stack|].
+     split; [rewrite <- Es1; apply stack_removeProof.make_init_any_use_store|].
+     split; [rewrite <- Es1; apply stack_removeProof.make_init_any_use_alloc|].
+     split; [rewrite <- Es1; apply stack_removeProof.make_init_any_code|].
+     split; [rewrite <- Es1; apply stack_removeProof.make_init_any_compile_oracle|].
+     split; [eapply initialized_alloc_bound; exact Hsi|].
+     split; [rewrite <- Es1; apply stack_removeProof.make_init_any_stack_limit|].
+     split; [rewrite stack_rawcallProof.MAP_FST_compile; exact (proj1 Hgood)|].
+     rewrite Hraw. exact HF. }
+ assert (HNF : semantics bvl_to_bvi.InitGlobals_location si <> Fail) by (rewrite HA, Hraw; exact HF).
+ specialize (Hsem HNF).
+ rewrite <- Hraw, <- HA, <- Hsem.
+ assert (Hct : labSem.code t = MAP prog_to_section (stack_names.compile f cd2)) by exact Hcode.
+ assert (HL : labels_ok (labSem.code t)).
+ { rewrite Hcode. apply good_code_label_pres; exact Hgood. }
+ assert (HD2 : ALL_DISTINCT (MAP FST cd2)).
+ { pose proof (proj1 (proj2 (labels_ok_imp _ HL))) as H.
+   rewrite Hct, MAP_prog_to_section_Section_num, map_fst_names in H. exact H. }
+ assert (Hnames : semantics 0 s3 = semantics 0 s2).
+ { apply stack_namesProof.make_init_semantics.
+   split; [discriminate|]. split; [discriminate|]. split; [discriminate|].
+   split; [exact HB|]. split; [exact HD2|]. split; reflexivity. }
+ rewrite <- Hnames.
+ assert (Hca : EVERY (fun p => call_args p (ptr_reg t) (len_reg t) (ptr2_reg t) (len2_reg t) (link_reg t))
+   (MAP SND (stack_names.compile f cd2))).
+ { rewrite <- R1, <- R2, <- R3, <- R4, <- R0.
+   apply (stack_namesProof.stack_names_call_args f cd2 (stack_names.compile f cd2)). split; [reflexivity|].
+   apply (stack_removeProof.stack_remove_call_args jp off ggc mh sp bvl_to_bvi.InitGlobals_location cd1 cd2). split; [reflexivity|].
+   apply (stack_allocProof.stack_alloc_call_args (stack_rawcall.compile cd) dc). rewrite stack_rawcallProof.stack_alloc_call_args.
+   exact (proj1 (proj2 (proj2 Hgood))). }
+ assert (HSR : state_rel s3 t).
+ { unfold s3. apply state_rel_make_init. split.
+   - intros n p Hlook. unfold cd3 in Hlook. rewrite lookup_fromAList in Hlook. split.
+     + pose proof Hca as Hc. apply EVERY_Forall in Hc. rewrite Forall_map, Forall_forall in Hc.
+       apply ALOOKUP_MEM in Hlook. unfold is_true in Hlook; rewrite MEM_In in Hlook. exact (Hc (n,p) Hlook).
+     + rewrite Hct. apply code_installed_prog_to_section. split; [rewrite <-Hct; exact HL|exact Hlook].
+   - split; [exact Hfail|]. split.
+     + rewrite Hor. apply functional_extensionality; intros n.
+       unfold co3,co2,co1. destruct (co n) as [cfg [ps bms]]. reflexivity.
+     + split.
+       * intros k. unfold co3,co2,co1. destruct (co k) as [cfg [ps bms]] eqn:Ek.
+         cbn [PAIR_MAP I].
+         pose proof (Horgood k) as Hk. rewrite Ek in Hk; cbn [FST SND] in Hk.
+         rewrite <- R1, <- R2, <- R3, <- R4, <- R0. apply oracle_labels_call_args; exact Hk.
+       * assert (Hinj : forall x y, stack_names.find_name f x = stack_names.find_name f y -> x = y).
+         { intros x y Hxy. exact (proj2 (proj1 HB) x y (conj Logic.I Logic.I) Hxy). }
+         split; [rewrite <- R0, <- R2; intros E0; apply Hinj in E0; discriminate|].
+         split; [rewrite <- R0, <- R1; intros E0; apply Hinj in E0; discriminate|].
+         split; [rewrite <- R0, <- R4; intros E0; apply Hinj in E0; discriminate|].
+         split; [rewrite <- R0, <- R3; intros E0; apply Hinj in E0; discriminate|].
+         split; [exact Hlink|]. split.
+         -- unfold cd3. rewrite domain_fromAList, Hct, MAP_prog_to_section_Section_num.
+            apply set_ext; intros n. apply MEM_set.
+         -- split; [exact (proj1 (labels_ok_imp _ HL))|].
+            split; [exact Hio|]. split; [exact Hcc|]. split; [exact Hmd|]. split; [exact Hsmd|exact Hg]. }
+ apply (flatten_semantics 0 s3 t). split.
+ - change (halt_assum ffi_t c cd3). unfold cd3, cd2. apply halt_assum_lemma.
+ - split; [exact HSR|]. split.
+   + rewrite Hct, Hpc. unfold cd2, stack_remove.compile, stack_remove.init_stubs, stack_names.compile.
+     cbn [MAP stack_names.prog_comp APPEND]. rewrite prog_to_section_eq at 1. rewrite ltp_cons. reflexivity.
+   + rewrite Hnames, Hsem; exact HNF.
+Qed.
 End Initialization.
