@@ -271,7 +271,7 @@ Context {a : N}.
 Lemma stack_rel_frame_lookup k hdl m l0 el (hnd : option (N * (N * N))) (st : list (stack_frame a)) shandler stk len bms f' lens n v :
   stack_rel k hdl (StackFrame m l0 el hnd :: st) shandler stk len bms (f' :: lens) ->
   lookup n (union (fromAList el) (fromAList l0)) = SOME v -> k <= n DIV 2 ->
-  n DIV 2 - k < f' /\ oEL ((if hnd is SOME _ then 3 else 0) + f' - (n DIV 2 - k)) stk = SOME v.
+  n DIV 2 - k < f' /\ oEL ((match hnd with SOME _ => 3 | _ => 0 end) + f' - (n DIV 2 - k)) stk = SOME v.
 Proof.
   intros [_ (abs & Ha & _ & Hrel)] Hl Hk.
   assert (Hframe : forall bits frame, LENGTH frame = f' ->
