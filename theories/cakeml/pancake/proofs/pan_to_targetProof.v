@@ -1,5 +1,8 @@
 (** * Correctness of the Pancake-to-target composition.
-    Port of [cakeml/pancake/proofs/pan_to_targetProofScript.sml], in progress.
+    Port of [cakeml/pancake/proofs/pan_to_targetProofScript.sml].
+    All declarations preceding [pan_to_target_compile_semantics] are ported.
+    The final composition still needs the unported [IMP_init_state_ok] /
+    [IMP_init_store_ok] and [data_to_word_gcProof] dependencies.
     HOL's [PERMUTES] is [BIJ f UNIV UNIV]; quantified predicates inside
     boolean [EVERY] are reflected using [bool_decide]. *)
 From Galette Require Import Base Classical.
@@ -1193,3 +1196,58 @@ Proof.
  rewrite HIO; reflexivity.
 Qed.
 End MemorySemantics.
+
+(** Galette helper: encoder preconditions for the final composition,
+    assembled from HOL's pass-specific convention lemmas. *)
+Section FinalCode.
+Import data_to_word stackProps.
+Context {a : N} {B C : Type}.
+Local Theorem pan_to_lab_all_enc_ok_pre (mc : machine_config a B C) (c : backend.config) pan_code wprog col bitmaps wc fs p :
+ word_to_word.compile (backend.word_to_word_conf c) (asmProps.config (target mc)) (pan_to_word.compile_prog (ISA (asmProps.config (target mc))) pan_code) = (col,wprog) /\
+ word_to_stack.compile (asmProps.config (target mc)) false wprog = (bitmaps,(wc,(fs,p))) /\
+ pancake_good_code pan_code /\ backendProof.backend_config_ok (asmProps.config (target mc)) c /\
+ init_defs.mc_conf_ok mc /\ ISA (asmProps.config (target mc)) <> Ag32 ->
+ labProps.all_enc_ok_pre (asmProps.config (target mc))
+ (stack_to_lab.compile (backend.stack_conf c) (backend.data_conf c)
+ (2 * data_to_word.max_heap_limit a (backend.data_conf c) - 1)
+ (reg_count (asmProps.config (target mc)) - (LENGTH (avoid_regs (asmProps.config (target mc))) + 3))
+ (addr_offset (asmProps.config (target mc))) p).
+Proof.
+ intros (Hw & Hs & Hpan & Hcfg & Hmc & HI).
+ set (ac := asmProps.config (target mc)) in *.
+ assert (Hd : good_dimindex a) by (unfold init_defs.mc_conf_ok in Hmc; tauto).
+ unfold backendProof.backend_config_ok in Hcfg; consts.destr_conj.
+ assert (Hb : byte_offset_ok ac (n2w 0)).
+ { eapply H14; pose proof (good_dimindex_0w_8w Hd); tauto. }
+ assert (Hinst : EVERY (fun '(n,(m,p)) => wordConvs.every_inst (wordConvs.inst_ok_less ac) p) (pan_to_word.compile_prog (ISA ac) pan_code)).
+ { apply (pan_to_wordProof.pan_to_word_every_inst_ok_less ac pan_code (pan_to_word.compile_prog (ISA ac) pan_code)); repeat split; try assumption; try reflexivity; exact Hpan. }
+ assert (Hshare : EVERY (fun '(_,(_,pp)) => bool_decide (wordConvs.no_share_inst pp \/ ISA ac <> Ag32)) (pan_to_word.compile_prog (ISA ac) pan_code)).
+ { apply EVERY_Forall; rewrite Forall_forall; intros [n [m pp]] _; apply bool_decide_spec; auto. }
+ destruct (backendProof.compile_to_word_conventions2 _ _ _ _ _ (conj Hw Hshare)) as [Hfst [Hlabs HC]].
+ assert (HA : EVERY (fun '(n,p) => stack_asm_name ac p && stack_asm_remove ac p) p).
+ { pose proof (syntax.word_to_stack_stack_asm_convs ac wprog) as HH.
+ rewrite Hs in HH; cbn [SND] in HH; apply HH; split; [|lia].
+ apply EVERY_Forall in HC; rewrite Forall_forall in HC.
+ apply EVERY_Forall; rewrite Forall_forall; intros [n [m pp]] Hpp; specialize (HC _ Hpp).
+ apply bool_decide_spec in HC; apply bool_decide_spec; destruct HC as [Hflat [Hpost [Hfull [Htwo Hshare1]]]].
+ repeat split; try assumption; [apply Hfull; repeat split; assumption|replace (reg_count ac - (LENGTH (avoid_regs ac) + 5)) with (reg_count ac - (5 + LENGTH (avoid_regs ac))) by lia; exact Hpost]. }
+ eapply stack_to_labProof.stack_to_lab_compile_all_enc_ok; repeat split; try assumption.
+all: try solve [apply EVERY_Forall; apply EVERY_Forall in HA; rewrite Forall_forall in HA |- *; intros [n pp] Hpp; specialize (HA _ Hpp); apply Bool.andb_true_iff in HA; tauto].
+all: try solve [unfold reg_name; apply N.ltb_lt; lia].
+all: try lia.
+all: unfold data_to_word.conf_ok in H5; consts.destr_conj; try assumption.
+all: first [exact (proj1 (H25 n H26))|exact (proj2 (H25 n H26))].
+Qed.
+End FinalCode.
+
+Section ArithmeticFinal.
+Context {a : N}.
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "n2w_sub_alt" *)
+Local Theorem n2w_sub_alt : forall x y, y <= x -> (n2w (x-y) : word a) = (n2w x + word_2comp (n2w 1) * n2w y)%w.
+Proof. intros x y H; rewrite n2w_sub by exact H; stack_removeProof.wring. Qed.
+(** HOL [divides a b] is [exists q, b = q*a], exactly [N.divide]. *)
+Local Abbreviation divides := N.divide.
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "aligned_n2w_IMP" *)
+Local Theorem aligned_n2w_IMP k n : aligned k (n2w n : word a) /\ n < dimword a -> divides (2 ** k) n.
+Proof. intros [Ha Hn]; apply aligned_w2n in Ha; rewrite w2n_n2w, (N.mod_small n (dimword a) Hn) in Ha; apply N.Div0.mod_divides in Ha as [q Hq]; exists q; nia. Qed.
+End ArithmeticFinal.

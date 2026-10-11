@@ -77161,6 +77161,16 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "aligned_n2w_IMP",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "aligned_n2w_IMP"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "compile_prog_max_def",
   "hol_line": null,
   "case": null,
@@ -77408,6 +77418,16 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
   "rocq_name": "memory_swap_lemma1"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "n2w_sub_alt",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "n2w_sub_alt"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
