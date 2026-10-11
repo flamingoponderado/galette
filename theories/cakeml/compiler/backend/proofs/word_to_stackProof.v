@@ -19,6 +19,13 @@
     - [word_to_stackProof/comp_lemmas.v]: the lemmas stated between the
       cases of [comp_correct]: constant stores, shared memory, copying of
       results (HOL lines 5855-7767);
+    - [word_to_stackProof/comp_correct.v]: the cases of [comp_correct]
+      except [Call_returning] (HOL lines 5719-10049);
+    - [word_to_stackProof/comp_call.v]: the [Call_returning] case and the
+      assembled [comp_correct] (HOL lines 8166-10049);
+    - [word_to_stackProof/comp_semantics.v]: [comp_Call], the semantics
+      theorems, [init_state_ok], [make_init] and [compile_semantics] (HOL
+      lines 10066-10760);
     - [word_to_stackProof/compile_props.v]: how [comp], [compile_prog] and
       [compile_word_to_stack] thread the bitmaps and code names (HOL lines
       2797-2856 and 5594-5717);
@@ -34,4 +41,4 @@
     [(bytes, (c, (fs, p)))]. *)
 
 From Galette.cakeml.compiler.backend.proofs.word_to_stackProof Require Export
-  basic compile_props state_rel gc stack_rel moves inst comp_lemmas syntax.
+  basic compile_props state_rel gc stack_rel moves inst comp_lemmas comp_correct comp_call comp_semantics syntax.
