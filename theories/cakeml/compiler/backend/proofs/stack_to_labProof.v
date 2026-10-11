@@ -4752,6 +4752,124 @@ Fixpoint complex_get_code_labels (p : prog a) : N * N -> Prop :=
   | _ => {}
   end.
 
+Local Definition emitted_labels (ls : list (line a)) (x : N * N) : Prop :=
+ exists y, In y ls /\ x IN line_get_labels y.
+Local Definition declared_labels (n : N) (ls : list (line a)) (x : N * N) : Prop :=
+ exists k z, In (Label n k z) ls /\ x = (n,k).
+Local Lemma emitted_app ls1 ls2 x :
+ emitted_labels (ls1 ++ ls2) x <-> emitted_labels ls1 x \/ emitted_labels ls2 x.
+Proof. unfold emitted_labels; setoid_rewrite in_app_iff; firstorder. Qed.
+Local Lemma declared_app n ls1 ls2 x :
+ declared_labels n (ls1 ++ ls2) x <-> declared_labels n ls1 x \/ declared_labels n ls2 x.
+Proof. unfold declared_labels; setoid_rewrite in_app_iff; firstorder. Qed.
+Local Lemma declared_one n k x : declared_labels n [Label n k 0] x <-> x = (n,k).
+Proof. unfold declared_labels; cbn; split. - intros (k1 & z & [E|E] & H); [injection E as <- <-; exact H|contradiction]. - intros H; exists k,0; auto. Qed.
+Local Lemma emitted_one lab x : emitted_labels [lab] x <-> x IN line_get_labels lab.
+Proof. unfold emitted_labels; cbn; firstorder congruence. Qed.
+Local Lemma emitted_nil x : emitted_labels [] x <-> False.
+Proof. unfold emitted_labels; cbn; firstorder. Qed.
+Local Lemma emitted_cons lab ls x : emitted_labels (lab :: ls) x <-> x IN line_get_labels lab \/ emitted_labels ls x.
+Proof. unfold emitted_labels; cbn; firstorder congruence. Qed.
+Local Lemma declared_empty n x : declared_labels n [] x <-> False.
+Proof. unfold declared_labels; cbn; firstorder. Qed.
+Local Lemma declared_LabAsm n op w bytes len ls x :
+ declared_labels n (LabAsm op w bytes len :: ls) x <-> declared_labels n ls x.
+Proof. unfold declared_labels; cbn; split; intros (k & z & H & E); exists k,z; split; auto; destruct H as [H|H]; [discriminate|exact H]. Qed.
+Local Lemma declared_label n k z ls x :
+ declared_labels n (Label n k z :: ls) x <-> x = (n,k) \/ declared_labels n ls x.
+Proof. unfold declared_labels; cbn; split.
+ - intros (k1 & z1 & [E|E] & H); [injection E as <- <-; auto|right; eauto].
+ - intros [H|(k1 & z1 & E & H)]; [exists k,z|exists k1,z1]; auto.
+Qed.
+Local Lemma oEL_in {A} (ls : list A) k y : oEL k ls = Some y -> In y ls.
+Proof.
+ revert k; induction ls as [|z ls IH]; intros k H; cbn [oEL] in H; [discriminate|].
+ destruct (k =? 0); [injection H as <-; left; reflexivity|right; eauto].
+Qed.
+Local Lemma find_lab_in k ls : find_lab k ls = 0 \/ In (find_lab k ls) ls.
+Proof. unfold find_lab; destruct (oEL k ls) eqn:E; [right; eapply oEL_in; eauto|auto]. Qed.
+Local Ltac label_norm :=
+ cbn [FST fst snd]; rewrite ?append_Append, ?append_List;
+ rewrite ?emitted_app, ?declared_app, ?emitted_cons, ?declared_LabAsm, ?declared_label, ?declared_one, ?emitted_nil, ?declared_empty;
+ cbn [line_get_labels labs_of complex_get_code_labels compile_jump];
+ cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *;
+ cbn [andb orb] in *; rewrite ?Bool.andb_false_r in *.
+Local Lemma complex_flatten_aux : forall p : prog a,
+ forall t n m cs bs x,
+ emitted_labels (append (FST (flatten t p n m cs bs))) x ->
+ x = (n,0) \/ x = (n, if t && is_Seq p then 1 else 0) \/
+ In x (List.map (fun k => (n,k)) (cs ++ bs)) \/
+ declared_labels n (append (FST (flatten t p n m cs bs))) x \/
+ x IN complex_get_code_labels p.
+Proof.
+ intros p. induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind;
+ intros t n m cs bs x.
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + destruct h as [[p2 [k1 k2]]|].
+     * pose proof (Hr p1 _ eq_refl false n m cs bs x) as E1.
+       cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+       pose proof (Hh p2 _ eq_refl false n m1 cs bs x) as E2.
+       destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+       cbn [FST is_Seq] in E1,E2 |- *. destruct dest; label_norm; label_norm; tauto.
+     * pose proof (Hr p1 _ eq_refl false n m cs bs x) as E1.
+       cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+       cbn [FST is_Seq] in E1 |- *. destruct dest; label_norm; label_norm; tauto.
+   + destruct dest; cbn [flatten FST is_Seq]; label_norm; tauto.
+ - pose proof (IH1 false n m cs bs x) as E1.
+   cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+   pose proof (IH2 false n m1 cs bs x) as E2.
+   destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+   cbn [FST] in E1,E2 |- *. destruct t; label_norm; cbn [is_Seq] in *; tauto.
+ - pose proof (IH1 false n m cs bs x) as E1.
+   cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+   pose proof (IH2 false n m1 cs bs x) as E2.
+   destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+   cbn [FST] in E1,E2 |- *.
+   destruct (is_Skip p1 && is_Skip p2); [label_norm; tauto|].
+   destruct (is_Skip p1); [label_norm; label_norm; tauto|].
+   destruct (is_Skip p2); [label_norm; label_norm; tauto|].
+   destruct nr1; [label_norm; label_norm; tauto|].
+   destruct nr2; label_norm; label_norm; tauto.
+ - pose proof (IH false n (m+2) (m::cs) ((m+1)::bs) x) as E.
+   cbn [flatten]. destruct (flatten false p n (m+2) (m::cs) ((m+1)::bs)) as [xs [nr m1]] eqn:F.
+   cbn [FST] in E |- *. label_norm; label_norm.
+   cbn [APPEND List.app List.map] in E. rewrite map_app in E; cbn in E; rewrite in_app_iff in E.
+   rewrite map_app, in_app_iff. cbn in E. intuition congruence.
+ - destruct p; cbn in Hp; try contradiction; cbn [flatten FST is_Seq]; label_norm; try tauto.
+   all: try (pose proof (find_lab_in n0 bs) as E; intros H; destruct H as [[->|H]|H]; [|contradiction|contradiction];
+      destruct E as [E|E]; [left; congruence|right; right; left; apply in_map; apply in_app_iff; auto]).
+   all: try (pose proof (find_lab_in n0 cs) as E; intros H; destruct H as [[->|H]|H]; [|contradiction|contradiction];
+      destruct E as [E|E]; [left; congruence|right; right; left; apply in_map; apply in_app_iff; auto]).
+Qed.
+Local Lemma seq_cond t (p : prog a) :
+ (if t && is_Seq p then 1 else 0) =
+ (if decide (is_true t /\ exists p1 p2, p = Seq p1 p2) then 1 else 0).
+Proof.
+ destruct t; destruct p; cbn [andb is_Seq];
+ destruct (decide _) as [[Ht [q1 [q2 Hpeq]]]|H]; try discriminate; try reflexivity;
+ exfalso; apply H; split; [reflexivity|eauto].
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "complex_flatten_labels" *)
+Local Theorem complex_flatten_labels : forall t (p : prog a) n m cs bs,
+ let pp := set (append (FST (flatten t p n m cs bs))) in
+ BIGUNION (IMAGE line_get_labels pp) SUBSET
+ ((n,0) INSERT
+  (n,if decide (is_true t /\ exists p1 p2, p = Seq p1 p2) then 1 else 0) INSERT
+  set (MAP (fun l => (n,l)) (cs ++ bs))) UNION
+ IMAGE (fun n2 => (n,n2)) (BIGUNION (IMAGE line_get_code_labels pp)) UNION
+ complex_get_code_labels p.
+Proof.
+ intros t p n m cs bs; cbn zeta. unfold pred_set.SUBSET; intros x H.
+ apply IN_BIGUNION_IMAGE_set in H.
+ pose proof (complex_flatten_aux p t n m cs bs x H) as E.
+ rewrite seq_cond in E.
+ rewrite !IN_UNION, !IN_INSERT, IN_set.
+ destruct E as [E|[E|[E|[E|E]]]]; try tauto.
+ left; right. destruct E as (k & z & Hl & ->).
+ apply IN_IMAGE. exists k; split; [reflexivity|].
+ apply IN_BIGUNION_IMAGE_set. exists (Label n k z); split; [exact Hl|].
+ cbn [line_get_code_labels]; apply IN_SING; reflexivity.
+Qed.
 End CodeLabels.
 
 
