@@ -72,7 +72,7 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | backend/proofs lab_filter | done |
 | backend/proofs lab_to_target | todo |
 | encoders/riscv/proofs/riscv_targetProof | done (`riscv_encoder_correct`; lem11/lem12 are ML-generated, see header) |
-| backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | todo |
+| backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | done (10 backendProof declarations used by pan_to_target; wordConvsProof complete) |
 | pancake/proofs/pan_to_targetProof | todo |
 
 Axiom audit: the theorems checked so far depend only on the axioms declared
