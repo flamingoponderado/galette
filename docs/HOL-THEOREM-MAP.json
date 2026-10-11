@@ -57671,6 +57671,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
+  "hol_name": "installed_def",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/semantics/targetSem.v",
+  "rocq_name": "installed"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/semantics/targetSemScript.sml",
   "hol_name": "is_valid_mapped_read_def",
   "hol_line": null,
   "case": null,
@@ -77428,6 +77438,26 @@
   "note": "",
   "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
   "rocq_name": "pan_installed"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "pan_installed_imp_installed",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "pan_installed_imp_installed"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "pan_to_lab_good_code_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "pan_to_lab_good_code_lemma"
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",

@@ -19,10 +19,11 @@ From Galette.cakeml.compiler.encoders.asm Require Import asm asmProps asmSem.
 From Galette.cakeml.compiler.backend Require wordLang word_to_word word_to_stack
   word_depth stack_to_lab backend lab_to_target.
 From Galette.cakeml.compiler.backend.semantics Require Import targetSem.
-From Galette.cakeml.compiler.backend.semantics Require wordSem wordConvs stackProps.
+From Galette.cakeml.compiler.backend Require Import labLang.
+From Galette.cakeml.compiler.backend.semantics Require wordSem wordConvs stackProps labProps backendProps.
 From Galette.cakeml.compiler.backend.semantics.wordProps Require consts code clock consts_with.
 From Galette.cakeml.compiler.backend.proofs Require backendProof stack_to_labProof
-  word_to_stackProof word_to_wordProof wordConvsProof stack_removeProof stack_namesProof stack_allocProof.
+  word_to_stackProof word_to_wordProof lab_to_targetProof wordConvsProof stack_removeProof stack_namesProof stack_allocProof.
 From Galette.cakeml.pancake Require Import panLang.
 From Galette.cakeml.pancake Require pan_to_word pan_to_target crep_to_loop.
 From Galette.cakeml.pancake.proofs Require pan_to_wordProof.
@@ -34,6 +35,32 @@ Context {a : N}.
 (*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "pancake_good_code_def" *)
 Definition pancake_good_code (pan_code : list (decl a)) : bool :=
   EVERY pan_to_wordProof.good_panops pan_code.
+
+
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "pan_to_lab_good_code_lemma" *)
+Theorem pan_to_lab_good_code_lemma (c : backend.config) lim1 lim2 offs stack_prog code0
+    (asm_conf3 conf : asm_config a) bm wc fs word_prog word_conf word_prog0 col pan_prog :
+  stack_to_lab.compile (backend.stack_conf c) (backend.data_conf c) lim1 lim2 offs stack_prog = code0 /\
+  word_to_stack.compile asm_conf3 false word_prog = (bm, (wc, (fs, stack_prog))) /\
+  word_to_word.compile word_conf asm_conf3 word_prog0 = (col, word_prog) /\
+  pan_to_word.compile_prog (ISA asm_conf3) pan_prog = word_prog0 /\
+  stack_to_labProof.labels_ok code0 /\ labProps.all_enc_ok_pre conf code0 ->
+  basic.good_code conf (LN : spt (spt N)) code0.
+Proof.
+  intros [Hs [Hw [Hc [Hp [Hl He]]]]].
+  destruct (stack_to_labProof.labels_ok_imp code0 Hl) as [Hsl [Had Hel]].
+  assert (Hhandlers : stackProps.stack_good_handler_labels stack_prog).
+  { eapply syntax.word_to_stack_good_handler_labels; [|exact Hw].
+    pose proof (pan_to_wordProof.pan_to_word_good_handlers _ _ _ Hp) as H.
+    pose proof (wordConvsProof.word_good_handlers_word_to_word word_conf asm_conf3 word_prog0 H) as H1.
+    rewrite Hc in H1; exact H1. }
+  unfold basic.good_code; repeat split; try assumption.
+  - rewrite <- Hs; unfold stack_to_lab.compile; apply stack_to_labProof.EVERY_sec_ends_with_label_MAP_prog_to_section.
+  - unfold DISJOINT, domain; cbn.
+    apply functional_extensionality; intros x; apply propositional_extensionality; unfold pred_set.INTER, pred_set.EMPTY, pred_set.IN; tauto.
+  - intros x Hx; left.
+    eapply stack_to_labProof.stack_to_lab_stack_good_handler_labels; [repeat split; eassumption|exact Hx].
+Qed.
 
 (*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "word_to_stack_compile_FST" *)
 Theorem word_to_stack_compile_FST {B C : Type} (mc : machine_config a B C)
@@ -263,6 +290,16 @@ Definition pan_installed {B C : Type} (bytes : list word8) (cbspace : N)
         (Addr (lab_to_target.addr_reg rec) (n2w (lab_to_target.addr_off rec)),
          (lab_to_target.reg rec, (n2w (lab_to_target.exit_pc rec) + get_pc (target mc) ms)%w)))) shmem_extra) /\
     cbspace + LENGTH bytes + lab_to_target.ffi_offset * (i + 3) < dimword a).
+
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "pan_installed_imp_installed" *)
+Theorem pan_installed_imp_installed {B C : Type} bytes cbspace bitmaps data_sp ffi_names r1 r2
+    (mc : machine_config a B C) shmem_extra ms p_mem p_dom sdm :
+  pan_installed bytes cbspace bitmaps data_sp ffi_names (r1,r2) mc shmem_extra ms p_mem p_dom sdm ->
+  installed bytes cbspace bitmaps data_sp ffi_names (r1,r2) mc shmem_extra ms.
+Proof.
+  unfold pan_installed, installed; cbn beta iota zeta.
+  intros [t [m [ptr [dm [sdm0 H]]]]]; exists t, m, ptr, dm, sdm0; tauto.
+Qed.
 
 (*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "compile_prog_max_def" *)
 Definition compile_prog_max {B C : Type} (c : backend.config)

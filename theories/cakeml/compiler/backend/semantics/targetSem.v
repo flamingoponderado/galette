@@ -15,8 +15,7 @@
       decided classically ([classical_dec]).
     - [evaluate] recurses on the clock [k] ([num_rec]); HOL's equation is
       [evaluate_def].
-    - Not ported: [installed_def], which needs [misc]'s [word_list] and
-      [word_list_exists] (not yet in [misc.v]). *)
+    *)
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
@@ -29,6 +28,7 @@ From Galette.HOL.src.finite_maps Require Import alist.
 From Galette.HOL.src.coalgebras Require Import llist.
 From Galette.HOL.examples.pl_semantics.lprefix_lub Require Import lprefix_lub.
 From Galette.cakeml.basis.pure Require Import mlstring.
+From Galette.HOL.examples.machine_code.hoare_triple Require Import set_sep.
 From Galette.cakeml.misc Require Import misc.
 From Galette.cakeml.semantics.ffi Require Import ffi.
 From Galette.cakeml.compiler.encoders.asm Require Import asm asmSem asmProps.
@@ -662,5 +662,37 @@ Definition good_init_state
       (n2w (n + LENGTH bytes) + t.(pc))%w IN t.(mem_domain) /\
       (n2w (n + LENGTH bytes) + t.(pc))%w NOTIN dm) /\
     cbspace + LENGTH bytes < dimword a.
+
+(*! HOL "cakeml/compiler/backend/semantics/targetSemScript.sml" "installed_def" *)
+Definition installed (bytes : list word8) (cbspace : N)
+    (bitmaps : list (word a)) (data_sp : N) ffi_names (rs : N * N)
+    (mc : machine_config a B C) (shmem_extra : list lab_to_target.shmem_info_num)
+    (ms : B) : Prop :=
+  let '(r1,r2) := rs in
+  exists (t : asm_state a) m bitmap_ptr bitmaps_dm sdm,
+  let heap_stack_dm := fun w => word_ls (regs t r1) w /\ word_lo w (regs t r2) in
+  good_init_state mc ms bytes cbspace t m (heap_stack_dm UNION bitmaps_dm) sdm /\
+  byte_aligned (regs t r1) /\ byte_aligned (regs t r2) /\ byte_aligned bitmap_ptr /\
+  word_ls (regs t r1) (regs t r2) /\
+  word_ls (n2w 1024 * bytes_in_word)%w (regs t r2 - regs t r1)%w /\
+  DISJOINT heap_stack_dm bitmaps_dm /\
+  m (regs t r1) = wordLang.Word bitmap_ptr /\
+  m (regs t r1 + bytes_in_word)%w = wordLang.Word (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))%w /\
+  m (regs t r1 + n2w 2 * bytes_in_word)%w = wordLang.Word
+    (bitmap_ptr + bytes_in_word * n2w data_sp + bytes_in_word * n2w (LENGTH bitmaps))%w /\
+  m (regs t r1 + n2w 3 * bytes_in_word)%w = wordLang.Word (get_pc (target mc) ms + n2w (LENGTH bytes))%w /\
+  m (regs t r1 + n2w 4 * bytes_in_word)%w = wordLang.Word (get_pc (target mc) ms + n2w cbspace + n2w (LENGTH bytes))%w /\
+  STAR (word_list bitmap_ptr (MAP wordLang.Word bitmaps))
+    (word_list_exists (bitmap_ptr + bytes_in_word * n2w (LENGTH bitmaps))%w data_sp)
+    (fun2set (m, (fun w => byte_aligned w) INTER bitmaps_dm)) /\
+  ffi_names = SOME (targetSem.ffi_names mc) /\
+  (forall i, mmio_pcs_min_index (targetSem.ffi_names mc) = SOME i ->
+    MAP (fun rec => w2n (get_pc (target mc) ms) + lab_to_target.entry_pc rec) shmem_extra =
+      DROP i (MAP w2n (ffi_entry_pcs mc)) /\
+    mmio_info mc = ZIP (GENLIST (fun index => index + i) (LENGTH shmem_extra),
+      MAP (fun rec => (lab_to_target.nbytes rec,
+        (Addr (lab_to_target.addr_reg rec) (n2w (lab_to_target.addr_off rec)),
+         (lab_to_target.reg rec, (n2w (lab_to_target.exit_pc rec) + get_pc (target mc) ms)%w)))) shmem_extra) /\
+    cbspace + LENGTH bytes + lab_to_target.ffi_offset * (i + 3) < dimword a).
 
 End Ok.
