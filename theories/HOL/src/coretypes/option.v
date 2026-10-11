@@ -43,6 +43,10 @@ Definition OPTION_CHOICE (m1 m2 : option A) : option A :=
 Definition OPTREL (R : A -> B -> Prop) (x : option A) (y : option B) : Prop :=
   (x = NONE /\ y = NONE) \/ (exists x0 y0, x = SOME x0 /\ y = SOME y0 /\ R x0 y0).
 
+(*! HOL "HOL/src/coretypes/optionScript.sml" "OPTION_ALL_def" *)
+Definition OPTION_ALL (P : A -> bool) (o_ : option A) : bool :=
+  match o_ with None => true | Some x => P x end.
+
 End Defs.
 
 (*! HOL "HOL/src/coretypes/optionScript.sml" "OPTION_MAP2_DEF" *)
