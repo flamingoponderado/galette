@@ -29021,6 +29021,16 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "get_code_labels_comp",
+  "hol_line": 4110,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "get_code_labels_comp_remove"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
   "hol_name": "get_labels_MAP_prog_to_section_SUBSET_code_labels",
   "hol_line": null,
   "case": null,

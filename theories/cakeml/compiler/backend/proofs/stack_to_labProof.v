@@ -5188,6 +5188,85 @@ Proof.
  - constructor.
  - constructor; [apply get_code_labels_comp|exact IH].
 Qed.
+Local Ltac remove_label_norm :=
+ cbn [stackProps.get_code_labels stack_remove.single_stack_alloc stack_remove.single_stack_free
+ stack_remove.halt_inst stackLang.list_Seq] in *;
+ rewrite ?stack_removeProof.EMPTY_UNION_EMPTY in *.
+Local Lemma remove_alloc_labels : forall fuel jump k n,
+ stackProps.get_code_labels (@stack_remove.stack_alloc_f a fuel jump k n) SUBSET
+ (stack_remove.stack_err_lab,0) INSERT {}.
+Proof.
+ induction fuel as [|fuel IH]; intros jump k n; cbn [stack_remove.stack_alloc_f];
+ unfold pred_set.SUBSET in *; intros q Hq.
+ - cbn [stackProps.get_code_labels] in Hq; contradiction.
+ - destruct (n =? 0); [cbn [stackProps.get_code_labels] in Hq; contradiction|]. destruct (n <=? stack_remove.max_stack_alloc);
+   destruct jump; remove_label_norm;
+   cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *;
+   try tauto; first [specialize (IH true k (n-stack_remove.max_stack_alloc) q); tauto|specialize (IH false k (n-stack_remove.max_stack_alloc) q); tauto].
+Qed.
+Local Lemma remove_free_labels : forall fuel k n,
+ stackProps.get_code_labels (@stack_remove.stack_free_f a fuel k n) = {}.
+Proof.
+ induction fuel as [|fuel IH]; intros k n; cbn [stack_remove.stack_free_f]; [reflexivity|].
+ destruct (n =? 0); [reflexivity|]. destruct (n <=? stack_remove.max_stack_alloc); remove_label_norm;
+ rewrite ?IH, ?stack_removeProof.EMPTY_UNION_EMPTY; reflexivity.
+Qed.
+Local Lemma remove_upshift_labels : forall fuel r n,
+ stackProps.get_code_labels (@stack_remove.upshift_f a fuel r n) = {}.
+Proof.
+ induction fuel as [|fuel IH]; intros r n; cbn [stack_remove.upshift_f]; [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); remove_label_norm;
+ rewrite ?IH, ?stack_removeProof.EMPTY_UNION_EMPTY; reflexivity.
+Qed.
+Local Lemma remove_downshift_labels : forall fuel r n,
+ stackProps.get_code_labels (@stack_remove.downshift_f a fuel r n) = {}.
+Proof.
+ induction fuel as [|fuel IH]; intros r n; cbn [stack_remove.downshift_f]; [reflexivity|].
+ destruct (n <=? stack_remove.max_stack_alloc); remove_label_norm;
+ rewrite ?IH, ?stack_removeProof.EMPTY_UNION_EMPTY; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "get_code_labels_comp" 4110 *)
+(** HOL rebinds [get_code_labels_comp]; the suffix distinguishes its second use. *)
+Local Theorem get_code_labels_comp_remove : forall jump off k (p : prog a),
+ stackProps.get_code_labels (stack_remove.comp jump off k p) SUBSET
+ (stack_remove.stack_err_lab,0) INSERT stackProps.get_code_labels p.
+Proof.
+ intros jump off k p. induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind;
+ unfold pred_set.SUBSET in *; intros q.
+ - destruct ret as [[p1 [lr [l1 l2]]]|]; destruct h as [[p2 [k1 k2]]|]; destruct dest;
+   cbn [stack_remove.comp stackProps.get_code_labels];
+   cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY];
+   try specialize (Hr p1 _ eq_refl q); try specialize (Hh p2 _ eq_refl q);
+   cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in Hr,Hh; tauto.
+ - cbn [stack_remove.comp stackProps.get_code_labels];
+   specialize (IH1 q); specialize (IH2 q);
+   cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT] in *; tauto.
+ - cbn [stack_remove.comp stackProps.get_code_labels];
+   specialize (IH1 q); specialize (IH2 q);
+   cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT] in *; tauto.
+ - cbn [stack_remove.comp stackProps.get_code_labels];
+   specialize (IH q); cbv beta delta [pred_set.IN pred_set.INSERT] in *; tauto.
+ - destruct p; cbn in Hp; try contradiction; cbn [stack_remove.comp];
+   remove_label_norm; cbv beta delta [pred_set.IN pred_set.UNION pred_set.INSERT pred_set.EMPTY] in *; try tauto.
+   + destruct (decide (s = CurrHeap)); remove_label_norm; cbv beta delta [pred_set.IN pred_set.EMPTY]; tauto.
+   + destruct (decide (s = CurrHeap)); remove_label_norm; cbv beta delta [pred_set.IN pred_set.EMPTY]; tauto.
+   + unfold stack_remove.copy_loop, stack_remove.copy_each; remove_label_norm;
+     cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto.
+   + unfold stack_remove.stack_alloc. pose proof (remove_alloc_labels (Datatypes.S (N.to_nat n)) jump k n q) as E.
+     cbv beta delta [pred_set.IN pred_set.INSERT pred_set.EMPTY] in E; exact E.
+   + unfold stack_remove.stack_free; rewrite remove_free_labels.
+     cbv beta delta [pred_set.IN pred_set.EMPTY]; tauto.
+   + destruct (offset_ok 0 off (stack_remove.word_offset n0)); remove_label_norm;
+     [cbv beta delta [pred_set.IN pred_set.EMPTY]; tauto|].
+     unfold stack_remove.stack_store, stack_remove.upshift, stack_remove.downshift.
+     remove_label_norm; rewrite remove_upshift_labels, remove_downshift_labels.
+     cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto.
+   + destruct (offset_ok 0 off (stack_remove.word_offset n0)); remove_label_norm;
+     [cbv beta delta [pred_set.IN pred_set.EMPTY]; tauto|].
+     unfold stack_remove.stack_load, stack_remove.upshift.
+     remove_label_norm; rewrite remove_upshift_labels.
+     cbv beta delta [pred_set.IN pred_set.UNION pred_set.EMPTY]; tauto.
+Qed.
 End CodeLabels.
 
 
