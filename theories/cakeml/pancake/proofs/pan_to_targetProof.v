@@ -1342,3 +1342,84 @@ Proof.
        rewrite WORD_MULT_COMM; apply pan_globalsProof.byte_aligned_bytes_in_word_mul; exact HG.
 Qed.
 End Interval.
+
+From Galette.cakeml.compiler.backend.proofs Require data_to_word_gcProof.
+
+Section InitPre.
+Context {a : N} {c ffi_t : Type}.
+Local Open Scope word_scope.
+Local Lemma init_code_pre_from_initialization jump off gen mh k start co cd (s : stackSem.state a c ffi_t) bm dsp :
+ stack_removeProof.discharge_these jump off gen mh k start co cd s -> stack_removeProof.propagate_these s bm dsp ->
+ stack_removeProof.init_code_pre k bm dsp s.
+Proof.
+ intros (Hev & Horc & Hco & Hcode & Hk8 & H1 & Hfsr & Hus & Hust & Hua & Hmh)
+   (Hg & ptr2 & ptr3 & ptr4 & bmp & R2 & R3 & R4 & M0 & M1 & M2 & M3 & M4 & Hcbb & Hle & Ha2 & Ha4 & Hab & HL & Hmem).
+ exists ptr2, ptr3, ptr4, bmp.
+ do 21 (split; [assumption|]).
+replace (ptr4-ptr2) with (- n2w 1 * ptr2 + ptr4) by stack_removeProof.wring; exact Hmem.
+Qed.
+End InitPre.
+
+Section Geo.
+Context {a : N}.
+Local Open Scope word_scope.
+Local Lemma init_arith_precise (w2 w3 w4 : word a) mh :
+ good_dimindex a -> byte_aligned w2 -> byte_aligned w4 -> w2 <=+ w4 ->
+ n2w 1024 * bytes_in_word <=+ w4-w2 -> (stack_remove.max_stack_alloc <= mh)%N ->
+ w2 + n2w stack_remove.max_stack_alloc * bytes_in_word <=+ w3 ->
+ w3 <=+ w4 - n2w stack_remove.max_stack_alloc * bytes_in_word ->
+ (w2n (w3-w2) <= mh*w2n (bytes_in_word : word a))%N ->
+ (w2n (bytes_in_word : word a)*mh < dimword a)%N ->
+ aligned (backend_common.word_shift a+1)%N (w3-w2) ->
+ exists hl rest,
+ w3 = n2w (w2n w2 + 2*hl*(dimindex a DIV 8)) /\
+ (w2n w2+(2*hl+48+rest)*(dimindex a DIV 8)=w2n w4)%N /\
+ (207<=rest)%N /\ (127<=hl)%N /\ (2*hl<=mh)%N /\
+ stack_removeProof.get_stack_heap_limit mh (w2,(w3,w4))=(rest,hl).
+Proof.
+ intros HG HA HB HL HR HM H2 H4 HBound HFit HAlign.
+ pose proof (stack_removeProof.init_arith w2 w3 w4 mh HG HA HB HL HR HM) as HH.
+ cbv zeta in HH.
+ destruct HH as (hl & rest & E2 & E3 & Ehalf & Enum & Hrest & Hhl & Hmh & Elim).
+ assert (EN2 : is_true (w3 <+ w2+n2w stack_remove.max_stack_alloc*bytes_in_word) <-> False).
+ { rewrite WORD_LO; apply WORD_LS in H2; lia. }
+ assert (EN4 : is_true (w4-n2w stack_remove.max_stack_alloc*bytes_in_word <+ w3) <-> False).
+ { rewrite WORD_LO; apply WORD_LS in H4; lia. }
+ assert (EB2 : word_lo w3 (w2+n2w stack_remove.max_stack_alloc*bytes_in_word) = false).
+ { destruct (word_lo w3 (w2+n2w stack_remove.max_stack_alloc*bytes_in_word)) eqn:E; [exfalso; apply (proj1 EN2); reflexivity|reflexivity]. }
+ assert (EB4 : word_lo (w4-n2w stack_remove.max_stack_alloc*bytes_in_word) w3 = false).
+ { destruct (word_lo (w4-n2w stack_remove.max_stack_alloc*bytes_in_word) w3) eqn:E; [exfalso; apply (proj1 EN4); reflexivity|reflexivity]. }
+ rewrite EB2,EB4,E2 in E3; cbn beta iota zeta in E3.
+ assert (EFit : (mh*w2n (bytes_in_word : word a) <? dimword a)%N = true).
+ { apply N.ltb_lt; nia. }
+ rewrite EFit in E3.
+ assert (EMax : w2n (n2w mh * bytes_in_word : word a) = (mh*w2n (bytes_in_word : word a))%N).
+ { rewrite (stack_removeProof.bw_d HG),word_mul_n2w,stack_removeProof.w2n_n2w_lt by (rewrite (proj1 (stack_removeProof.good_dimindex_d HG)) in HFit; nia).
+   rewrite stack_removeProof.w2n_n2w_lt by (pose proof (proj2 (stack_removeProof.good_dimindex_d HG)); destruct HG as [E|E]; rewrite dimword_pow,E; reflexivity); reflexivity. }
+ assert (EClamp : word_lo (n2w mh * bytes_in_word) (w3-w2) = false).
+ { apply Bool.not_true_iff_false; intros EH; apply WORD_LO in EH; rewrite EMax in EH; lia. }
+ rewrite EClamp,data_to_word_gcProof.lsr_lsl in E3 by exact HAlign.
+ replace (w3-w2+w2) with w3 in E3 by stack_removeProof.wring.
+ exists hl,rest; repeat split; assumption.
+Qed.
+End Geo.
+
+Section HeapSize.
+Context {a : N}.
+Local Open Scope word_scope.
+Local Lemma initialized_heap_size (w2 w3 w4 : word a) hl rest :
+ good_dimindex a -> w3=n2w (w2n w2+2*hl*(dimindex a DIV 8)) ->
+ (w2n w2+(2*hl+48+rest)*(dimindex a DIV 8)=w2n w4)%N ->
+ (w2n (w3+bytes_in_word*n2w 48-w2) DIV (dimindex a DIV 8)-48=2*hl)%N.
+Proof.
+ intros HG E3 E4.
+ set (d := (dimindex a DIV 8)%N) in *.
+ assert (Hd : d<>0%N) by (unfold d; destruct HG as [E|E]; rewrite E; discriminate).
+ assert (EW : w3+bytes_in_word*n2w 48-w2=n2w ((2*hl+48)*d)).
+ { rewrite E3,(stack_removeProof.bw_d HG),word_mul_n2w; fold d.
+   rewrite <- (n2w_w2n w2) at 2.
+   rewrite word_add_n2w,stack_removeProof.n2w_sub_N by lia; f_equal; nia. }
+ rewrite EW,stack_removeProof.w2n_n2w_lt by (pose proof (w2n_lt w4); nia).
+ rewrite N.div_mul by exact Hd; lia.
+Qed.
+End HeapSize.
