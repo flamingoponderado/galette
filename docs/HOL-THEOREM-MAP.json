@@ -77391,6 +77391,26 @@
  },
  {
   "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "memory_swap_lemma",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "memory_swap_lemma"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
+  "hol_name": "memory_swap_lemma1",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/pancake/proofs/pan_to_targetProof.v",
+  "rocq_name": "memory_swap_lemma1"
+ },
+ {
+  "hol_path": "cakeml/pancake/proofs/pan_to_targetProofScript.sml",
   "hol_name": "no_alloc_word_evaluate",
   "hol_line": null,
   "case": null,
