@@ -6,6 +6,15 @@ top-level correctness theorem `pan_to_target_compile_semantics`
 HOL scripts on that theorem's dependency path. Per-declaration status is in
 `docs/HOL-THEOREM-MAP.json`.
 
+**Status (2026-10-11): `pan_to_target_compile_semantics` is proved** in
+`theories/cakeml/pancake/proofs/pan_to_targetProof.v`. Its statement matches
+HOL clause for clause, and `Print Assumptions` shows only the Base axioms
+(propositional/functional extensionality, proof irrelevance, classic,
+constructive indefinite description). Rows marked partial below are library
+theories that are only partly ported; everything the theorem depends on is
+ported and proved. All 8255 tags are still `pending_review` or reviewed in
+`docs/HOL-THEOREM-MAP.json`; a build is not a line-by-line review.
+
 Legend: **done** (all declarations needed by the chain ported), **partial**,
 **wip** (in progress), **todo**.
 
@@ -56,7 +65,7 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | pancake/proofs/pan_to_wordProof | done (`state_rel_imp_semantics`, syntactic lemmas for pan_to_target) |
 | backend/reg_alloc/parmoveScript theorems | done |
 | backend/reg_alloc/proofs/reg_allocProof | done (`reg_alloc_correct`) |
-| backend/reg_alloc/proofs/linear_scanProof | partial (intervals, allocator) |
+| backend/reg_alloc/proofs/linear_scanProof | done (`linear_scan_reg_alloc_correct`) |
 | backend/proofs word_simp, word_inst, word_remove, word_unreach | done (agent-reported; see file headers) |
 | backend/proofs word_copy, wordConvsProof | done |
 | backend/proofs word_cse | done except balanced_map invariant lemmas (wf_data / sem_inv over map entries; see header) |
@@ -73,7 +82,8 @@ All definitions on the `compile_pancake_64` path: **done**, byte-identical to
 | backend/proofs lab_to_target | done (`compile_correct`, `semantics_compile`, `semantics_make_init`) |
 | encoders/riscv/proofs/riscv_targetProof | done (`riscv_encoder_correct`; lem11/lem12 are ML-generated, see header) |
 | backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | done (10 backendProof declarations used by pan_to_target; wordConvsProof complete) |
-| pancake/proofs/pan_to_targetProof | todo |
+| pancake/proofs/pan_to_targetProof | **done** (`pan_to_target_compile_semantics`, exact HOL statement; Base axioms only) |
+| backend/proofs/data_to_word_gcProof | partial (init_store_ok, gc_fun_ok_word_gc_fun, gc_fun_const_ok_word_gc_fun: what pan_to_target needs) |
 
 Axiom audit: the theorems checked so far depend only on the axioms declared
 in `theories/Base.v` (excluded middle, choice, functional extensionality,
