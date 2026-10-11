@@ -19,10 +19,11 @@ From Galette.cakeml.compiler.encoders.asm Require Import asm asmProps asmSem.
 From Galette.cakeml.compiler.backend Require wordLang word_to_word word_to_stack
   word_depth stack_to_lab backend lab_to_target.
 From Galette.cakeml.compiler.backend.semantics Require Import targetSem.
-From Galette.cakeml.compiler.backend.semantics Require wordSem wordConvs stackProps.
+From Galette.cakeml.compiler.backend Require Import labLang.
+From Galette.cakeml.compiler.backend.semantics Require wordSem wordConvs stackProps labProps backendProps.
 From Galette.cakeml.compiler.backend.semantics.wordProps Require consts code clock consts_with.
 From Galette.cakeml.compiler.backend.proofs Require backendProof stack_to_labProof
-  word_to_stackProof word_to_wordProof wordConvsProof stack_removeProof stack_namesProof stack_allocProof.
+  word_to_stackProof word_to_wordProof lab_to_targetProof wordConvsProof stack_removeProof stack_namesProof stack_allocProof.
 From Galette.cakeml.pancake Require Import panLang.
 From Galette.cakeml.pancake Require pan_to_word pan_to_target crep_to_loop.
 From Galette.cakeml.pancake.proofs Require pan_to_wordProof.
@@ -34,6 +35,32 @@ Context {a : N}.
 (*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "pancake_good_code_def" *)
 Definition pancake_good_code (pan_code : list (decl a)) : bool :=
   EVERY pan_to_wordProof.good_panops pan_code.
+
+
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "pan_to_lab_good_code_lemma" *)
+Theorem pan_to_lab_good_code_lemma (c : backend.config) lim1 lim2 offs stack_prog code0
+    (asm_conf3 conf : asm_config a) bm wc fs word_prog word_conf word_prog0 col pan_prog :
+  stack_to_lab.compile (backend.stack_conf c) (backend.data_conf c) lim1 lim2 offs stack_prog = code0 /\
+  word_to_stack.compile asm_conf3 false word_prog = (bm, (wc, (fs, stack_prog))) /\
+  word_to_word.compile word_conf asm_conf3 word_prog0 = (col, word_prog) /\
+  pan_to_word.compile_prog (ISA asm_conf3) pan_prog = word_prog0 /\
+  stack_to_labProof.labels_ok code0 /\ labProps.all_enc_ok_pre conf code0 ->
+  basic.good_code conf (LN : spt (spt N)) code0.
+Proof.
+  intros [Hs [Hw [Hc [Hp [Hl He]]]]].
+  destruct (stack_to_labProof.labels_ok_imp code0 Hl) as [Hsl [Had Hel]].
+  assert (Hhandlers : stackProps.stack_good_handler_labels stack_prog).
+  { eapply syntax.word_to_stack_good_handler_labels; [|exact Hw].
+    pose proof (pan_to_wordProof.pan_to_word_good_handlers _ _ _ Hp) as H.
+    pose proof (wordConvsProof.word_good_handlers_word_to_word word_conf asm_conf3 word_prog0 H) as H1.
+    rewrite Hc in H1; exact H1. }
+  unfold basic.good_code; repeat split; try assumption.
+  - rewrite <- Hs; unfold stack_to_lab.compile; apply stack_to_labProof.EVERY_sec_ends_with_label_MAP_prog_to_section.
+  - unfold DISJOINT, domain; cbn.
+    apply functional_extensionality; intros x; apply propositional_extensionality; unfold pred_set.INTER, pred_set.EMPTY, pred_set.IN; tauto.
+  - intros x Hx; left.
+    eapply stack_to_labProof.stack_to_lab_stack_good_handler_labels; [repeat split; eassumption|exact Hx].
+Qed.
 
 (*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "word_to_stack_compile_FST" *)
 Theorem word_to_stack_compile_FST {B C : Type} (mc : machine_config a B C)
@@ -263,6 +290,16 @@ Definition pan_installed {B C : Type} (bytes : list word8) (cbspace : N)
         (Addr (lab_to_target.addr_reg rec) (n2w (lab_to_target.addr_off rec)),
          (lab_to_target.reg rec, (n2w (lab_to_target.exit_pc rec) + get_pc (target mc) ms)%w)))) shmem_extra) /\
     cbspace + LENGTH bytes + lab_to_target.ffi_offset * (i + 3) < dimword a).
+
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "pan_installed_imp_installed" *)
+Theorem pan_installed_imp_installed {B C : Type} bytes cbspace bitmaps data_sp ffi_names r1 r2
+    (mc : machine_config a B C) shmem_extra ms p_mem p_dom sdm :
+  pan_installed bytes cbspace bitmaps data_sp ffi_names (r1,r2) mc shmem_extra ms p_mem p_dom sdm ->
+  installed bytes cbspace bitmaps data_sp ffi_names (r1,r2) mc shmem_extra ms.
+Proof.
+  unfold pan_installed, installed; cbn beta iota zeta.
+  intros [t [m [ptr [dm [sdm0 H]]]]]; exists t, m, ptr, dm, sdm0; tauto.
+Qed.
 
 (*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "compile_prog_max_def" *)
 Definition compile_prog_max {B C : Type} (c : backend.config)
@@ -982,3 +1019,177 @@ all: try (match goal with
  end).
 Qed.
 End InstMemory.
+
+Section MemorySwap.
+Import wordSem wordConvs consts consts_with.
+Context {a : N} {c ffi_t : Type}.
+Local Abbreviation state := (wordSem.state a c ffi_t).
+
+Local Lemma mc_clock k (st : state) m : set_clock k (set_memory m st) = set_memory m (set_clock k st). Proof. destruct st; reflexivity. Qed.
+Local Lemma mc_termdep k (st : state) m : set_termdep k (set_memory m st) = set_memory m (set_termdep k st). Proof. destruct st; reflexivity. Qed.
+Local Lemma mc_call_env xs ss (st : state) m : call_env xs ss (set_memory m st) = set_memory m (call_env xs ss st). Proof. destruct st; reflexivity. Qed.
+Local Lemma mc_dec_clock (st : state) m : dec_clock (set_memory m st) = set_memory m (dec_clock st). Proof. destruct st; reflexivity. Qed.
+Local Lemma mc_set_var n v (st : state) m : set_var n v (set_memory m st) = set_memory m (set_var n v st). Proof. destruct st; reflexivity. Qed.
+Local Lemma mc_set_vars n v (st : state) m : set_vars n v (set_memory m st) = set_memory m (set_vars n v st). Proof. destruct st; reflexivity. Qed.
+Local Lemma mc_locals ls (st : state) m : set_locals ls (set_memory m st) = set_memory m (set_locals ls st). Proof. destruct st; reflexivity. Qed.
+Local Lemma mc_jump (st : state) m : jump_exc (set_memory m st) = OPTION_MAP (fun x => (set_memory m (FST x),SND x)) (jump_exc st).
+Proof. unfold jump_exc; cbn [handler stack set_memory]; destruct (handler st <? LENGTH (stack st)); [|reflexivity]; destruct (lastn.LASTN _ _) as [|[sz e0 e [[n [l1 l2]]|]] xs]; destruct st; reflexivity. Qed.
+Local Lemma mc_jump_fields (st st1 : state) ret : jump_exc st = SOME (st1,ret) -> memory st1 = memory st /\ mdomain st1 = mdomain st.
+Proof. unfold jump_exc; destruct (handler st <? LENGTH (stack st)); [|discriminate]; destruct (lastn.LASTN _ _) as [|[sz e0 e [[n [l1 l2]]|]] xs]; intros H; inversion H; subst; split; reflexivity. Qed.
+Local Lemma mc_pop (st : state) m : pop_env (set_memory m st) = OPTION_MAP (fun x => set_memory m x) (pop_env st).
+Proof. unfold pop_env; cbn [stack set_memory]; destruct (stack st) as [|[sz e0 e ret] xs]; [reflexivity|]; destruct ret as [[n r]|]; destruct st; reflexivity. Qed.
+Local Lemma mc_push_code xs ret (st : state) : code (push_env xs ret st) = code st. Proof. pose proof (push_env_const xs ret st); consts.destr_conj; assumption. Qed.
+Local Ltac mm_fields := cbn [set_locals set_locals_size set_fp_regs set_store_field set_stack set_stack_limit set_stack_max set_stack_size set_memory set_mdomain set_sh_mdomain set_permute set_compile set_compile_oracle set_code_buffer set_data_buffer set_gc_fun set_handler set_clock set_termdep set_code set_be set_ffi set_var set_vars set_store set_fp_var dec_clock set_var set_vars call_env memory mdomain code]; repeat rewrite ?(proj1 (push_env_mem_const _ _ _)), ?(proj2 (push_env_mem_const _ _ _)), ?mc_push_code.
+Local Theorem memory_swap_strengthened : forall x : wordLang.prog a * state, forall r t, evaluate x = (r,t) ->
+ forall m, fun2set (memory (snd x),mdomain (snd x)) = fun2set (m,mdomain (snd x)) ->
+ code.no_install_code (code (snd x)) -> code.no_alloc_code (code (snd x)) ->
+ no_install (fst x) -> no_alloc (fst x) ->
+ exists m', evaluate (fst x,set_memory m (snd x)) = (r,set_memory m' t) /\
+ fun2set (memory t,mdomain t) = fun2set (m',mdomain t).
+Proof.
+ intros x; induction x as [[p s] IH] using (well_founded_induction eval_lt_wf).
+ intros r t H m HM HNI HNA Hpi Hpa; cbn [fst snd] in *.
+ rewrite evaluate_eqn in H; destruct p; cbn [evaluate_body] in H; clock.io_step IH H;
+ repeat match goal with E : (_,_) = (_,_) |- _ => injection E as <- <- end;
+ try (exfalso; unfold no_install in Hpi; cbn [not_created_subprogs] in Hpi; apply Hpi; reflexivity);
+ try (exfalso; unfold no_alloc in Hpa; cbn [not_created_subprogs] in Hpa; apply Hpa; reflexivity);
+ rewrite evaluate_eqn; cbn [evaluate_body];
+ rewrite ?get_var_const_memory, ?get_vars_const_memory, ?get_var_imm_const_memory;
+ rewrite ?word_exp_const_memory by exact HM;
+ cbn [locals set_memory memory mdomain be state_stack_size get_store store clock termdep code fp_regs ffi code_buffer data_buffer];
+ repeat match goal with E : ?z = _ |- context [?z] => rewrite E; cbn beta iota zeta end;
+ try solve [exists m; split; [unfold set_var, set_vars, set_store, flush_state, dec_clock; destruct s; reflexivity|cbn [set_var set_vars set_store flush_state dec_clock set_clock set_memory set_code_buffer set_data_buffer set_locals set_locals_size set_store_field set_stack memory mdomain]; first [exact HM|reflexivity]]].
+all: try (unfold get_store; cbn [store set_memory]; repeat match goal with E : get_store _ _ = _ |- _ => unfold get_store in E end; repeat match goal with E : ?z = _ |- context [?z] => rewrite E; cbn beta iota zeta end).
+all: try solve [exists m; split; [unfold set_var, set_vars, set_store, flush_state, dec_clock; destruct s; reflexivity|cbn [set_var set_vars set_store flush_state dec_clock set_clock set_memory set_code_buffer set_data_buffer set_locals set_locals_size set_store_field set_stack memory mdomain]; first [exact HM|reflexivity]]].
+all: try solve [match goal with E : inst ?i ?st = SOME ?t0 |- _ =>
+ pose proof (@inst_const_memory a c ffi_t st i st m HM) as [HN HS];
+ destruct (HS ltac:(congruence)) as [m1 [HT HF]]; rewrite E in HT, HF; cbn [THE] in HT, HF;
+ destruct (inst i (set_memory m st)) as [t1|] eqn:EI;
+ [cbn [THE] in HT; subst t1; exists m1; split; [reflexivity|exact HF]|exfalso; assert (inst i st = NONE) by (apply (proj2 HN); reflexivity); congruence] end].
+all: try solve [match goal with E : inst ?i ?st = NONE |- _ =>
+ pose proof (@inst_const_memory a c ffi_t st i st m HM) as [HN HS];
+ rewrite (proj1 HN E); exists m; split; reflexivity end].
+all: try solve [match goal with E : share_inst ?op ?v ?ad ?st = (?r,?t) |- _ =>
+ pose proof (share_inst_const_memory st op v ad m r t (conj HM E)) as [Hmem [Hdm HE]]; exists m; split; [exact HE|rewrite Hmem, Hdm; exact HM] end].
+all: try solve [match goal with E : mem_store ?ad ?w ?st = SOME _ |- _ =>
+ unfold mem_store in E |- *; cbn [mdomain set_memory];
+ destruct (classical_dec (ad IN mdomain st)); cbn beta iota zeta in E |- *; try discriminate;
+ injection E as <-; exists ((ad =+ w) m); split; [destruct st; reflexivity|cbn [set_memory memory mdomain]; apply fun2set_update_eq; exact HM] end].
+all: try solve [match goal with E : mem_store ?ad ?w ?st = NONE |- _ =>
+ pose proof (proj1 (mem_store_const_memory ad w st m HM)) as HN; rewrite (proj1 HN E); exists m; split; reflexivity end].
+all: repeat multimatch goal with E : pop_env ?st = SOME ?st1 |- _ => lazymatch goal with _ : memory st1 = memory st |- _ => fail | _ => let HF := fresh "HFpop" in pose proof (pop_env_const st st1 E) as HF; consts.destr_conj end end.
+all: repeat match goal with E : cut_state ?xs ?st = SOME ?st1 |- _ => is_var st1; let ls := fresh "ls" in let Hstate := fresh "Hstate" in destruct (cut_state_const xs st st1 E) as [ls Hstate]; subst st1 end.
+all: rewrite ?cut_state_with_mem_const; repeat match goal with H : ?z = _ |- context [?z] => rewrite H; cbn beta iota zeta end; cbn [OPTION_MAP]; rewrite ?fix_clock_evaluate.
+all: cbn [FST SND fst snd] in *.
+all: rewrite ?fix_clock_evaluate.
+all: rewrite ?mc_clock, ?mc_termdep, ?mc_dec_clock, ?push_env_mem_upd, ?mc_call_env, ?mc_set_var, ?mc_set_vars, ?mc_locals.
+all: repeat multimatch goal with
+ Hi : forall mm, _ |- context [evaluate (?pp,set_memory ?mem ?ss)] =>
+ let Hsp := fresh "Hsp" in pose proof (Hi mem) as Hsp;
+ lazymatch type of Hsp with
+ | ?A -> ?B -> ?C -> ?D -> ?E -> exists mout, evaluate (pp,set_memory mem ss) = _ /\ _ =>
+ let HA := fresh "HA" in let HB := fresh "HB" in let HC := fresh "HC" in let HD := fresh "HD" in let HE := fresh "HE" in
+ assert (HA : A) by (mm_fields; repeat multimatch goal with H : memory ?st1 = memory ?st |- context [memory ?st1] => progress rewrite H end; repeat multimatch goal with H : mdomain ?st1 = mdomain ?st |- context [mdomain ?st1] => progress rewrite H end; first [assumption|reflexivity]);
+ assert (HB : B) by (mm_fields; repeat multimatch goal with E : pop_env ?st = SOME ?st1, H : code ?st1 = code ?st |- context [code ?st1] => progress rewrite H end; assumption);
+ assert (HC : C) by (mm_fields; repeat multimatch goal with E : pop_env ?st = SOME ?st1, H : code ?st1 = code ?st |- context [code ?st1] => progress rewrite H end; assumption);
+ assert (HD : D) by (first [eapply code.no_install_find_code; split; [|eassumption]; assumption|unfold no_install in *; cbn [not_created_subprogs STOP] in *; consts.destr_conj; assumption]);
+ assert (HE : E) by (first [eapply code.no_alloc_find_code; split; eassumption|unfold no_alloc in *; cbn [not_created_subprogs STOP] in *; consts.destr_conj; assumption]);
+ let mnew := fresh "mnew" in let HEval := fresh "HEval" in let HMnew := fresh "HMnew" in
+ destruct (Hsp HA HB HC HD HE) as [mnew [HEval HMnew]]; clear Hi Hsp;
+ let HCode := fresh "HCode" in pose proof (code.no_install_evaluate_const_code _ _ _ _ (conj HEval (conj HD HB))) as HCode; cbn [code set_memory] in HCode;
+ let HNIout := fresh "HNIout" in let HNAout := fresh "HNAout" in pose proof HB as HNIout; pose proof HC as HNAout; rewrite HCode in HNIout, HNAout;
+ rewrite HEval; cbn [clock termdep set_memory];
+ rewrite ?mc_pop, ?cut_state_with_mem_const;
+ repeat match goal with H : ?z = _ |- context [?z] => rewrite H; cbn beta iota zeta end;
+ cbn [OPTION_MAP locals set_memory];
+ rewrite ?mc_clock, ?mc_termdep, ?mc_dec_clock, ?push_env_mem_upd, ?mc_call_env, ?mc_set_var, ?mc_set_vars, ?mc_locals;
+ repeat match goal with H : ?z = _ |- context [?z] => rewrite H; cbn beta iota zeta end
+ end
+ end.
+all: try solve [eexists; split; [reflexivity|first [assumption|reflexivity]]].
+all: try (let HR := fresh "HR" in assert (HR : forall ptr len, read_bytearray ptr len (mem_load_byte_aux m (mdomain s) (be s)) = read_bytearray ptr len (mem_load_byte_aux (memory s) (mdomain s) (be s))) by (intros; symmetry; apply read_bytearray_const_memory; exact HM); rewrite ?HR; cbn [ffi set_memory]; repeat match goal with H : ?z = _ |- context [?z] => rewrite H; cbn beta iota zeta end).
+all: try solve [exists m; split; [unfold flush_state; destruct s; reflexivity|cbn [flush_state set_memory set_locals_size set_store_field set_stack set_locals memory mdomain]; first [exact HM|reflexivity]]].
+all: try solve [match goal with |- context [write_bytearray ?ptr ?ls ?mem (mdomain ?st) (be ?st)] =>
+ exists (write_bytearray ptr ls mem (mdomain st) (be st)); split; [destruct st; reflexivity|cbn [set_memory set_ffi set_fp_regs set_locals memory mdomain]; apply write_bytearray_const_memory; exact HM] end].
+all: try solve [match goal with |- context [const_writes ?ad ?off ?ls ?mem] => exists (const_writes ad off ls mem); split; [unfold set_var, unset_var; destruct s; reflexivity|cbn [set_var unset_var set_locals set_memory memory mdomain]; apply const_writes_const_memory; exact HM] end].
+all: try solve [match goal with E : jump_exc ?st = SOME (?st1,?ret) |- _ =>
+ rewrite mc_jump, E; cbn [OPTION_MAP FST SND]; exists m; split; [reflexivity|pose proof (mc_jump_fields st st1 ret E) as Hf; consts.destr_conj; repeat match goal with H : memory _ = _ |- _ => rewrite H end; repeat match goal with H : mdomain _ = _ |- _ => rewrite H end; exact HM] end].
+all: try solve [match goal with E : jump_exc ?st = NONE |- _ => rewrite mc_jump, E; cbn [OPTION_MAP]; exists m; split; reflexivity end].
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "memory_swap_lemma1" *)
+Local Theorem memory_swap_lemma1 : forall prog (st : state) res rst m,
+ evaluate (prog,st) = (res,rst) /\
+ fun2set (memory st,mdomain st) = fun2set (m,mdomain st) /\
+ code.no_alloc_code (code st) /\ code.no_install_code (code st) /\
+ no_alloc prog /\ no_install prog ->
+ exists st', evaluate (prog,set_memory m st) = (res,st') /\
+ set_memory ARB st' = set_memory ARB rst /\
+ fun2set (memory rst,mdomain rst) = fun2set (memory st',mdomain rst).
+Proof.
+ intros p st res rst m (He & Hm & Hna & Hni & Hpa & Hpi).
+ destruct (memory_swap_strengthened (p,st) res rst He m Hm Hni Hna Hpi Hpa) as [m1 [He1 Hm1]].
+ exists (set_memory m1 rst); split; [exact He1|]; split; [destruct rst; reflexivity|exact Hm1].
+Qed.
+
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "memory_swap_lemma" *)
+Local Theorem memory_swap_lemma : forall prog (st : state) res rst m,
+ evaluate (prog,st) = (res,rst) /\
+ fun2set (memory st,mdomain st) = fun2set (m,mdomain st) /\
+ code.no_alloc_code (code st) /\ code.no_install_code (code st) /\
+ no_alloc prog /\ no_install prog ->
+ exists m', evaluate (prog,set_memory m st) = (res,set_memory m' rst) /\
+ fun2set (memory rst,mdomain rst) = fun2set (m',mdomain rst).
+Proof.
+ intros p st res rst m (He & Hm & Hna & Hni & Hpa & Hpi).
+ exact (memory_swap_strengthened (p,st) res rst He m Hm Hni Hna Hpi Hpa).
+Qed.
+
+End MemorySwap.
+
+Section MemorySemantics.
+Import wordSem wordConvs.
+Context {a : N} {c ffi_t : Type}.
+Local Abbreviation state := (wordSem.state a c ffi_t).
+(*! HOL "cakeml/pancake/proofs/pan_to_targetProofScript.sml" "word_semantics_memory_update" *)
+Theorem word_semantics_memory_update (s : state) m start :
+ fun2set (memory s,mdomain s) = fun2set (m,mdomain s) /\
+ code.no_alloc_code (code s) /\ code.no_install_code (code s) ->
+ wordSem.semantics (set_memory m s) start <> Fail ->
+ wordSem.semantics s start = wordSem.semantics (set_memory m s) start.
+Proof.
+ intros (HM & HNA & HNI) Hsafe.
+ set (p := @wordLang.Call a NONE (SOME start) [0] NONE).
+ assert (Hpi : no_install p) by (unfold p, no_install; cbn [not_created_subprogs]; repeat split; try exact Logic.I; intros H; discriminate).
+ assert (Hpa : no_alloc p) by (unfold p, no_alloc; cbn [not_created_subprogs]; repeat split; try exact Logic.I; intros H; discriminate).
+ assert (HS : forall k, exists m1, evaluate (p,set_clock k (set_memory m s)) = (FST (evaluate (p,set_clock k s)),set_memory m1 (SND (evaluate (p,set_clock k s))))).
+ { intros k; destruct (evaluate (p,set_clock k s)) as [r t] eqn:He.
+ destruct (memory_swap_strengthened (p,set_clock k s) r t He m HM HNI HNA Hpi Hpa) as [m1 [He1 Hm1]].
+ exists m1; rewrite mc_clock; exact He1. }
+ assert (HO : forall k, FST (evaluate (p,set_clock k s)) = FST (evaluate (p,set_clock k (set_memory m s))) /\
+   ffi (SND (evaluate (p,set_clock k s))) = ffi (SND (evaluate (p,set_clock k (set_memory m s))))).
+ { intros k; destruct (HS k) as [m1 He]; rewrite He; split; reflexivity. }
+ unfold wordSem.semantics; fold p.
+ cbn [FST SND] in HO.
+ lazymatch goal with |- (if classical_dec ?P then _ else _) = (if classical_dec ?Q then _ else _) =>
+ assert (HP : P = Q) by (apply propositional_extensionality; split; intros [k H]; exists k; [rewrite <- (proj1 (HO k))|rewrite (proj1 (HO k))]; exact H); rewrite HP
+ end.
+ destruct (classical_dec _) as [Hbad|Hgood]; [reflexivity|].
+ lazymatch goal with |- (match some ?P with _ => _ end) = (match some ?Q with _ => _ end) =>
+ assert (Hterm : P = Q) by
+ (apply functional_extensionality; intros out; apply propositional_extensionality; split;
+ intros [k [t [r [outcome [He [Hr Hout]]]]]];
+ [ destruct (HS k) as [m1 Hswap]; rewrite He in Hswap; cbn [FST SND] in Hswap;
+ exists k, (set_memory m1 t), r, outcome; split; [exact Hswap|]; split; [exact Hr|exact Hout]
+ | destruct (evaluate (p,set_clock k s)) as [r0 t0] eqn:He0;
+ destruct (HS k) as [m1 Hswap]; rewrite He0 in Hswap; cbn [FST SND] in Hswap;
+ rewrite Hswap in He; injection He as <- <-;
+ exists k,t0,r0,outcome; repeat split; assumption ]); rewrite Hterm
+ end.
+ destruct (some _) as [b|]; [reflexivity|].
+ assert (HIO : (fun k => llist.fromList (io_events (ffi (snd (evaluate (p,set_clock k s)))))) =
+ (fun k => llist.fromList (io_events (ffi (snd (evaluate (p,set_clock k (set_memory m s)))))))) by
+ (apply functional_extensionality; intros k; rewrite (proj2 (HO k)); reflexivity).
+ rewrite HIO; reflexivity.
+Qed.
+End MemorySemantics.
