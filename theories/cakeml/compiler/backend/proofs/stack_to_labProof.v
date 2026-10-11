@@ -20,9 +20,7 @@
     handler label preservation through [stack_to_lab_stack_good_handler_labels_incr],
     [full_make_init_has_fp_ops], and the complete no_shmemop / no_install chains.
 
-    NOT YET PORTED:
-    [IMP_init_store_ok] and [IMP_init_state_ok] are skipped because their
-    dependencies are not yet ported.
+    Also ported: [IMP_init_store_ok] and [IMP_init_state_ok].
 
     Mismatches with HOL:
     - [code_installed]: Prop-valued Fixpoint; the non-[Label] case of the
@@ -6440,3 +6438,186 @@ Proof.
  apply stack_names_compile_no_install; apply stack_remove_compile_no_install; apply stack_alloc_compile_no_install; apply stack_rawcall_compile_no_install; exact H.
 Qed.
 End Safety.
+
+From Galette.cakeml.compiler.backend.proofs Require Import data_to_word_gcProof.
+From Galette.cakeml.compiler.backend.proofs.word_to_stackProof Require Import comp_semantics.
+From Galette.cakeml.compiler.backend Require Import wordConvs.
+
+Import data_to_word (max_heap_limit, gc_kind).
+Import stack_removeProof (init_prop, word_list_exists_ADD, word_list_exists_thm, fun2set_EMPTY_eq).
+Import wordSem (position, space_left, buffer_buffer, mk_buffer).
+Import word_gcFunctions (word_gc_fun).
+
+(** ** GC and word-to-stack initialization invariants *)
+Section InitDependencies.
+Context {a : N} {c ffi_t : Type}.
+Local Opaque stackSem.evaluate.
+Local Lemma init_store_from_prop gen mh dsp lim (s : stackSem.state a c ffi_t) dc :
+ mh = 2 * max_heap_limit a dc - 1 -> gen = is_gen_gc (gc_kind dc) ->
+ init_prop gen mh dsp lim s ->
+ init_store_ok dc (stackSem.store s \\ Handler) (stackSem.memory s) (stackSem.mdomain s) (stackSem.code_buffer s) (stackSem.data_buffer s).
+Proof.
+ intros HM HG (curr & other & bm & len & HP).
+ unfold init_store_ok; exists len, curr.
+ unfold init_prop in *.
+ repeat rewrite DOMSUB_FLOOKUP_THM.
+ repeat match goal with |- context [decide ?P] => destruct (decide P); try discriminate end.
+ destruct HP as (Hcurr & Hnext & Htrig & Hend & Hother & Hbm & Hlen & Hprog & Halloc & Hglob & Hgreal & Hhand & Hgen & Hcb & Hce & Hbb & Hbe & Hrest).
+ destruct Hrest as (Hlim & Hcb0 & Hdb0 & Hus & Hst & Hr & Hb & Hstk & HotherEq & Hal & Hlast & Hspace & HstackBound & Hheap & Hmem).
+ subst other gen; rewrite <- word_list_exists_ADD in Hmem.
+ repeat split; try assumption; try lia.
+ - congruence.
+ - destruct (gc_kind dc); cbn [is_gen_gc] in Htrig; exact Htrig.
+ - rewrite Hlen; f_equal; f_equal; apply WORD_MULT_COMM.
+Qed.
+
+
+Local Lemma lookup_zero_list : forall ns (fm : fmap store_name (word_loc a)) k,
+ FLOOKUP fm k = SOME (Word (n2w 0 : word a)) \/ In k ns ->
+ FLOOKUP (fm |++ MAP (fun x => (x, Word (n2w 0 : word a))) ns) k = SOME (Word (n2w 0 : word a)).
+Proof.
+ induction ns as [|x ns IH]; intros fm k H; [cbn in H; tauto|].
+ cbn [MAP map] in *; change (FLOOKUP ((fm |+ (x, Word (n2w 0 : word a))) |++ MAP (fun x => (x, Word (n2w 0 : word a))) ns) k = SOME (Word (n2w 0 : word a))).
+ apply IH; destruct H as [H|[H|H]].
+ - left; rewrite FLOOKUP_UPDATE; destruct (decide (x=k)); auto.
+ - subst k; left; rewrite FLOOKUP_UPDATE; destruct (decide (x=x)); [reflexivity|contradiction].
+ - right; exact H.
+Qed.
+Local Lemma init_store_zero dc (m : word a -> word_loc a) :
+ init_store_ok dc
+ ((FEMPTY |++ MAP (fun x => (x, Word (n2w 0 : word a))) (CurrHeap :: stack_remove.store_list)) \\ Handler)
+ m EMPTY (mk_buffer (n2w 0) [] 0 : buffer a 8) (mk_buffer (n2w 0) [] 0 : buffer a a).
+Proof.
+ unfold init_store_ok; exists 0, (n2w 0).
+ cbn [position space_left buffer_buffer]; rewrite !N.add_0_r.
+ assert (Hmul : ((bytes_in_word : word a) * n2w 0 = n2w 0)%w) by stack_removeProof.wring.
+ rewrite Hmul; repeat rewrite WORD_ADD_0; try reflexivity.
+ assert (Hlookup : forall k, In k (CurrHeap :: stack_remove.store_list) -> k <> Handler ->
+   FLOOKUP ((FEMPTY |++ MAP (fun x => (x, Word (n2w 0 : word a))) (CurrHeap :: stack_remove.store_list)) \\ Handler) k = SOME (Word (n2w 0 : word a))).
+ { intros k HK Hk; rewrite DOMSUB_FLOOKUP_THM; destruct (decide (Handler = k)); [congruence|].
+   apply lookup_zero_list; right; exact HK. }
+ repeat rewrite Hlookup by (unfold stack_remove.store_list; cbn [In]; intuition discriminate).
+ repeat split; try reflexivity; try lia.
+ - destruct (gc_kind dc); reflexivity.
+ - rewrite (proj1 (word_list_exists_thm (n2w 0 : word a) 0)).
+   rewrite fun2set_EMPTY_eq. reflexivity.
+Qed.
+Local Lemma init_store_any dc mh bm dsp co jump off sp cd (s : stackSem.state a c ffi_t) :
+ mh = 2 * max_heap_limit a dc - 1 ->
+ let t := stack_removeProof.make_init_any (is_gen_gc (gc_kind dc)) mh bm dsp co jump off sp cd s in
+ init_store_ok dc (stackSem.store t \\ Handler) (stackSem.memory t) (stackSem.mdomain t)
+ (stackSem.code_buffer t) (stackSem.data_buffer t).
+Proof.
+ intros HM; cbv zeta; unfold stack_removeProof.make_init_any.
+ destruct (stack_removeProof.make_init_opt _ _ _ _ _ _ _ _ _ _) as [t|] eqn:ET.
+ - unfold stack_removeProof.make_init_opt in ET.
+   destruct (stackSem.evaluate _) as [[r|] t0]; [discriminate|].
+   destruct (classical_dec _) as [HP|HP]; [|discriminate].
+   injection ET as <-; eapply init_store_from_prop; [exact HM|reflexivity|exact HP].
+ - apply init_store_zero.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "IMP_init_store_ok" *)
+Theorem IMP_init_store_ok : forall max_heap c1 fmis xxx stack_conf sp offset bitmaps code
+ (s : labSem.state a c ffi_t) save_regs data_sp coracle,
+ max_heap = 2 * max_heap_limit a c1 - 1 /\
+ (fmis,xxx) = full_make_init stack_conf c1 max_heap sp offset bitmaps code s save_regs data_sp coracle ->
+ init_store_ok c1 (stackSem.store fmis \\ Handler) (stackSem.memory fmis) (stackSem.mdomain fmis)
+ (stackSem.code_buffer fmis) (stackSem.data_buffer fmis).
+Proof.
+ intros mh dc fmis xxx sc sp off bm cd s sr dsp co [HM H].
+ unfold full_make_init in H; cbv zeta in H.
+ apply (f_equal fst) in H; cbn [fst] in H; subst fmis.
+ unfold stack_allocProof.make_init.
+ cbn [stackSem.store stackSem.memory stackSem.mdomain stackSem.code_buffer stackSem.data_buffer
+ stackSem.set_compile_oracle stackSem.set_compile stackSem.set_gc_fun stackSem.set_use_stack stackSem.set_use_alloc stackSem.set_code].
+ apply init_store_any; exact HM.
+Qed.
+
+Local Lemma drop_last_one : forall (xs : list (word_loc a)) n,
+ LENGTH xs = N.succ n -> DROP n xs = [LAST xs].
+Proof.
+ induction xs as [|x xs IH]; intros n HL; [rewrite LENGTH_length in HL; cbn in HL; lia|].
+ destruct xs as [|y ys].
+ - assert (n=0) by (rewrite LENGTH_length in HL; cbn in HL; lia); subst; reflexivity.
+ - assert (HN : n <> 0) by (rewrite LENGTH_length in HL; cbn in HL; lia).
+   cbn [DROP]; rewrite (proj2 (N.eqb_neq n 0) HN).
+   cbn [LAST]; apply IH; rewrite !LENGTH_length in HL |- *; cbn [length] in HL |- *; rewrite !Nat2N.inj_succ in HL |- *; lia.
+Qed.
+Local Lemma init_state_from_prop (ac : asm_config a) k dc cd wo so
+ (s : stackSem.state a c ffi_t) gen mh dsp lim tl :
+ 4 < k -> good_dimindex a -> init_prop gen mh dsp lim s ->
+ stackSem.bitmaps s = n2w 4 :: tl -> space_left (stackSem.data_buffer s) = dsp ->
+ (forall n, let '((bm0,cfg),progs) := wo n in
+  EVERY (fun y => post_alloc_conventions k (SND (SND y))) progs /\
+  EVERY (fun y => flat_exp_conventions (SND (SND y))) progs /\
+  EVERY (fun y => negb (wordLang.raise_stub_location =? FST y)) progs /\
+  EVERY (fun y => negb (wordLang.store_consts_stub_location =? FST y)) progs /\
+  (n = 0 -> bm0 = LENGTH (stackSem.bitmaps s))) ->
+ so = (fun n => let '((bm0,cfg),progs) := wo n in
+  let '(progs,(fs,bm)) := word_to_stack.compile_word_to_stack ac false k progs (Nil,bm0) in
+  (cfg,(progs,append (FST bm)))) ->
+ comp_semantics.init_state_ok ac k (stack_allocProof.make_init dc cd so s) wo.
+Proof.
+ intros HK HG HP HB HD HO HS; unfold init_prop in HP.
+ destruct HP as (curr & other & bm & len & HP).
+ destruct HP as (Hcurr & Hnext & Htrig & Hend & Hother & Hbm & Hlen & Hprog & Halloc & Hglob & Hgreal & Hhand & Hgen & Hcb & Hce & Hbb & Hbe & Hrest).
+ destruct Hrest as (Hlim & Hcb0 & Hdb0 & Hus & Hst & Hr & Hb & Hstk & HotherEq & Hal & Hlast & Hspace & HstackBound & Hheap & Hmem).
+ unfold stack_allocProof.make_init, comp_semantics.init_state_ok.
+ cbn [stackSem.store stackSem.memory stackSem.mdomain stackSem.code_buffer stackSem.data_buffer
+ stackSem.set_compile_oracle stackSem.set_compile stackSem.set_gc_fun stackSem.set_use_stack stackSem.set_use_alloc stackSem.set_code
+ stackSem.use_stack stackSem.use_alloc stackSem.use_store stackSem.gc_fun stackSem.compile_oracle stackSem.bitmaps
+ stackSem.regs stackSem.stack stackSem.stack_space].
+ rewrite Hdb0, HD; cbn [LENGTH length]; repeat match goal with |- _ /\ _ => split end; try assumption; try lia; try reflexivity.
+ - unfold good_dimindex in HG; unfold dimindex in *; lia.
+ - apply data_to_word_gcProof.gc_fun_ok_word_gc_fun.
+ - rewrite HB; cbn [isPREFIX]; apply andb_true_intro; split; [apply bool_decide_spec; reflexivity|reflexivity].
+ - rewrite (drop_last_one _ _ Hspace), Hlast; reflexivity.
+ - unfold pred_set.IN, FDOM; rewrite Hhand; discriminate.
+Qed.
+
+
+Local Lemma init_state_opt (ac : asm_config a) k dc cd wo so gen mh bm tl dsp co jump off sp code0
+ (s : stackSem.state a c ffi_t) t :
+ 4 < k -> good_dimindex a -> bm = n2w 4 :: tl ->
+ (forall n, let '((bm0,cfg),progs) := wo n in
+  EVERY (fun y => post_alloc_conventions k (SND (SND y))) progs /\
+  EVERY (fun y => flat_exp_conventions (SND (SND y))) progs /\
+  EVERY (fun y => negb (wordLang.raise_stub_location =? FST y)) progs /\
+  EVERY (fun y => negb (wordLang.store_consts_stub_location =? FST y)) progs /\
+  (n = 0 -> bm0 = LENGTH bm)) ->
+ so = (fun n => let '((bm0,cfg),progs) := wo n in
+  let '(progs,(fs,bm)) := word_to_stack.compile_word_to_stack ac false k progs (Nil,bm0) in
+  (cfg,(progs,append (FST bm)))) ->
+ stack_removeProof.make_init_opt gen mh bm dsp co jump off sp code0 s = SOME t ->
+ comp_semantics.init_state_ok ac k (stack_allocProof.make_init dc cd so t) wo.
+Proof.
+ intros HK HG HB HO HS ET; unfold stack_removeProof.make_init_opt in ET.
+ destruct (stackSem.evaluate _) as [[r|] s0]; [discriminate|].
+ destruct (classical_dec _) as [HP|HP]; [|discriminate].
+ injection ET as <-; eapply init_state_from_prop; try eassumption; reflexivity.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "IMP_init_state_ok" *)
+Theorem IMP_init_state_ok : forall (ac : asm_config a) kkk (bitmaps : list (word a)) t
+ word_oracle stack_oracle scc dc max_heap stk stoff p6 (lab_st : labSem.state a c ffi_t) save_regs data_sp fmis xxx,
+ 4 < kkk /\ bitmaps = n2w 4 :: t /\ good_dimindex a /\
+ (forall n, let '((bm0,cfg),progs) := word_oracle n in
+  EVERY (fun y => post_alloc_conventions kkk (SND (SND y))) progs /\
+  EVERY (fun y => flat_exp_conventions (SND (SND y))) progs /\
+  EVERY (fun y => negb (wordLang.raise_stub_location =? FST y)) progs /\
+  EVERY (fun y => negb (wordLang.store_consts_stub_location =? FST y)) progs /\
+  (n = 0 -> bm0 = LENGTH bitmaps)) /\
+ stack_oracle = (fun n => let '((bm0,cfg),progs) := word_oracle n in
+  let '(progs,(fs,bm)) := word_to_stack.compile_word_to_stack ac false kkk progs (Nil,bm0) in
+  (cfg,(progs,append (FST bm)))) /\
+ full_make_init scc dc max_heap stk stoff bitmaps p6 lab_st save_regs data_sp stack_oracle = (fmis,SOME xxx) ->
+ comp_semantics.init_state_ok ac kkk fmis word_oracle.
+Proof.
+ intros ac k bm tl wo so sc dc mh stk off p6 lab_st sr dsp fmis xxx (HK & Hbm & Hdim & HO & HS & HI).
+ unfold full_make_init in HI; cbv zeta in HI.
+ pose proof (f_equal snd HI) as ET; cbn [snd] in ET.
+ pose proof (f_equal fst HI) as HF; cbn [fst] in HF; rewrite <- HF.
+ unfold stack_removeProof.make_init_any; rewrite ET.
+ eapply init_state_opt; eassumption.
+Qed.
+
+End InitDependencies.

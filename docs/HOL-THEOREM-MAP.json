@@ -33291,6 +33291,26 @@
  },
  {
   "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "IMP_init_state_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "IMP_init_state_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
+  "hol_name": "IMP_init_store_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "pending_review",
+  "note": "",
+  "rocq_path": "theories/cakeml/compiler/backend/proofs/stack_to_labProof.v",
+  "rocq_name": "IMP_init_store_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml",
   "hol_name": "IN_domain_collect_info",
   "hol_line": null,
   "case": null,
