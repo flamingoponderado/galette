@@ -15,10 +15,10 @@
     [halt_assum_lemma], [FLOOKUP_regs], [state_rel_make_init],
     [MAP_FST_compile_compile], the rebound [next_lab_non_zero],
     [extract_label_store_list_code], [stack_to_lab_compile_lab_pres] and
-    [good_code] and [full_make_init_semantics].
+    [good_code], [full_make_init_semantics], the encoder line preconditions
+    and [stack_to_lab_compile_all_enc_ok].
 
-    NOT YET PORTED: [stack_to_lab_compile_all_enc_ok],
-    [full_make_init_has_fp_ops], the get_code_labels / handler_labels lemmas
+    NOT YET PORTED: [full_make_init_has_fp_ops], the get_code_labels / handler_labels lemmas
     and the no_shmemop / no_install lemmas.
     [IMP_init_store_ok] and [IMP_init_state_ok] are skipped because their
     dependencies are not yet ported.
@@ -4601,3 +4601,130 @@ Proof.
    + rewrite Hnames, Hsem; exact HNF.
 Qed.
 End Initialization.
+
+Section EncoderSyntax.
+Context {a : N}.
+Local Lemma LAST_app_singleton {B} `{Inhabited B} (ls : list B) x : LAST (ls ++ [x]) = x.
+Proof. induction ls as [|h ls IH]; [reflexivity|]. destruct ls; [reflexivity|exact IH]. Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "EVERY_sec_ends_with_label_MAP_prog_to_section" *)
+Theorem EVERY_sec_ends_with_label_MAP_prog_to_section : forall ps : list (N * prog a),
+ EVERY sec_ends_with_label (MAP prog_to_section ps).
+Proof.
+ intros ps. apply EVERY_Forall. apply Forall_map. apply Forall_forall. intros [n p] Hin.
+ unfold prog_to_section. destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [xs [nr nl]].
+ cbn [FST SND sec_ends_with_label]. rewrite append_Append, append_List. rewrite LAST_app_singleton.
+ destruct (append xs); reflexivity.
+Qed.
+
+Local Ltac enc_norm :=
+ cbn [FST andb orb];
+ repeat rewrite append_Append; repeat rewrite append_List; repeat rewrite stack_allocProof.EVERY_app;
+ cbn [EVERY line_ok_pre lab_to_target.cbw_to_asm asm_ok reg_ok];
+ rewrite ?Bool.andb_true_r, ?Bool.andb_true_l.
+Local Lemma flatten_lines_ok (cfg : asm_config a) : forall p : prog a,
+ forall t n m cs bs, byte_offset_ok cfg (n2w 0) /\ stack_asm_ok cfg p ->
+ EVERY (line_ok_pre cfg) (append (FST (flatten t p n m cs bs))).
+Proof.
+ intros p. induction p as [ret dest h Hr Hh|p1 p2 IH1 IH2|cmp r ri p1 p2 IH1 IH2|p IH|p Hp] using prog_nested_ind;
+ intros t n m cs bs (Hbyte & Hok).
+ - destruct ret as [[p1 [lr [l1 l2]]]|].
+   + destruct h as [[p2 [k1 k2]]|].
+     * cbn [stack_asm_ok] in Hok.
+       apply Bool.andb_true_iff in Hok as [Hd Hps]. apply Bool.andb_true_iff in Hps as [H1 H2].
+       pose proof (Hr p1 _ eq_refl false n m cs bs (conj Hbyte H1)) as E1.
+       cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+       pose proof (Hh p2 _ eq_refl false n m1 cs bs (conj Hbyte H2)) as E2.
+       destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+       cbn [FST] in E1,E2 |- *. destruct dest; enc_norm;
+       cbn [compile_jump line_ok_pre lab_to_target.cbw_to_asm asm_ok reg_ok] in *;
+       unfold is_true in *; cbn [reg_ok] in *; rewrite ?Bool.andb_true_r in *; rewrite E1,E2; cbn; try reflexivity; unfold reg_ok; rewrite !Bool.andb_true_r; exact Hd.
+     * cbn [stack_asm_ok] in Hok. apply Bool.andb_true_iff in Hok as [Hd Hps].
+       apply Bool.andb_true_iff in Hps as [H1 _].
+       pose proof (Hr p1 _ eq_refl false n m cs bs (conj Hbyte H1)) as E1.
+       cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+       cbn [FST] in E1 |- *. destruct dest; enc_norm;
+       cbn [compile_jump line_ok_pre lab_to_target.cbw_to_asm asm_ok reg_ok] in *;
+       unfold is_true in *; cbn [reg_ok] in *; rewrite ?Bool.andb_true_r in *; rewrite E1; cbn; try reflexivity; unfold reg_ok; rewrite !Bool.andb_true_r; exact Hd.
+   + destruct dest; cbn [stack_asm_ok] in Hok; cbn [flatten FST]; enc_norm;
+       cbn [compile_jump line_ok_pre lab_to_target.cbw_to_asm asm_ok reg_ok] in *;
+       unfold is_true in *; unfold reg_ok; rewrite !Bool.andb_true_r in *; exact Hok.
+ - cbn [stack_asm_ok] in Hok. apply Bool.andb_true_iff in Hok as [H1 H2].
+   pose proof (IH1 false n m cs bs (conj Hbyte H1)) as E1.
+   cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+   pose proof (IH2 false n m1 cs bs (conj Hbyte H2)) as E2.
+   destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+   cbn [FST] in E1,E2 |- *. destruct t; enc_norm; rewrite E1,E2; reflexivity.
+ - cbn [stack_asm_ok] in Hok. apply Bool.andb_true_iff in Hok as [H1 H2].
+   pose proof (IH1 false n m cs bs (conj Hbyte H1)) as E1.
+   cbn [flatten]. destruct (flatten false p1 n m cs bs) as [xs [nr1 m1]] eqn:F1.
+   pose proof (IH2 false n m1 cs bs (conj Hbyte H2)) as E2.
+   destruct (flatten false p2 n m1 cs bs) as [ys [nr2 m2]] eqn:F2.
+   cbn [FST] in E1,E2 |- *.
+   destruct (is_Skip p1), (is_Skip p2), nr1, nr2; enc_norm; rewrite ?E1,?E2; reflexivity.
+ - cbn [stack_asm_ok] in Hok.
+   pose proof (IH false n (m+2) (m::cs) ((m+1)::bs) (conj Hbyte Hok)) as E.
+   cbn [flatten]. destruct (flatten false p n (m+2) (m::cs) ((m+1)::bs)) as [xs [nr m1]].
+   cbn [FST] in E |- *. enc_norm; rewrite E; reflexivity.
+ - destruct p; try contradiction; cbn [stack_asm_ok] in Hok; cbn [flatten FST]; enc_norm;
+   cbn [inst_ok addr_ok lab_to_target.cbw_to_asm reg_ok] in *; rewrite ?Bool.andb_true_r in *; try exact Hok; try reflexivity.
+   + destruct a0. unfold addr_ok in Hok. unfold is_true in *.
+     rewrite !Bool.andb_true_iff in *. tauto.
+   + repeat match goal with |- context [MEM Store8 ?ls] =>
+       replace (MEM Store8 ls) with false by (symmetry; apply Bool.not_true_iff_false;
+         rewrite MEM_In; simpl; intuition congruence) end.
+     cbn [ifb]. unfold is_true in *. unfold reg_ok. rewrite !Bool.andb_true_iff in *. tauto.
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "flatten_line_ok_pre" *)
+Local Theorem flatten_line_ok_pre : forall t (p : prog a) n m cs bs ls nr nl cfg,
+ byte_offset_ok cfg (n2w 0) /\ stack_asm_ok cfg p /\ flatten t p n m cs bs = (ls,(nr,nl)) ->
+ EVERY (line_ok_pre cfg) (append ls).
+Proof.
+ intros t p n m cs bs ls nr nl cfg (Hb & Hp & E).
+ pose proof (flatten_lines_ok cfg p t n m cs bs (conj Hb Hp)) as H. rewrite E in H. exact H.
+Qed.
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "compile_all_enc_ok_pre" *)
+Theorem compile_all_enc_ok_pre : forall cfg (ps : list (N * prog a)),
+ byte_offset_ok cfg (n2w 0) /\ EVERY (fun '(n,p) => stack_asm_ok cfg p) ps ->
+ all_enc_ok_pre cfg (MAP prog_to_section ps).
+Proof.
+ intros cfg ps (Hb & Hp). apply EVERY_Forall in Hp. rewrite Forall_forall in Hp.
+ apply EVERY_Forall. apply Forall_map. apply Forall_forall. intros [n p] Hin.
+ specialize (Hp (n,p) Hin).
+ unfold prog_to_section. destruct (flatten true p n (stack_alloc.next_lab p 2) [] []) as [ls [nr nl]] eqn:E.
+ cbn [sec_ok_pre]. rewrite append_Append, append_List, stack_allocProof.EVERY_app.
+ apply Bool.andb_true_iff; split; [apply (flatten_line_ok_pre true p n (stack_alloc.next_lab p 2) [] [] ls nr nl cfg); repeat split; assumption|reflexivity].
+Qed.
+
+(*! HOL "cakeml/compiler/backend/proofs/stack_to_labProofScript.sml" "stack_to_lab_compile_all_enc_ok" *)
+Theorem stack_to_lab_compile_all_enc_ok : forall sc dc mh sp (cfg : asm_config a) (ps : list (N * prog a)),
+ EVERY (fun '(n,p) => stack_asm_name cfg p) ps /\
+ EVERY (fun '(n,p) => stack_asm_remove cfg p) ps /\
+ stack_names.names_ok (reg_names sc) (reg_count cfg) (avoid_regs cfg) /\
+ stackProps.fixed_names (reg_names sc) cfg /\
+ addr_offset_ok cfg (n2w 0) /\ good_dimindex a /\ byte_offset_ok cfg (n2w 0) /\
+ (forall n, n <= stack_remove.max_stack_alloc ->
+  valid_imm cfg (inl asm.Sub) (n2w (n * (dimindex a DIV 8))) /\
+  valid_imm cfg (inl asm.Add) (n2w (n * (dimindex a DIV 8)))) /\
+ valid_imm cfg (inl asm.Add) (n2w 1) /\ valid_imm cfg (inl asm.Sub) (n2w 1) /\
+ valid_imm cfg (inl asm.Add) (n2w 4) /\ valid_imm cfg (inl asm.Add) (n2w 8) /\
+ (forall s, addr_offset_ok cfg (stack_remove.store_offset s)) /\ reg_name 10 cfg /\
+ reg_name (sp+2) cfg /\ reg_name (sp+1) cfg /\ reg_name sp cfg /\ data_to_word.conf_ok a dc /\ sp <> 0 ->
+ all_enc_ok_pre cfg (stack_to_lab.compile sc dc mh sp (addr_offset cfg) ps).
+Proof.
+ intros sc dc mh sp cfg ps (HN & HR & Hnames & Hfixed & Haddr & Hdim & Hbyte & Himm & H1a & H1s & H4 & H8 & Hstore & H10 & Hsp2 & Hsp1 & Hsp & Hconf & Hsp0).
+ unfold stack_to_lab.compile. apply compile_all_enc_ok_pre. split; [exact Hbyte|].
+ apply stack_namesProof.stack_names_stack_asm_ok. split; [|split; assumption].
+ apply stack_removeProof.stack_remove_stack_asm_name.
+ assert (H7 : reg_name 7 cfg).
+ { unfold reg_name in H10 |- *. apply N.ltb_lt in H10; apply N.ltb_lt; lia. }
+ destruct (stack_rawcallProof.stack_alloc_stack_asm_convs cfg ps) as [ERn ERr].
+ assert (HA : EVERY (fun '(n,p) => stack_asm_name cfg p) (stack_alloc.compile dc (stack_rawcall.compile ps)) /\
+  EVERY (fun '(n,p) => stack_asm_remove cfg p) (stack_alloc.compile dc (stack_rawcall.compile ps))).
+ { apply stack_allocProof.stack_alloc_stack_asm_convs. rewrite ERn,ERr. repeat (first [assumption|split]). }
+ destruct HA as [HAn HAr]. repeat (first [assumption|split]).
+Qed.
+End EncoderSyntax.
+
+
+
