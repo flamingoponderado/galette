@@ -1,6 +1,6 @@
 # Galette
 
-Galette is an in-progress Rocq port of the formally verified
+Galette is a Rocq port of the formally verified
 [Pancake](https://cakeml.org) compiler (part of CakeML) and its correctness
 theorems, for the RISC-V backend only. It is derived from CakeML and HOL4;
 see `LICENSE` (CakeML's BSD-3-Clause license).
@@ -23,9 +23,21 @@ Contributor conventions are in [AGENTS.md](AGENTS.md).
 
 ## Building
 
-    opam install rocq-prover   # Rocq 9.3
+Requires dune 3.24 or later and Rocq 9.2 or later (also builds on Rocq 9.3).
+From the repository root:
+
+    opam install . --deps-only
+    opam install zarith        # for the extracted compiler
     dune build
     python3 scripts/check-hol-refs.py --kernel
+
+The reference checkout at `../flapjack` is needed for the HOL-reference
+checks and parity tests. The parity script also accepts its location through
+`FLAPJACK`.
+
+Galette is a public dune/opam package named `galette`. Install it locally
+with `opam install .`; downstream dune projects can then depend on the
+`Galette` theory via `(theories Galette)` in their `rocq.theory` stanza.
 
 ## Dependencies
 
@@ -34,11 +46,22 @@ Only the Rocq standard library (`rocq-stdlib`) and, for extraction, OCaml
 `finite_map` and `sptree` theories are ported rather than taken from
 bit-vector or finite-map libraries.
 
-Libraries that may be added later: `coq-itree`/`coq-paco` for the
-interaction-tree semantics, and `rocq-equations` (needs rocq-core 9.2) for
-HOL-style well-founded definitions.
-
 ## Status
+
+**Correctness: the top-level theorem is proved.**
+[`pan_to_target_compile_semantics`](theories/cakeml/pancake/proofs/pan_to_targetProof.v)
+composes the Pancake and backend pass proofs through to target-machine
+semantics. Its statement matches HOL clause for clause; under HOL's
+well-formedness, configuration and initial-state hypotheses, it relates
+compiled machine behavior to Pancake semantics, allowing the specified
+resource-limit behavior. Its assumptions are only the classical logic,
+choice and extensionality axioms in `theories/Base.v`.
+
+The semantics and proofs needed by that theorem are ported, including
+Pancake, crep, loop, word, stack, lab, assembly and target semantics, and the
+needed L3 RISC-V model definitions. This does not mean every declaration in
+every upstream library has been ported; see [the progress inventory](docs/PROGRESS.md)
+for the remaining omissions.
 
 **Compiler: complete and byte-identical on the parity corpus.** The
 extracted executable (`dune build ./extraction/galette.exe`) reproduces the
@@ -60,14 +83,15 @@ the register allocator is quadratic.
 
 Every compiler definition on the `compile_pancake_64` path is ported from
 HOL (parser, static checker, Pancake passes, word/stack/lab backend,
-register allocation, assembler, RISC-V encoder, exporter) and tagged; see
-`docs/HOL-THEOREM-MAP.json` for the per-declaration inventory and review
-status (`pending_review` rows have not yet been compared line by line).
+register allocation, assembler, RISC-V encoder, exporter) and tagged.
 
-Plan, in order:
+**Review: complete for all tagged declarations.** All 8,255 tags in
+[`docs/HOL-THEOREM-MAP.json`](docs/HOL-THEOREM-MAP.json) have been compared
+line by line with HOL: 8,030 are `reviewed_exact`, 225 are
+`documented_mismatch`, and none are `pending_review`. Documented differences
+are recorded in the manifest and the corresponding file headers.
 
-1. Semantics: Pancake (panSem), crep, loop, word, stack, lab, asm and
-   target semantics, and the L3 RISC-V step function.
-2. Correctness proofs, pass by pass, up to `pan_to_target_compile_semantics`.
-3. Review: compare `pending_review` declarations with HOL and mark them
-   `reviewed_exact`.
+Remaining work includes unported library declarations and a faithful port
+of HOL's floating-point theories (`machine_ieee`/`binary_ieee`). The current
+floating-point operations are `ARB` stand-ins shared by word, stack and
+assembly semantics; Pancake never emits floating-point instructions.
