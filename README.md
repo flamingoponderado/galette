@@ -23,7 +23,7 @@ Contributor conventions are in [AGENTS.md](AGENTS.md).
 
 ## Building
 
-Requires dune 3.24 or later and Rocq 9.2 or later (also builds on Rocq 9.3).
+Requires dune 3.24 or later and Rocq 9.3.0 or later.
 From the repository root:
 
     opam install . --deps-only

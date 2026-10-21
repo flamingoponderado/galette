@@ -3098,9 +3098,9 @@ Ltac range_facts :=
   | H : word_lt _ _ = true |- _ => apply word_lt_w2i in H
   end;
   rewrite ?w2i_min21, ?w2i_max21 in *;
-  change (w2i (word_2comp (n2w 4092) : word64)) with (-4092)%Z in *;
-  change (w2i (n2w 4095 : word64)) with 4095%Z in *;
-  change (w2i (n2w 0 : word64)) with 0%Z in *.
+  change (w2i (word_2comp (n2w 4092))) with (-4092)%Z in *;
+  change (w2i (n2w 4095)) with 4095%Z in *;
+  change (w2i (n2w 0)) with 0%Z in *.
 
 Ltac mono_tac :=
   unfold offset_monotonic; cbn [encode riscv_config]; rewrite !len_enc_ast; intros _;

@@ -792,7 +792,7 @@ Proof. intros s; unfold parse_statement; rewrite pancake_exec_eq; reflexivity. Q
 Definition parse (s : list (token * locs)) : ptree + list (mlstring * locs) :=
   match pancake_exec TopDecListNT s with
   | Result (Success [] [e] _) => inl e
-  | Result (Success toks _ _) => inr [(strlit "Parser could not consume all tokens", unknown_loc)]
+  | Result (Success _toks _ _) => inr [(strlit "Parser could not consume all tokens", unknown_loc)]
   | Result (Failure loc msg) => inr [(implode msg, loc)]
   | Looped => inr [(strlit "PEG execution looped during parsing", unknown_loc)]
   | _ => inr [(strlit "Unknown error during parsing", unknown_loc)]
@@ -803,7 +803,7 @@ Theorem parse_def : forall s,
   parse s =
   match peg_exec pancake_peg (mknt TopDecListNT) s [] NONE [] done failed with
   | Result (Success [] [e] _) => inl e
-  | Result (Success toks _ _) => inr [(strlit "Parser could not consume all tokens", unknown_loc)]
+  | Result (Success _toks _ _) => inr [(strlit "Parser could not consume all tokens", unknown_loc)]
   | Result (Failure loc msg) => inr [(implode msg, loc)]
   | Looped => inr [(strlit "PEG execution looped during parsing", unknown_loc)]
   | _ => inr [(strlit "Unknown error during parsing", unknown_loc)]
