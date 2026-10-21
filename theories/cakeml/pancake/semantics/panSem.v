@@ -42,6 +42,12 @@ Context {a : N}.
 (*! HOL "cakeml/pancake/semantics/panSemScript.sml" "word_lab" *)
 Inductive word_lab : Type := Word : word a -> word_lab.
 
+(* The [v] type below nests [list] and [prod]; generate their [All]
+   induction schemes first so the automatically generated principle for
+   [v] does not emit the [register-all] automation warning. *)
+Scheme All for list.
+Scheme All for prod.
+
 (*! HOL "cakeml/pancake/semantics/panSemScript.sml" "v" *)
 Inductive v : Type :=
 | Val : word_lab -> v

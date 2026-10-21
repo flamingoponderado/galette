@@ -478,7 +478,7 @@ Proof. intros H; rewrite w2n_n2w; apply N.mod_small; pose proof dimindex_lt_dimw
 Local Lemma n2w_ne0 x : 0 < x -> x < dimindex a -> (n2w x : word a) <> n2w 0.
 Proof.
   intros H0 H1 E; apply (f_equal w2n) in E. rewrite w2n_n2w_lt in E by exact H1.
-  rewrite w2n_n2w, N.mod_0_l in E by (pose proof (ZERO_LT_dimword a); lia). lia.
+  rewrite w2n_n2w, N.Div0.mod_0_l in E by (pose proof (ZERO_LT_dimword a); lia). lia.
 Qed.
 
 Local Lemma reg_name_le (c : asm_config a) r : reg_name 10 c -> r <= 10 -> reg_name r c.
@@ -619,10 +619,10 @@ Theorem bit_length_thm : forall w : word a,
   (w >>> bit_length w = n2w 0) /\ (forall n, (n < bit_length w)%N -> w >>> n <> n2w 0).
 Proof.
   intros w; unfold bit_length; split.
-  - apply word_eq_w2n. rewrite w2n_lsr, w2n_n2w, N.mod_0_l by (pose proof (ZERO_LT_dimword a); lia).
+  - apply word_eq_w2n. rewrite w2n_lsr, w2n_n2w, N.Div0.mod_0_l by (pose proof (ZERO_LT_dimword a); lia).
     apply N.div_small. destruct (N.eq_dec (w2n w) 0) as [E|E]; [rewrite E; cbn; lia|].
     apply N.size_gt.
-  - intros n Hn E. apply (f_equal w2n) in E. rewrite w2n_lsr, w2n_n2w, N.mod_0_l in E
+  - intros n Hn E. apply (f_equal w2n) in E. rewrite w2n_lsr, w2n_n2w, N.Div0.mod_0_l in E
       by (pose proof (ZERO_LT_dimword a); lia).
     destruct (N.eq_dec (w2n w) 0) as [Z|Z]; [rewrite Z in Hn; cbn in Hn; lia|].
     rewrite N.size_log2 in Hn by exact Z.
@@ -671,7 +671,7 @@ Theorem shift_to_zero_word_msb : forall (w : word a) n,
   w >>> n = n2w 0 /\ word_msb w -> (dimindex a <= n)%N.
 Proof.
   intros w n [E Hm]. apply word_msb_ge in Hm. apply (f_equal w2n) in E.
-  rewrite w2n_lsr, w2n_n2w, N.mod_0_l in E by (pose proof (ZERO_LT_dimword a); lia).
+  rewrite w2n_lsr, w2n_n2w, N.Div0.mod_0_l in E by (pose proof (ZERO_LT_dimword a); lia).
   apply N.div_small_iff in E; [|apply N.pow_nonzero; lia].
   destruct (N.le_gt_cases (dimindex a) n) as [|Hlt]; [assumption|].
   assert (Hpp : (2 ^ n <= 2 ^ (dimindex a - 1))%N) by (apply N.pow_le_mono_r; lia). lia.
@@ -775,11 +775,11 @@ Qed.
 Theorem word_msb_IFF_lsr_EQ_0 : forall h : word a, word_msb h <-> h >>> (dimindex a - 1) <> n2w 0.
 Proof.
   intros h. unfold is_true. rewrite word_msb_ge. split.
-  - intros H E. apply (f_equal w2n) in E. rewrite w2n_lsr, w2n_n2w, N.mod_0_l in E
+  - intros H E. apply (f_equal w2n) in E. rewrite w2n_lsr, w2n_n2w, N.Div0.mod_0_l in E
       by (pose proof (ZERO_LT_dimword a); lia).
     apply N.div_small_iff in E; [lia|apply N.pow_nonzero; lia].
   - intros H. destruct (N.lt_ge_cases (w2n h) (2 ^ (dimindex a - 1))) as [Hl|]; [|assumption].
-    exfalso; apply H. apply word_eq_w2n. rewrite w2n_lsr, w2n_n2w, N.mod_0_l
+    exfalso; apply H. apply word_eq_w2n. rewrite w2n_lsr, w2n_n2w, N.Div0.mod_0_l
       by (pose proof (ZERO_LT_dimword a); lia). apply N.div_small, Hl.
 Qed.
 
@@ -798,7 +798,7 @@ Proof.
   intros n [Hg H]. apply bytes_in_word_word_shift; split; [exact Hg|].
   assert (Hb : (dimindex a DIV 8 < dimword a)%N /\ (n < dimword a)%N).
   { assert (H8 : (1 <= dimindex a DIV 8)%N) by (destruct Hg as [E|E]; rewrite E; cbn; lia).
-    assert (Hd : (dimindex a DIV 8 <= dimindex a)%N) by (apply N.div_le_upper_bound; lia).
+    assert (Hd : (dimindex a DIV 8 <= dimindex a)%N) by (apply N.Div0.div_le_upper_bound; lia).
     assert (Hdw : (dimindex a < dimword a)%N) by (rewrite dimword_pow; apply N.pow_gt_lin_r; lia).
     split; [lia|]. nia. }
   unfold bytes_in_word. rewrite !w2n_n2w_small by lia. exact H.
@@ -985,7 +985,7 @@ Local Theorem EL_LENGTH_ADD_LEMMA : forall {A} `{Inhabited A} (init old : list A
   EL (LENGTH init + LENGTH old) (init ++ old ++ [x] ++ st1) = x.
 Proof.
   intros A HA init old x st1. rewrite app_assoc.
-  replace (LENGTH init + LENGTH old)%N with (LENGTH (init ++ old)) by (rewrite !LENGTH_length, app_length; lia).
+  replace (LENGTH init + LENGTH old)%N with (LENGTH (init ++ old)) by (rewrite !LENGTH_length, length_app; lia).
   exact (EL_app_len (init ++ old) x st1).
 Qed.
 
@@ -994,7 +994,7 @@ Local Theorem LUPDATE_LENGTH_ADD_LEMMA : forall {A} (w : A) (init old : list A) 
   LUPDATE w (LENGTH init + LENGTH old) (init ++ old ++ [x] ++ st1) = init ++ old ++ [w] ++ st1.
 Proof.
   intros A w init old x st1. rewrite !app_assoc.
-  replace (LENGTH init + LENGTH old)%N with (LENGTH (init ++ old)) by (rewrite !LENGTH_length, app_length; lia).
+  replace (LENGTH init + LENGTH old)%N with (LENGTH (init ++ old)) by (rewrite !LENGTH_length, length_app; lia).
   generalize (init ++ old) as l; intros l. induction l as [|y l IH]; [cbn; reflexivity|].
   cbn [app LUPDATE]. rewrite LENGTH_length; cbn [length].
   replace (N.of_nat (Datatypes.S (length l)) =? 0)%N with false by (symmetry; apply N.eqb_neq; lia).
@@ -1156,8 +1156,8 @@ Proof.
   assert (Hlen : LENGTH (stack (set_memory m (set_regs FEMPTY (set_store_fld st
                    (set_stack (TAKE (stack_space s) (stack s) ++ stk1) s))))) = LENGTH (stack s)).
   { cbn [stack set_memory set_regs set_store_fld set_stack].
-    apply N.ltb_ge in El. rewrite !LENGTH_length, app_length in *. rewrite TAKE_firstn, DROP_skipn in *.
-    rewrite firstn_length, skipn_length in *. lia. }
+    apply N.ltb_ge in El. rewrite !LENGTH_length, length_app in *. rewrite TAKE_firstn, DROP_skipn in *.
+    rewrite length_firstn, length_skipn in *. lia. }
   destruct (FLOOKUP _ AllocSize) as [w|]; [|injection H as <- <-; exact Hlen].
   destruct (has_space _ _) as [[]|]; injection H as <- <-; try exact Hlen.
   exfalso; eapply Hr; reflexivity.
@@ -1736,7 +1736,7 @@ Proof.
   rewrite TAKE_firstn, DROP_skipn, firstn_skipn in H. cbn beta iota in H.
   stk_fields. cbn [FUPDATE_LIST FOLDL] in H. rewrite !sx_store_upd in H. sx_dec.
   unfold has_space in H. rewrite !sx_store_upd in H. sx_dec.
-  rewrite WORD_SUB_REFL, w2n_n2w, N.mod_0_l in H by (pose proof (ZERO_LT_dimword a); lia).
+  rewrite WORD_SUB_REFL, w2n_n2w, N.Div0.mod_0_l in H by (pose proof (ZERO_LT_dimword a); lia).
   unfold word_gc_code. rewrite Hk. cbn [list_Seq].
   destruct (N.leb_spec (w2n w) 0) as [Hw|Hw]; injection H as <- <-.
   - assert (Hw0 : w = n2w 0) by (apply w2n_eq_0; lia). subst w.
@@ -1745,7 +1745,7 @@ Proof.
     split; [intros E; contradiction|]. split; [intros k0 v0 Hk0; discriminate Hk0|]. intros _; reflexivity.
   - exists 0, FEMPTY. rewrite N.add_0_r. sx_all.
     rewrite (proj2 (proj2 (proj2 (proj2 (WORD_AND_CLAUSES w))))).
-    assert (Hw0 : w <> n2w 0) by (intros ->; rewrite w2n_n2w, N.mod_0_l in Hw by (pose proof (ZERO_LT_dimword a); lia); lia).
+    assert (Hw0 : w <> n2w 0) by (intros ->; rewrite w2n_n2w, N.Div0.mod_0_l in Hw by (pose proof (ZERO_LT_dimword a); lia); lia).
     rewrite (proj1 (Bool.not_true_iff_false (bool_decide (w = n2w 0)))
                ltac:(intros E; apply bool_decide_spec in E; exact (Hw0 E))).
     try rewrite ev_halt. sx_simp.
@@ -3233,8 +3233,8 @@ Proof.
     unfold word_gc_move_bitmap_code in Er. cbn [list_Seq] in Er.
     autorewrite with nf in Er. cbn [clock regs memory stackSem.stack set_regs set_clock set_memory set_stack] in Er.
     autorewrite with nf in Er. cbn [FUPDATE_LIST FOLDL] in Er.
-    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, app_length in Er |- *. cbn [length] in Er |- *.
-    rewrite app_length in Er; cbn [length] in Er.
+    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, length_app in Er |- *. cbn [length] in Er |- *.
+    rewrite length_app in Er; cbn [length] in Er.
     replace (N.of_nat (length old) + 1)%N with (N.of_nat (length old + 1)) by lia.
     sx_simp. rw_eval Er. st_fin.
   - destruct (word_gc_move conf (x, (i, (pa, (curr, (memory s, mdomain s))))))
@@ -3244,7 +3244,7 @@ Proof.
     injection H as <- <- <- <- <- Hc. apply andb_prop in Hc as [-> ->].
     set (L := LENGTH old).
     assert (HL : (dimindex a DIV 8 * L < dimword a)%N).
-    { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. unfold L. rewrite Hst, !LENGTH_length, !app_length. lia. }
+    { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. unfold L. rewrite Hst, !LENGTH_length, !length_app. lia. }
     assert (HLw : (L < dimword a)%N).
     { assert (Hk : (1 <= dimindex a DIV 8)%N) by (destruct Hg as [E|E]; rewrite E; cbn; lia). nia. }
     set (s4 := set_regs (regs s |+ (5, x) |+ (7, Word (w >>> 1)%w)) s).
@@ -3261,7 +3261,7 @@ Proof.
     { subst s5 s4; unfold get_var; nf_fields. cbn [FUPDATE_LIST FOLDL]. rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb].
       splits; try assumption; try reflexivity; try lia;
         try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
-      rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ [x1]) ++ xs)) with (LENGTH (init ++ old ++ x :: xs)); [exact Hlen|]. rewrite !LENGTH_length, !app_length; cbn [length]; lia. }
+      rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ [x1]) ++ xs)) with (LENGTH (init ++ old ++ x :: xs)); [exact Hlen|]. rewrite !LENGTH_length, !length_app; cbn [length]; lia. }
     pose proof (evaluate_add_clock (ck2 + 1) (word_gc_move_code conf) (set_clock (clock s4 + ck1) s4)) as Ev'.
     assert (NT : @NONE (result a) <> SOME TimeOut) by discriminate.
     specialize (Ev' NONE _ (conj Ev NT)). subst s4. autorewrite with nf in Ev'.
@@ -3276,7 +3276,7 @@ Proof.
       by (rewrite Hsh; apply WORD_MULT_COMM).
     rewrite (proj2 (bool_decide_spec _) eq_refl), Hss, Hst.
     replace (LENGTH init + L <? LENGTH (init ++ old ++ x :: xs))%N with true
-      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
     cbn [andb]. replace (x :: xs) with ([x] ++ xs) by reflexivity. unfold L. rewrite EL_LENGTH_ADD_LEMMA. cbn [app].
     sx_all2. rewrite word_sh_lsr by lia. sx_all2. rw_eval Ev'. sx_simp. sx_all2.
     rewrite Hust. cbn [negb].
@@ -3285,7 +3285,7 @@ Proof.
       by (rewrite Hsh; apply WORD_MULT_COMM).
     rewrite (proj2 (bool_decide_spec _) eq_refl), Hss, Hst.
     replace (LENGTH init + L <? LENGTH (init ++ old ++ x :: xs))%N with true
-      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
     cbn [andb]. replace (x :: xs) with ([x] ++ xs) by reflexivity. unfold L.
     rewrite LUPDATE_LENGTH_ADD_LEMMA. cbn [app].
     sx_all2. rewrite bytes_n2w_succ.
@@ -3293,9 +3293,9 @@ Proof.
     subst s5. unfold word_gc_move_bitmap_code in Er. cbn [list_Seq] in Er.
     autorewrite with nf in Er. cbn [clock regs memory stackSem.stack set_regs set_clock set_memory set_stack] in Er.
     autorewrite with nf in Er. cbn [FUPDATE_LIST FOLDL] in Er.
-    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, !app_length in Er |- *. cbn [length] in Er |- *.
+    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, !length_app in Er |- *. cbn [length] in Er |- *.
     replace (N.of_nat (length old) + 1)%N with (N.of_nat (length old + 1)) by lia.
-    sx_simp. rw_eval Er. st_fin. rewrite app_length; reflexivity.
+    sx_simp. rw_eval Er. st_fin. rewrite length_app; reflexivity.
 Qed.
 
 (*! HOL "cakeml/compiler/backend/proofs/stack_allocProofScript.sml" "word_gc_move_bitmap_code_thm" *)
@@ -3431,7 +3431,7 @@ Proof.
         try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
       - do 2 f_equal. word_ring.
       - rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ hd) ++ ws)) with (LENGTH (init ++ old ++ stack)); [exact Hlen|].
-        rewrite !LENGTH_length, !app_length. rewrite !LENGTH_length in HlenB. lia. }
+        rewrite !LENGTH_length, !length_app. rewrite !LENGTH_length in HlenB. lia. }
     pose proof (evaluate_add_clock (ck2 + 1) (word_gc_move_bitmap_code conf) (set_clock (clock s2 + ck1) s2)) as Ev'.
     specialize (Ev' NONE _ (conj Ev NT)). subst s2. autorewrite with nf in Ev'.
     cbn [clock regs memory set_regs set_clock set_memory set_stack] in Ev'. autorewrite with nf in Ev'.
@@ -3571,13 +3571,13 @@ Proof.
   { subst s2; unfold get_var; nf_fields. rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb].
     splits; try assumption; try reflexivity;
       try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
-    - rewrite !LENGTH_length, app_length. cbn [length]. do 4 f_equal. lia.
+    - rewrite !LENGTH_length, length_app. cbn [length]. do 4 f_equal. lia.
     - rewrite Hst, <- !app_assoc. reflexivity. }
   set (L1 := (LENGTH old + 1 + LENGTH x0)%N).
-  assert (EL1 : LENGTH ((old ++ [Word c]) ++ x0) = L1) by (unfold L1; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+  assert (EL1 : LENGTH ((old ++ [Word c]) ++ x0) = L1) by (unfold L1; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
   rewrite EL1 in Ev.
   assert (Hst' : LENGTH (stackSem.stack s) = (LENGTH init + L1 + LENGTH (h :: t))%N).
-  { rewrite Hst. unfold L1. rewrite !LENGTH_length, !app_length in *. cbn [length] in *. lia. }
+  { rewrite Hst. unfold L1. rewrite !LENGTH_length, !length_app in *. cbn [length] in *. lia. }
   assert (HL1 : (dimindex a DIV 8 * L1 < dimword a)%N).
   { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. rewrite Hst'. lia. }
   assert (HL1w : (L1 < dimword a)%N).
@@ -3592,9 +3592,9 @@ Proof.
   { subst s8 s2; unfold get_var; nf_fields. cbn [FUPDATE_LIST FOLDL]. rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb HD].
     splits; try assumption; try reflexivity; try lia;
       try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
-    - do 4 f_equal. unfold L1. rewrite !LENGTH_length, !app_length. cbn [length]. lia.
+    - do 4 f_equal. unfold L1. rewrite !LENGTH_length, !length_app. cbn [length]. lia.
     - rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ Word c :: x0) ++ h :: t)) with (LENGTH (init ++ old ++ Word c :: stack));
-        [exact Hlen|]. rewrite !LENGTH_length, !app_length in *. cbn [length] in *. lia. }
+        [exact Hlen|]. rewrite !LENGTH_length, !length_app in *. cbn [length] in *. lia. }
   pose proof (evaluate_add_clock (ck2 + 1) (word_gc_move_bitmaps_code conf) (set_clock (clock s2 + ck1) s2)) as Ev'.
   specialize (Ev' NONE _ (conj Ev NT)). subst s2. autorewrite with nf in Ev'.
   cbn [clock regs memory set_regs set_clock set_memory set_stack] in Ev'. autorewrite with nf in Ev'.
@@ -3609,9 +3609,9 @@ Proof.
   replace (init ++ (old ++ [Word c]) ++ x0 ++ h :: t) with ((init ++ (old ++ [Word c]) ++ x0) ++ h :: t)
     by (rewrite <- !app_assoc; reflexivity).
   assert (Hl2 : LENGTH (init ++ (old ++ [Word c]) ++ x0) = (LENGTH init + L1)%N)
-    by (rewrite <- EL1, !LENGTH_length, !app_length; lia).
+    by (rewrite <- EL1, !LENGTH_length, !length_app; lia).
   replace (LENGTH init + L1 <? LENGTH ((init ++ (old ++ [Word c]) ++ x0) ++ h :: t))%N with true
-    by (symmetry; apply N.ltb_lt; rewrite !LENGTH_length, !app_length in *; cbn [length] in *; lia).
+    by (symmetry; apply N.ltb_lt; rewrite !LENGTH_length, !length_app in *; cbn [length] in *; lia).
   cbn [andb]. rewrite (EL_LENGTH_ADD_LEMMA_2 _ _ h t Hl2).
   sx_all2. sx_simp.
   cbn [cont_loop]. replace (clock s + (ck2 + 1) =? 0)%N with false by (symmetry; apply N.eqb_neq; lia).
@@ -3670,7 +3670,9 @@ Proof.
 Qed.
 
 Lemma zero_lsr k : (n2w 0 >>> k : word a)%w = n2w 0.
-Proof. apply word_eq_w2n. rewrite w2n_lsr, w2n_n2w, N.mod_0_l by (pose proof (ZERO_LT_dimword a); lia). apply N.div_0_l. apply N.pow_nonzero; lia. Qed.
+(* [Div0.div_0_l] carries no separate [n <> 0] premise, so the [pow_nonzero]
+   step the deprecated [N.div_0_l] needed is now unnecessary. *)
+Proof. apply word_eq_w2n. rewrite w2n_lsr, w2n_n2w, N.Div0.mod_0_l by (pose proof (ZERO_LT_dimword a); lia). apply N.Div0.div_0_l. Qed.
 
 Lemma zero_lsl k : (n2w 0 << k : word a)%w = n2w 0.
 Proof. rewrite WORD_MUL_LSL. word_ring. Qed.
@@ -3766,7 +3768,7 @@ Proof.
   assert (Hsplit : stack s = init ++ h0 :: t0)
     by (rewrite <- Edrop; unfold init; rewrite TAKE_firstn, DROP_skipn, firstn_skipn; reflexivity).
   assert (Hinit : stack_space s = LENGTH init).
-  { unfold init. rewrite TAKE_firstn, LENGTH_length, firstn_length. rewrite LENGTH_length in Hsp. lia. }
+  { unfold init. rewrite TAKE_firstn, LENGTH_length, length_firstn. rewrite LENGTH_length in Hsp. lia. }
   set (ST4 := store s |+ (AllocSize, Word w) |+ (NextFree, ret) |+ (Globals, Word g1w)
                 |+ (GlobReal, Word ((g1w >>> shift_length conf << word_shift a) + new)%w)).
   set (R4 := (R3 |++ [(0, q0); (1, q1); (2, q2); (3, Word pa1); (4, Word i1); (5, Word g1w); (6, q6)])
@@ -3816,7 +3818,7 @@ Proof.
   set (LC := word_gc_move_loop_code conf).
   sx_all2. subst MC. rw_eval Ev1'. sx_simp. sx_all2.
   rewrite word_sh_lsr by lia. sx_all2. rewrite word_sh_lsl by lia. sx_all2.
-  rewrite zero_lsr, zero_lsl, w2n_n2w, N.mod_0_l, N.add_0_r by (pose proof (ZERO_LT_dimword a); lia).
+  rewrite zero_lsr, zero_lsl, w2n_n2w, N.Div0.mod_0_l, N.add_0_r by (pose proof (ZERO_LT_dimword a); lia).
   rewrite (proj2 (bool_decide_spec _) eq_refl), (proj2 (N.ltb_lt _ _) Hsp), Eh0. cbn [andb]. sx_all2.
   subst RC. rw_eval Ev2'. sx_simp. sx_all2. subst LC. rw_eval Ev3. cbn [FUPDATE_LIST FOLDL]. sx_simp. sx_all2.
   replace (len + new)%w with (new + len)%w by apply WORD_ADD_COMM.
@@ -4696,8 +4698,8 @@ Proof.
     unfold word_gen_gc_partial_move_bitmap_code in Er. cbn [list_Seq] in Er.
     autorewrite with nf in Er. cbn [clock regs memory stackSem.stack set_regs set_clock set_memory set_stack] in Er.
     autorewrite with nf in Er. cbn [FUPDATE_LIST FOLDL] in Er.
-    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, app_length in Er |- *. cbn [length] in Er |- *.
-    rewrite app_length in Er; cbn [length] in Er.
+    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, length_app in Er |- *. cbn [length] in Er |- *.
+    rewrite length_app in Er; cbn [length] in Er.
     replace (N.of_nat (length old) + 1)%N with (N.of_nat (length old + 1)) by lia.
     sx_simp. rw_eval Er. st_fin.
   - destruct (word_gen_gc_partial_move conf (x, (i, (pa, (curr, (memory s, (mdomain s, (gs, rs))))))))
@@ -4707,7 +4709,7 @@ Proof.
     injection H as <- <- <- <- <- Hc. apply andb_prop in Hc as [-> ->].
     set (L := LENGTH old).
     assert (HL : (dimindex a DIV 8 * L < dimword a)%N).
-    { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. unfold L. rewrite Hst, !LENGTH_length, !app_length. lia. }
+    { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. unfold L. rewrite Hst, !LENGTH_length, !length_app. lia. }
     assert (HLw : (L < dimword a)%N).
     { assert (Hk : (1 <= dimindex a DIV 8)%N) by (destruct Hg as [E|E]; rewrite E; cbn; lia). nia. }
     set (s4 := set_regs (regs s |+ (5, x) |+ (7, Word (w >>> 1)%w)) s).
@@ -4724,7 +4726,7 @@ Proof.
     { subst s5 s4; unfold get_var; nf_fields. cbn [FUPDATE_LIST FOLDL]. rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb].
       splits; try assumption; try reflexivity; try lia;
         try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
-      rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ [x1]) ++ xs)) with (LENGTH (init ++ old ++ x :: xs)); [exact Hlen|]. rewrite !LENGTH_length, !app_length; cbn [length]; lia. }
+      rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ [x1]) ++ xs)) with (LENGTH (init ++ old ++ x :: xs)); [exact Hlen|]. rewrite !LENGTH_length, !length_app; cbn [length]; lia. }
     pose proof (evaluate_add_clock (ck2 + 1) (word_gen_gc_partial_move_code conf) (set_clock (clock s4 + ck1) s4)) as Ev'.
     assert (NT : @NONE (result a) <> SOME TimeOut) by discriminate.
     specialize (Ev' NONE _ (conj Ev NT)). subst s4. autorewrite with nf in Ev'.
@@ -4739,7 +4741,7 @@ Proof.
       by (rewrite Hsh; apply WORD_MULT_COMM).
     rewrite (proj2 (bool_decide_spec _) eq_refl), Hss, Hst.
     replace (LENGTH init + L <? LENGTH (init ++ old ++ x :: xs))%N with true
-      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
     cbn [andb]. replace (x :: xs) with ([x] ++ xs) by reflexivity. unfold L. rewrite EL_LENGTH_ADD_LEMMA. cbn [app].
     sx_all3. rewrite word_sh_lsr by lia. sx_all3. rw_eval Ev'. sx_simp. sx_all3.
     rewrite Hust. cbn [negb].
@@ -4748,7 +4750,7 @@ Proof.
       by (rewrite Hsh; apply WORD_MULT_COMM).
     rewrite (proj2 (bool_decide_spec _) eq_refl), Hss, Hst.
     replace (LENGTH init + L <? LENGTH (init ++ old ++ x :: xs))%N with true
-      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
     cbn [andb]. replace (x :: xs) with ([x] ++ xs) by reflexivity. unfold L.
     rewrite LUPDATE_LENGTH_ADD_LEMMA. cbn [app].
     sx_all3. rewrite bytes_n2w_succ.
@@ -4756,9 +4758,9 @@ Proof.
     subst s5. unfold word_gen_gc_partial_move_bitmap_code in Er. cbn [list_Seq] in Er.
     autorewrite with nf in Er. cbn [clock regs memory stackSem.stack set_regs set_clock set_memory set_stack] in Er.
     autorewrite with nf in Er. cbn [FUPDATE_LIST FOLDL] in Er.
-    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, !app_length in Er |- *. cbn [length] in Er |- *.
+    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, !length_app in Er |- *. cbn [length] in Er |- *.
     replace (N.of_nat (length old) + 1)%N with (N.of_nat (length old + 1)) by lia.
-    sx_simp. rw_eval Er. st_fin. rewrite app_length; reflexivity.
+    sx_simp. rw_eval Er. st_fin. rewrite length_app; reflexivity.
 Qed.
 
 
@@ -4860,8 +4862,8 @@ Proof.
     unfold word_gen_gc_move_bitmap_code in Er. cbn [list_Seq] in Er.
     autorewrite with nf in Er. cbn [clock regs memory store stackSem.stack set_regs set_clock set_memory set_stack set_store_fld] in Er.
     autorewrite with nf in Er. cbn [FUPDATE_LIST FOLDL] in Er.
-    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, app_length in Er |- *. cbn [length] in Er |- *.
-    rewrite app_length in Er; cbn [length] in Er.
+    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, length_app in Er |- *. cbn [length] in Er |- *.
+    rewrite length_app in Er; cbn [length] in Er.
     replace (N.of_nat (length old) + 1)%N with (N.of_nat (length old + 1)) by lia.
     sx_simp. rw_eval Er. st_fin2.
   - destruct (word_gen_gc_move conf (x, (i, (pa, (ib, (pb, (curr, (memory s, mdomain s))))))))
@@ -4871,7 +4873,7 @@ Proof.
     injection H as <- <- <- <- <- <- <- Hc. apply andb_prop in Hc as [-> ->].
     set (L := LENGTH old).
     assert (HL : (dimindex a DIV 8 * L < dimword a)%N).
-    { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. unfold L. rewrite Hst, !LENGTH_length, !app_length. lia. }
+    { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. unfold L. rewrite Hst, !LENGTH_length, !length_app. lia. }
     assert (HLw : (L < dimword a)%N).
     { assert (Hk : (1 <= dimindex a DIV 8)%N) by (destruct Hg as [E|E]; rewrite E; cbn; lia). nia. }
     set (s4 := set_regs (regs s |+ (5, x) |+ (7, Word (w >>> 1)%w)) s).
@@ -4891,7 +4893,7 @@ Proof.
       sx_dec; sx_temp.
       splits; try assumption; try reflexivity; try lia;
         try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD, ?sx_store_upd; cbn [N.eqb Pos.eqb]; sx_dec; sx_temp; congruence).
-      rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ [x1]) ++ xs)) with (LENGTH (init ++ old ++ x :: xs)); [exact Hlen|]. rewrite !LENGTH_length, !app_length; cbn [length]; lia. }
+      rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ [x1]) ++ xs)) with (LENGTH (init ++ old ++ x :: xs)); [exact Hlen|]. rewrite !LENGTH_length, !length_app; cbn [length]; lia. }
     pose proof (evaluate_add_clock (ck2 + 1) (word_gen_gc_move_code conf) (set_clock (clock s4 + ck1) s4)) as Ev'.
     assert (NT : @NONE (result a) <> SOME TimeOut) by discriminate.
     specialize (Ev' NONE _ (conj Ev NT)). subst s4. autorewrite with nf in Ev'.
@@ -4906,7 +4908,7 @@ Proof.
       by (rewrite Hsh; apply WORD_MULT_COMM).
     rewrite (proj2 (bool_decide_spec _) eq_refl), Hss, Hst.
     replace (LENGTH init + L <? LENGTH (init ++ old ++ x :: xs))%N with true
-      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
     cbn [andb]. replace (x :: xs) with ([x] ++ xs) by reflexivity. unfold L. rewrite EL_LENGTH_ADD_LEMMA. cbn [app].
     sx_all3. rewrite word_sh_lsr by lia. sx_all3. rw_eval Ev'. sx_simp. sx_all3.
     rewrite Hust. cbn [negb].
@@ -4915,7 +4917,7 @@ Proof.
       by (rewrite Hsh; apply WORD_MULT_COMM).
     rewrite (proj2 (bool_decide_spec _) eq_refl), Hss, Hst.
     replace (LENGTH init + L <? LENGTH (init ++ old ++ x :: xs))%N with true
-      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+      by (symmetry; apply N.ltb_lt; unfold L; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
     cbn [andb]. replace (x :: xs) with ([x] ++ xs) by reflexivity. unfold L.
     rewrite LUPDATE_LENGTH_ADD_LEMMA. cbn [app].
     sx_all3. rewrite bytes_n2w_succ.
@@ -4923,9 +4925,9 @@ Proof.
     subst s5. unfold word_gen_gc_move_bitmap_code in Er. cbn [list_Seq] in Er.
     autorewrite with nf in Er. cbn [clock regs memory store stackSem.stack set_regs set_clock set_memory set_stack set_store_fld] in Er.
     autorewrite with nf in Er. cbn [FUPDATE_LIST FOLDL] in Er.
-    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, !app_length in Er |- *. cbn [length] in Er |- *.
+    rewrite <- !app_assoc in Er. cbn [app] in Er. rewrite !LENGTH_length, !length_app in Er |- *. cbn [length] in Er |- *.
     replace (N.of_nat (length old) + 1)%N with (N.of_nat (length old + 1)) by lia.
-    sx_simp. rewrite ?LENGTH_length. rw_eval2 Er. st_fin2. all: rewrite ?app_length; cbn [length]; regs_fin.
+    sx_simp. rewrite ?LENGTH_length. rw_eval2 Er. st_fin2. all: rewrite ?length_app; cbn [length]; regs_fin.
 Qed.
 
 
@@ -5065,7 +5067,7 @@ Proof.
         try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
       - do 2 f_equal. word_ring.
       - rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ hd) ++ ws)) with (LENGTH (init ++ old ++ stack)); [exact Hlen|].
-        rewrite !LENGTH_length, !app_length. rewrite !LENGTH_length in HlenB. lia. }
+        rewrite !LENGTH_length, !length_app. rewrite !LENGTH_length in HlenB. lia. }
     pose proof (evaluate_add_clock (ck2 + 1) (word_gen_gc_partial_move_bitmap_code conf) (set_clock (clock s2 + ck1) s2)) as Ev'.
     specialize (Ev' NONE _ (conj Ev NT)). subst s2. autorewrite with nf in Ev'.
     cbn [clock regs memory set_regs set_clock set_memory set_stack] in Ev'. autorewrite with nf in Ev'.
@@ -5190,13 +5192,13 @@ Proof.
   { subst s2; unfold get_var; nf_fields. rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb].
     splits; try assumption; try reflexivity;
       try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
-    - rewrite !LENGTH_length, app_length. cbn [length]. do 4 f_equal. lia.
+    - rewrite !LENGTH_length, length_app. cbn [length]. do 4 f_equal. lia.
     - rewrite Hst, <- !app_assoc. reflexivity. }
   set (L1 := (LENGTH old + 1 + LENGTH x0)%N).
-  assert (EL1 : LENGTH ((old ++ [Word c]) ++ x0) = L1) by (unfold L1; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+  assert (EL1 : LENGTH ((old ++ [Word c]) ++ x0) = L1) by (unfold L1; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
   rewrite EL1 in Ev.
   assert (Hst' : LENGTH (stackSem.stack s) = (LENGTH init + L1 + LENGTH (h :: t))%N).
-  { rewrite Hst. unfold L1. rewrite !LENGTH_length, !app_length in *. cbn [length] in *. lia. }
+  { rewrite Hst. unfold L1. rewrite !LENGTH_length, !length_app in *. cbn [length] in *. lia. }
   assert (HL1 : (dimindex a DIV 8 * L1 < dimword a)%N).
   { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. rewrite Hst'. lia. }
   assert (HL1w : (L1 < dimword a)%N).
@@ -5211,9 +5213,9 @@ Proof.
   { subst s8 s2; unfold get_var; nf_fields. cbn [FUPDATE_LIST FOLDL]. rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb HD].
     splits; try assumption; try reflexivity; try lia;
       try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
-    - do 4 f_equal. unfold L1. rewrite !LENGTH_length, !app_length. cbn [length]. lia.
+    - do 4 f_equal. unfold L1. rewrite !LENGTH_length, !length_app. cbn [length]. lia.
     - rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ Word c :: x0) ++ h :: t)) with (LENGTH (init ++ old ++ Word c :: stack));
-        [exact Hlen|]. rewrite !LENGTH_length, !app_length in *. cbn [length] in *. lia. }
+        [exact Hlen|]. rewrite !LENGTH_length, !length_app in *. cbn [length] in *. lia. }
   pose proof (evaluate_add_clock (ck2 + 1) (word_gen_gc_partial_move_bitmaps_code conf) (set_clock (clock s2 + ck1) s2)) as Ev'.
   specialize (Ev' NONE _ (conj Ev NT)). subst s2. autorewrite with nf in Ev'.
   cbn [clock regs memory set_regs set_clock set_memory set_stack] in Ev'. autorewrite with nf in Ev'.
@@ -5228,9 +5230,9 @@ Proof.
   replace (init ++ (old ++ [Word c]) ++ x0 ++ h :: t) with ((init ++ (old ++ [Word c]) ++ x0) ++ h :: t)
     by (rewrite <- !app_assoc; reflexivity).
   assert (Hl2 : LENGTH (init ++ (old ++ [Word c]) ++ x0) = (LENGTH init + L1)%N)
-    by (rewrite <- EL1, !LENGTH_length, !app_length; lia).
+    by (rewrite <- EL1, !LENGTH_length, !length_app; lia).
   replace (LENGTH init + L1 <? LENGTH ((init ++ (old ++ [Word c]) ++ x0) ++ h :: t))%N with true
-    by (symmetry; apply N.ltb_lt; rewrite !LENGTH_length, !app_length in *; cbn [length] in *; lia).
+    by (symmetry; apply N.ltb_lt; rewrite !LENGTH_length, !length_app in *; cbn [length] in *; lia).
   cbn [andb]. rewrite (EL_LENGTH_ADD_LEMMA_2 _ _ h t Hl2).
   sx_all3. sx_simp.
   cbn [cont_loop]. replace (clock s + (ck2 + 1) =? 0)%N with false by (symmetry; apply N.eqb_neq; lia).
@@ -5389,7 +5391,7 @@ Proof.
         try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD, ?sx_store_upd; cbn [N.eqb Pos.eqb]; sx_dec; sx_temp; congruence).
       - do 2 f_equal. word_ring.
       - rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ hd) ++ ws)) with (LENGTH (init ++ old ++ stack)); [exact Hlen|].
-        rewrite !LENGTH_length, !app_length. rewrite !LENGTH_length in HlenB. lia. }
+        rewrite !LENGTH_length, !length_app. rewrite !LENGTH_length in HlenB. lia. }
     pose proof (evaluate_add_clock (ck2 + 1) (word_gen_gc_move_bitmap_code conf) (set_clock (clock s2 + ck1) s2)) as Ev'.
     specialize (Ev' NONE _ (conj Ev NT)). subst s2. autorewrite with nf in Ev'.
     cbn [clock regs memory store set_regs set_clock set_memory set_stack set_store_fld] in Ev'. autorewrite with nf in Ev'.
@@ -5525,13 +5527,13 @@ Proof.
   { subst s2; unfold get_var; nf_fields. rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb].
     splits; try assumption; try reflexivity;
       try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD; cbn [N.eqb Pos.eqb]; congruence).
-    - rewrite !LENGTH_length, app_length. cbn [length]. do 4 f_equal. lia.
+    - rewrite !LENGTH_length, length_app. cbn [length]. do 4 f_equal. lia.
     - rewrite Hst, <- !app_assoc. reflexivity. }
   set (L1 := (LENGTH old + 1 + LENGTH x0)%N).
-  assert (EL1 : LENGTH ((old ++ [Word c]) ++ x0) = L1) by (unfold L1; rewrite !LENGTH_length, !app_length; cbn [length]; lia).
+  assert (EL1 : LENGTH ((old ++ [Word c]) ++ x0) = L1) by (unfold L1; rewrite !LENGTH_length, !length_app; cbn [length]; lia).
   rewrite EL1 in Ev.
   assert (Hst' : LENGTH (stackSem.stack s) = (LENGTH init + L1 + LENGTH (h :: t))%N).
-  { rewrite Hst. unfold L1. rewrite !LENGTH_length, !app_length in *. cbn [length] in *. lia. }
+  { rewrite Hst. unfold L1. rewrite !LENGTH_length, !length_app in *. cbn [length] in *. lia. }
   assert (HL1 : (dimindex a DIV 8 * L1 < dimword a)%N).
   { eapply N.le_lt_trans; [|exact Hlen]. apply N.mul_le_mono_l. rewrite Hst'. lia. }
   assert (HL1w : (L1 < dimword a)%N).
@@ -5549,9 +5551,9 @@ Proof.
     sx_dec; sx_temp.
     splits; try assumption; try reflexivity; try lia;
       try (unfold pred_set.IN, FDOM; rewrite ?FLOOKUP_UPD, ?sx_store_upd; cbn [N.eqb Pos.eqb]; sx_dec; sx_temp; congruence).
-    - do 4 f_equal. unfold L1. rewrite !LENGTH_length, !app_length. cbn [length]. lia.
+    - do 4 f_equal. unfold L1. rewrite !LENGTH_length, !length_app. cbn [length]. lia.
     - rewrite Hst in Hlen. replace (LENGTH (init ++ (old ++ Word c :: x0) ++ h :: t)) with (LENGTH (init ++ old ++ Word c :: stack));
-        [exact Hlen|]. rewrite !LENGTH_length, !app_length in *. cbn [length] in *. lia. }
+        [exact Hlen|]. rewrite !LENGTH_length, !length_app in *. cbn [length] in *. lia. }
   pose proof (evaluate_add_clock (ck2 + 1) (word_gen_gc_move_bitmaps_code conf) (set_clock (clock s2 + ck1) s2)) as Ev'.
   specialize (Ev' NONE _ (conj Ev NT)). subst s2. autorewrite with nf in Ev'.
   cbn [clock regs memory store set_regs set_clock set_memory set_stack set_store_fld] in Ev'. autorewrite with nf in Ev'.
@@ -5566,9 +5568,9 @@ Proof.
   replace (init ++ (old ++ [Word c]) ++ x0 ++ h :: t) with ((init ++ (old ++ [Word c]) ++ x0) ++ h :: t)
     by (rewrite <- !app_assoc; reflexivity).
   assert (Hl2 : LENGTH (init ++ (old ++ [Word c]) ++ x0) = (LENGTH init + L1)%N)
-    by (rewrite <- EL1, !LENGTH_length, !app_length; lia).
+    by (rewrite <- EL1, !LENGTH_length, !length_app; lia).
   replace (LENGTH init + L1 <? LENGTH ((init ++ (old ++ [Word c]) ++ x0) ++ h :: t))%N with true
-    by (symmetry; apply N.ltb_lt; rewrite !LENGTH_length, !app_length in *; cbn [length] in *; lia).
+    by (symmetry; apply N.ltb_lt; rewrite !LENGTH_length, !length_app in *; cbn [length] in *; lia).
   cbn [andb]. rewrite (EL_LENGTH_ADD_LEMMA_2 _ _ h t Hl2).
   sx_all3. sx_simp.
   cbn [cont_loop]. replace (clock s + (ck2 + 1) =? 0)%N with false by (symmetry; apply N.eqb_neq; lia).
@@ -6766,7 +6768,7 @@ Proof.
   assert (Hsplit : stack s = init ++ h0 :: t0)
     by (rewrite <- Edrop; unfold init; rewrite TAKE_firstn, DROP_skipn, firstn_skipn; reflexivity).
   assert (Hinit : stack_space s = LENGTH init).
-  { unfold init. rewrite TAKE_firstn, LENGTH_length, firstn_length. rewrite LENGTH_length in Hsp. lia. }
+  { unfold init. rewrite TAKE_firstn, LENGTH_length, length_firstn. rewrite LENGTH_length in Hsp. lia. }
   assert (NT : @NONE (result a) <> SOME TimeOut) by discriminate.
   destruct (⌜word_gen_gc_can_do_partial gen_sizes _⌝) eqn:Ecp;
     rewrite ?Fother, ?Fcurr, ?Flen, ?Fendh, ?Fgsv, ?Fglob, ?Fall in H; cbn [wordSem.theWord] in H.
@@ -6864,7 +6866,7 @@ Proof.
     unfold is_true in *. sx_all3. rewrite word_sh_lsr by lia. sx_all3.
     subst MC. rw_eval Ev1'. sx_simp. sx_all3.
     rewrite word_sh_lsr by lia. sx_all3. rewrite word_sh_lsl by lia. sx_all3.
-    rewrite zero_lsr, zero_lsl, w2n_n2w, N.mod_0_l, N.add_0_r by (pose proof (ZERO_LT_dimword a); lia).
+    rewrite zero_lsr, zero_lsl, w2n_n2w, N.Div0.mod_0_l, N.add_0_r by (pose proof (ZERO_LT_dimword a); lia).
     rewrite (proj2 (bool_decide_spec _) eq_refl), (proj2 (N.ltb_lt _ _) Hsp), Eh0. cbn [andb]. sx_all3.
     subst RC. rw_eval Ev2'. cbn [FUPDATE_LIST FOLDL]. sx_simp. sx_all3.
     rewrite (proj1 (proj2 (proj2 (proj2 (WORD_OR_CLAUSES (pb2 - (len + other))%w))))).
@@ -7007,7 +7009,7 @@ Proof.
   unfold is_true in *. sx_all3. rewrite word_sh_lsr by lia. sx_all3.
   subst MC. rw_eval Ev1'. sx_simp. sx_all3.
   rewrite word_sh_lsr by lia. sx_all3. rewrite word_sh_lsl by lia. sx_all3.
-  rewrite zero_lsr, zero_lsl, w2n_n2w, N.mod_0_l, N.add_0_r by (pose proof (ZERO_LT_dimword a); lia).
+  rewrite zero_lsr, zero_lsl, w2n_n2w, N.Div0.mod_0_l, N.add_0_r by (pose proof (ZERO_LT_dimword a); lia).
   rewrite (proj2 (bool_decide_spec _) eq_refl), (proj2 (N.ltb_lt _ _) Hsp), Eh0. cbn [andb]. sx_all3.
   subst RC. rw_eval Ev2'. cbn [FUPDATE_LIST FOLDL]. sx_simp. sx_all3.
   subst FC. rw_eval Ev3'. cbn [FUPDATE_LIST FOLDL]. sx_simp. sx_all3.

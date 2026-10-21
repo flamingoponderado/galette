@@ -9,7 +9,7 @@ bug-reports: "https://github.com/flamingoponderado/galette/issues"
 dev-repo: "git+https://github.com/flamingoponderado/galette.git"
 depends: [
   "dune" {>= "3.24"}
-  "rocq-prover" {>= "9.2"}
+  "rocq-prover" {>= "9.3.0"}
 ]
 build: [
   ["dune" "build" "-p" name "-j" jobs]

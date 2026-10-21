@@ -7,4 +7,17 @@
  (name Galette)
  (package galette)
  (theories Stdlib)
- (flags :standard -w -notation-overridden -w -ambiguous-paths))
+ ; -notation-overridden / -ambiguous-paths: carry-over HOL-style notations.
+ ; -implicit-create-rewrite-hint-db: the files already declare their Rewrite
+ ;   databases with `Create HintDb` (tre, nf, snr), but 9.x still warns on the
+ ;   first `Hint Rewrite ... : db` even after it (a deprecation the
+ ;   `Create HintDb` no longer silences); stkcode is likewise implicitly
+ ;   declared. Silenced rather than reworked, as the databases are correct.
+ ; -unused-intro-pattern: the ported proofs destruct a hypothesis with an
+ ;   explicit `as [He Hl]` whose names are used on the success path; the
+ ;   `try` around it makes Rocq report them as unused in the failing branches.
+ (flags :standard
+        -w -notation-overridden
+        -w -ambiguous-paths
+        -w -implicit-create-rewrite-hint-db
+        -w -unused-intro-pattern))
