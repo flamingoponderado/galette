@@ -56,11 +56,31 @@ Definition mk_Branch (t1 t2 : call_tree) : call_tree :=
 Section CallGraph.
 Context {a : N}.
 
+(** The visited list is kept for the HOL-facing equations.  The evaluator
+    also carries a trie, so membership on long call chains is logarithmic
+    rather than scanning the growing list at every call. *)
+Fixpoint visited_map (ns : list N) : num_map unit :=
+  match ns with
+  | [] => LN
+  | n :: ns => insert n tt (visited_map ns)
+  end.
+
+Lemma visited_map_lookup ns d :
+  (match lookup d (visited_map ns) with Some _ => true | None => false end) = MEM d ns.
+Proof.
+  induction ns as [|n ns IH]; [reflexivity|].
+  cbn [visited_map MEM]. rewrite lookup_insert.
+  destruct (decide (d = n)) as [E|E]; subst; cbn.
+  - unfold bool_decide. destruct (decide (n = n)); [reflexivity|congruence].
+  - rewrite IH. unfold bool_decide. destruct (decide (d = n)); [congruence|reflexivity].
+Qed.
+
 (** [cg f1 funs n ns total p] with [f1 = size funs]; the inner fuel [f2] is
     [total - LENGTH ns]. *)
 Fixpoint cg (f1 : nat) (funs : num_map (N * prog a)) (n : N) (ns : list N) (total : N)
     (p : prog a) {struct f1} : call_tree :=
-  let fix cg2 (f2 : nat) (n : N) (ns : list N) (p : prog a) {struct f2} : call_tree :=
+  let fix cg2 (f2 : nat) (n : N) (ns : list N) (visited : num_map unit)
+      (p : prog a) {struct f2} : call_tree :=
     let fix cg3 (p : prog a) {struct p} : call_tree :=
       match p with
       | Seq p1 p2 => mk_Branch (cg3 p1) (cg3 p2)
@@ -69,7 +89,8 @@ Fixpoint cg (f1 : nat) (funs : num_map (N * prog a)) (n : N) (ns : list N) (tota
           match dest with
           | None => Unknown
           | Some d =>
-              if MEM d ns && match ret with None => true | Some _ => false end then Leaf else
+              if (match lookup d visited with Some _ => true | None => false end) &&
+                 match ret with None => true | Some _ => false end then Leaf else
               match lookup d funs with
               | None => Unknown
               | Some (_, body) =>
@@ -77,7 +98,8 @@ Fixpoint cg (f1 : nat) (funs : num_map (N * prog a)) (n : N) (ns : list N) (tota
                   | None =>
                       if LENGTH ns <? total then
                         mk_Branch (Call d Leaf)
-                          (match f2 with O => Leaf | S f2' => cg2 f2' d (d :: ns) body end)
+                          (match f2 with O => Leaf | S f2' =>
+                             cg2 f2' d (d :: ns) (insert d tt visited) body end)
                       else Leaf
                   | Some (_, (_, (ret_prog, (_, _)))) =>
                       let new_funs := delete d funs in
@@ -105,7 +127,7 @@ Fixpoint cg (f1 : nat) (funs : num_map (N * prog a)) (n : N) (ns : list N) (tota
       | _ => Leaf
       end in
     cg3 p in
-  cg2 (N.to_nat (total - LENGTH ns)) n ns p.
+  cg2 (N.to_nat (total - LENGTH ns)) n ns (visited_map ns) p.
 
 (** HOL [call_graph]; see the file header. *)
 Definition call_graph (funs : num_map (N * prog a)) (n : N) (ns : list N) (total : N)
@@ -171,23 +193,23 @@ Proof.
         destruct (N.to_nat (total - LENGTH ns)); reflexivity].
     destruct (MEM d ns && match ret with None => true | Some _ => false end) eqn:M;
       [destruct (N.to_nat (size funs)); cbn [cg];
-       destruct (N.to_nat (total - LENGTH ns)); cbn; rewrite M; reflexivity|].
+       destruct (N.to_nat (total - LENGTH ns)); cbn; rewrite ?visited_map_lookup, M; reflexivity|].
     destruct (lookup d funs) as [[x body]|] eqn:L;
       [|destruct (N.to_nat (size funs)); cbn [cg];
-        destruct (N.to_nat (total - LENGTH ns)); cbn; rewrite M, L; reflexivity].
+        destruct (N.to_nat (total - LENGTH ns)); cbn; rewrite ?visited_map_lookup, M, L; reflexivity].
     assert (S1 : (0 < size funs)%N) by (eapply lookup_size; exact L).
     assert (E : N.to_nat (size funs) = S (N.to_nat (size (delete d funs)))).
     { rewrite size_delete; destruct (decide (lookup d funs = None)); [congruence|lia]. }
     rewrite E; cbn [cg].
     destruct ret as [[? [? [ret_prog [? ?]]]]|].
-    + destruct (N.to_nat (total - LENGTH ns)); cbn; rewrite M, L;
+    + destruct (N.to_nat (total - LENGTH ns)); cbn; rewrite ?visited_map_lookup, M, L;
         destruct handler as [[? [? [? ?]]]|]; reflexivity.
     + destruct (N.ltb_spec (LENGTH ns) total) as [H|H].
       * assert (E2 : N.to_nat (total - LENGTH ns) = S (N.to_nat (total - LENGTH (d :: ns)))).
         { cbn [LENGTH]; lia. }
-        rewrite E2; cbn; rewrite M, L.
+        rewrite E2; cbn; rewrite ?visited_map_lookup, M, L.
         destruct (N.ltb_spec (LENGTH ns) total); [reflexivity|lia].
-      * destruct (N.to_nat (total - LENGTH ns)); cbn; rewrite M, L;
+      * destruct (N.to_nat (total - LENGTH ns)); cbn; rewrite ?visited_map_lookup, M, L;
           (destruct (N.ltb_spec (LENGTH ns) total); [lia|reflexivity]).
   - destruct p; try exact I; destruct (N.to_nat (size funs)); cbn [cg];
       destruct (N.to_nat (total - LENGTH ns)); reflexivity.
