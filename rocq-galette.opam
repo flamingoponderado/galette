@@ -1,5 +1,5 @@
 opam-version: "2.0"
-name: "galette"
+name: "rocq-galette"
 synopsis: "Rocq port of the CakeML Pancake compiler and its correctness theorems (RISC-V backend)"
 maintainer: "Flamingo Ponderado - Unipessoal LDA <hello@flamingoponderado.com>"
 authors: "Galette contributors"
@@ -9,7 +9,7 @@ bug-reports: "https://github.com/flamingoponderado/galette/issues"
 dev-repo: "git+https://github.com/flamingoponderado/galette.git"
 depends: [
   "dune" {>= "3.24"}
-  "rocq-prover" {>= "9.3.0"}
+  "rocq-prover" {>= "9.3.0" & < "9.4~"}
 ]
 build: [
   ["dune" "build" "-p" name "-j" jobs]

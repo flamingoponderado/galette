@@ -5,7 +5,7 @@
 
 (rocq.theory
  (name Galette)
- (package galette)
+ (package rocq-galette)
  (theories Stdlib)
  ; -notation-overridden / -ambiguous-paths: carry-over HOL-style notations.
  ; -implicit-create-rewrite-hint-db: the files already declare their Rewrite
