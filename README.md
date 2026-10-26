@@ -35,7 +35,7 @@ The reference checkout at `../flapjack` is needed for the HOL-reference
 checks and parity tests. The parity script also accepts its location through
 `FLAPJACK`.
 
-Galette is a public dune/opam package named `galette`. Install it locally
+Galette is a public dune/opam package named `rocq-galette`. Install it locally
 with `opam install .`; downstream dune projects can then depend on the
 `Galette` theory via `(theories Galette)` in their `rocq.theory` stanza.
 
