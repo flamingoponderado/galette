@@ -1,7 +1,7 @@
 opam-version: "2.0"
 name: "galette"
 synopsis: "Rocq port of the CakeML Pancake compiler and its correctness theorems (RISC-V backend)"
-maintainer: "zkSecurity"
+maintainer: "Flamingo Ponderado - Unipessoal LDA <hello@flamingoponderado.com>"
 authors: "Galette contributors"
 license: "BSD-3-Clause"
 homepage: "https://github.com/flamingoponderado/galette"
