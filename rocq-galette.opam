@@ -19,7 +19,6 @@ build: [
 ]
 tags: [
   "logpath:Galette"
-  "category:Computer Science/Semantics and Compilation/Compilation"
   "keyword:CakeML"
   "keyword:Pancake"
   "keyword:RISC-V"
