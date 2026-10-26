@@ -4,7 +4,7 @@ version: "0.1.0"
 synopsis: "Rocq port of the CakeML Pancake compiler and its correctness theorems (RISC-V backend)"
 description: "Rocq port of the Pancake compiler (currently only the RISC-V backend)."
 maintainer: "Flamingo Ponderado - Unipessoal LDA <hello@flamingoponderado.com>"
-authors: "CakeML contributors"
+authors: ["CakeML contributors" "Galette contributors"]
 license: "BSD-3-Clause"
 homepage: "https://github.com/flamingoponderado/galette"
 bug-reports: "https://github.com/flamingoponderado/galette/issues"
