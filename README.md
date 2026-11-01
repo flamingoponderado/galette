@@ -19,7 +19,8 @@ Two properties are the point of the port:
    `cake --pancake --target=riscv` byte for byte (the oracle digests are those
    recorded in Flapjack's parity fixtures).
 
-Contributor conventions are in [AGENTS.md](AGENTS.md).
+Contributor conventions are in [AGENTS.md](AGENTS.md). What the proofs and
+tests do and do not establish is in [docs/SOUNDNESS.md](docs/SOUNDNESS.md).
 
 ## Building
 
