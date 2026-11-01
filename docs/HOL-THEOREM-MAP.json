@@ -14210,6 +14210,16 @@
   "rocq_name": "SPLITP"
  },
  {
+  "hol_path": "HOL/src/marker/markerScript.sml",
+  "hol_name": "Abbrev_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Abbrev x = x.",
+  "rocq_path": "theories/HOL/src/marker/marker.v",
+  "rocq_name": "Abbrev"
+ },
+ {
   "hol_path": "HOL/src/monad/more_monads/errorLogMonadScript.sml",
   "hol_name": "M",
   "hol_line": null,
@@ -67338,6 +67348,136 @@
   "note": "reviewer: same IN {INL Add; INL Sub; INR Less; INR Lower; INR Equal; INR NotLess; INR NotLower; INR NotEqual} test (bool_decide on INSERT/{} membership) and the same two branches",
   "rocq_path": "theories/cakeml/compiler/encoders/arm8/arm8_target.v",
   "rocq_name": "valid_immediate"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "Decode_EncodeBitMask",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "Decode_EncodeBitMask"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "arm8_encode_not_nil",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "arm8_encode_not_nil"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "arm8_encoder_correct",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "arm8_encoder_correct"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "arm8_encoding",
+  "hol_line": 309,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "The exported declaration at line 309 (after SIMP_RULE with arm8_enc_def and LIST_BIND_def): FLAT (MAP arm8_encode (arm8_ast i)).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "arm8_encoding"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "arm8_target_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "arm8_target_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "asr",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "asr"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "asr2",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "HOL's x is unconstrained (type 'a); the Rocq statement quantifies it over a type parameter A.",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "asr2"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "length_arm8_enc",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "length_arm8_enc"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "length_arm8_encode",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "length_arm8_encode"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "lsl",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "lsl"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "lsr",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "lsr"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "mul_long",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "mul_long"
+ },
+ {
+  "hol_path": "cakeml/compiler/encoders/arm8/proofs/arm8_targetProofScript.sml",
+  "hol_name": "ror",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_targetProofScript.sml (and printed from the built arm8_targetTheory).",
+  "rocq_path": "theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v",
+  "rocq_name": "ror"
  },
  {
   "hol_path": "cakeml/compiler/encoders/asm/asmPropsScript.sml",
