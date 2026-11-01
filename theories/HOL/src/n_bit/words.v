@@ -254,6 +254,10 @@ Definition word_slice (h l : N) (w : word a) : word a :=
 Definition word_modify (f : N -> bool -> bool) (w : word a) : word a :=
   FCP (fun i => f i (fcp_index w i)).
 
+(*! HOL "HOL/src/n-bit/wordsScript.sml" "word_reverse_def" *)
+Definition word_reverse (w : word a) : word a :=
+  FCP (fun i => fcp_index w (dimindex a - 1 - i)).
+
 (*! HOL "HOL/src/n-bit/wordsScript.sml" "bit_count_upto_def" *)
 Definition bit_count_upto (n : N) (w : word a) : N :=
   SUM n (fun i => if fcp_index w i then 1 else 0).

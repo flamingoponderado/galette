@@ -6,7 +6,8 @@
 
 From Galette Require Import Base.
 From Galette.HOL.src.num.theories Require Import arithmetic.
-From Galette.HOL.src.list.src Require Import list.
+From Galette.HOL.src.list.src Require Import list numposrep.
+From Galette.HOL.src.list.src.list Require Import extra.
 From Galette.HOL.src.n_bit Require Import words.
 From Galette.HOL.src.n_bit.words Require Import fcp_defs.
 Open Scope N_scope.
@@ -38,3 +39,57 @@ Proof.
     + symmetry; apply N.bits_above_log2; rewrite N.log2_1; lia.
     + symmetry; apply N.bits_0.
 Qed.
+
+(** ** Conversions, extension and fields (used by the L3 ARMv8 model) *)
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "bitify_def" *)
+Fixpoint bitify (a : list N) (l : list bool) {struct l} : list N :=
+  match l with
+  | [] => a
+  | false :: l => bitify (0 :: a) l
+  | true :: l => bitify (1 :: a) l
+  end.
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "v2n_def" *)
+Definition v2n (l : list bool) : N := l2n 2 (bitify [] l).
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "zero_extend_def" *)
+Definition zero_extend (n : N) (v : list bool) : list bool := PAD_LEFT false n v.
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "fixwidth_def" *)
+Definition fixwidth (n : N) (v : list bool) : list bool :=
+  let l := LENGTH v in
+  if l <? n then zero_extend n v else DROP (l - n) v.
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "shiftl_def" *)
+Definition shiftl (v : list bool) (m : N) : list bool := PAD_RIGHT false (LENGTH v + m) v.
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "shiftr_def" *)
+Definition shiftr (v : list bool) (m : N) : list bool := TAKE (LENGTH v - m) v.
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "field_def" *)
+Definition field (h l : N) (v : list bool) : list bool := fixwidth (SUC h - l) (shiftr v l).
+
+(** HOL's [m MOD l] is unspecified for [l = 0]; that case returns [v]
+    before the remainder is used. *)
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "rotate_def" *)
+Definition rotate (v : list bool) (m : N) : list bool :=
+  let l := LENGTH v in
+  let x := m mod l in
+  if (l =? 0) || (x =? 0) then v else field (x - 1) 0 v ++ field (l - 1) x v.
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "w2v_def" *)
+Definition w2v {a : N} (w : word a) : list bool :=
+  GENLIST (fun i => fcp_index w (dimindex a - 1 - i)) (dimindex a).
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "bitwise_def" *)
+Definition bitwise (f : bool -> bool -> bool) (v1 v2 : list bool) : list bool :=
+  let m := MAX (LENGTH v1) (LENGTH v2) in
+  MAP (fun p => f (fst p) (snd p)) (ZIP (fixwidth m v1, fixwidth m v2)).
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "bxor_def" *)
+Definition bxor : list bool -> list bool -> list bool :=
+  bitwise (fun x y => negb (bool_decide (x = y))).
+
+(*! HOL "HOL/src/n-bit/bitstringScript.sml" "replicate_def" *)
+Definition replicate (v : list bool) (n : N) : list bool := FLAT (GENLIST (fun _ => v) n).
