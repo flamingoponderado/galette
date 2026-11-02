@@ -595,6 +595,37 @@ Proof.
   - symmetry; apply run_Looped.
 Qed.
 
+(** ** Running [coreloop_acc] in the kernel (Galette)
+
+    [coreloop_acc] recurses on its [Acc] argument, and the termination
+    proofs ([peg_exec_nt_Acc]) are opaque, so on them [coreloop_acc] is
+    stuck in the kernel ([vm_compute]).  [Acc_gen n x H] puts about [2^n]
+    lazily built [Acc_intro] layers in front of [H], by Stdlib's
+    [Acc_intro_generator] on the states that have an [Acc] proof
+    ([Acc_sub]); [H] itself is carried along but never inspected.
+    Extraction erases all of it. *)
+Definition Acc_sub {T} (R : T -> T -> Prop) (a b : {y : T | Acc R y}) : Prop :=
+  R (proj1_sig a) (proj1_sig b).
+
+Lemma Acc_sub_acc {T} (R : T -> T -> Prop) :
+  forall y, Acc R y -> forall H : Acc R y, Acc (Acc_sub R) (exist _ y H).
+Proof.
+  intros y Hy; induction Hy as [y _ IH]; intros H.
+  constructor; intros [z Hz] r; exact (IH z r Hz).
+Qed.
+
+Lemma Acc_sub_wf {T} (R : T -> T -> Prop) : well_founded (Acc_sub R).
+Proof. intros [y H]; exact (Acc_sub_acc R y H H). Qed.
+
+Fixpoint Acc_sub_back {T} {R : T -> T -> Prop} (a : {y : T | Acc R y})
+    (Ha : Acc (Acc_sub R) a) {struct Ha} : Acc R (proj1_sig a) :=
+  Acc_intro _ (fun y h =>
+    Acc_sub_back (exist _ y (Acc_inv (proj2_sig a) h))
+      (Acc_inv Ha (y := exist _ y (Acc_inv (proj2_sig a) h)) h)).
+
+Definition Acc_gen {T} {R : T -> T -> Prop} (n : nat) (x : T) (H : Acc R x) : Acc R x :=
+  Acc_sub_back (exist _ x H) (Acc_intro_generator n (Acc_sub_wf R) (exist _ x H)).
+
 Lemma halts_Acc G n s :
   notResult (FUNPOW (coreloop_step G) n s) = false -> Acc (Rstep G) s.
 Proof.
