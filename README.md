@@ -2,8 +2,10 @@
 
 Galette is a Rocq port of the formally verified
 [Pancake](https://cakeml.org) compiler (part of CakeML) and its correctness
-theorems, for the RISC-V backend only. It is derived from CakeML and HOL4;
-see `LICENSE` (CakeML's BSD-3-Clause license).
+theorems, for the RISC-V backend only. It is derived from CakeML and HOL4,
+both under BSD-3-Clause licenses: `LICENSE` is CakeML's, and
+`theories/HOL/LICENSE` is HOL4's (its `COPYRIGHT` file), which covers the
+ports of HOL4 theories under `theories/HOL`.
 
 The reference is the HOL4 development, read from a checkout of
 [Flapjack](https://github.com/flamingoponderado/flapjack) at `../flapjack`
