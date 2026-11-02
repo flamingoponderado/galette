@@ -144,6 +144,11 @@ Extract Inlined Constant N.peano_rect =>
 Extract Inlined Constant N.peano_rec =>
   "(fun f0 fs n -> let rec go i acc = if Galette_zarith.equal i n then acc else go (Galette_zarith.succ i) (fs i acc) in go Galette_zarith.zero f0)".
 
+(** Stdlib's [List.rev] (HOL's [REVERSE]) is quadratic when extracted
+    ([rev l ++ [x]]); HOL's code generator uses ML's linear [List.rev]. The
+    register allocator's [sorted_insert] reverses on every edge insertion. *)
+Extract Inlined Constant List.rev => "List.rev".
+
 (** [ARB]/[select] are not computable; reaching them at run time is a bug. *)
 Extract Constant select => "(fun _ -> failwith ""Galette: ARB/select evaluated"")".
 
