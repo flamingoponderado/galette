@@ -21,7 +21,8 @@ Two properties are the point of the port:
    parity fixtures; for ARMv8, a live run of `cake` and Flapjack's ARMv8
    goldens).
 
-Contributor conventions are in [AGENTS.md](AGENTS.md).
+Contributor conventions are in [AGENTS.md](AGENTS.md). What the proofs and
+tests do and do not establish is in [docs/SOUNDNESS.md](docs/SOUNDNESS.md).
 
 ## Building
 
