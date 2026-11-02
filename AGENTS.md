@@ -1,10 +1,10 @@
 # Galette: agent and contributor notes
 
 Galette is a Rocq port of the CakeML Pancake compiler and its correctness
-theorems, restricted to the RISC-V backend. The reference is the HOL4 source
+theorems, restricted to the RISC-V and ARMv8 (`arm8`) backends. The reference is the HOL4 source
 in the read-only `../flapjack` checkout: `../flapjack/cakeml` (CakeML,
 including `pancake/`) and `../flapjack/HOL` (HOL4, including the L3 RISC-V
-model). Flapjack's Lean port is a convenient second opinion, but **HOL is the
+and ARMv8 models). Flapjack's Lean port is a convenient second opinion, but **HOL is the
 reference**. Do not modify `../flapjack`.
 
 Goals, in priority order:
@@ -16,7 +16,10 @@ Goals, in priority order:
 2. **Same bytes.** The extracted compiler must produce, byte for byte, the
    output of `cake --pancake --target=riscv` (the oracle digests are
    recorded in `../flapjack/scripts/parity-small-corpus.json` and
-   `../flapjack/scripts/guest-parity.json`).
+   `../flapjack/scripts/guest-parity.json`) and of
+   `cake --pancake --target=arm8` (`scripts/parity.py --target=arm8 --cake
+   PATH` compares the corpus with a live run of `cake` and checks Flapjack's
+   ARMv8 goldens in `../flapjack/scripts/arm8/parity`).
 
 ## Build
 
@@ -143,6 +146,16 @@ the `_def` tag. The tagged statement must be HOL's.
   hits them fails at run time.
 - **Shared files**: if you need something in a file you do not own, say so in
   your report instead of editing it.
+
+**Generated L3 models.** The ARMv8 model
+(`theories/HOL/examples/l3_machine_code/arm8/model/arm8.v`) is printed from
+the HOL terms of the built `arm8Theory` by `scripts/l3-to-rocq/` and
+post-processed for the few recursive definitions; regenerate it with
+`HOLDIR=<built HOL> scripts/l3-to-rocq/regen-arm8.sh`, which must reproduce
+the committed file exactly. Hand edits to `arm8.v` belong in
+`scripts/l3-to-rocq/arm8-patch.py`. The file header lists the translation
+conventions (right-nested tuples, `X@64` as `X_64`, width parameters
+`{Nw : N}`).
 
 ## Porting semantics (clocked `evaluate` functions)
 

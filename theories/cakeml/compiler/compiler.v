@@ -14,9 +14,10 @@
 
     Deviations (untagged, documented at each declaration):
     - [parse_target_64]: HOL's selects one of the x64/arm8/mips/riscv
-      backends (default x64).  Only RISC-V is ported, so the Galette version
-      accepts [--target=riscv] only and reports every other choice
-      (including the default) as a configuration error.
+      backends (default x64).  Only ARMv8 and RISC-V are ported, so the
+      Galette version accepts [--target=arm8] and [--target=riscv] and
+      reports every other choice (including the default) as a
+      configuration error.
     - [full_compile_64] works on the basis library's file-system model
       ([add_stdout], [add_stderr], [fastForwardFD] over [IO_fs]), which is
       not ported.  [compiler_main] below follows the dispatch of the
@@ -55,6 +56,8 @@ From Galette.cakeml.compiler.backend Require
   clos_known clos_to_bvl bvl_to_bvi data_to_word word_to_word stack_to_lab lab_to_target.
 From Galette.cakeml.compiler.backend Require Import backend_common presLang backend.
 From Galette.cakeml.compiler.backend.riscv Require Import riscv_config export_riscv.
+From Galette.cakeml.compiler.encoders.arm8 Require arm8_target.
+From Galette.cakeml.compiler.backend.arm8 Require arm8_config export_arm8.
 From Galette.cakeml.pancake Require panLang panStatic pan_passes.
 From Galette.cakeml.pancake.parser Require panPtreeConversion.
 From Galette.cakeml.pancake Require Import news.
@@ -645,22 +648,25 @@ Definition extend_conf (ls : list mlstring) (conf : config) : config + mlstring 
                    get_err_str lab])
   end.
 
-(** The type of the target-specific exporters ([riscv_export]). *)
+(** The type of the target-specific exporters ([riscv_export],
+    [arm8_export]). *)
 Definition exporter : Type :=
   list mlstring -> list word8 -> list word64 -> list (mlstring * (N * N)) ->
   list mlstring -> bool -> bool -> app_list mlstring.
 
-(** HOL [parse_target_64] (untagged, see the header): only the RISC-V
-    branch is ported; every other choice, including the default ([x64]
-    when no [--target=] is given), is a configuration error. *)
+(** HOL [parse_target_64] (untagged, see the header): only the ARMv8 and
+    RISC-V branches are ported; every other choice, including the default
+    ([x64] when no [--target=] is given), is a configuration error. *)
 Definition parse_target_64 (ls : list mlstring)
     : (config * (exporter * asm_config 64)) + mlstring :=
   match find_str (strlit "--target=") ls with
-  | None => inr (strlit "No --target= given: only --target=riscv is supported by Galette (CakeML's default is x64)")
+  | None => inr (strlit "No --target= given: only --target=arm8 and --target=riscv are supported by Galette (CakeML's default is x64)")
   | Some rest =>
-      if decide (rest = strlit "riscv") then inl (riscv_backend_config, (riscv_export, riscv_config))
-      else if bool_decide (rest = strlit "x64") || bool_decide (rest = strlit "arm8") || bool_decide (rest = strlit "mips")
-      then inr (concat [strlit "Unsupported 64-bit target option (Galette supports only riscv): "; rest])
+      if decide (rest = strlit "arm8") then
+        inl (arm8_config.arm8_backend_config, (export_arm8.arm8_export, arm8_target.arm8_config))
+      else if decide (rest = strlit "riscv") then inl (riscv_backend_config, (riscv_export, riscv_config))
+      else if bool_decide (rest = strlit "x64") || bool_decide (rest = strlit "mips")
+      then inr (concat [strlit "Unsupported 64-bit target option (Galette supports only arm8 and riscv): "; rest])
       else inr (concat [strlit "Unrecognized 64-bit target option: "; rest])
   end.
 

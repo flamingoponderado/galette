@@ -123,6 +123,19 @@ Notation "s 'DIFF' t" := (DIFF s t) (at level 50, left associativity).
 Notation "s 'INTER' t" := (INTER s t) (at level 40, left associativity).
 Notation "{}" := EMPTY.
 
+(** Membership in a set written out with [INSERT] and [{}] is decidable
+    (Galette infrastructure, so that HOL code testing [x IN {a; b}] runs). *)
+#[global] Instance IN_EMPTY_dec {A} (x : A) : Decision (x IN {}).
+Proof. right; intros []. Defined.
+
+#[global] Instance IN_INSERT_dec {A} `{EqDecision A} (x a : A) (s : A -> Prop)
+  `{Decision (x IN s)} : Decision (x IN (a INSERT s)).
+Proof.
+  destruct (decide (x = a)) as [e|ne]; [left; left; exact e|].
+  destruct (decide (x IN s)) as [i|ni]; [left; right; exact i|].
+  right; intros [e|i]; contradiction.
+Defined.
+
 (** HOL [INFINITE s] abbreviates [~FINITE s]. *)
 Abbreviation INFINITE s := (~ FINITE s).
 
