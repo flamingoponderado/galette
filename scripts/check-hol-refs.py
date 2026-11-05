@@ -58,6 +58,11 @@ HOL_HEADER = re.compile(
     r"Type|Quote)\s*:?\s*([A-Za-z0-9_']+)")
 SML_VAL = re.compile(r"^val\s+(?:\(\s*)?([A-Za-z0-9_']+)\s*(?:,|=)")
 DATATYPE_OPEN = re.compile(r"^Datatype\s*:?\s*$")
+# L3-generated scripts declare their types with `Record`/`Construct` instead
+# of `Datatype:` blocks (e.g. HOL/examples/l3-machine-code/arm8/model).
+RECORD_DECL = re.compile(r'\bRecord\s*\(\s*"([A-Za-z0-9_\']+)"')
+CONSTRUCT_BLOCK = re.compile(r'\bConstruct\s*\[(.*?)\n\s*;', re.S)
+CONSTRUCT_NAME = re.compile(r'\(\s*"([A-Za-z0-9_\']+)",\s*\[')
 DATATYPE_INLINE = re.compile(r"^Datatype\s*:\s*([A-Za-z0-9_']+)\s*=")
 DATATYPE_NAME = re.compile(r"^\s*([A-Za-z0-9_']+)\s*(=|$)")
 END = re.compile(r"^End\b")
@@ -95,9 +100,10 @@ def hol_declarations(path: Path, cache: dict) -> dict[str, list[int]]:
     def add(name: str, line: int) -> None:
         names.setdefault(name, []).append(line)
 
+    text = strip_sml_comments(path.read_text(errors="replace"))
     in_datatype = False
     expect_name = False
-    for number, line in enumerate(strip_sml_comments(path.read_text(errors="replace")).splitlines(), 1):
+    for number, line in enumerate(text.splitlines(), 1):
         if in_datatype:
             if END.match(line):
                 in_datatype = False
@@ -132,6 +138,12 @@ def hol_declarations(path: Path, cache: dict) -> dict[str, list[int]]:
             if line.startswith("Definition") and m.group(1).endswith("_def"):
                 add(m.group(1)[:-4], number)
                 add(m.group(1)[:-4] + "_ind", number)
+    for m in RECORD_DECL.finditer(text):
+        add(m.group(1), text.count("\n", 0, m.start()) + 1)
+    for m in CONSTRUCT_BLOCK.finditer(text):
+        line = text.count("\n", 0, m.start()) + 1
+        for mm in CONSTRUCT_NAME.finditer(m.group(1)):
+            add(mm.group(1), line)
     cache[path] = names
     return names
 
