@@ -18,6 +18,12 @@ Flapjack checkout (`../flapjack/cakeml`, `../flapjack/HOL`). Other CakeML
 backends (x64, mips, ag32, and the ASL-based `arm8_asl` target) and the
 CakeML source-language compiler are out of scope.
 
+For x86-64, Galette has only the compiler configuration
+(`x64_config.v`) and the assembly export (`export_x64.v`), ported as
+definitions. There is no x64 target, machine model or encoder theorem, and
+`--target=x64` is rejected; nothing below relies on them. See
+[docs/X64.md](X64.md).
+
 The two backends are not on the same footing. The top-level theorem is
 generic in the target, and for both targets the encoder theorem is proved.
 For neither target is the theorem instantiated with the concrete
