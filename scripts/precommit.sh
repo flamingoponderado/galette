@@ -24,6 +24,7 @@ if ! find theories -name '*.v' | sed 's/\.v$/.vo/' | xargs dune build --root . >
   echo "precommit: build failed (full log: $LOG)"
   exit 1
 fi
+FLAPJACK="$FLAPJACK" python3 scripts/check-hol-refs.py --self-test
 FLAPJACK="$FLAPJACK" python3 scripts/check-hol-refs.py --update-manifest >/dev/null
 cp docs/HOL-THEOREM-MAP.json "$ROOT/docs/HOL-THEOREM-MAP.json"
 cd "$ROOT"; git add docs/HOL-THEOREM-MAP.json

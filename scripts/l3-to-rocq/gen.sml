@@ -402,7 +402,7 @@ fun has_fun_type ty =
    let val {Tyop, Thy, Args} = dest_thy_type ty
    in (Thy = "min" andalso Tyop = "fun") orelse List.exists has_fun_type Args end)
 
-fun pdatatype tname =
+fun pdatatype hol_path tname =
   let
     val ty = mk_thy_type {Thy = !THY, Tyop = tname, Args = []}
     val rn = tyname tname
@@ -412,6 +412,7 @@ fun pdatatype tname =
         val fs = TypeBase.fields_of ty
         val flds = map (fn (f, {ty = fty, ...}) => (tname ^ "_" ^ f, fty)) fs
         val decl =
+          hol_tag hol_path tname ^
           "(** HOL record type [" ^ tname ^ "] (L3 [Record]); fields are named after HOL's\n" ^
           "    accessor constants. *)\n" ^
           "Record " ^ rn ^ " : Type := {\n" ^
@@ -437,6 +438,7 @@ fun pdatatype tname =
               val (argtys, _) = strip_fun cty
           in "| " ^ constname n ^ " : " ^ concatS (map (fn a => pty a ^ " -> ") argtys) ^ rn ^ "\n" end
         val decl =
+          hol_tag hol_path tname ^
           "(** HOL datatype [" ^ tname ^ "] (L3 [Construct]). *)\n" ^
           "Inductive " ^ rn ^ " : Type :=\n" ^ concatS (map pc cs) ^ ".\n"
         val c0 = hd cs

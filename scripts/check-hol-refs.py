@@ -63,6 +63,35 @@ DATATYPE_OPEN = re.compile(r"^Datatype\s*:?\s*$")
 RECORD_DECL = re.compile(r'\bRecord\s*\(\s*"([A-Za-z0-9_\']+)"')
 CONSTRUCT_BLOCK = re.compile(r'\bConstruct\s*\[(.*?)\n\s*;', re.S)
 CONSTRUCT_NAME = re.compile(r'\(\s*"([A-Za-z0-9_\']+)",\s*\[')
+
+
+def construct_types(block: str) -> list[str]:
+    """Top-level datatype names of an L3 `Construct` list.
+
+    The block is the text between the list's outer brackets; constructors
+    live one level deeper and are not declarations of their own name.
+    """
+    names: list[str] = []
+    depth, i = 0, 0
+    while i < len(block):
+        c = block[i]
+        if c == "[":
+            depth += 1
+            i += 1
+            continue
+        if c == "]":
+            depth -= 1
+            i += 1
+            continue
+        if c == "(" and depth == 0:
+            m = CONSTRUCT_NAME.match(block, i)
+            if m:
+                names.append(m.group(1))
+                i = m.end()
+                depth += 1
+                continue
+        i += 1
+    return names
 DATATYPE_INLINE = re.compile(r"^Datatype\s*:\s*([A-Za-z0-9_']+)\s*=")
 DATATYPE_NAME = re.compile(r"^\s*([A-Za-z0-9_']+)\s*(=|$)")
 END = re.compile(r"^End\b")
@@ -142,8 +171,8 @@ def hol_declarations(path: Path, cache: dict) -> dict[str, list[int]]:
         add(m.group(1), text.count("\n", 0, m.start()) + 1)
     for m in CONSTRUCT_BLOCK.finditer(text):
         line = text.count("\n", 0, m.start()) + 1
-        for mm in CONSTRUCT_NAME.finditer(m.group(1)):
-            add(mm.group(1), line)
+        for name in construct_types(m.group(1)):
+            add(name, line)
     cache[path] = names
     return names
 
@@ -339,8 +368,42 @@ def kernel_check(tags: list[dict]) -> list[str]:
     return [] if r.returncode == 0 else ["kernel check failed:\n" + r.stdout + r.stderr]
 
 
+def self_test() -> int:
+    """Regression checks for the L3 `Record`/`Construct` parser."""
+    failures: list[str] = []
+
+    def expect(cond: bool, msg: str) -> None:
+        if not cond:
+            failures.append(msg)
+
+    arm8 = REFERENCE / "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml"
+    d = hol_declarations(arm8, {})
+    for name in ("ProcState", "arm8_state", "BranchType", "System", "instruction"):
+        expect(name in d, f"arm8: datatype {name} not found")
+    for name in ("BranchType_CALL", "ExceptionReturn", "BranchConditional"):
+        expect(name not in d, f"arm8: constructor {name} treated as a declaration")
+    expect(d.get("System") == [80], "arm8: System should be the datatype at line 80")
+
+    riscv = REFERENCE / "HOL/examples/l3-machine-code/riscv/model/riscvScript.sml"
+    r = hol_declarations(riscv, {})
+    for name in ("riscv_state", "instruction", "exception"):
+        expect(name in r, f"riscv: datatype {name} not found")
+    expect(not any(name.endswith("_CALL") for name in r),
+           "riscv: constructor treated as a declaration")
+
+    if failures:
+        print("self-test FAILED:")
+        for f in failures:
+            print(" ", f)
+        return 1
+    print("self-test OK")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--self-test", action="store_true",
+                    help="run parser regression checks and exit")
     ap.add_argument("--update-manifest", action="store_true")
     ap.add_argument("--kernel", action="store_true", help="also Check every tagged name")
     ap.add_argument("--mapping", action="store_true", help="print HOL -> Rocq mapping")
@@ -353,6 +416,8 @@ def main() -> int:
     ap.add_argument("--only", metavar="PREFIX",
                     help="report only errors for Rocq files under this path prefix")
     args = ap.parse_args()
+    if args.self_test:
+        return self_test()
     if not REFERENCE.is_dir():
         print(f"reference checkout not found: {REFERENCE}", file=sys.stderr)
         return 2

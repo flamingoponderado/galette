@@ -63,9 +63,9 @@ Local Open Scope hol_string_scope.
 
 (** ** Datatypes *)
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "ProcState" *)
 (** HOL record type [ProcState] (L3 [Record]); fields are named after HOL's
     accessor constants. *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "ProcState" *)
 Record ProcState : Type := {
   ProcState_C : bool;
   ProcState_EL : word2;
@@ -77,9 +77,9 @@ Record ProcState : Type := {
 #[global] Instance ProcState_inhabited : Inhabited ProcState :=
   {| ProcState_C := inhabitant _; ProcState_EL := inhabitant _; ProcState_N := inhabitant _; ProcState_SPS := inhabitant _; ProcState_V := inhabitant _; ProcState_Z := inhabitant _ |}.
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "TCR_EL1" *)
 (** HOL record type [TCR_EL1] (L3 [Record]); fields are named after HOL's
     accessor constants. *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "TCR_EL1" *)
 Record TCR_EL1 : Type := {
   TCR_EL1_TBI0 : bool;
   TCR_EL1_TBI1 : bool;
@@ -88,9 +88,9 @@ Record TCR_EL1 : Type := {
 #[global] Instance TCR_EL1_inhabited : Inhabited TCR_EL1 :=
   {| TCR_EL1_TBI0 := inhabitant _; TCR_EL1_TBI1 := inhabitant _; TCR_EL1_tcr_el1'rst := inhabitant _ |}.
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "TCR_EL2_EL3" *)
 (** HOL record type [TCR_EL2_EL3] (L3 [Record]); fields are named after HOL's
     accessor constants. *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "TCR_EL2_EL3" *)
 Record TCR_EL2_EL3 : Type := {
   TCR_EL2_EL3_TBI : bool;
   TCR_EL2_EL3_tcr_el2_el3'rst : (word 31);
@@ -98,9 +98,9 @@ Record TCR_EL2_EL3 : Type := {
 #[global] Instance TCR_EL2_EL3_inhabited : Inhabited TCR_EL2_EL3 :=
   {| TCR_EL2_EL3_TBI := inhabitant _; TCR_EL2_EL3_tcr_el2_el3'rst := inhabitant _ |}.
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "SCTLRType" *)
 (** HOL record type [SCTLRType] (L3 [Record]); fields are named after HOL's
     accessor constants. *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "SCTLRType" *)
 Record SCTLRType : Type := {
   SCTLRType_A : bool;
   SCTLRType_E0E : bool;
@@ -112,8 +112,8 @@ Record SCTLRType : Type := {
 #[global] Instance SCTLRType_inhabited : Inhabited SCTLRType :=
   {| SCTLRType_A := inhabitant _; SCTLRType_E0E := inhabitant _; SCTLRType_EE := inhabitant _; SCTLRType_SA := inhabitant _; SCTLRType_SA0 := inhabitant _; SCTLRType_sctlrtype'rst := inhabitant _ |}.
 
-(** HOL datatype [BranchType] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "BranchType" *)
+(** HOL datatype [BranchType] (L3 [Construct]). *)
 Inductive BranchType : Type :=
 | BranchType_CALL : BranchType
 | BranchType_ERET : BranchType
@@ -125,8 +125,8 @@ Inductive BranchType : Type :=
 .
 #[global] Instance BranchType_inhabited : Inhabited BranchType := BranchType_CALL.
 
-(** HOL datatype [AccType] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "AccType" *)
+(** HOL datatype [AccType] (L3 [Construct]). *)
 Inductive AccType : Type :=
 | AccType_NORMAL : AccType
 | AccType_VEC : AccType
@@ -143,8 +143,8 @@ Inductive AccType : Type :=
 .
 #[global] Instance AccType_inhabited : Inhabited AccType := AccType_NORMAL.
 
-(** HOL datatype [ShiftType] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "ShiftType" *)
+(** HOL datatype [ShiftType] (L3 [Construct]). *)
 Inductive ShiftType : Type :=
 | ShiftType_LSL : ShiftType
 | ShiftType_LSR : ShiftType
@@ -153,8 +153,8 @@ Inductive ShiftType : Type :=
 .
 #[global] Instance ShiftType_inhabited : Inhabited ShiftType := ShiftType_LSL.
 
-(** HOL datatype [ExtendType] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "ExtendType" *)
+(** HOL datatype [ExtendType] (L3 [Construct]). *)
 Inductive ExtendType : Type :=
 | ExtendType_UXTB : ExtendType
 | ExtendType_UXTH : ExtendType
@@ -167,8 +167,8 @@ Inductive ExtendType : Type :=
 .
 #[global] Instance ExtendType_inhabited : Inhabited ExtendType := ExtendType_UXTB.
 
-(** HOL datatype [LogicalOp] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "LogicalOp" *)
+(** HOL datatype [LogicalOp] (L3 [Construct]). *)
 Inductive LogicalOp : Type :=
 | LogicalOp_AND : LogicalOp
 | LogicalOp_ORR : LogicalOp
@@ -176,8 +176,8 @@ Inductive LogicalOp : Type :=
 .
 #[global] Instance LogicalOp_inhabited : Inhabited LogicalOp := LogicalOp_AND.
 
-(** HOL datatype [MemOp] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "MemOp" *)
+(** HOL datatype [MemOp] (L3 [Construct]). *)
 Inductive MemOp : Type :=
 | MemOp_LOAD : MemOp
 | MemOp_STORE : MemOp
@@ -185,8 +185,8 @@ Inductive MemOp : Type :=
 .
 #[global] Instance MemOp_inhabited : Inhabited MemOp := MemOp_LOAD.
 
-(** HOL datatype [MemBarrierOp] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "MemBarrierOp" *)
+(** HOL datatype [MemBarrierOp] (L3 [Construct]). *)
 Inductive MemBarrierOp : Type :=
 | MemBarrierOp_DSB : MemBarrierOp
 | MemBarrierOp_DMB : MemBarrierOp
@@ -194,8 +194,8 @@ Inductive MemBarrierOp : Type :=
 .
 #[global] Instance MemBarrierOp_inhabited : Inhabited MemBarrierOp := MemBarrierOp_DSB.
 
-(** HOL datatype [MoveWideOp] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "MoveWideOp" *)
+(** HOL datatype [MoveWideOp] (L3 [Construct]). *)
 Inductive MoveWideOp : Type :=
 | MoveWideOp_N : MoveWideOp
 | MoveWideOp_Z : MoveWideOp
@@ -203,8 +203,8 @@ Inductive MoveWideOp : Type :=
 .
 #[global] Instance MoveWideOp_inhabited : Inhabited MoveWideOp := MoveWideOp_N.
 
-(** HOL datatype [RevOp] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "RevOp" *)
+(** HOL datatype [RevOp] (L3 [Construct]). *)
 Inductive RevOp : Type :=
 | RevOp_RBIT : RevOp
 | RevOp_REV16 : RevOp
@@ -213,8 +213,8 @@ Inductive RevOp : Type :=
 .
 #[global] Instance RevOp_inhabited : Inhabited RevOp := RevOp_RBIT.
 
-(** HOL datatype [SystemHintOp] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "SystemHintOp" *)
+(** HOL datatype [SystemHintOp] (L3 [Construct]). *)
 Inductive SystemHintOp : Type :=
 | SystemHintOp_NOP : SystemHintOp
 | SystemHintOp_YIELD : SystemHintOp
@@ -225,8 +225,8 @@ Inductive SystemHintOp : Type :=
 .
 #[global] Instance SystemHintOp_inhabited : Inhabited SystemHintOp := SystemHintOp_NOP.
 
-(** HOL datatype [PSTATEField] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "PSTATEField" *)
+(** HOL datatype [PSTATEField] (L3 [Construct]). *)
 Inductive PSTATEField : Type :=
 | PSTATEField_DAIFSet : PSTATEField
 | PSTATEField_DAIFClr : PSTATEField
@@ -234,8 +234,8 @@ Inductive PSTATEField : Type :=
 .
 #[global] Instance PSTATEField_inhabited : Inhabited PSTATEField := PSTATEField_DAIFSet.
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "System" *)
 (** HOL datatype [System] (L3 [Construct]). *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "System" 80 *)
 Inductive System_ty : Type :=
 | ExceptionReturn : System_ty
 | HypervisorCall : word16 -> System_ty
@@ -247,8 +247,8 @@ Inductive System_ty : Type :=
 .
 #[global] Instance System_ty_inhabited : Inhabited System_ty := ExceptionReturn.
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "Debug" *)
 (** HOL datatype [Debug] (L3 [Construct]). *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "Debug" 90 *)
 Inductive Debug_ty : Type :=
 | Breakpoint : word16 -> Debug_ty
 | DebugRestore : Debug_ty
@@ -257,8 +257,8 @@ Inductive Debug_ty : Type :=
 .
 #[global] Instance Debug_ty_inhabited : Inhabited Debug_ty := Breakpoint (inhabitant _).
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "LoadStore" *)
 (** HOL datatype [LoadStore] (L3 [Construct]). *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "LoadStore" 95 *)
 Inductive LoadStore_ty : Type :=
 | LoadLiteral_32 : (word32 * (MemOp * (bool * (word64 * word5)))) -> LoadStore_ty
 | LoadLiteral_64 : (word64 * (MemOp * (bool * (word64 * word5)))) -> LoadStore_ty
@@ -281,8 +281,8 @@ Inductive LoadStore_ty : Type :=
 .
 #[global] Instance LoadStore_ty_inhabited : Inhabited LoadStore_ty := LoadLiteral_32 (inhabitant _).
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "Branch" *)
 (** HOL datatype [Branch] (L3 [Construct]). *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "Branch" 226 *)
 Inductive Branch_ty : Type :=
 | BranchConditional : (word64 * word4) -> Branch_ty
 | BranchImmediate : (word64 * BranchType) -> Branch_ty
@@ -294,8 +294,8 @@ Inductive Branch_ty : Type :=
 .
 #[global] Instance Branch_ty_inhabited : Inhabited Branch_ty := BranchConditional (inhabitant _).
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "CRCExt" *)
 (** HOL datatype [CRCExt] (L3 [Construct]). *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "CRCExt" 236 *)
 Inductive CRCExt_ty : Type :=
 | CRC_16 : (word16 * (bool * (word5 * (word5 * word5)))) -> CRCExt_ty
 | CRC_32 : (word32 * (bool * (word5 * (word5 * word5)))) -> CRCExt_ty
@@ -304,8 +304,8 @@ Inductive CRCExt_ty : Type :=
 .
 #[global] Instance CRCExt_ty_inhabited : Inhabited CRCExt_ty := CRC_16 (inhabitant _).
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "Data" *)
 (** HOL datatype [Data] (L3 [Construct]). *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "Data" 243 *)
 Inductive Data_ty : Type :=
 | AddSubCarry_32 : (word32 * (bool * (bool * (word5 * (word5 * word5))))) -> Data_ty
 | AddSubCarry_64 : (word64 * (bool * (bool * (word5 * (word5 * word5))))) -> Data_ty
@@ -346,8 +346,8 @@ Inductive Data_ty : Type :=
 .
 #[global] Instance Data_ty_inhabited : Inhabited Data_ty := AddSubCarry_32 (inhabitant _).
 
-(** HOL datatype [instruction] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "instruction" *)
+(** HOL datatype [instruction] (L3 [Construct]). *)
 Inductive instruction : Type :=
 | Address : (bool * (word64 * word5)) -> instruction
 | Branch : Branch_ty -> instruction
@@ -364,16 +364,16 @@ Inductive instruction : Type :=
 .
 #[global] Instance instruction_inhabited : Inhabited instruction := Address (inhabitant _).
 
-(** HOL datatype [MachineCode] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "MachineCode" *)
+(** HOL datatype [MachineCode] (L3 [Construct]). *)
 Inductive MachineCode : Type :=
 | ARM8 : word32 -> MachineCode
 | BadCode : (list ascii) -> MachineCode
 .
 #[global] Instance MachineCode_inhabited : Inhabited MachineCode := ARM8 (inhabitant _).
 
-(** HOL datatype [exception] (L3 [Construct]). *)
 (*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "exception" *)
+(** HOL datatype [exception] (L3 [Construct]). *)
 Inductive exception : Type :=
 | ALIGNMENT_FAULT : exception
 | ASSERT : (list ascii) -> exception
@@ -382,9 +382,9 @@ Inductive exception : Type :=
 .
 #[global] Instance exception_inhabited : Inhabited exception := ALIGNMENT_FAULT.
 
+(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "arm8_state" *)
 (** HOL record type [arm8_state] (L3 [Record]); fields are named after HOL's
     accessor constants. *)
-(*! HOL "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml" "arm8_state" *)
 Record arm8_state : Type := {
   arm8_state_MEM : (word64 -> word8);
   arm8_state_PC : word64;

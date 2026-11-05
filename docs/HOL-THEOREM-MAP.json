@@ -1392,10 +1392,10 @@
  {
   "hol_path": "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml",
   "hol_name": "Branch",
-  "hol_line": 226,
+  "hol_line": null,
   "case": null,
   "status": "reviewed_exact",
-  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name Branch_ty avoids the clash with the instruction constructor Branch. The tag cites the datatype declaration (line 226), not the same-named instruction constructor.",
+  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name Branch_ty avoids the clash with the instruction constructor Branch.",
   "rocq_path": "theories/HOL/examples/l3_machine_code/arm8/model/arm8.v",
   "rocq_name": "Branch_ty"
  },
@@ -1432,10 +1432,10 @@
  {
   "hol_path": "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml",
   "hol_name": "CRCExt",
-  "hol_line": 236,
+  "hol_line": null,
   "case": null,
   "status": "reviewed_exact",
-  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name CRCExt_ty avoids the clash with the instruction constructor CRCExt. The tag cites the datatype declaration (line 236), not the same-named instruction constructor.",
+  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name CRCExt_ty avoids the clash with the instruction constructor CRCExt.",
   "rocq_path": "theories/HOL/examples/l3_machine_code/arm8/model/arm8.v",
   "rocq_name": "CRCExt_ty"
  },
@@ -1512,20 +1512,20 @@
  {
   "hol_path": "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml",
   "hol_name": "Data",
-  "hol_line": 243,
+  "hol_line": null,
   "case": null,
   "status": "reviewed_exact",
-  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name Data_ty avoids the clash with the instruction constructor Data. The tag cites the datatype declaration (line 243), not the same-named instruction constructor.",
+  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name Data_ty avoids the clash with the instruction constructor Data.",
   "rocq_path": "theories/HOL/examples/l3_machine_code/arm8/model/arm8.v",
   "rocq_name": "Data_ty"
  },
  {
   "hol_path": "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml",
   "hol_name": "Debug",
-  "hol_line": 90,
+  "hol_line": null,
   "case": null,
   "status": "reviewed_exact",
-  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name Debug_ty avoids the clash with the instruction constructor Debug. The tag cites the datatype declaration (line 90), not the same-named instruction constructor.",
+  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name Debug_ty avoids the clash with the instruction constructor Debug.",
   "rocq_path": "theories/HOL/examples/l3_machine_code/arm8/model/arm8.v",
   "rocq_name": "Debug_ty"
  },
@@ -1722,10 +1722,10 @@
  {
   "hol_path": "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml",
   "hol_name": "LoadStore",
-  "hol_line": 95,
+  "hol_line": null,
   "case": null,
   "status": "reviewed_exact",
-  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name LoadStore_ty avoids the clash with the instruction constructor LoadStore. The tag cites the datatype declaration (line 95), not the same-named instruction constructor.",
+  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name LoadStore_ty avoids the clash with the instruction constructor LoadStore.",
   "rocq_path": "theories/HOL/examples/l3_machine_code/arm8/model/arm8.v",
   "rocq_name": "LoadStore_ty"
  },
@@ -2052,10 +2052,10 @@
  {
   "hol_path": "HOL/examples/l3-machine-code/arm8/model/arm8Script.sml",
   "hol_name": "System",
-  "hol_line": 80,
+  "hol_line": null,
   "case": null,
   "status": "reviewed_exact",
-  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name System_ty avoids the clash with the instruction constructor System. The tag cites the datatype declaration (line 80), not the same-named instruction constructor.",
+  "note": "L3 Construct datatype; ported as a Rocq Inductive with HOL's constructors. Rocq name System_ty avoids the clash with the instruction constructor System.",
   "rocq_path": "theories/HOL/examples/l3_machine_code/arm8/model/arm8.v",
   "rocq_name": "System_ty"
  },
