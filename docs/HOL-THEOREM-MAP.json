@@ -14491,6 +14491,16 @@
  },
  {
   "hol_path": "HOL/src/monad/more_monads/state_transformerScript.sml",
+  "hol_name": "FOREACH_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with state_transformerScript.sml; both equations (empty list -> UNIT (), cons -> BIND (a h) (FOREACH (t,a))); the recursion is the Fixpoint FOREACH_aux on the list, FOREACH is the tupled wrapper, and the tagged theorem states HOL's two clauses",
+  "rocq_path": "theories/HOL/src/monad/more_monads/state_transformer.v",
+  "rocq_name": "FOREACH_def"
+ },
+ {
+  "hol_path": "HOL/src/monad/more_monads/state_transformerScript.sml",
   "hol_name": "FOR_def",
   "hol_line": null,
   "case": null,
