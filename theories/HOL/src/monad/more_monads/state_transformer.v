@@ -63,4 +63,25 @@ Proof.
     rewrite Hd; cbn [FOR_fuel]; rewrite E; reflexivity.
 Qed.
 
+Fixpoint FOREACH_aux {A : Type} (l : list A) (a : A -> S -> unit * S) : S -> unit * S :=
+  match l with
+  | [] => UNIT tt
+  | h :: t => BIND (a h) (fun _ => FOREACH_aux t a)
+  end.
+
+(** HOL [FOREACH (l, a)]: run [a] on each element of [l], in order. *)
+Definition FOREACH {A : Type} (q : list A * (A -> S -> unit * S)) : S -> unit * S :=
+  FOREACH_aux (fst q) (snd q).
+
+(*! HOL "HOL/src/monad/more_monads/state_transformerScript.sml" "FOREACH_def" *)
+Theorem FOREACH_def {A : Type} : forall (a : A -> S -> unit * S),
+  FOREACH ([], a) = UNIT tt /\
+  (forall (h : A) (t : list A),
+     FOREACH (h :: t, a) = BIND (a h) (fun _ => FOREACH (t, a))).
+Proof.
+  intros a; split.
+  - reflexivity.
+  - intros h t; cbn [FOREACH fst snd FOREACH_aux]; reflexivity.
+Qed.
+
 End M.

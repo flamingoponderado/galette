@@ -28,7 +28,8 @@ val reserved =
    "Or","Xor","Load","Store","Skip","Equal","Less","Lower","Test","NotLess",
    "NotLower","NotEqual","NotTest","Reg","Imm","Addr","Mem","Inst","Jump",
    "Call","Loc","JumpCmp","JumpReg","Halt","Arith","Const","Binop","Shift",
-   "Div","LongMul","LongDiv","AddCarry","AddOverflow","SubOverflow","FP"]
+   "Div","LongMul","LongDiv","AddCarry","AddOverflow","SubOverflow","FP",
+   "flags","rounding","float_compare"]
 
 fun ident s =
   let
@@ -85,6 +86,9 @@ fun pty ty =
          else die "cart over non-bool"
      | ("list", "list", [a]) => "(list " ^ pty a ^ ")"
      | ("option", "option", [a]) => "(option " ^ pty a ^ ")"
+     | ("binary_ieee", "flags", []) => "flags"
+     | ("binary_ieee", "rounding", []) => "rounding"
+     | ("binary_ieee", "float_compare", []) => "float_compare"
      | (t, n, []) => if t = !THY then tyname n else die ("unknown type " ^ t ^ "$" ^ n)
      | (t, n, _) => die ("unknown type " ^ t ^ "$" ^ n)
   end
@@ -161,7 +165,17 @@ fun zbin name =
   | "int_lt" => SOME "Z.ltb" | "int_le" => SOME "Z.leb" | _ => NONE
 
 (* conditions and bindings for matching a pattern against an expression
-   string (only tuples / literals / variables / wildcards) *)
+   string.  Tuples and literals are decomposed directly; a constructor
+   pattern is tested by a [match] that binds fresh variables, and each
+   subpattern is then matched against its fresh variable.  This handles
+   constructor patterns with literal subterms (e.g. [Znop 1]) that cannot
+   appear in a Rocq pattern. *)
+val patvar_counter = ref 0
+fun fresh_patvar ty =
+  let val n = !patvar_counter
+      val _ = patvar_counter := n + 1
+  in mk_var ("patv" ^ Int.toString n, ty) end
+
 fun pat_conds pat e =
   if is_var pat then ([], [(pat, e)])
   else if is_lit pat then (["bool_decide (" ^ e ^ " = " ^ pt pat ^ ")"], [])
@@ -172,7 +186,21 @@ fun pat_conds pat e =
     in (c1 @ c2, b1 @ b2) end
   else if aconv pat T then (["(" ^ e ^ ")"], [])
   else if aconv pat F then (["(negb " ^ e ^ ")"], [])
-  else die ("pat_conds: " ^ term_to_string pat)
+  else
+    let
+      val (f, args) = strip_comb pat
+      val fresh = map (fn a => fresh_patvar (type_of a)) args
+      val pat_tm = list_mk_comb (f, fresh)
+      val pat_s = with_used pat_tm (fn () => ppat pat_tm)
+      val cond0 = "(match " ^ e ^ " with " ^ pat_s ^ " => true | _ => false end)"
+      fun sub (a, v) =
+        let val ex = "(match " ^ e ^ " with " ^ pat_s ^ " => " ^ pvar v ^
+                     " | _ => (ARB : " ^ pty (type_of a) ^ ") end)"
+        in pat_conds a ex end
+      val subs = ListPair.map sub (args, fresh)
+      val conds = cond0 :: List.concat (map #1 subs)
+      val binds = List.concat (map #2 subs)
+    in (conds, binds) end
 
 and ppat p =
   if is_var p then (if HOLset.member (!used_vars, p) then pvar p else "_" ^ pvar p)
@@ -207,7 +235,8 @@ and pcase t =
       (* HOL's first-match semantics over literal patterns: an if-chain *)
       let
         val sv = "scrut'"
-        fun go [] = "ARB"
+        val rty = pty (type_of (snd (hd rows)))
+        fun go [] = "(ARB : " ^ rty ^ ")"
           | go ((p, r) :: rest) =
               let val (cs, bs) = pat_conds p sv
                   val body = List.foldr (fn ((v, e), acc) =>
@@ -290,7 +319,7 @@ and papp f args t =
     fun app n = if null args then n else "(" ^ joinWith " " (n :: map pt args) ^ ")"
   in
     case (Thy, Name, args) of
-      ("bool", "ARB", []) => "ARB"
+      ("bool", "ARB", []) => "(ARB : " ^ pty (type_of t) ^ ")"
     | ("one", "one", []) => "tt"
     | ("state_transformer", "FOR", x :: rest) =>
         (* state_transformer's FOR takes Galette's left-nested triple *)
@@ -313,6 +342,11 @@ and papp f args t =
     | ("integer", "int_of_num", _) => app "Z.of_N"
     | ("integer", "Num", _) => app "Z.to_N"
     | ("integer", "int_neg", _) => app "Z.opp"
+    | ("integer", "int_div", [a, b]) => "(Z.div " ^ pt a ^ " " ^ pt b ^ ")"
+    | ("integer", "int_quot", [a, b]) => "(Z.quot " ^ pt a ^ " " ^ pt b ^ ")"
+    | ("integer", "int_exp", [a, b]) => "(Z.pow " ^ pt a ^ " (Z.of_N " ^ pt b ^ "))"
+    | ("integer", "int_mod", [a, b]) => "(Z.modulo " ^ pt a ^ " " ^ pt b ^ ")"
+    | ("integer", "int_rem", [a, b]) => "(Z.rem " ^ pt a ^ " " ^ pt b ^ ")"
     | ("integer", n, [a, b]) =>
         (case zbin n of SOME z => "(" ^ z ^ " " ^ pt a ^ " " ^ pt b ^ ")"
                       | NONE => die ("integer op " ^ n))

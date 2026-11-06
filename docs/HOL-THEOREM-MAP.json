@@ -12481,6 +12481,36 @@
  },
  {
   "hol_path": "HOL/src/floating-point/binary_ieeeScript.sml",
+  "hol_name": "clear_flags_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with binary_ieeeScript.sml; all six flags false, HOL's field order",
+  "rocq_path": "theories/HOL/src/floating_point/binary_ieee.v",
+  "rocq_name": "clear_flags"
+ },
+ {
+  "hol_path": "HOL/src/floating-point/binary_ieeeScript.sml",
+  "hol_name": "dividezero_flags_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with binary_ieeeScript.sml; clear_flags with DivideByZero := T, written with the flags_DivideByZero_fupd helper",
+  "rocq_path": "theories/HOL/src/floating_point/binary_ieee.v",
+  "rocq_name": "dividezero_flags"
+ },
+ {
+  "hol_path": "HOL/src/floating-point/binary_ieeeScript.sml",
+  "hol_name": "flags",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with binary_ieeeScript.sml; record with HOL's six fields in HOL's order (DivideByZero, InvalidOp, Overflow, Precision, Underflow_BeforeRounding, Underflow_AfterRounding); field names carry the flags_ prefix because HOL's selectors are flags_<field>; bool carriers",
+  "rocq_path": "theories/HOL/src/floating_point/binary_ieee.v",
+  "rocq_name": "flags"
+ },
+ {
+  "hol_path": "HOL/src/floating-point/binary_ieeeScript.sml",
   "hol_name": "float_compare",
   "hol_line": 755,
   "case": null,
@@ -12488,6 +12518,16 @@
   "note": "reviewer: compared with binary_ieeeScript.sml; same constructors in same order",
   "rocq_path": "theories/HOL/src/floating_point/binary_ieee.v",
   "rocq_name": "float_compare"
+ },
+ {
+  "hol_path": "HOL/src/floating-point/binary_ieeeScript.sml",
+  "hol_name": "invalidop_flags_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with binary_ieeeScript.sml; clear_flags with InvalidOp := T, written with the flags_InvalidOp_fupd helper",
+  "rocq_path": "theories/HOL/src/floating_point/binary_ieee.v",
+  "rocq_name": "invalidop_flags"
  },
  {
   "hol_path": "HOL/src/floating-point/binary_ieeeScript.sml",
@@ -14448,6 +14488,16 @@
   "note": "reviewer: compared with state_transformerScript.sml; ('b,'a) M as S -> B * S; BIND (UNCURRY f o g) written pointwise; FOR defined by fuel = HOL's measure, HOL's FOR_def equation proved as tagged theorem",
   "rocq_path": "theories/HOL/src/monad/more_monads/state_transformer.v",
   "rocq_name": "BIND"
+ },
+ {
+  "hol_path": "HOL/src/monad/more_monads/state_transformerScript.sml",
+  "hol_name": "FOREACH_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with state_transformerScript.sml; both equations (empty list -> UNIT (), cons -> BIND (a h) (FOREACH (t,a))); the recursion is the Fixpoint FOREACH_aux on the list, FOREACH is the tupled wrapper, and the tagged theorem states HOL's two clauses",
+  "rocq_path": "theories/HOL/src/monad/more_monads/state_transformer.v",
+  "rocq_name": "FOREACH_def"
  },
  {
   "hol_path": "HOL/src/monad/more_monads/state_transformerScript.sml",
@@ -66678,6 +66728,86 @@
   "note": "coordinator: generalised to HOL's most general type (narrowing found in review)",
   "rocq_path": "theories/cakeml/compiler/backend/word_unreach.v",
   "rocq_name": "remove_unreach_test"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/x64/export_x64Script.sml",
+  "hol_name": "export_func_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared string for string with export_x64Script.sml; APPLE/WIN32/else blocks, lea name_jmp(%rip), jmp wcml(cake_enter), name_jmp label, .endfunc",
+  "rocq_path": "theories/cakeml/compiler/backend/x64/export_x64.v",
+  "rocq_name": "export_func"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/x64/export_x64Script.sml",
+  "hol_name": "export_funcs_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with export_x64Script.sml; FOLDL export_func Nil over symbols filtered by MEM (fst x) exp",
+  "rocq_path": "theories/cakeml/compiler/backend/x64/export_x64.v",
+  "rocq_name": "export_funcs"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/x64/export_x64Script.sml",
+  "hol_name": "ffi_asm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with export_x64Script.sml; list recursion on ffis, pushq %rax, jmp wcdecl(ffi...), .p2align 4",
+  "rocq_path": "theories/cakeml/compiler/backend/x64/export_x64.v",
+  "rocq_name": "ffi_asm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/x64/export_x64Script.sml",
+  "hol_name": "startup_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared string for string with export_x64Script.sml; pk branch and ret branch preserved; .p2align 12 and cake_text_begin lines present",
+  "rocq_path": "theories/cakeml/compiler/backend/x64/export_x64.v",
+  "rocq_name": "startup"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/x64/export_x64Script.sml",
+  "hol_name": "windows_ffi_asm_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with export_x64Script.sml; register shuffle rcx->r9, rdx->r8, rsi->rdx, rdi->rcx then jmp cdecl(ffi...)",
+  "rocq_path": "theories/cakeml/compiler/backend/x64/export_x64.v",
+  "rocq_name": "windows_ffi_asm"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/x64/export_x64Script.sml",
+  "hol_name": "x64_export_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with export_x64Script.sml; preamble, .quad data, data_buffer, startup, ffi_code, .byte bytes, code_buffer, emit_symbols, windows_ffi_code, then entry_point_code and export_funcs only when ret",
+  "rocq_path": "theories/cakeml/compiler/backend/x64/export_x64.v",
+  "rocq_name": "x64_export"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/x64/x64_configScript.sml",
+  "hol_name": "x64_backend_config_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared field by field with x64_configScript.sml; HOL splices EVALuated clos_to_bvl/bvl_to_bvi default_config, Rocq uses the constants (same values); data_conf has_div=F, has_longdiv=T, has_fp_ops=T, has_fp_tern=F; stack_conf jump=T, perf_calls=F; lab_conf init_clock=5, hash_size=104729",
+  "rocq_path": "theories/cakeml/compiler/backend/x64/x64_config.v",
+  "rocq_name": "x64_backend_config"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/x64/x64_configScript.sml",
+  "hol_name": "x64_names_def",
+  "hol_line": 10,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "reviewer: compared with x64_configScript.sml line 10 (the composition of inserts); HOL rebinds the same name at line 38 to its EVALuated tree, and the Rocq definition is the composition, as for arm8_names_def; num_map values are N",
+  "rocq_path": "theories/cakeml/compiler/backend/x64/x64_config.v",
+  "rocq_name": "x64_names"
  },
  {
   "hol_path": "cakeml/compiler/compilerScript.sml",
