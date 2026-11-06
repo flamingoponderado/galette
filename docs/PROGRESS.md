@@ -103,6 +103,11 @@ ported: `backend/x64/x64_configScript` (**done**) and
 | pancake/proofs/pan_to_targetProof | **done** (`pan_to_target_compile_semantics`, exact HOL statement; Base axioms only) |
 | backend/proofs/data_to_word_gcProof | partial (init_store_ok, gc_fun_ok_word_gc_fun, gc_fun_const_ok_word_gc_fun: what pan_to_target needs) |
 
+Flapjack-specific (no HOL original): `backend/arm8/proofs/arm8_pancake_config`
+proves `backend_config_ok` and `mc_init_ok` for
+`pancake_backend_conf arm8_backend_config`, mirroring Flapjack's
+`arm8BackendConfigOkL3`/`arm8InitOkL3_pancake`.
+
 Axiom audit: the theorems checked so far depend only on the axioms declared
 in `theories/Base.v` (excluded middle, choice, functional extensionality,
 proof irrelevance), i.e. HOL's logic.
