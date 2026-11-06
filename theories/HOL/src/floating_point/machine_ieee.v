@@ -112,6 +112,47 @@ Definition fp64_mul_sub : rounding -> word64 -> word64 -> word64 -> word64 :=
 Definition fp64_to_int : rounding -> word64 -> option Z := fp_to_int_arb.
 Definition int_to_fp64 : rounding -> Z -> word64 := int_to_fp_arb.
 
+(** ** Flag-returning operations (unspecified stand-ins)
+
+    The L3 x86-64 model uses [machine_ieee]'s [*_with_flags] operations,
+    whose HOL definitions go through [binary_ieee]'s real-valued semantics.
+    As with the operations above, these are [ARB] stand-ins with HOL's names
+    and types; nothing can be proved about their results. *)
+
+Definition fp32_add_with_flags : rounding -> word32 -> word32 -> (flags * word32) :=
+  fun _ _ _ => ARB.
+Definition fp32_sub_with_flags : rounding -> word32 -> word32 -> (flags * word32) :=
+  fun _ _ _ => ARB.
+Definition fp32_mul_with_flags : rounding -> word32 -> word32 -> (flags * word32) :=
+  fun _ _ _ => ARB.
+Definition fp32_div_with_flags : rounding -> word32 -> word32 -> (flags * word32) :=
+  fun _ _ _ => ARB.
+Definition fp32_sqrt_with_flags : rounding -> word32 -> (flags * word32) :=
+  fun _ _ => ARB.
+Definition fp32_mul_add_with_flags :
+  rounding -> word32 -> word32 -> word32 -> (flags * word32) := fun _ _ _ _ => ARB.
+Definition fp32_mul_sub_with_flags :
+  rounding -> word32 -> word32 -> word32 -> (flags * word32) := fun _ _ _ _ => ARB.
+
+Definition fp64_add_with_flags : rounding -> word64 -> word64 -> (flags * word64) :=
+  fun _ _ _ => ARB.
+Definition fp64_sub_with_flags : rounding -> word64 -> word64 -> (flags * word64) :=
+  fun _ _ _ => ARB.
+Definition fp64_mul_with_flags : rounding -> word64 -> word64 -> (flags * word64) :=
+  fun _ _ _ => ARB.
+Definition fp64_div_with_flags : rounding -> word64 -> word64 -> (flags * word64) :=
+  fun _ _ _ => ARB.
+Definition fp64_sqrt_with_flags : rounding -> word64 -> (flags * word64) :=
+  fun _ _ => ARB.
+Definition fp64_mul_add_with_flags :
+  rounding -> word64 -> word64 -> word64 -> (flags * word64) := fun _ _ _ _ => ARB.
+Definition fp64_mul_sub_with_flags :
+  rounding -> word64 -> word64 -> word64 -> (flags * word64) := fun _ _ _ _ => ARB.
+
+Definition fp32_to_fp64_with_flags : word32 -> (flags * word64) := fun _ => ARB.
+Definition fp64_to_fp32_with_flags : rounding -> word64 -> (flags * word32) :=
+  fun _ _ => ARB.
+
 (** Conversions. *)
 Definition fp32_to_fp64 : word32 -> word64 := fun _ => ARB.
 Definition fp64_to_fp32 : rounding -> word64 -> word32 := fun _ _ => ARB.

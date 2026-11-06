@@ -109,4 +109,5 @@ proof irrelevance), i.e. HOL's logic.
 Known gap: floating-point operations (`machine_ieee`/`binary_ieee`) are
 Galette stand-ins (`ARB`) shared by wordSem/stackSem/asmSem; Pancake never
 emits FP instructions, but a faithful port of those HOL theories is still to
-do.
+do. `binary_ieee`'s `flags` record and flag constants are now ported (for
+the x64 model groundwork); the real-valued semantics are not.

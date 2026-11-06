@@ -85,6 +85,9 @@ fun pty ty =
          else die "cart over non-bool"
      | ("list", "list", [a]) => "(list " ^ pty a ^ ")"
      | ("option", "option", [a]) => "(option " ^ pty a ^ ")"
+     | ("binary_ieee", "flags", []) => "flags"
+     | ("binary_ieee", "rounding", []) => "rounding"
+     | ("binary_ieee", "float_compare", []) => "float_compare"
      | (t, n, []) => if t = !THY then tyname n else die ("unknown type " ^ t ^ "$" ^ n)
      | (t, n, _) => die ("unknown type " ^ t ^ "$" ^ n)
   end
@@ -313,6 +316,11 @@ and papp f args t =
     | ("integer", "int_of_num", _) => app "Z.of_N"
     | ("integer", "Num", _) => app "Z.to_N"
     | ("integer", "int_neg", _) => app "Z.opp"
+    | ("integer", "int_div", [a, b]) => "(Z.div " ^ pt a ^ " " ^ pt b ^ ")"
+    | ("integer", "int_quot", [a, b]) => "(Z.quot " ^ pt a ^ " " ^ pt b ^ ")"
+    | ("integer", "int_exp", [a, b]) => "(Z.pow " ^ pt a ^ " (Z.of_N " ^ pt b ^ "))"
+    | ("integer", "int_mod", [a, b]) => "(Z.modulo " ^ pt a ^ " " ^ pt b ^ ")"
+    | ("integer", "int_rem", [a, b]) => "(Z.rem " ^ pt a ^ " " ^ pt b ^ ")"
     | ("integer", n, [a, b]) =>
         (case zbin n of SOME z => "(" ^ z ^ " " ^ pt a ^ " " ^ pt b ^ ")"
                       | NONE => die ("integer op " ^ n))
