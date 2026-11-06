@@ -768,7 +768,7 @@ Proof. intros [x|m]; [destruct x|]; vm_compute; reflexivity. Qed.
 Definition pancake_exec (n : pancakeNT) (s : list (token * locs))
     : evalcase token pancakeNT (list ptree) string :=
   coreloop_acc pancake_lookup pancake_peg pancake_lookup_eq (EV (mknt n) s [] NONE [] done failed)
-    (peg_exec_nt_Acc pancake_peg (inl n) I s PEG_wellformed (pancake_nt_dom n)).
+    (Acc_gen 40 _ (peg_exec_nt_Acc pancake_peg (inl n) I s PEG_wellformed (pancake_nt_dom n))).
 
 Lemma pancake_exec_eq n s :
   pancake_exec n s = peg_exec pancake_peg (mknt n) s [] NONE [] done failed.

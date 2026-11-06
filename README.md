@@ -42,9 +42,111 @@ The reference checkout at `../flapjack` is needed for the HOL-reference
 checks and parity tests. The parity script also accepts its location through
 `FLAPJACK`.
 
-Galette is a public dune/opam package named `galette`. Install it locally
+Galette is a public dune/opam package named `rocq-galette`. Install it locally
 with `opam install .`; downstream dune projects can then depend on the
 `Galette` theory via `(theories Galette)` in their `rocq.theory` stanza.
+
+## Usage
+
+### Running the compiler from the command line
+
+The compiler is extracted to OCaml and built as a standalone executable that
+takes the same arguments as CakeML's `cake` and reads the Pancake source on
+stdin:
+
+    dune build ./extraction/galette.exe
+    ./_build/default/extraction/galette.exe --pancake --target=riscv < prog.pnk > prog.S
+    ./_build/default/extraction/galette.exe --pancake --target=arm8  < prog.pnk > prog.S
+
+For example:
+
+    printf 'fun 1 main() { return 7; }' \
+      | ./_build/default/extraction/galette.exe --pancake --target=riscv > ret7.S
+
+`--target=riscv` (RV64) or `--target=arm8` (AArch64) is required; x64 and
+mips are rejected. Other `cake` options (`--help`, `--version`,
+`--explore`, `--main_return=`, `--no_warn`, ...) behave as in `cake`.
+Warnings go to stderr. On an error, the message (starting `###`) goes to
+stderr and the exit code is 1.
+
+The output is the same GNU assembler file `cake` writes (run through the C
+preprocessor: a `.S` file). It defines `cml_main`, `cml_heap`, `cml_stack`
+and the code buffer. As with `cake`'s output, it is linked with C code that
+provides `main`, sets up the heap and stack and implements the program's FFI
+functions (`ffi<name>`); CakeML's `basis/basis_ffi.c` shows the expected
+interface.
+
+### Running the compiler in the Rocq kernel
+
+The compiler is a Rocq function, so it also runs inside Rocq itself, with
+no extracted code involved. `compiler.compiler_main` is the definition that
+the executable runs: it takes the command-line arguments and the source text
+and returns the stdout chunks and the stderr text.
+
+    From Galette Require Import Base.
+    From Galette.HOL.src.string Require Import string.
+    From Galette.cakeml.misc Require Import misc.
+    From Galette.cakeml.basis.pure Require Import mlstring.
+    From Galette.cakeml.compiler Require compiler.
+
+    Definition src : string := "fun 1 main() { return 7; }"%hstring.
+
+    Definition result : mlstring * mlstring :=
+      let '(out, err) :=
+        compiler.compiler_main [strlit "--pancake"; strlit "--target=riscv"] src in
+      (concat (append out), err).
+
+    Eval vm_compute in result.   (* (assembly text, stderr text) *)
+
+Compile it against the built theories with
+`rocq c -R _build/default/theories Galette File.v`, or put it in a dune
+`rocq.theory` that depends on `Galette`. `scripts/kernel-compile.py` does
+this for a source file and prints the result like the executable:
+
+    python3 scripts/kernel-compile.py --target=riscv prog.pnk > prog.S
+
+The kernel's output was byte-identical to the executable's on every program
+tried (19 programs of up to 755 bytes of source, both targets). Each took
+4-40 s, mostly Rocq start-up and loading the library. Use `vm_compute`
+(or `native_compute`); `compute`/`cbv` are much slower. Larger programs
+are slow: in the logic HOL's monadic arrays are lists, so the register
+allocator is quadratic. A 17 KB program
+(`secp256k1_recover.pnk`) did not finish in 15 minutes, and the
+stateless-pancaketh guests are out of reach. The same evaluation can be used
+in proofs, e.g. `vm_compute; reflexivity` to show that a given program
+compiles to given bytes.
+
+### Where the correctness theorem is
+
+The top-level compiler correctness theorem is
+[`pan_to_target_compile_semantics`](theories/cakeml/pancake/proofs/pan_to_targetProof.v)
+(`Galette.cakeml.pancake.proofs.pan_to_targetProof`), the port of HOL's theorem
+of the same name in `cakeml/pancake/proofs/pan_to_targetProofScript.sml`.
+For any machine configuration `mc` and backend configuration `c`, if
+`compile_prog_max c mc pan_code` returns `bytes` and the hypotheses hold
+(well-formed source, a configuration satisfying `backend_config_ok` and
+`mc_conf_ok`, and an initial machine state `ms` with `bytes` installed), then
+every behaviour of the machine (`machine_sem mc ffi0 ms`) is a behaviour of
+the source program (`panSem.semantics_decls`), possibly cut short by running
+out of resources. It cannot be summarised fully; read the statement and the
+definitions it uses. To check its axioms:
+
+    From Galette.cakeml.pancake.proofs Require Import pan_to_targetProof.
+    Print Assumptions pan_to_target_compile_semantics.
+
+The encoder theorems that discharge its target-specific part are
+`riscv_encoder_correct`
+([`riscv_targetProof.v`](theories/cakeml/compiler/encoders/riscv/proofs/riscv_targetProof.v))
+and `arm8_encoder_correct`
+([`arm8_targetProof.v`](theories/cakeml/compiler/encoders/arm8/proofs/arm8_targetProof.v)).
+As in HOL, the theorem is stated for `compile_prog_max` (defined in the same
+file). It runs the Pancake-to-bytes passes and also returns the static stack
+bound. It is not literally the function `compiler_main` calls
+(`pan_to_target.compile_prog`, which also moves `main` first and records
+function names for the output), and the parser, the assembly printer and the
+command-line driver are outside it. [docs/SOUNDNESS.md](docs/SOUNDNESS.md)
+lists this and the other limitations, e.g. that the theorem is not yet
+instantiated with the concrete RISC-V or ARMv8 configuration.
 
 ## Dependencies
 

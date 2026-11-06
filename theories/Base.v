@@ -57,26 +57,33 @@ Class EqDecision (A : Type) := eq_dec :: forall x y : A, Decision (x = y).
 #[global] Instance unit_eq_dec : EqDecision unit.
 Proof. intros [] []; left; reflexivity. Defined.
 
+(** The instances for pairs, sums and options branch on the component
+    decisions without rewriting along their equality proofs, so they
+    compute in the kernel ([vm_compute]) even when a component instance
+    has an opaque proof (e.g. [word_eq_dec]). *)
 #[global] Instance prod_eq_dec {A B} `{EqDecision A} `{EqDecision B} :
   EqDecision (A * B).
 Proof.
-  intros [a b] [c d]; destruct (decide (a = c)) as [->|n];
-    [destruct (decide (b = d)) as [->|m]|]; [left; reflexivity|right|right];
-    congruence.
+  intros [a b] [c d].
+  refine (match decide (a = c), decide (b = d) with
+          | left e1, left e2 => left _
+          | _, right n => right _
+          | right n, _ => right _
+          end); congruence.
 Defined.
 
 #[global] Instance sum_eq_dec {A B} `{EqDecision A} `{EqDecision B} :
   EqDecision (A + B).
 Proof.
   intros [a|b] [c|d]; try (right; discriminate).
-  - destruct (decide (a = c)) as [->|n]; [left; reflexivity|right; congruence].
-  - destruct (decide (b = d)) as [->|n]; [left; reflexivity|right; congruence].
+  - refine (match decide (a = c) with left e => left _ | right n => right _ end); congruence.
+  - refine (match decide (b = d) with left e => left _ | right n => right _ end); congruence.
 Defined.
 
 #[global] Instance option_eq_dec {A} `{EqDecision A} : EqDecision (option A).
 Proof.
   intros [a|] [b|]; try (right; discriminate); try (left; reflexivity).
-  destruct (decide (a = b)) as [->|n]; [left; reflexivity|right; congruence].
+  refine (match decide (a = b) with left e => left _ | right n => right _ end); congruence.
 Defined.
 
 #[global] Instance list_eq_dec {A} `{EqDecision A} : EqDecision (list A) :=

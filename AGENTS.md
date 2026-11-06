@@ -144,6 +144,19 @@ the `_def` tag. The tagged statement must be HOL's.
 - **Executable**: compiler code must not use `ARB`, `select`, `classical_dec`
   or `Classical.v` unless HOL's code does exactly that; extracted code that
   hits them fails at run time.
+- **Computable in the kernel**: compiler code must also reduce under
+  `vm_compute` (README, "Running the compiler in the Rocq kernel";
+  `scripts/kernel-compile.py`). Two things block that:
+  - Recursion on an opaque (`Qed`) well-foundedness or `Acc` proof. Guard
+    it: `Acc_intro_generator` for a `well_founded` proof (e.g. `N_lt_wf`,
+    `measure_wf`), or `pegexec.Acc_gen` for a single `Acc` proof.
+  - A `Decision` instance whose boolean result depends on reducing an opaque
+    equality proof (e.g. one that rewrites with `->` along a component's
+    proof). Branch on the component decisions and build proofs only in the
+    leaves, as `prod_eq_dec` in `Base.v` does.
+
+  A stuck term does not fail: `vm_compute` instead normalises a huge term
+  and appears to hang.
 - **Shared files**: if you need something in a file you do not own, say so in
   your report instead of editing it.
 
