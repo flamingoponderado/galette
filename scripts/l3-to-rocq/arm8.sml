@@ -14,7 +14,7 @@ val allconsts = map (fn c => #1 (dest_const c)) (constants "arm8");
 val _ = Gen.THY := "arm8";
 val _ = Gen.ty_rename := List.mapPartial (fn t => if mem t allconsts then SOME (t, t ^ "_ty") else NONE) tys;
 val _ = Gen.type_names := map Gen.tyname tys;
-val dts = map Gen.pdatatype tys;
+val dts = map (Gen.pdatatype hol_path) tys;
 val _ = Gen.theory_consts := List.concat (map #4 dts);
 val used = HOLset.listItems (List.foldl (fn (n,s) => HOLset.addList (s, map (#1 o dest_const) (find_terms (fn t => is_const t andalso #Thy (dest_thy_const t) = "arm8") (concl (DB.fetch "arm8" n))))) (HOLset.empty String.compare) defs);
 val enums = List.filter (fn t => mem (t ^ "2num") used orelse mem ("num2" ^ t) used) tys;
