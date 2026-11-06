@@ -24590,6 +24590,46 @@
   "rocq_name": "startup"
  },
  {
+  "hol_path": "cakeml/compiler/backend/arm8/proofs/arm8_configProofScript.sml",
+  "hol_name": "arm8_backend_config_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_configProofScript.sml; HOL's EVAL/blast obligations are discharged by vm_compute and explicit lemmas (land_mask_64, store_offset_w2i, arm8_names_domain/BIJ).",
+  "rocq_path": "theories/cakeml/compiler/backend/arm8/proofs/arm8_configProof.v",
+  "rocq_name": "arm8_backend_config_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/arm8/proofs/arm8_configProofScript.sml",
+  "hol_name": "arm8_init_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_configProofScript.sml; after the is_arm8_machine_config facts are substituted, each conjunct of mc_init_ok is computed.",
+  "rocq_path": "theories/cakeml/compiler/backend/arm8/proofs/arm8_configProof.v",
+  "rocq_name": "arm8_init_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/arm8/proofs/arm8_configProofScript.sml",
+  "hol_name": "arm8_machine_config_ok",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Statement compared with arm8_configProofScript.sml; good_dimindex 64 and the reg_ok facts are computed, encoder_correct is arm8_encoder_correct, enc_ok is arm8_enc_ok.",
+  "rocq_path": "theories/cakeml/compiler/backend/arm8/proofs/arm8_configProof.v",
+  "rocq_name": "arm8_machine_config_ok"
+ },
+ {
+  "hol_path": "cakeml/compiler/backend/arm8/proofs/arm8_configProofScript.sml",
+  "hol_name": "is_arm8_machine_config_def",
+  "hol_line": null,
+  "case": null,
+  "status": "reviewed_exact",
+  "note": "Record fields ported as in arm8_configProofScript.sml; mc is stated at HOL's inferred carrier machine_config 64 arm8_state arm8_proj_type (the projection type of arm8_target, named locally).",
+  "rocq_path": "theories/cakeml/compiler/backend/arm8/proofs/arm8_configProof.v",
+  "rocq_name": "is_arm8_machine_config"
+ },
+ {
   "hol_path": "cakeml/compiler/backend/backendScript.sml",
   "hol_name": "attach_bitmaps_def",
   "hol_line": null,

@@ -98,6 +98,7 @@ ported: `backend/x64/x64_configScript` (**done**) and
 | encoders/riscv/proofs/riscv_targetProof | done (`riscv_encoder_correct`; lem11/lem12 are ML-generated, see header) |
 | encoders/arm8/proofs/arm8_targetProof | done (`arm8_encoder_correct`, `Decode_EncodeBitMask`, shift lemmas; `[local]` lsl/lsr/asr lemmas not needed, see header) |
 | encoders/x64/proofs/x64_targetProof | todo (`x64_encoder_correct`) |
+| backend/arm8/proofs/arm8_configProof | done (`is_arm8_machine_config`, `arm8_backend_config_ok`, `arm8_machine_config_ok`, `arm8_init_ok`; `arm8_compile_correct` not ported — Galette has no compiler-level `compile_correct`) |
 | backend/proofs/backendProof (Pancake-relevant part), wordConvsProof | done (10 backendProof declarations used by pan_to_target; wordConvsProof complete) |
 | pancake/proofs/pan_to_targetProof | **done** (`pan_to_target_compile_semantics`, exact HOL statement; Base axioms only) |
 | backend/proofs/data_to_word_gcProof | partial (init_store_ok, gc_fun_ok_word_gc_fun, gc_fun_const_ok_word_gc_fun: what pan_to_target needs) |
